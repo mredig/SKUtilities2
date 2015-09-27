@@ -94,11 +94,47 @@ bool distanceBetweenIsWithinXDistancePreSquared (CGPoint pointA, CGPoint pointB,
 
 #pragma mark ORIENTATION
 
+CGFloat orientToFromRightFace (CGPoint facing, CGPoint from) {
+	CGFloat deltaX = facing.x - from.x;
+	CGFloat deltaY = facing.y - from.y;
+	return atan2f(deltaY, deltaX);
+}
+
+CGFloat orientToFromUpFace (CGPoint facing, CGPoint from) {
+	CGFloat deltaX = facing.x - from.x;
+	CGFloat deltaY = facing.y - from.y;
+	return atan2f(deltaY, deltaX) - (90 * kSKUDegToRadConvFactor);
+}
+
+CGFloat orientToFromLeftFace (CGPoint facing, CGPoint from) {
+	CGFloat deltaX = facing.x - from.x;
+	CGFloat deltaY = facing.y - from.y;
+	return atan2f(deltaY, deltaX) - (180 * kSKUDegToRadConvFactor);
+}
+
+CGFloat orientToFromDownFace (CGPoint facing, CGPoint from) {
+	CGFloat deltaX = facing.x - from.x;
+	CGFloat deltaY = facing.y - from.y;
+	return atan2f(deltaY, deltaX) + (90 * kSKUDegToRadConvFactor);
+}
+
+
+
 
 
 #pragma mark CGVector HELPERS
 
 #pragma mark CGPoint HELPERS
+
+CGPoint midPointOfRect (CGRect rect) {
+	CGPoint rPoint = CGPointMake(rect.size.width / 2.0, rect.size.height / 2.0);
+	rPoint = CGPointMake(rect.origin.x + rPoint.x, rect.origin.y + rPoint.y);
+	return rPoint;
+}
+
+CGPoint midPointOfSize (CGSize size) {
+	return midPointOfRect(CGRectMake(0.0, 0.0, size.width, size.height));
+}
 
 #pragma mark COORDINATE CONVERSIONS
 

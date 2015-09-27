@@ -8,6 +8,7 @@
 
 #import "GameScene.h"
 #import "SKUtilities2.h"
+#import "02rotationScene.h"
 
 @interface GameScene() {
 	SKUtilities2* sharedUtilities;
@@ -67,13 +68,49 @@
 -(void)setupButton {
 	
 	SKNode* tempButton = [SKNode node];
-	tempButton.position = CGPointMake(self.size.width / 2, self.size.height / 2); //// make a "midpoint of" method
+	tempButton.position = midPointOfRect(self.frame);
+	tempButton.position = CGPointMake(tempButton.position.x, tempButton.position.y * 0.5);
+	tempButton.zPosition = 1.0;
+	tempButton.name = @"tempButton";
+	[self addChild:tempButton];
+	
+	SKSpriteNode* buttonBG = [SKSpriteNode spriteNodeWithColor:[SKColor whiteColor] size:CGSizeMake(200, 50)];
+	[tempButton addChild:buttonBG];
+	
+	SKLabelNode* buttonLabel = [SKLabelNode labelNodeWithText:@"Next Scene"];
+	buttonLabel.fontColor = [SKColor blackColor];
+	buttonLabel.fontSize = 28;
+	buttonLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeCenter;
+	buttonLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
+	buttonLabel.zPosition = 1.0;
+	[tempButton addChild:buttonLabel];
+	
 	
 }
 
--(void)mouseDown:(NSEvent *)theEvent {
+-(void)mouseUp:(NSEvent *)theEvent {
 	
+	CGPoint location = [theEvent locationInNode:self];
 
+	NSArray* nodes = [self nodesAtPoint:location];
+	
+	for (SKNode* node in nodes) {
+		if ([node.name isEqualToString:@"tempButton"]) {
+			//next scene
+			[self transferScene];
+		}
+	}
+	
+}
+
+-(void)transferScene {
+	
+	_2rotationScene* scene = [[_2rotationScene alloc] initWithSize:self.size];
+	scene.scaleMode = self.scaleMode;
+	
+	SKView* view = (SKView*)self.view;
+	[view presentScene:scene];
+	
 }
 
 -(void)distanceBenchmark {

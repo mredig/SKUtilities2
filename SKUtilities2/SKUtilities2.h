@@ -114,9 +114,18 @@ bool distanceBetweenIsWithinXDistancePreSquared (CGPoint pointA, CGPoint pointB,
 
 #pragma mark ORIENTATION
 
+CGFloat orientToFromRightFace (CGPoint facing, CGPoint from);
+CGFloat orientToFromUpFace (CGPoint facing, CGPoint from);
+CGFloat orientToFromLeftFace (CGPoint facing, CGPoint from);
+CGFloat orientToFromDownFace (CGPoint facing, CGPoint from);
+
+
 #pragma mark CGVector HELPERS
 
 #pragma mark CGPoint HELPERS
+
+CGPoint midPointOfRect (CGRect rect);
+CGPoint midPointOfSize (CGSize size);
 
 #pragma mark COORDINATE CONVERSIONS
 
