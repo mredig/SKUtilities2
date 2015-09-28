@@ -519,7 +519,7 @@ static SKUtilities2* sharedUtilities = Nil;
 @end
 
 
-@implementation SGG_PositionObject
+@implementation SKU_PositionObject
 
 -(id)init {
 	if (self = [super init]) {
@@ -557,20 +557,20 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 
-+(SGG_PositionObject*)position:(CGPoint)location {
-	return [[SGG_PositionObject alloc]initWithPosition:location];
++(SKU_PositionObject*)position:(CGPoint)location {
+	return [[SKU_PositionObject alloc]initWithPosition:location];
 }
 
-+(SGG_PositionObject*)vector:(CGVector)vector {
-	return [[SGG_PositionObject alloc]initWithVector:vector];
++(SKU_PositionObject*)vector:(CGVector)vector {
+	return [[SKU_PositionObject alloc]initWithVector:vector];
 }
 
-+(SGG_PositionObject*)size:(CGSize)size {
-	return [[SGG_PositionObject alloc]initWithSize:size];
++(SKU_PositionObject*)size:(CGSize)size {
+	return [[SKU_PositionObject alloc]initWithSize:size];
 }
 
-+(SGG_PositionObject*)rect:(CGRect)rect {
-	return [[SGG_PositionObject alloc]initWithRect:rect];
++(SKU_PositionObject*)rect:(CGRect)rect {
+	return [[SKU_PositionObject alloc]initWithRect:rect];
 }
 
 

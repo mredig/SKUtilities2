@@ -390,23 +390,37 @@ double bezierTValueAtXValue (double x, double p0x, double p1x, double p2x, doubl
 
 
 @interface SKUtilities2 : NSObject
-
+/**
+ Current time passed in from scene update method, but must be set up properly. This allows you to get the currentTime into other objects or methods without directly calling them from the update method.
+ */
 @property (nonatomic, readonly) CFTimeInterval currentTime;
+/**
+ Amount of time passed since last frame. This value is capped by deltaMaxTime.
+ */
 @property (nonatomic, readonly) CFTimeInterval deltaFrameTime;
+/**
+ Amount of time passed since last frame. This value is capped by deltaMaxTime.
+Vulnerable to lag spikes if used.
+ */
 @property (nonatomic, readonly) CFTimeInterval deltaFrameTimeUncapped;
 /**
  Defaults to 1.0f.
  */
 @property (nonatomic) CGFloat deltaMaxTime;
-
+/**
+ Singleton object. Currently only has timing info on it. May be expanded in future.
+ */
 +(SKUtilities2*) sharedUtilities;
+/**
+ Call this method in your scene's update method to share the time with other objects throughout the game.
+ */
 -(void)updateCurrentTime:(CFTimeInterval)timeUpdate;
 
 
 @end
 
 
-@interface SGG_PositionObject : NSObject
+@interface SKU_PositionObject : NSObject
 
 @property (nonatomic) CGPoint position;
 @property (nonatomic) CGSize size;
@@ -418,10 +432,10 @@ double bezierTValueAtXValue (double x, double p0x, double p1x, double p2x, doubl
 -(id)initWithVector:(CGVector)vector;
 -(id)initWithSize:(CGSize)size;
 -(id)initWithRect:(CGRect)rect;
-+(SGG_PositionObject*)position:(CGPoint)location;
-+(SGG_PositionObject*)vector:(CGVector)vector;
-+(SGG_PositionObject*)size:(CGSize)size;
-+(SGG_PositionObject*)rect:(CGRect)rect;
++(SKU_PositionObject*)position:(CGPoint)location;
++(SKU_PositionObject*)vector:(CGVector)vector;
++(SKU_PositionObject*)size:(CGSize)size;
++(SKU_PositionObject*)rect:(CGRect)rect;
 
 -(CGSize)getSizeFromPosition;
 -(CGPoint)getPositionFromSize;
