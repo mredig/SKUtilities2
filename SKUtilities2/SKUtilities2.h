@@ -58,6 +58,17 @@ CGFloat linearInterpolationBetweenFloatValues (CGFloat valueA, CGFloat valueB, C
 
 CGFloat reverseLinearInterpolationBetweenFloatValues (CGFloat valueA, CGFloat valueB, CGFloat valueBetween, bool clipped);
 
+/**
+ Returns a CGFloat modifying currentValue that iteratively changes over time to become closer to idealValue in iterations of stepValue
+ @param idealValue
+ CGFloat value that you are approaching
+ @param currentValue
+ CGFloat input value of where you are now
+ @param stepValue
+ CGFloat amount to iterate by
+ */
+CGFloat rampToValue (CGFloat idealValue, CGFloat currentValue, CGFloat stepValue);
+
 #pragma mark RANDOM NUMBERS
 
 /**
@@ -339,11 +350,19 @@ CGPoint midPointOfSize (CGSize size);
 bool pointIsBehindVictim (CGPoint origin, CGPoint victim, CGVector normalVictimFacingVector, CGFloat latitude);
 
 
-#pragma mark COORDINATE CONVERSIONS
-
-
-
-
+#pragma mark COORDINATE FORMAT CONVERSIONS
+/**
+ Returns a CGPoint struct converted from a properly formatted string.
+ @param string
+ NSString formatted like { ##,## } where ## are numbers.
+ */
+CGPoint getCGPointFromString (NSString* string);
+/**
+ Returns a properly formatted NSString to later be converted back to a CGPoint. This is useful for saving to plist files.
+ @param location
+ CGPoint struct
+ */
+NSString* getStringFromPoint (CGPoint location);
 
 
 

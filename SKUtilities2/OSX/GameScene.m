@@ -32,6 +32,12 @@
 	NSLog(@"interpolate: %f", linearInterpolationBetweenFloatValues(floatA, floatB, 0.25, NO));
 	NSLog(@"reverseInterp: %f", reverseLinearInterpolationBetweenFloatValues(floatA, floatB, 63.5, NO));
 	
+	CGFloat start = 0.0, end = 1.0;
+	while (start < end) {
+		start = rampToValue(end, start, 0.1);
+		NSLog(@"ramping to %f - currently %f", end, start);
+	}
+	
 #pragma mark RANDOM NUMBERS
 	u_int32_t lowUInt = 100;
 	u_int32_t highUInt = 1000;

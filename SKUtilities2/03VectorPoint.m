@@ -112,6 +112,11 @@
 	pointC = pointInterpolationLinearBetweenTwoPoints(CGPointZero, pointC, 0.333);
 	NSLog(@"0.33 linear point interpoltion: %f %f", pointC.x, pointC.y);
 	
+	NSLog(@"string from point: %@", getStringFromPoint(pointC));
+	
+	CGPoint stringPoint = getCGPointFromString(getStringFromPoint(pointC));
+	NSLog(@"point from string: %f %f", stringPoint.x, stringPoint.y);
+	
 	
 	[self setupSpriteDemos];
 	[self setupButton];
@@ -155,7 +160,6 @@
 	//// position behind demos
 	victim = [SKSpriteNode spriteNodeWithColor:[SKColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.5] size:CGSizeMake(100, 100)];
 	victim.position = CGPointMake(self.size.width/2, self.size.height * 0.25);
-//	victim.alpha = 0.5;
 	victim.zPosition = 10.0;
 	[self addChild:victim];
 	
@@ -274,8 +278,6 @@
 	latValue = fmax(-1.0, latValue);
 	latValue = fmin(1.0, latValue);
 	previousLocation = location;
-	
-//	[self updatePartColor];
 }
 
 
