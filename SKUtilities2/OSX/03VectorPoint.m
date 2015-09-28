@@ -22,7 +22,7 @@
 	CGFloat latValue;
 	CGPoint previousLocation;
 	
-	CFTimeInterval previousTime, gCurrentTime;
+	SKUtilities2* sharedUtilities;
 	
 }
 
@@ -32,6 +32,7 @@
 
 
 -(void) didMoveToView:(SKView *)view {
+	sharedUtilities = [SKUtilities2 sharedUtilities];
 	
 	NSLog(@"\n\n\n\n03VectorPoint: demos vector and point functions");
 	
@@ -223,12 +224,10 @@
 }
 
 -(void)moveNodes {
+		
+	spriteVectorInterval.position = pointStepVectorFromPointWithInterval(spriteVectorInterval.position, CGVectorMake(1.0, 0.0), sharedUtilities.deltaFrameTime, 5.0f/60.0f, 100.0f, 1.0f);
 	
-	CFTimeInterval interval = gCurrentTime - previousTime;
-	
-	spriteVectorInterval.position = pointStepVectorFromPointWithInterval(spriteVectorInterval.position, CGVectorMake(1.0, 0.0), interval, 5.0f/60.0f, 100.0f, 1.0f);
-	
-	spritePoint.position = pointStepTowardsPointWithInterval(spritePoint.position, CGPointMake(5000.0, spritePoint.position.y), interval, 5.0f/60.0f, 100.0f, 1.0f);
+	spritePoint.position = pointStepTowardsPointWithInterval(spritePoint.position, CGPointMake(5000.0, spritePoint.position.y), sharedUtilities.deltaFrameTime, 5.0f/60.0f, 100.0f, 1.0f);
 	
 	spriteVector.position = pointStepVectorFromPoint(spriteVector.position, CGVectorMake(1.0, 0.0), 100.0f/60.0f);
 	
@@ -325,11 +324,10 @@
 
 
 -(void)update:(NSTimeInterval)currentTime {
-	gCurrentTime = currentTime;
+	[[SKUtilities2 sharedUtilities] updateCurrentTime:currentTime];
 	
 	[self moveNodes];
 	
-	previousTime = currentTime;
 }
 
 @end
