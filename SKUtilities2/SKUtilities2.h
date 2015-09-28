@@ -273,6 +273,24 @@ CGPoint pointAdd (CGPoint pointA, CGPoint pointB);
 CGPoint pointAddValue (CGPoint point, CGFloat value);
 
 /**
+ Returns a CGPoint that is the product of two other CGPoints (Ax * Bx, Ay * By)
+ @param pointB
+ CGPoint point struct to be factored.
+ @param vectorB
+ CGPoint point struct to be factored.
+ */
+CGPoint pointMultiplyByPoint (CGPoint pointA, CGPoint pointB);
+
+/**
+ Returns a CGPoint that is the product of multiplying both values by the same factor.
+ @param point
+ CGPoint point struct to be factored.
+ @param factor
+ CGFloat value to multiply both x and y by.
+ */
+CGPoint pointMultiplyByFactor (CGPoint point, CGFloat factor);
+
+/**
  Returns a CGPoint struct that is the result of movement based on the factors provided
  @param origin
  CGPoint where the point is in the current frame, prior to moving to the next frame
@@ -363,6 +381,11 @@ CGPoint getCGPointFromString (NSString* string);
  CGPoint struct
  */
 NSString* getStringFromPoint (CGPoint location);
+
+#pragma mark BEZIER CALCUATIONS
+CGPoint bezierPoint (CGFloat t, CGPoint point0, CGPoint point1, CGPoint point2, CGPoint point3);
+
+double bezierTValueAtXValue (double x, double p0x, double p1x, double p2x, double p3x);
 
 
 

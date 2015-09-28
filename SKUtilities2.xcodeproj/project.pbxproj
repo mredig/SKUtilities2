@@ -16,6 +16,7 @@
 		335C92D51BB71EEA00DC1BD2 /* SKUtilities2.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92D41BB71EEA00DC1BD2 /* SKUtilities2.m */; };
 		335C92D81BB7AEB100DC1BD2 /* 02rotationScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92D71BB7AEB100DC1BD2 /* 02rotationScene.m */; };
 		335C92DB1BB8959400DC1BD2 /* 03VectorPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92DA1BB8959400DC1BD2 /* 03VectorPoint.m */; };
+		335C92E21BB9D01200DC1BD2 /* 04BezierDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92E11BB9D01200DC1BD2 /* 04BezierDemo.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,8 @@
 		335C92D71BB7AEB100DC1BD2 /* 02rotationScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = 02rotationScene.m; path = OSX/02rotationScene.m; sourceTree = "<group>"; };
 		335C92D91BB8959400DC1BD2 /* 03VectorPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = 03VectorPoint.h; path = OSX/03VectorPoint.h; sourceTree = "<group>"; };
 		335C92DA1BB8959400DC1BD2 /* 03VectorPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = 03VectorPoint.m; path = OSX/03VectorPoint.m; sourceTree = "<group>"; };
+		335C92E01BB9D01200DC1BD2 /* 04BezierDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = 04BezierDemo.h; path = OSX/04BezierDemo.h; sourceTree = "<group>"; };
+		335C92E11BB9D01200DC1BD2 /* 04BezierDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = 04BezierDemo.m; path = OSX/04BezierDemo.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +97,8 @@
 				335C92D71BB7AEB100DC1BD2 /* 02rotationScene.m */,
 				335C92D91BB8959400DC1BD2 /* 03VectorPoint.h */,
 				335C92DA1BB8959400DC1BD2 /* 03VectorPoint.m */,
+				335C92E01BB9D01200DC1BD2 /* 04BezierDemo.h */,
+				335C92E11BB9D01200DC1BD2 /* 04BezierDemo.m */,
 				335C92C71BB71D7000DC1BD2 /* Assets.xcassets */,
 				335C92C91BB71D7000DC1BD2 /* MainMenu.xib */,
 				335C92CC1BB71D7000DC1BD2 /* Info.plist */,
@@ -175,6 +180,7 @@
 				335C92DB1BB8959400DC1BD2 /* 03VectorPoint.m in Sources */,
 				335C92C11BB71D7000DC1BD2 /* main.m in Sources */,
 				335C92D51BB71EEA00DC1BD2 /* SKUtilities2.m in Sources */,
+				335C92E21BB9D01200DC1BD2 /* 04BezierDemo.m in Sources */,
 				335C92C41BB71D7000DC1BD2 /* GameScene.m in Sources */,
 				335C92BE1BB71D7000DC1BD2 /* AppDelegate.m in Sources */,
 				335C92D81BB7AEB100DC1BD2 /* 02rotationScene.m in Sources */,

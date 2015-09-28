@@ -7,6 +7,7 @@
 //
 
 #import "03VectorPoint.h"
+#import "04BezierDemo.h"
 #import "SKUtilities2.h"
 
 @interface _3VectorPoint() {
@@ -32,7 +33,7 @@
 
 -(void) didMoveToView:(SKView *)view {
 	
-	NSLog(@"\n\n\n\n03VectorPoint: demos vector, point and possibly more functions");
+	NSLog(@"\n\n\n\n03VectorPoint: demos vector and point functions");
 	
 	
 #pragma mark CGVector HELPERS
@@ -314,7 +315,7 @@
 
 -(void)transferScene {
 	
-	_3VectorPoint* scene = [[_3VectorPoint alloc] initWithSize:self.size];
+	_4BezierDemo* scene = [[_4BezierDemo alloc] initWithSize:self.size];
 	scene.scaleMode = self.scaleMode;
 	
 	SKView* view = (SKView*)self.view;
