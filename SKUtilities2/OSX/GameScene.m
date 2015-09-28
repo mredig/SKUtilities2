@@ -23,6 +23,8 @@
 	
 	sharedUtilities = [SKUtilities2 sharedUtilities];
 	
+	NSLog(@"GameScene: demos number interpolation, random numbers, and distance functions");
+	
 #pragma mark NUMBER INTERPOLATION
 
 	CGFloat floatA = 50.0;
@@ -50,16 +52,6 @@
 	NSLog(@"distance is closer than %f: %i", comparison, distanceBetweenIsWithinXDistancePreSquared(pointA, pointB, comparison * comparison));
 
 	
-#pragma mark ORIENTATION
-	
-#pragma mark CGVector HELPERS
-	
-#pragma mark CGPoint HELPERS
-	
-	CGPoint pointC = pointAdd(pointA, pointB);
-//	NSLog(@"newPoint: %f %f", pointC.x, pointC.y);
-	
-#pragma mark COORDINATE CONVERSIONS
 
 	[self setupButton];
 	
@@ -91,13 +83,12 @@
 -(void)mouseUp:(NSEvent *)theEvent {
 	
 	CGPoint location = [theEvent locationInNode:self];
-
 	NSArray* nodes = [self nodesAtPoint:location];
-	
 	for (SKNode* node in nodes) {
 		if ([node.name isEqualToString:@"tempButton"]) {
 			//next scene
 			[self transferScene];
+			break;
 		}
 	}
 	

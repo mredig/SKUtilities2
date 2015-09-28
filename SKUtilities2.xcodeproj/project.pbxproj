@@ -15,6 +15,7 @@
 		335C92CB1BB71D7000DC1BD2 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 335C92C91BB71D7000DC1BD2 /* MainMenu.xib */; };
 		335C92D51BB71EEA00DC1BD2 /* SKUtilities2.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92D41BB71EEA00DC1BD2 /* SKUtilities2.m */; };
 		335C92D81BB7AEB100DC1BD2 /* 02rotationScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92D71BB7AEB100DC1BD2 /* 02rotationScene.m */; };
+		335C92DB1BB8959400DC1BD2 /* 03VectorPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92DA1BB8959400DC1BD2 /* 03VectorPoint.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,8 @@
 		335C92D41BB71EEA00DC1BD2 /* SKUtilities2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKUtilities2.m; sourceTree = "<group>"; };
 		335C92D61BB7AEB100DC1BD2 /* 02rotationScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = 02rotationScene.h; path = OSX/02rotationScene.h; sourceTree = "<group>"; };
 		335C92D71BB7AEB100DC1BD2 /* 02rotationScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = 02rotationScene.m; path = OSX/02rotationScene.m; sourceTree = "<group>"; };
+		335C92D91BB8959400DC1BD2 /* 03VectorPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = 03VectorPoint.h; sourceTree = "<group>"; };
+		335C92DA1BB8959400DC1BD2 /* 03VectorPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = 03VectorPoint.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +92,8 @@
 				335C92C51BB71D7000DC1BD2 /* GameScene.sks */,
 				335C92D61BB7AEB100DC1BD2 /* 02rotationScene.h */,
 				335C92D71BB7AEB100DC1BD2 /* 02rotationScene.m */,
+				335C92D91BB8959400DC1BD2 /* 03VectorPoint.h */,
+				335C92DA1BB8959400DC1BD2 /* 03VectorPoint.m */,
 				335C92C71BB71D7000DC1BD2 /* Assets.xcassets */,
 				335C92C91BB71D7000DC1BD2 /* MainMenu.xib */,
 				335C92CC1BB71D7000DC1BD2 /* Info.plist */,
@@ -167,6 +172,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				335C92DB1BB8959400DC1BD2 /* 03VectorPoint.m in Sources */,
 				335C92C11BB71D7000DC1BD2 /* main.m in Sources */,
 				335C92D51BB71EEA00DC1BD2 /* SKUtilities2.m in Sources */,
 				335C92C41BB71D7000DC1BD2 /* GameScene.m in Sources */,
