@@ -106,8 +106,7 @@
 	
 }
 
--(void)mouseDown:(NSEvent *)theEvent {
-	CGPoint location = [theEvent locationInNode:self];
+-(void)inputBegan:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 	NSArray* nodes = [self nodesAtPoint:location];
 	for (SKNode* node in nodes) {
 		if ([node.name isEqualToString:@"tempButton"]) {
@@ -123,21 +122,16 @@
 	}
 }
 
--(void)mouseDragged:(NSEvent *)theEvent {
-	CGPoint location = [theEvent locationInNode:self];
+-(void)inputMoved:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 	if (![selectedNode.name isEqualToString:@"tempButton"]) {
 		selectedNode.position = location;
 		[self updateBezierCurve];
 	}
 	
 	xAndTvalueLabel.text = [NSString stringWithFormat:@"xVal: %f tVal:%f", location.x, bezierTValueAtXValue(location.x, 0.0, handle1.position.x, handle2.position.x, self.size.width)];
-
 }
 
-
--(void)mouseUp:(NSEvent *)theEvent {
-	
-	CGPoint location = [theEvent locationInNode:self];
+-(void)inputEnded:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 	NSArray* nodes = [self nodesAtPoint:location];
 	for (SKNode* node in nodes) {
 		if ([node.name isEqualToString:@"tempButton"] && [selectedNode.name isEqualToString:@"tempButton"]) {
@@ -148,7 +142,6 @@
 	}
 	selectedNode = nil;
 }
-
 
 
 

@@ -59,20 +59,15 @@
 	
 	
 }
-
--(void)mouseDown:(NSEvent *)theEvent {
-	CGPoint location = [theEvent locationInNode:self];
+-(void)inputBegan:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 	multiLineLabel.position = location;
 }
 
--(void)mouseDragged:(NSEvent *)theEvent {
-	CGPoint location = [theEvent locationInNode:self];
+-(void)inputMoved:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 	multiLineLabel.position = location;
 }
 
-
--(void)mouseUp:(NSEvent *)theEvent {
-	CGPoint location = [theEvent locationInNode:self];
+-(void)inputEnded:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 	NSArray* nodes = [self nodesAtPoint:location];
 	for (SKNode* node in nodes) {
 		if ([node.name isEqualToString:@"tempButton"]) {
@@ -82,7 +77,6 @@
 		}
 	}
 }
-
 
 
 

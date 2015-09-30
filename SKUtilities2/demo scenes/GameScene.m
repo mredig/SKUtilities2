@@ -86,9 +86,8 @@
 	
 }
 
--(void)mouseUp:(NSEvent *)theEvent {
+-(void)inputEnded:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 	
-	CGPoint location = [theEvent locationInNode:self];
 	NSArray* nodes = [self nodesAtPoint:location];
 	for (SKNode* node in nodes) {
 		if ([node.name isEqualToString:@"tempButton"]) {
@@ -97,8 +96,9 @@
 			break;
 		}
 	}
-	
 }
+
+
 
 -(void)transferScene {
 	

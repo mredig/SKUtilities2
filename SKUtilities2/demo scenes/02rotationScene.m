@@ -124,26 +124,21 @@
 	
 }
 
--(void)mouseDown:(NSEvent *)theEvent {
-	CGPoint location = [theEvent locationInNode:self];
-	
+-(void)inputBegan:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 	orientUpNode.zRotation = orientToFromUpFace(location, orientUpNode.position);
 	orientRightNode.zRotation = orientToFromRightFace(location, orientRightNode.position);
 	orientLeftNode.zRotation = orientToFromLeftFace(location, orientLeftNode.position);
 	orientDownNode.zRotation = orientToFromDownFace(location, orientDownNode.position);
 }
 
--(void)mouseDragged:(NSEvent *)theEvent {
-	CGPoint location = [theEvent locationInNode:self];
+-(void)inputMoved:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 	orientUpNode.zRotation = orientToFromUpFace(location, orientUpNode.position);
 	orientRightNode.zRotation = orientToFromRightFace(location, orientRightNode.position);
 	orientLeftNode.zRotation = orientToFromLeftFace(location, orientLeftNode.position);
 	orientDownNode.zRotation = orientToFromDownFace(location, orientDownNode.position);
 }
 
--(void)mouseUp:(NSEvent *)theEvent {
-	
-	CGPoint location = [theEvent locationInNode:self];
+-(void)inputEnded:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 	NSArray* nodes = [self nodesAtPoint:location];
 	for (SKNode* node in nodes) {
 		if ([node.name isEqualToString:@"tempButton"]) {
@@ -152,8 +147,8 @@
 			break;
 		}
 	}
-	
 }
+
 
 -(void)transferScene {
 	

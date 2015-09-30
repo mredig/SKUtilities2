@@ -84,19 +84,8 @@
 	
 }
 
--(void)mouseDown:(NSEvent *)theEvent {
-	CGPoint location = [theEvent locationInNode:self];
-
-}
-
--(void)mouseDragged:(NSEvent *)theEvent {
-	CGPoint location = [theEvent locationInNode:self];
-
-}
-
-
--(void)mouseUp:(NSEvent *)theEvent {
-	CGPoint location = [theEvent locationInNode:self];
+-(void)inputEnded:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+	
 	NSArray* nodes = [self nodesAtPoint:location];
 	for (SKNode* node in nodes) {
 		if ([node.name isEqualToString:@"tempButton"]) {
@@ -106,7 +95,6 @@
 		}
 	}
 }
-
 
 
 

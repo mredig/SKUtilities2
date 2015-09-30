@@ -421,6 +421,8 @@ Vulnerable to lag spikes if used.
 
 @end
 
+#pragma mark NEW CLASSES
+
 #pragma mark SKU_PositionObject
 
 /**
@@ -518,6 +520,19 @@ Vulnerable to lag spikes if used.
 + (instancetype)labelNodeWithFontNamed:(NSString *)fontName;
 - (instancetype)initWithFontNamed:(NSString *)fontName;
 
+
+@end
+
+
+
+#pragma MARK MODIFIED CLASSES
+
+
+@interface SKNode (ConsolidatedInput)
+
+-(void)inputBegan:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict ;
+-(void)inputMoved:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict ;
+-(void)inputEnded:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict ;
 
 @end
 

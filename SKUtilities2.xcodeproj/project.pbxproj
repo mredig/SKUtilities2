@@ -25,7 +25,6 @@
 		335C93021BBB7F0C00DC1BD2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 335C93001BBB7F0C00DC1BD2 /* Main.storyboard */; };
 		335C93071BBB7F0C00DC1BD2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 335C93051BBB7F0C00DC1BD2 /* LaunchScreen.storyboard */; };
 		335C930C1BBB7F2800DC1BD2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 335C92C71BB71D7000DC1BD2 /* Assets.xcassets */; };
-		335C930D1BBB7F2E00DC1BD2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92BD1BB71D7000DC1BD2 /* AppDelegate.m */; };
 		335C930E1BBB7F2E00DC1BD2 /* GameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92C31BB71D7000DC1BD2 /* GameScene.m */; };
 		335C930F1BBB7F2E00DC1BD2 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 335C92C51BB71D7000DC1BD2 /* GameScene.sks */; };
 		335C93101BBB7F2E00DC1BD2 /* 02rotationScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92D71BB7AEB100DC1BD2 /* 02rotationScene.m */; };
@@ -130,7 +129,6 @@
 			children = (
 				335C92BC1BB71D7000DC1BD2 /* AppDelegate.h */,
 				335C92BD1BB71D7000DC1BD2 /* AppDelegate.m */,
-				335C92C71BB71D7000DC1BD2 /* Assets.xcassets */,
 				335C92C91BB71D7000DC1BD2 /* MainMenu.xib */,
 				335C92CC1BB71D7000DC1BD2 /* Info.plist */,
 				335C92BF1BB71D7000DC1BD2 /* Supporting Files */,
@@ -166,6 +164,7 @@
 		335C93171BBB831D00DC1BD2 /* demo scenes */ = {
 			isa = PBXGroup;
 			children = (
+				335C92C71BB71D7000DC1BD2 /* Assets.xcassets */,
 				335C92C21BB71D7000DC1BD2 /* GameScene.h */,
 				335C92C31BB71D7000DC1BD2 /* GameScene.m */,
 				335C92C51BB71D7000DC1BD2 /* GameScene.sks */,
@@ -303,7 +302,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				335C93111BBB7F2E00DC1BD2 /* 03VectorPoint.m in Sources */,
-				335C930D1BBB7F2E00DC1BD2 /* AppDelegate.m in Sources */,
 				335C92FF1BBB7F0C00DC1BD2 /* GameViewController.m in Sources */,
 				335C93121BBB7F2E00DC1BD2 /* 04BezierDemo.m in Sources */,
 				335C93141BBB7F2E00DC1BD2 /* 06MultiLineDemo.m in Sources */,
@@ -458,7 +456,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				INFOPLIST_FILE = SKUtilitiesiOSDemo/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/SKUtilities2/iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.secretgamegroup.SKUtilitiesiOSDemo;
@@ -473,7 +471,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				INFOPLIST_FILE = SKUtilitiesiOSDemo/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/SKUtilities2/iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.secretgamegroup.SKUtilitiesiOSDemo;
