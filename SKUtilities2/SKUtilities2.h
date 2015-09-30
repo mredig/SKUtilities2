@@ -511,6 +511,8 @@ Vulnerable to lag spikes if used.
 +(SKU_ShapeNode*)squareWithWidth:(CGFloat)width andColor:(SKColor*)color;
 +(SKU_ShapeNode*)rectangleWithSize:(CGSize)size andColor:(SKColor*)color;
 +(SKU_ShapeNode*)rectangleRoundedWithSize:(CGSize)size andCornerRadius:(CGFloat)radius andColor:(SKColor*)color;
++(SKU_ShapeNode*)shapeWithPath:(CGPathRef)path andColor:(SKColor*)color;
+
 
 @end
 

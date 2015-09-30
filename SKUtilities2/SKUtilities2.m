@@ -791,6 +791,12 @@ static SKUtilities2* sharedUtilities = Nil;
 	return shapeNode;
 }
 
++(SKU_ShapeNode*)shapeWithPath:(CGPathRef)path andColor:(UIColor *)color {
+	SKU_ShapeNode* shapeNode = [SKU_ShapeNode node];
+	shapeNode.fillColor = color;
+	shapeNode.path = path;
+	return shapeNode;
+}
 -(id)init {
 	
 	if (self = [super init]) {
