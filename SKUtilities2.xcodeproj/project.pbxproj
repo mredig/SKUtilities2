@@ -17,6 +17,8 @@
 		335C92D81BB7AEB100DC1BD2 /* 02rotationScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92D71BB7AEB100DC1BD2 /* 02rotationScene.m */; };
 		335C92DB1BB8959400DC1BD2 /* 03VectorPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92DA1BB8959400DC1BD2 /* 03VectorPoint.m */; };
 		335C92E21BB9D01200DC1BD2 /* 04BezierDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92E11BB9D01200DC1BD2 /* 04BezierDemo.m */; };
+		335C92E51BBB4F7700DC1BD2 /* 05ShapeDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92E41BBB4F7700DC1BD2 /* 05ShapeDemo.m */; };
+		335C92E81BBB7C0F00DC1BD2 /* SKUMultiLineLabelNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92E71BBB7C0F00DC1BD2 /* SKUMultiLineLabelNode.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +40,10 @@
 		335C92DA1BB8959400DC1BD2 /* 03VectorPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = 03VectorPoint.m; path = OSX/03VectorPoint.m; sourceTree = "<group>"; };
 		335C92E01BB9D01200DC1BD2 /* 04BezierDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = 04BezierDemo.h; path = OSX/04BezierDemo.h; sourceTree = "<group>"; };
 		335C92E11BB9D01200DC1BD2 /* 04BezierDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = 04BezierDemo.m; path = OSX/04BezierDemo.m; sourceTree = "<group>"; };
+		335C92E31BBB4F7700DC1BD2 /* 05ShapeDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = 05ShapeDemo.h; path = OSX/05ShapeDemo.h; sourceTree = "<group>"; };
+		335C92E41BBB4F7700DC1BD2 /* 05ShapeDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = 05ShapeDemo.m; path = OSX/05ShapeDemo.m; sourceTree = "<group>"; };
+		335C92E61BBB7C0F00DC1BD2 /* SKUMultiLineLabelNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKUMultiLineLabelNode.h; sourceTree = "<group>"; };
+		335C92E71BBB7C0F00DC1BD2 /* SKUMultiLineLabelNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKUMultiLineLabelNode.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +78,8 @@
 			children = (
 				335C92D31BB71EEA00DC1BD2 /* SKUtilities2.h */,
 				335C92D41BB71EEA00DC1BD2 /* SKUtilities2.m */,
+				335C92E61BBB7C0F00DC1BD2 /* SKUMultiLineLabelNode.h */,
+				335C92E71BBB7C0F00DC1BD2 /* SKUMultiLineLabelNode.m */,
 				335C92D21BB71E6F00DC1BD2 /* OSX */,
 			);
 			path = SKUtilities2;
@@ -99,6 +107,8 @@
 				335C92DA1BB8959400DC1BD2 /* 03VectorPoint.m */,
 				335C92E01BB9D01200DC1BD2 /* 04BezierDemo.h */,
 				335C92E11BB9D01200DC1BD2 /* 04BezierDemo.m */,
+				335C92E31BBB4F7700DC1BD2 /* 05ShapeDemo.h */,
+				335C92E41BBB4F7700DC1BD2 /* 05ShapeDemo.m */,
 				335C92C71BB71D7000DC1BD2 /* Assets.xcassets */,
 				335C92C91BB71D7000DC1BD2 /* MainMenu.xib */,
 				335C92CC1BB71D7000DC1BD2 /* Info.plist */,
@@ -180,10 +190,12 @@
 				335C92DB1BB8959400DC1BD2 /* 03VectorPoint.m in Sources */,
 				335C92C11BB71D7000DC1BD2 /* main.m in Sources */,
 				335C92D51BB71EEA00DC1BD2 /* SKUtilities2.m in Sources */,
+				335C92E51BBB4F7700DC1BD2 /* 05ShapeDemo.m in Sources */,
 				335C92E21BB9D01200DC1BD2 /* 04BezierDemo.m in Sources */,
 				335C92C41BB71D7000DC1BD2 /* GameScene.m in Sources */,
 				335C92BE1BB71D7000DC1BD2 /* AppDelegate.m in Sources */,
 				335C92D81BB7AEB100DC1BD2 /* 02rotationScene.m in Sources */,
+				335C92E81BBB7C0F00DC1BD2 /* SKUMultiLineLabelNode.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

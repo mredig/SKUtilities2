@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <QuartzCore/QuartzCore.h>
+#import <SpriteKit/SpriteKit.h>
 
 #pragma mark CONSTANTS
 
@@ -419,7 +421,9 @@ Vulnerable to lag spikes if used.
 
 @end
 
-
+/**
+ For easy passing of struct data through mediums that only accept objects, like NSArrays or performSelectors that only accept passing of objects.
+ */
 @interface SKU_PositionObject : NSObject
 
 @property (nonatomic) CGPoint position;
@@ -440,5 +444,52 @@ Vulnerable to lag spikes if used.
 -(CGSize)getSizeFromPosition;
 -(CGPoint)getPositionFromSize;
 -(CGVector)getVectorFromSize;
+
+@end
+
+/**
+ Apple's first shape generator for SpriteKit (OS 10.9) caused performance issues. It might have been addressed in later versions of SpriteKit, but it appeared that the shapes were rerendered each frame, despite a lack of change in appearance. This method uses CAShapeLayer to render a shape, which is slightly more costly than the rendering of the SKShapeNode, but once it's rendered, is cached as a bitmap and renders very quickly in SpriteKit thereafter.
+ */
+@interface SKU_ShapeNode : SKNode
+
+/**
+ The CGPath to be drawn (in the Node's coordinate space) (will only redraw the image if the path is non-nil, so it's best to set the path as the last property and save some CPU cycles)
+ */
+@property (nonatomic) CGPathRef path;
+
+/**
+ The color to draw the path with. (for no stroke use [SKColor clearColor]). Defaults to [SKColor whiteColor].
+ */
+@property (nonatomic, retain) SKColor *strokeColor;
+
+/**
+ The color to fill the path with. Defaults to [SKColor clearColor] (no fill).
+ */
+@property (nonatomic, retain) SKColor *fillColor;
+
+/**
+ The width used to stroke the path. Widths larger than 2.0 may result in artifacts. Defaults to 1.0.
+ */
+@property (nonatomic) CGFloat lineWidth;
+
+
+/* The fill rule used when filling the path. Options are `non-zero' and
+ * `even-odd'. Defaults to `non-zero'. */
+@property (nonatomic, assign) NSString* fillRule;
+
+
+@property (nonatomic, assign) NSString* lineCap;
+@property (nonatomic, assign) NSArray* lineDashPattern;
+@property (nonatomic, assign) CGFloat lineDashPhase;
+@property (nonatomic, assign) NSString* lineJoin;
+@property (nonatomic, assign) CGFloat miterLimit;
+@property (nonatomic, assign) CGFloat strokeEnd;
+@property (nonatomic, assign) CGFloat strokeStart;
+@property (nonatomic, assign) CGPoint anchorPoint;
+
++(SKU_ShapeNode*)circleWithRadius:(CGFloat)radius andColor:(SKColor*)color;
++(SKU_ShapeNode*)squareWithWidth:(CGFloat)width andColor:(SKColor*)color;
++(SKU_ShapeNode*)rectangleWithSize:(CGSize)size andColor:(SKColor*)color;
++(SKU_ShapeNode*)rectangleRoundedWithSize:(CGSize)size andCornerRadius:(CGFloat)radius andColor:(SKColor*)color;
 
 @end

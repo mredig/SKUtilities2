@@ -613,3 +613,205 @@ static SKUtilities2* sharedUtilities = Nil;
 
 @end
 
+@interface SKU_ShapeNode() {
+	
+	CAShapeLayer* shapeLayer;
+	
+	CGSize boundingSize;
+	
+	SKSpriteNode* drawSprite;
+	CGPoint defaultPosition;
+	
+	SKNode* null;
+	
+	
+}
+
+@end
+
+
+@implementation SKU_ShapeNode
+
++(SKU_ShapeNode*)circleWithRadius:(CGFloat)radius andColor:(SKColor*)color{
+	CGRect rect = CGRectMake(-radius, -radius, radius*2.0, radius*2.0);
+	CGPathRef circle = CGPathCreateWithEllipseInRect(rect, NULL);
+	
+	SKU_ShapeNode* shapeNode = [SKU_ShapeNode node];
+	shapeNode.fillColor = color;
+	shapeNode.path = circle;
+	
+	CGPathRelease(circle);
+	
+	return shapeNode;
+}
+
++(SKU_ShapeNode*)squareWithWidth:(CGFloat)width andColor:(SKColor*)color{
+	CGRect rect = CGRectMake(-width / 2.0, -width / 2.0, width, width);
+	CGPathRef square = CGPathCreateWithRect(rect, NULL);
+	
+	SKU_ShapeNode* shapeNode = [SKU_ShapeNode node];
+	shapeNode.fillColor = color;
+	shapeNode.path = square;
+	
+	CGPathRelease(square);
+	
+	return shapeNode;
+}
+
++(SKU_ShapeNode*)rectangleWithSize:(CGSize)size andColor:(SKColor*)color{
+	CGRect rect = CGRectMake(-size.width / 2.0, -size.height / 2.0, size.width, size.height);
+	CGPathRef rectPath = CGPathCreateWithRect(rect, NULL);
+	
+	SKU_ShapeNode* shapeNode = [SKU_ShapeNode node];
+	shapeNode.fillColor = color;
+	shapeNode.path = rectPath;
+	
+	CGPathRelease(rectPath);
+	
+	return shapeNode;
+}
+
++(SKU_ShapeNode*)rectangleRoundedWithSize:(CGSize)size andCornerRadius:(CGFloat)radius andColor:(SKColor*)color{
+	CGRect rect = CGRectMake(-size.width / 2.0, -size.height / 2.0, size.width, size.height);
+	CGPathRef rectPath = CGPathCreateWithRoundedRect(rect, radius, radius, NULL);
+	
+	SKU_ShapeNode* shapeNode = [SKU_ShapeNode node];
+	shapeNode.fillColor = color;
+	shapeNode.path = rectPath;
+	
+	CGPathRelease(rectPath);
+	
+	return shapeNode;
+}
+
+-(id)init {
+	
+	if (self = [super init]) {
+		
+		self.name = @"SKU_ShapeNode";
+		
+		null = [SKNode node];
+		null.name = @"SKU_ShapeNodeNULL";
+		[self addChild:null];
+		
+		drawSprite = [SKSpriteNode node];
+		drawSprite.name = @"SKU_ShapeNodeDrawSprite";
+		[null addChild:drawSprite];
+//		_boundingSize = CGSizeMake(500, 500);
+		_strokeColor = [SKColor whiteColor];
+		_fillColor = [SKColor clearColor];
+		_lineWidth = 0.0;
+		_fillRule = kCAFillRuleNonZero;
+		_lineCap = kCALineCapButt;
+		_lineDashPattern = nil;
+		_lineDashPhase = 0;
+		_lineJoin = kCALineJoinMiter;
+		_miterLimit = 10.0;
+		_strokeEnd = 1.0;
+		_strokeStart = 0.0;
+		
+		_anchorPoint = CGPointMake(0.5, 0.5);
+	}
+	
+	return self;
+}
+
+
+-(void)redrawTexture {
+	
+	if (!_path) {
+		return;
+	}
+	
+	if (!shapeLayer) {
+		shapeLayer = [CAShapeLayer layer];
+	}
+	
+	shapeLayer.strokeColor = [_strokeColor CGColor];
+	shapeLayer.fillColor = [_fillColor CGColor];
+	shapeLayer.lineWidth = _lineWidth;
+	shapeLayer.fillRule = _fillRule;
+	shapeLayer.lineCap = _lineCap;
+	shapeLayer.lineDashPattern = _lineDashPattern;
+	shapeLayer.lineDashPhase = _lineDashPhase;
+	shapeLayer.lineJoin = _lineJoin;
+	shapeLayer.miterLimit = _miterLimit;
+	shapeLayer.strokeEnd = _strokeEnd;
+	shapeLayer.strokeStart = _strokeStart;
+
+	
+	CGRect enclosure = CGPathGetPathBoundingBox(_path);
+//	NSLog(@"bounding: %f %f %f %f", enclosure.origin.x, enclosure.origin.y, enclosure.size.width, enclosure.size.height);
+	CGPoint enclosureOffset;
+	
+	if (![_strokeColor isEqual:[SKColor clearColor]]) {
+		enclosureOffset = CGPointMake(enclosure.origin.x - _lineWidth, enclosure.origin.y - _lineWidth);
+	} else {
+		enclosureOffset = CGPointMake(enclosure.origin.x, enclosure.origin.y);
+	}
+	
+	CGAffineTransform transform = CGAffineTransformMake(1, 0, 0, 1, -enclosureOffset.x, -enclosureOffset.y);
+	CGPathRef newPath = CGPathCreateCopyByTransformingPath(_path, &transform);
+	
+	shapeLayer.path = newPath;
+	
+	boundingSize = CGSizeMake(enclosure.size.width + _lineWidth * 2, enclosure.size.height + _lineWidth * 2);
+	
+	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+	
+	CGContextRef context = CGBitmapContextCreate(NULL, boundingSize.width, boundingSize.height, 8, 0, colorSpace, kCGImageAlphaPremultipliedLast); //fixing this warning with a proper CGBitmapInfo enum causes the build to crash - Perhaps I did something wrong?
+//	CGContextRef context = CGBitmapContextCreate(NULL, _boundingSize.width, _boundingSize.height, 8, 0, colorSpace, kCGBitmapAlphaInfoMask);
+	
+//	CGContextTranslateCTM(context, enclosureOffset.x, enclosureOffset.y);
+	
+	[shapeLayer renderInContext:context];
+	
+	CGImageRef imageRef = CGBitmapContextCreateImage(context);
+	CGContextRelease(context);
+	CGColorSpaceRelease(colorSpace);
+	CGPathRelease(newPath);
+	
+	
+	SKTexture* tex = [SKTexture textureWithCGImage:imageRef];
+	
+	CGImageRelease(imageRef);
+	
+	drawSprite.texture = tex;
+	drawSprite.size = boundingSize;
+	drawSprite.anchorPoint = CGPointZero;
+	defaultPosition = CGPointMake(enclosureOffset.x, enclosureOffset.y);
+	drawSprite.position = defaultPosition;
+	[self setAnchorPoint:_anchorPoint];
+	
+}
+
+-(void)setAnchorPoint:(CGPoint)anchorPoint {
+	_anchorPoint = anchorPoint;
+//	drawSprite.position = defaultPosition;
+	null.position = CGPointMake(boundingSize.width * (0.5 - anchorPoint.x), boundingSize.height * (0.5 - anchorPoint.y));
+//	NSLog(@"defx: %f defy: %f boundw: %f boundh: %f finalx: %f finaly: %f", defaultPosition.x, defaultPosition.y, boundingSize.width, boundingSize.height, drawSprite.position.x, drawSprite.position.y);
+}
+
+
+-(void)setPath:(CGPathRef)path {
+	_path = path;
+	[self redrawTexture];
+}
+
+-(void)setFillColor:(SKColor *)fillColor {
+	_fillColor = fillColor;
+	[self redrawTexture];
+}
+
+-(void)setStrokeEnd:(CGFloat)strokeEnd {
+	_strokeEnd = strokeEnd;
+	[self redrawTexture];
+}
+
+-(void)setStrokeStart:(CGFloat)strokeStart {
+	_strokeStart = strokeStart;
+	[self redrawTexture];
+}
+
+@end
+

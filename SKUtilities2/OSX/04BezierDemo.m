@@ -8,6 +8,7 @@
 
 #import "04BezierDemo.h"
 #import "SKUtilities2.h"
+#import "05ShapeDemo.h"
 
 @interface _4BezierDemo() {
 	
@@ -153,7 +154,7 @@
 
 -(void)transferScene {
 	
-	_4BezierDemo* scene = [[_4BezierDemo alloc] initWithSize:self.size];
+	_5ShapeDemo* scene = [[_5ShapeDemo alloc] initWithSize:self.size];
 	scene.scaleMode = self.scaleMode;
 	
 	SKView* view = (SKView*)self.view;
