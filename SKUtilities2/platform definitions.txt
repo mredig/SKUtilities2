@@ -1,0 +1,27 @@
+tvos
+
+    #define TARGET_OS_MAC         
+    #define TARGET_OS_IPHONE      
+    #define TARGET_OS_TV          
+    #define TARGET_OS_EMBEDDED    
+    
+    
+ios
+
+    #define TARGET_OS_MAC         
+    #define TARGET_OS_IPHONE      
+    #define TARGET_OS_IOS         
+    #define TARGET_OS_EMBEDDED    
+    
+    
+watchos
+
+    #define TARGET_OS_MAC         
+    #define TARGET_OS_IPHONE      
+    #define TARGET_OS_WATCH       
+    #define TARGET_OS_EMBEDDED    
+    
+mac os
+
+    #define TARGET_OS_MAC         
+
