@@ -577,12 +577,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	
 	for (SKNode* selectionCandidate in pNavNodes) {
 		CGPoint newNodeWorldSpace = [selectionCandidate.parent convertPoint:selectionCandidate.position toNode:scene];
-
-//		if (direction == UISwipeGestureRecognizerDirectionUp) {
-//			if (newNodeWorldSpace.y > selectionWorldSpace.y) {
-//				[directionCandidates addObject:selectionCandidate];
-//			}
-//		}
+		
 		switch (direction) {
 			case UISwipeGestureRecognizerDirectionUp:
 				if (newNodeWorldSpace.y > selectionWorldSpace.y) {
