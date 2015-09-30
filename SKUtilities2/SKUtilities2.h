@@ -391,6 +391,16 @@ double bezierTValueAtXValue (double x, double p0x, double p1x, double p2x, doubl
 
 
 #pragma mark SKUTILITES SINGLETON
+
+#if TARGET_OS_TV
+
+typedef enum {
+	kSKUNavModeOn = 1,
+	kSKUNavModeOff,
+} kSKUNavModes;
+
+#endif
+
 @interface SKUtilities2 : NSObject
 /**
  Current time passed in from scene update method, but must be set up properly. This allows you to get the currentTime into other objects or methods without directly calling them from the update method.
@@ -412,6 +422,8 @@ Vulnerable to lag spikes if used.
 
 #if TARGET_OS_TV
 
+
+@property (nonatomic) kSKUNavModes navMode;
 @property (nonatomic, readonly) SKNode* navFocus;
 @property (nonatomic, strong) NSMutableSet* touchTracker;
 @property (nonatomic) CGFloat navThresholdDistance;

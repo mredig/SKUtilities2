@@ -513,6 +513,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	_touchTracker = [NSMutableSet set];
 	_navThresholdDistance = 125.0;
 	selectLocation = CGPointMake(960.0, 540.0); //midpoint of 1080p
+	_navMode = kSKUNavModeOn;
 #endif
 }
 
@@ -791,7 +792,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	return shapeNode;
 }
 
-+(SKU_ShapeNode*)shapeWithPath:(CGPathRef)path andColor:(UIColor *)color {
++(SKU_ShapeNode*)shapeWithPath:(CGPathRef)path andColor:(SKColor *)color {
 	SKU_ShapeNode* shapeNode = [SKU_ShapeNode node];
 	shapeNode.fillColor = color;
 	shapeNode.path = path;
@@ -1545,34 +1546,42 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 -(void)siriRemoteInputBegan:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
-	UITouch* touch = eventDict[@"touch"];
-	if (![[SKUtilities2 sharedUtilities].touchTracker containsObject:touch]) {
-		[[SKUtilities2 sharedUtilities].touchTracker addObject:touch];
+	
+	if ([SKUtilities2 sharedUtilities].navMode == kSKUNavModeOn) {
+		UITouch* touch = eventDict[@"touch"];
+		if (![[SKUtilities2 sharedUtilities].touchTracker containsObject:touch]) {
+			[[SKUtilities2 sharedUtilities].touchTracker addObject:touch];
+		}
 	}
+
 	[self inputBegan:location withEventDictionary:eventDict];
 }
 
 -(void)siriRemoteInputMoved:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
-	UITouch* touch = eventDict[@"touch"];
-	if ([[SKUtilities2 sharedUtilities].touchTracker containsObject:touch]) {
-		SKNode* prevSelection = [SKUtilities2 sharedUtilities].navFocus.userData[@"sku_currentSelectedNode"];
-		NSSet* nodeSet = [SKUtilities2 sharedUtilities].navFocus.userData[@"sku_navNodes"];
-		if (!prevSelection) {
-			NSLog(@"Error: no currently selected node - did you set the initial node selection (setCurrentSelectedNode:(SKNode*)) and set the navFocus on the singleton ([[SKUtilities2 sharedUtilities] setNavFocus:(SKNode*)]?");
-		} else if (!nodeSet) {
-			NSLog(@"Error: no navNodes to navigate through - did you add nodes to the nav nodes (addNodeToNavNodes:(SKNode*)) and set the navFocus on the singleton ([[SKUtilities2 sharedUtilities] setNavFocus:(SKNode*)]?");
-		} else {
-			SKNode* currentSelectionNode = [[SKUtilities2 sharedUtilities] handleSubNodeMovement:location withCurrentSelection:prevSelection inSet:nodeSet inScene:self.scene];
-			[self updateCurrentSelectedNode:currentSelectionNode];
+	if ([SKUtilities2 sharedUtilities].navMode == kSKUNavModeOn) {
+		UITouch* touch = eventDict[@"touch"];
+		if ([[SKUtilities2 sharedUtilities].touchTracker containsObject:touch]) {
+			SKNode* prevSelection = [SKUtilities2 sharedUtilities].navFocus.userData[@"sku_currentSelectedNode"];
+			NSSet* nodeSet = [SKUtilities2 sharedUtilities].navFocus.userData[@"sku_navNodes"];
+			if (!prevSelection) {
+				NSLog(@"Error: no currently selected node - did you set the initial node selection (setCurrentSelectedNode:(SKNode*)) and set the navFocus on the singleton ([[SKUtilities2 sharedUtilities] setNavFocus:(SKNode*)]?");
+			} else if (!nodeSet) {
+				NSLog(@"Error: no navNodes to navigate through - did you add nodes to the nav nodes (addNodeToNavNodes:(SKNode*)) and set the navFocus on the singleton ([[SKUtilities2 sharedUtilities] setNavFocus:(SKNode*)]?");
+			} else {
+				SKNode* currentSelectionNode = [[SKUtilities2 sharedUtilities] handleSubNodeMovement:location withCurrentSelection:prevSelection inSet:nodeSet inScene:self.scene];
+				[self updateCurrentSelectedNode:currentSelectionNode];
+			}
 		}
 	}
 	[self inputMoved:location withEventDictionary:eventDict];
 }
 
 -(void)siriRemoteInputEnded:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
-	UITouch* touch = eventDict[@"touch"];
-	if (![[SKUtilities2 sharedUtilities].touchTracker containsObject:touch]) {
-		[[SKUtilities2 sharedUtilities].touchTracker removeObject:touch];
+	if ([SKUtilities2 sharedUtilities].navMode == kSKUNavModeOn) {
+		UITouch* touch = eventDict[@"touch"];
+		if (![[SKUtilities2 sharedUtilities].touchTracker containsObject:touch]) {
+			[[SKUtilities2 sharedUtilities].touchTracker removeObject:touch];
+		}
 	}
 	[self inputEnded:location withEventDictionary:eventDict];
 }

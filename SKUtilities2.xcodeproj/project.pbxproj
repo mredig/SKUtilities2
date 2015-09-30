@@ -10,7 +10,7 @@
 		335C92BE1BB71D7000DC1BD2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92BD1BB71D7000DC1BD2 /* AppDelegate.m */; };
 		335C92C11BB71D7000DC1BD2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92C01BB71D7000DC1BD2 /* main.m */; };
 		335C92C41BB71D7000DC1BD2 /* 01NumbersDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92C31BB71D7000DC1BD2 /* 01NumbersDemo.m */; };
-		335C92C81BB71D7000DC1BD2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 335C92C71BB71D7000DC1BD2 /* Assets.xcassets */; };
+		335C92C81BB71D7000DC1BD2 /* SceneAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 335C92C71BB71D7000DC1BD2 /* SceneAssets.xcassets */; };
 		335C92CB1BB71D7000DC1BD2 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 335C92C91BB71D7000DC1BD2 /* MainMenu.xib */; };
 		335C92D51BB71EEA00DC1BD2 /* SKUtilities2.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92D41BB71EEA00DC1BD2 /* SKUtilities2.m */; };
 		335C92D81BB7AEB100DC1BD2 /* 02rotationScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92D71BB7AEB100DC1BD2 /* 02rotationScene.m */; };
@@ -23,7 +23,7 @@
 		335C92FF1BBB7F0C00DC1BD2 /* GameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92FE1BBB7F0C00DC1BD2 /* GameViewController.m */; };
 		335C93021BBB7F0C00DC1BD2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 335C93001BBB7F0C00DC1BD2 /* Main.storyboard */; };
 		335C93071BBB7F0C00DC1BD2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 335C93051BBB7F0C00DC1BD2 /* LaunchScreen.storyboard */; };
-		335C930C1BBB7F2800DC1BD2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 335C92C71BB71D7000DC1BD2 /* Assets.xcassets */; };
+		335C930C1BBB7F2800DC1BD2 /* SceneAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 335C92C71BB71D7000DC1BD2 /* SceneAssets.xcassets */; };
 		335C930E1BBB7F2E00DC1BD2 /* 01NumbersDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92C31BB71D7000DC1BD2 /* 01NumbersDemo.m */; };
 		335C93101BBB7F2E00DC1BD2 /* 02rotationScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92D71BB7AEB100DC1BD2 /* 02rotationScene.m */; };
 		335C93111BBB7F2E00DC1BD2 /* 03VectorPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92DA1BB8959400DC1BD2 /* 03VectorPoint.m */; };
@@ -43,6 +43,7 @@
 		335C933C1BBB8AFD00DC1BD2 /* 04BezierDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92E11BB9D01200DC1BD2 /* 04BezierDemo.m */; };
 		335C933D1BBB8AFD00DC1BD2 /* 05ShapeDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92E41BBB4F7700DC1BD2 /* 05ShapeDemo.m */; };
 		335C933E1BBB8AFD00DC1BD2 /* 06MultiLineDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92EA1BBB7C5C00DC1BD2 /* 06MultiLineDemo.m */; };
+		335C933F1BBCA95F00DC1BD2 /* SceneAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 335C92C71BB71D7000DC1BD2 /* SceneAssets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,7 +53,7 @@
 		335C92C01BB71D7000DC1BD2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = main.m; path = OSX/main.m; sourceTree = "<group>"; };
 		335C92C21BB71D7000DC1BD2 /* 01NumbersDemo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = 01NumbersDemo.h; path = "demo scenes/01NumbersDemo.h"; sourceTree = "<group>"; };
 		335C92C31BB71D7000DC1BD2 /* 01NumbersDemo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = 01NumbersDemo.m; path = "demo scenes/01NumbersDemo.m"; sourceTree = "<group>"; };
-		335C92C71BB71D7000DC1BD2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = OSX/Assets.xcassets; sourceTree = "<group>"; };
+		335C92C71BB71D7000DC1BD2 /* SceneAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = SceneAssets.xcassets; path = OSX/SceneAssets.xcassets; sourceTree = "<group>"; };
 		335C92CA1BB71D7000DC1BD2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		335C92CC1BB71D7000DC1BD2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = OSX/Info.plist; sourceTree = "<group>"; };
 		335C92D31BB71EEA00DC1BD2 /* SKUtilities2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKUtilities2.h; sourceTree = "<group>"; };
@@ -191,7 +192,7 @@
 		335C93171BBB831D00DC1BD2 /* demo scenes */ = {
 			isa = PBXGroup;
 			children = (
-				335C92C71BB71D7000DC1BD2 /* Assets.xcassets */,
+				335C92C71BB71D7000DC1BD2 /* SceneAssets.xcassets */,
 				335C92C21BB71D7000DC1BD2 /* 01NumbersDemo.h */,
 				335C92C31BB71D7000DC1BD2 /* 01NumbersDemo.m */,
 				335C92D61BB7AEB100DC1BD2 /* 02rotationScene.h */,
@@ -332,7 +333,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				335C92C81BB71D7000DC1BD2 /* Assets.xcassets in Resources */,
+				335C92C81BB71D7000DC1BD2 /* SceneAssets.xcassets in Resources */,
 				335C92CB1BB71D7000DC1BD2 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -342,7 +343,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				335C93071BBB7F0C00DC1BD2 /* LaunchScreen.storyboard in Resources */,
-				335C930C1BBB7F2800DC1BD2 /* Assets.xcassets in Resources */,
+				335C930C1BBB7F2800DC1BD2 /* SceneAssets.xcassets in Resources */,
 				335C93021BBB7F0C00DC1BD2 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -353,6 +354,7 @@
 			files = (
 				335C93301BBB8ADC00DC1BD2 /* Main.storyboard in Resources */,
 				335C93321BBB8ADD00DC1BD2 /* Assets.xcassets in Resources */,
+				335C933F1BBCA95F00DC1BD2 /* SceneAssets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

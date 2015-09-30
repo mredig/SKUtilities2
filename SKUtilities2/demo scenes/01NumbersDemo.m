@@ -13,6 +13,7 @@
 @interface _1NumbersDemo() {
 	SKUtilities2* sharedUtilities;
 	SKSpriteNode* indicator;
+	SKNode* currentSelectedNode;
 }
 
 @end
@@ -100,11 +101,27 @@
 	[self setCurrentSelectedNode:tempButton];
 	
 	[[SKUtilities2 sharedUtilities] setNavFocus:self];
+	
+	SKView* scnView = (SKView*)self.view;
+	
+	UITapGestureRecognizer* tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gestureTap:)];
+	[scnView addGestureRecognizer:tapGesture];
 #endif
 }
 
+#if TARGET_OS_TV
+-(void)gestureTap:(UIGestureRecognizer*)gesture {
+	if ([sharedUtilities.navFocus isEqual:self]) {
+		if ([currentSelectedNode.name isEqualToString:@"tempButton"]) {
+			[self transferScene];
+		}
+	}
+}
+#endif
+
 -(void)currentSelectedNodeUpdated:(SKNode *)node {
 	indicator.position = node.position;
+	currentSelectedNode = node;
 }
 
 -(void)inputEnded:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {

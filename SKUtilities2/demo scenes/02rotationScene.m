@@ -16,6 +16,8 @@
 	SKSpriteNode* orientRightNode;
 	SKSpriteNode* orientDownNode;
 	SKSpriteNode* orientLeftNode;
+	
+	SKSpriteNode* cursor;
 }
 
 @end
@@ -100,6 +102,15 @@
 	[orientDownNode addChild:downDirectionSprite];
 	
 	[self setupButton];
+	
+#if TARGET_OS_TV
+	
+	[SKUtilities2 sharedUtilities].navMode = kSKUNavModeOff;
+	cursor = [SKSpriteNode spriteNodeWithColor:[SKColor greenColor] size:CGSizeMake(20, 20)];
+	cursor.position = pointMultiplyByPoint(CGPointMake(0.5, 0.25), pointFromCGSize(self.size));
+	cursor.zPosition = 20;
+	[self addChild:cursor];
+#endif
 }
 
 -(void)setupButton {
@@ -125,13 +136,20 @@
 }
 
 -(void)inputBegan:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
-	orientUpNode.zRotation = orientToFromUpFace(location, orientUpNode.position);
-	orientRightNode.zRotation = orientToFromRightFace(location, orientRightNode.position);
-	orientLeftNode.zRotation = orientToFromLeftFace(location, orientLeftNode.position);
-	orientDownNode.zRotation = orientToFromDownFace(location, orientDownNode.position);
 }
 
 -(void)inputMoved:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+#if TARGET_OS_TV
+	UITouch* touch = eventDict[@"touch"];
+	CGPoint prevLocation = [touch previousLocationInNode:self];
+	cursor.position = pointAdd(pointAdd(pointInverse(prevLocation), location), cursor.position);
+	[self rotations:cursor.position];
+#else
+	[self rotations:location];
+#endif
+}
+
+-(void)rotations:(CGPoint)location {
 	orientUpNode.zRotation = orientToFromUpFace(location, orientUpNode.position);
 	orientRightNode.zRotation = orientToFromRightFace(location, orientRightNode.position);
 	orientLeftNode.zRotation = orientToFromLeftFace(location, orientLeftNode.position);
@@ -139,7 +157,11 @@
 }
 
 -(void)inputEnded:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+#if TARGET_OS_TV
+	NSArray* nodes = [self nodesAtPoint:cursor.position];
+#else
 	NSArray* nodes = [self nodesAtPoint:location];
+#endif
 	for (SKNode* node in nodes) {
 		if ([node.name isEqualToString:@"tempButton"]) {
 			//next scene
@@ -147,6 +169,7 @@
 			break;
 		}
 	}
+	
 }
 
 
