@@ -9,10 +9,20 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>SKUtilitiesiOSDemo.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>335C92B81BB71D7000DC1BD2</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>335C92EF1BBB7F0C00DC1BD2</key>
 		<dict>
 			<key>primary</key>
 			<true/>

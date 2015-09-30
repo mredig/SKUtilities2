@@ -8,6 +8,7 @@
 
 #import "05ShapeDemo.h"
 #import "SKUtilities2.h"
+#import "06MultiLineDemo.h"
 
 @implementation _5ShapeDemo
 
@@ -95,8 +96,15 @@
 
 
 -(void)mouseUp:(NSEvent *)theEvent {
-	
-
+	CGPoint location = [theEvent locationInNode:self];
+	NSArray* nodes = [self nodesAtPoint:location];
+	for (SKNode* node in nodes) {
+		if ([node.name isEqualToString:@"tempButton"]) {
+			//next scene
+			[self transferScene];
+			break;
+		}
+	}
 }
 
 
@@ -104,7 +112,7 @@
 
 -(void)transferScene {
 	
-	_5ShapeDemo* scene = [[_5ShapeDemo alloc] initWithSize:self.size];
+	_6MultiLineDemo* scene = [[_6MultiLineDemo alloc] initWithSize:self.size];
 	scene.scaleMode = self.scaleMode;
 	
 	SKView* view = (SKView*)self.view;

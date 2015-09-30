@@ -390,7 +390,7 @@ CGPoint bezierPoint (CGFloat t, CGPoint point0, CGPoint point1, CGPoint point2, 
 double bezierTValueAtXValue (double x, double p0x, double p1x, double p2x, double p3x);
 
 
-
+#pragma mark SKUTILITES SINGLETON
 @interface SKUtilities2 : NSObject
 /**
  Current time passed in from scene update method, but must be set up properly. This allows you to get the currentTime into other objects or methods without directly calling them from the update method.
@@ -421,6 +421,8 @@ Vulnerable to lag spikes if used.
 
 @end
 
+#pragma mark SKU_PositionObject
+
 /**
  For easy passing of struct data through mediums that only accept objects, like NSArrays or performSelectors that only accept passing of objects.
  */
@@ -446,6 +448,9 @@ Vulnerable to lag spikes if used.
 -(CGVector)getVectorFromSize;
 
 @end
+
+
+#pragma mark SKU_ShapeNode
 
 /**
  Apple's first shape generator for SpriteKit (OS 10.9) caused performance issues. It might have been addressed in later versions of SpriteKit, but it appeared that the shapes were rerendered each frame, despite a lack of change in appearance. This method uses CAShapeLayer to render a shape, which is slightly more costly than the rendering of the SKShapeNode, but once it's rendered, is cached as a bitmap and renders very quickly in SpriteKit thereafter.
@@ -493,3 +498,26 @@ Vulnerable to lag spikes if used.
 +(SKU_ShapeNode*)rectangleRoundedWithSize:(CGSize)size andCornerRadius:(CGFloat)radius andColor:(SKColor*)color;
 
 @end
+
+#pragma mark SKU_MultiLineLabelNode
+
+@interface SKU_MultiLineLabelNode : SKSpriteNode
+
+@property(retain, nonatomic) SKColor* fontColor;
+@property(copy, nonatomic) NSString* fontName;
+@property(nonatomic) CGFloat fontSize;
+@property(nonatomic) SKLabelHorizontalAlignmentMode horizontalAlignmentMode;
+@property(copy, nonatomic) NSString* text;
+@property(nonatomic) SKLabelVerticalAlignmentMode verticalAlignmentMode;
+@property(nonatomic, assign) CGFloat paragraphWidth;
+@property(nonatomic, assign) CGFloat paragraphHeight; //should only be necessary to force a proper height for stroked text
+@property(nonatomic, assign) CGFloat lineSpacing; //measures in points
+@property(nonatomic, assign) CGFloat strokeWidth;
+@property(retain, nonatomic) SKColor* strokeColor;
+
++ (instancetype)labelNodeWithFontNamed:(NSString *)fontName;
+- (instancetype)initWithFontNamed:(NSString *)fontName;
+
+
+@end
+
