@@ -1,29 +1,30 @@
 //
-//  GameScene.m
+//  01NumbersDemo.m
 //  SKUtilities2
 //
 //  Created by Michael Redig on 9/26/15.
 //  Copyright (c) 2015 Michael Redig. All rights reserved.
 //
 
-#import "GameScene.h"
+#import "01NumbersDemo.h"
 #import "SKUtilities2.h"
 #import "02rotationScene.h"
 
-@interface GameScene() {
+@interface _1NumbersDemo() {
 	SKUtilities2* sharedUtilities;
+	SKSpriteNode* indicator;
 }
 
 @end
 
 
-@implementation GameScene
+@implementation _1NumbersDemo
 
 -(void)didMoveToView:(SKView *)view {
 	
 	sharedUtilities = [SKUtilities2 sharedUtilities];
 	
-	NSLog(@"GameScene: demos number interpolation, random numbers, and distance functions");
+	NSLog(@"01NumbersDemo: demos number interpolation, random numbers, and distance functions");
 	
 #pragma mark NUMBER INTERPOLATION
 
@@ -83,11 +84,29 @@
 	buttonLabel.zPosition = 1.0;
 	[tempButton addChild:buttonLabel];
 	
+	[self addNodeToNavNodes:tempButton];
+	
+	SKSpriteNode* otherButton = [SKSpriteNode spriteNodeWithColor:[SKColor redColor] size:CGSizeMake(200, 50)];
+	otherButton.position = pointAdd(CGPointMake(0, 100.0), tempButton.position);
+	[self addChild:otherButton];
+	[self addNodeToNavNodes:otherButton];
+	
+	indicator = [SKSpriteNode spriteNodeWithColor:[SKColor greenColor] size:CGSizeMake(10, 10)];
+	indicator.zPosition = 20.0;
+	[self addChild:indicator];
+	
+	[self setCurrentSelectedNode:tempButton];
+	
+	[[SKUtilities2 sharedUtilities] setNavFocus:self];
 	
 }
 
+-(void)currentSelectedNodeUpdated:(SKNode *)node {
+	indicator.position = node.position;
+}
+
 -(void)inputEnded:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
-	
+
 	NSArray* nodes = [self nodesAtPoint:location];
 	for (SKNode* node in nodes) {
 		if ([node.name isEqualToString:@"tempButton"]) {

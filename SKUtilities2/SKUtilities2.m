@@ -480,6 +480,13 @@ double bezierTValueAtXValue (double x, double p0x, double p1x, double p2x, doubl
 
 ////end x bezier algorithm
 
+@interface SKUtilities2() {
+	CGPoint selectLocation; // initial value could be wonky... look into this
+}
+
+@end
+
+
 @implementation SKUtilities2
 
 static SKUtilities2* sharedUtilities = Nil;
@@ -502,6 +509,11 @@ static SKUtilities2* sharedUtilities = Nil;
 	_deltaMaxTime = 1.0f;
 	_deltaFrameTime = 1.0f/60.0f;
 	_deltaFrameTimeUncapped = 1.0f/60.0f;
+#if TARGET_OS_TV
+	_touchTracker = [NSMutableSet set];
+	_navThresholdDistance = 125.0;
+	selectLocation = CGPointMake(960.0, 540.0); //midpoint of 1080p
+#endif
 }
 
 -(void)updateCurrentTime:(CFTimeInterval)timeUpdate {
@@ -513,6 +525,101 @@ static SKUtilities2* sharedUtilities = Nil;
 		_deltaFrameTime = _deltaFrameTimeUncapped;
 	}
 	_currentTime = timeUpdate;
+}
+
+-(void)setNavFocus:(SKNode *)navFocus {
+	_navFocus = navFocus;
+}
+
+-(SKNode*)handleSubNodeMovement:(CGPoint)location withCurrentSelection:(SKNode *)currentSelectedNode inSet:(NSSet *)navNodeSet inScene:(SKScene*)scene {
+	
+	SKNode* rNode;
+	
+	CGFloat distance = distanceBetween(location, selectLocation);
+	if (distance > _navThresholdDistance) {
+		CGPoint diff = pointAdd(pointInverse(selectLocation), location);
+		
+		CGFloat absX, absY;
+		absX = fabs(diff.x);
+		absY = fabs(diff.y);
+		
+		if (absX > absY) { // horizontal movement
+			if (diff.x > 0) {
+				rNode = [self selectDirection:UISwipeGestureRecognizerDirectionRight withNodes:navNodeSet fromCurrentNode:currentSelectedNode inScene:scene];
+			} else {
+				rNode = [self selectDirection:UISwipeGestureRecognizerDirectionLeft withNodes:navNodeSet fromCurrentNode:currentSelectedNode inScene:scene];
+			}
+		} else { // vertical movement
+			if (diff.y > 0) {
+				rNode = [self selectDirection:UISwipeGestureRecognizerDirectionUp withNodes:navNodeSet fromCurrentNode:currentSelectedNode inScene:scene];
+			} else {
+				rNode = [self selectDirection:UISwipeGestureRecognizerDirectionDown withNodes:navNodeSet fromCurrentNode:currentSelectedNode inScene:scene];
+			}
+		}
+		selectLocation = location;
+	} else {
+		rNode = currentSelectedNode;
+	}
+	
+	return rNode;
+	
+}
+
+-(SKNode*)selectDirection:(UISwipeGestureRecognizerDirection)direction withNodes:(NSSet*)pNavNodes fromCurrentNode:(SKNode*)pCurrentNode inScene:(SKScene*)scene {
+	
+	if (!pCurrentNode.parent) {
+		return nil;
+	}
+	
+	CGPoint selectionWorldSpace = [pCurrentNode.parent convertPoint:pCurrentNode.position toNode:scene];
+	
+	NSMutableSet* directionCandidates = [NSMutableSet set];
+	
+	for (SKNode* selectionCandidate in pNavNodes) {
+		CGPoint newNodeWorldSpace = [selectionCandidate.parent convertPoint:selectionCandidate.position toNode:scene];
+
+//		if (direction == UISwipeGestureRecognizerDirectionUp) {
+//			if (newNodeWorldSpace.y > selectionWorldSpace.y) {
+//				[directionCandidates addObject:selectionCandidate];
+//			}
+//		}
+		switch (direction) {
+			case UISwipeGestureRecognizerDirectionUp:
+				if (newNodeWorldSpace.y > selectionWorldSpace.y) {
+					[directionCandidates addObject:selectionCandidate];
+				}
+				break;
+			case UISwipeGestureRecognizerDirectionDown:
+				if (newNodeWorldSpace.y < selectionWorldSpace.y) {
+					[directionCandidates addObject:selectionCandidate];
+				}
+				break;
+			case UISwipeGestureRecognizerDirectionLeft:
+				if (newNodeWorldSpace.x < selectionWorldSpace.x) {
+					[directionCandidates addObject:selectionCandidate];
+				}
+				break;
+			case UISwipeGestureRecognizerDirectionRight:
+				if (newNodeWorldSpace.x > selectionWorldSpace.x) {
+					[directionCandidates addObject:selectionCandidate];
+				}
+				break;
+			default:
+				break;
+		}
+	}
+	
+	SKNode* newNode;
+	CGFloat lowestDistance = MAXFLOAT;
+	for (SKNode* directionCand in directionCandidates) {
+		CGPoint newNodeWorldSpace = [directionCand.parent convertPoint:directionCand.position toNode:scene];
+		CGFloat distance = distanceBetween(selectionWorldSpace, newNodeWorldSpace);
+		if (distance < lowestDistance) {
+			newNode = directionCand;
+			lowestDistance = distance;
+		}
+	}
+	return newNode;
 }
 
 
@@ -1114,11 +1221,10 @@ static SKUtilities2* sharedUtilities = Nil;
 
 @end
 
-#pragma MARK MODIFIED CLASSES
+#pragma mark CLASS CATEGORIES
 
 
 @implementation SKNode (ConsolidatedInput)
-
 
 
 #if TARGET_OS_IPHONE
@@ -1137,7 +1243,11 @@ static SKUtilities2* sharedUtilities = Nil;
 						touch,
 						nil];
 	NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+#if TARGET_OS_TV
+	[self siriRemoteInputBegan:location withEventDictionary:eventDict];
+#else
 	[self inputBegan:location withEventDictionary:eventDict];
+#endif
 }
 
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -1155,7 +1265,11 @@ static SKUtilities2* sharedUtilities = Nil;
 						touch,
 						nil];
 	NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+#if TARGET_OS_TV
+	[self siriRemoteInputMoved:location withEventDictionary:eventDict];
+#else
 	[self inputMoved:location withEventDictionary:eventDict];
+#endif
 }
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -1173,7 +1287,11 @@ static SKUtilities2* sharedUtilities = Nil;
 						touch,
 						nil];
 	NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+#if TARGET_OS_TV
+	[self siriRemoteInputEnded:location withEventDictionary:eventDict];
+#else
 	[self inputEnded:location withEventDictionary:eventDict];
+#endif
 }
 
 -(void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -1191,7 +1309,11 @@ static SKUtilities2* sharedUtilities = Nil;
 						touch,
 						nil];
 	NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+#if TARGET_OS_TV
+	[self siriRemoteInputEnded:location withEventDictionary:eventDict];
+#else
 	[self inputEnded:location withEventDictionary:eventDict];
+#endif
 }
 
 #else
@@ -1372,19 +1494,106 @@ static SKUtilities2* sharedUtilities = Nil;
 #endif
 
 
--(void)inputBegan:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
+#if TARGET_OS_TV
+
+
+-(void)addNodeToNavNodes:(SKNode*)node {
 	
+	if (!self.userData) {
+		self.userData = [NSMutableDictionary dictionary];
+	}
+	
+	NSMutableSet* navNodes = self.userData[@"sku_navNodes"];
+	
+	if (!navNodes) {
+		navNodes = [NSMutableSet set];
+	}
+	
+	if (node.parent) {
+		[navNodes addObject:node];
+	} else {
+		NSLog(@"error: can't add node named '%@' to navNodes when it doesn't have a parent.", node.name);
+	}
+	
+	if (!self.userData[@"sku_navNodes"]) {
+		self.userData[@"sku_navNodes"] = navNodes;
+	}
+}
+
+-(void)setCurrentSelectedNode:(SKNode*)node {
+	[self updateCurrentSelectedNode:node];
+}
+
+-(void)updateCurrentSelectedNode:(SKNode*)node {
+	if (!node || [self.userData[@"sku_currentSelectedNode"] isEqual:node]) {
+		return;
+	}
+	
+	if (!self.userData) {
+		self.userData = [NSMutableDictionary dictionary];
+	}
+	
+	self.userData[@"sku_currentSelectedNode"] = node;
+	[self currentSelectedNodeUpdated:node];
+}
+
+-(void)currentSelectedNodeUpdated:(SKNode *)node {
+	//override this method to update visuals
+}
+
+-(void)siriRemoteInputBegan:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
+	UITouch* touch = eventDict[@"touch"];
+	if (![[SKUtilities2 sharedUtilities].touchTracker containsObject:touch]) {
+		[[SKUtilities2 sharedUtilities].touchTracker addObject:touch];
+	}
+	[self inputBegan:location withEventDictionary:eventDict];
+}
+
+-(void)siriRemoteInputMoved:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
+	UITouch* touch = eventDict[@"touch"];
+	if ([[SKUtilities2 sharedUtilities].touchTracker containsObject:touch]) {
+		SKNode* prevSelection = [SKUtilities2 sharedUtilities].navFocus.userData[@"sku_currentSelectedNode"];
+		NSSet* nodeSet = [SKUtilities2 sharedUtilities].navFocus.userData[@"sku_navNodes"];
+		if (!prevSelection) {
+			NSLog(@"Error: no currently selected node - did you set the initial node selection (setCurrentSelectedNode:(SKNode*)) and set the navFocus on the singleton ([[SKUtilities2 sharedUtilities] setNavFocus:(SKNode*)]?");
+		} else if (!nodeSet) {
+			NSLog(@"Error: no navNodes to navigate through - did you add nodes to the nav nodes (addNodeToNavNodes:(SKNode*)) and set the navFocus on the singleton ([[SKUtilities2 sharedUtilities] setNavFocus:(SKNode*)]?");
+		} else {
+			SKNode* currentSelectionNode = [[SKUtilities2 sharedUtilities] handleSubNodeMovement:location withCurrentSelection:prevSelection inSet:nodeSet inScene:self.scene];
+			[self updateCurrentSelectedNode:currentSelectionNode];
+		}
+	}
+	[self inputMoved:location withEventDictionary:eventDict];
+}
+
+-(void)siriRemoteInputEnded:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
+	UITouch* touch = eventDict[@"touch"];
+	if (![[SKUtilities2 sharedUtilities].touchTracker containsObject:touch]) {
+		[[SKUtilities2 sharedUtilities].touchTracker removeObject:touch];
+	}
+	[self inputEnded:location withEventDictionary:eventDict];
+}
+
+
+
+#endif
+
+
+
+-(void)inputBegan:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
+
 }
 
 -(void)inputMoved:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
-	
+
 }
 
 -(void)inputEnded:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
-	
+
 }
 
 
 @end
+
 
 

@@ -7,7 +7,7 @@
 //
 
 #import "GameViewController.h"
-#import "GameScene.h"
+#import "01NumbersDemo.h"
 
 @implementation SKScene (Unarchive)
 
@@ -42,7 +42,8 @@
     skView.ignoresSiblingOrder = YES;
     
     // Create and configure the scene.
-    GameScene *scene = [GameScene unarchiveFromFile:@"GameScene"];
+    _1NumbersDemo *scene = [_1NumbersDemo unarchiveFromFile:@"01NumbersDemo"];
+	scene.size = skView.frame.size;
     scene.scaleMode = SKSceneScaleModeAspectFill;
     
     // Present the scene.

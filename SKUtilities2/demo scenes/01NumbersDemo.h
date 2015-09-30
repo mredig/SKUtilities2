@@ -1,5 +1,5 @@
 //
-//  GameScene.h
+//  01NumbersDemo.h
 //  SKUtilities2
 //
 
@@ -8,6 +8,6 @@
 
 #import <SpriteKit/SpriteKit.h>
 
-@interface GameScene : SKScene
+@interface _1NumbersDemo : SKScene
 
 @end

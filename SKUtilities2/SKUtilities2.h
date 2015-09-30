@@ -409,6 +409,19 @@ Vulnerable to lag spikes if used.
  Defaults to 1.0f.
  */
 @property (nonatomic) CGFloat deltaMaxTime;
+
+#if TARGET_OS_TV
+
+@property (nonatomic, readonly) SKNode* navFocus;
+@property (nonatomic, strong) NSMutableSet* touchTracker;
+@property (nonatomic) CGFloat navThresholdDistance;
+
+-(SKNode*)handleSubNodeMovement:(CGPoint)location withCurrentSelection:(SKNode*)currentSelectedNode inSet:(NSSet*)navNodeSet inScene:(SKScene*)scene;
+-(void)setNavFocus:(SKNode *)navFocus;
+
+#endif
+
+
 /**
  Singleton object. Currently only has timing info on it. May be expanded in future.
  */
@@ -525,10 +538,18 @@ Vulnerable to lag spikes if used.
 
 
 
-#pragma MARK MODIFIED CLASSES
+#pragma MARK CLASS CATEGORIES
 
 
 @interface SKNode (ConsolidatedInput)
+
+#if TARGET_OS_TV
+
+-(void)setCurrentSelectedNode:(SKNode*)node;
+-(void)addNodeToNavNodes:(SKNode*)node;
+-(void)currentSelectedNodeUpdated:(SKNode *)node; //override this method to update visuals
+
+#endif
 
 -(void)inputBegan:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict ;
 -(void)inputMoved:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict ;

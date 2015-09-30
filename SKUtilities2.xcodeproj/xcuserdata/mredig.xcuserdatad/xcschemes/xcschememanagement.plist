@@ -14,6 +14,11 @@
 			<key>orderHint</key>
 			<integer>1</integer>
 		</dict>
+		<key>SKUtilitiestvOSdemo.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
@@ -23,6 +28,11 @@
 			<true/>
 		</dict>
 		<key>335C92EF1BBB7F0C00DC1BD2</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>335C931B1BBB8ADC00DC1BD2</key>
 		<dict>
 			<key>primary</key>
 			<true/>
