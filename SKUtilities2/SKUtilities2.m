@@ -518,6 +518,7 @@ static SKUtilities2* sharedUtilities = Nil;
 
 @end
 
+#pragma mark SKU_PositionObject
 
 @implementation SKU_PositionObject
 
@@ -612,6 +613,8 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 @end
+
+#pragma mark SKU_ShapeNode
 
 @interface SKU_ShapeNode() {
 	
@@ -816,6 +819,7 @@ static SKUtilities2* sharedUtilities = Nil;
 @end
 
 
+#pragma mark SKU_MultiLineLabelNode
 
 @interface SKU_MultiLineLabelNode () {
 	
