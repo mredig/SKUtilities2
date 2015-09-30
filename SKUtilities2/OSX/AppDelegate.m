@@ -33,7 +33,7 @@
 @synthesize window = _window;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-    _1NumbersDemo *scene = [_1NumbersDemo unarchiveFromFile:@"01NumbersDemo"];
+	_1NumbersDemo *scene = [[_1NumbersDemo alloc] initWithSize:self.skView.frame.size];
 
     /* Set the scale mode to scale to fit the window */
     scene.scaleMode = SKSceneScaleModeAspectFit;

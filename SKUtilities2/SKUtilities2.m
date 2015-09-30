@@ -527,6 +527,8 @@ static SKUtilities2* sharedUtilities = Nil;
 	_currentTime = timeUpdate;
 }
 
+#if TARGET_OS_TV
+
 -(void)setNavFocus:(SKNode *)navFocus {
 	_navFocus = navFocus;
 }
@@ -616,7 +618,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	}
 	return newNode;
 }
-
+#endif
 
 @end
 

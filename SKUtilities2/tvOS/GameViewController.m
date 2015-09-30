@@ -23,7 +23,7 @@
     skView.ignoresSiblingOrder = YES;
     
     // Create and configure the scene.
-    _1NumbersDemo *scene = [_1NumbersDemo nodeWithFileNamed:@"01NumbersDemo"];
+	_1NumbersDemo *scene = [[_1NumbersDemo alloc] initWithSize:skView.frame.size];
     scene.scaleMode = SKSceneScaleModeAspectFill;
     
     // Present the scene.

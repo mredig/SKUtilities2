@@ -84,6 +84,8 @@
 	buttonLabel.zPosition = 1.0;
 	[tempButton addChild:buttonLabel];
 	
+#if TARGET_OS_TV
+	
 	[self addNodeToNavNodes:tempButton];
 	
 	SKSpriteNode* otherButton = [SKSpriteNode spriteNodeWithColor:[SKColor redColor] size:CGSizeMake(200, 50)];
@@ -98,7 +100,7 @@
 	[self setCurrentSelectedNode:tempButton];
 	
 	[[SKUtilities2 sharedUtilities] setNavFocus:self];
-	
+#endif
 }
 
 -(void)currentSelectedNodeUpdated:(SKNode *)node {
