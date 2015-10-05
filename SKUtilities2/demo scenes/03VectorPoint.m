@@ -24,6 +24,8 @@
 	
 	SKUtilities2* sharedUtilities;
 	
+    SKSpriteNode* cursor;
+
 }
 
 @end
@@ -205,6 +207,15 @@
 	}
 	
 	[self updatePartColor];
+    
+#if TARGET_OS_TV
+    
+    [SKUtilities2 sharedUtilities].navMode = kSKUNavModeOff;
+    cursor = [SKSpriteNode spriteNodeWithColor:[SKColor greenColor] size:CGSizeMake(20, 20)];
+    cursor.position = pointMultiplyByPoint(CGPointMake(0.5, 0.25), pointFromCGSize(self.size));
+    cursor.zPosition = 20;
+    [self addChild:cursor];
+#endif
 	
 }
 
@@ -272,10 +283,20 @@
 	latValue = fmax(-1.0, latValue);
 	latValue = fmin(1.0, latValue);
 	previousLocation = location;
+#if TARGET_OS_TV
+    UITouch* touch = eventDict[@"touch"];
+    CGPoint prevTouchLocation = [touch previousLocationInNode:self];
+    cursor.position = pointAdd(pointAdd(pointInverse(prevTouchLocation), location), cursor.position);
+#endif
 }
 
 -(void)inputEnded:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+
+#if TARGET_OS_TV
+	NSArray* nodes = [self nodesAtPoint:cursor.position];
+#else
 	NSArray* nodes = [self nodesAtPoint:location];
+#endif
 	for (SKNode* node in nodes) {
 		if ([node.name isEqualToString:@"tempButton"]) {
 			//next scene

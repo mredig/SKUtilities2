@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3320465E1BC2FDF6008C9FCF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3320465C1BC2FDF6008C9FCF /* Main.storyboard */; };
+		332046601BC2FE2F008C9FCF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3320465F1BC2FE2F008C9FCF /* main.m */; };
 		335C92BE1BB71D7000DC1BD2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92BD1BB71D7000DC1BD2 /* AppDelegate.m */; };
 		335C92C11BB71D7000DC1BD2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92C01BB71D7000DC1BD2 /* main.m */; };
 		335C92C41BB71D7000DC1BD2 /* 01NumbersDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92C31BB71D7000DC1BD2 /* 01NumbersDemo.m */; };
@@ -31,10 +33,8 @@
 		335C93131BBB7F2E00DC1BD2 /* 05ShapeDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92E41BBB4F7700DC1BD2 /* 05ShapeDemo.m */; };
 		335C93141BBB7F2E00DC1BD2 /* 06MultiLineDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92EA1BBB7C5C00DC1BD2 /* 06MultiLineDemo.m */; };
 		335C93151BBB7F3100DC1BD2 /* SKUtilities2.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92D41BB71EEA00DC1BD2 /* SKUtilities2.m */; };
-		335C93201BBB8ADC00DC1BD2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C931F1BBB8ADC00DC1BD2 /* main.m */; };
 		335C93231BBB8ADC00DC1BD2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C93221BBB8ADC00DC1BD2 /* AppDelegate.m */; };
 		335C932B1BBB8ADC00DC1BD2 /* GameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C932A1BBB8ADC00DC1BD2 /* GameViewController.m */; };
-		335C93301BBB8ADC00DC1BD2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 335C932E1BBB8ADC00DC1BD2 /* Main.storyboard */; };
 		335C93321BBB8ADD00DC1BD2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 335C93311BBB8ADD00DC1BD2 /* Assets.xcassets */; };
 		335C93371BBB8AFD00DC1BD2 /* SKUtilities2.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92D41BB71EEA00DC1BD2 /* SKUtilities2.m */; };
 		335C93381BBB8AFD00DC1BD2 /* 01NumbersDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92C31BB71D7000DC1BD2 /* 01NumbersDemo.m */; };
@@ -47,6 +47,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3320465D1BC2FDF6008C9FCF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = SKUtilities2/tvOS/Base.lproj/Main.storyboard; sourceTree = SOURCE_ROOT; };
+		3320465F1BC2FE2F008C9FCF /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = SKUtilities2/tvOS/main.m; sourceTree = SOURCE_ROOT; };
 		335C92B91BB71D7000DC1BD2 /* SKUtilities2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SKUtilities2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		335C92BC1BB71D7000DC1BD2 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = OSX/AppDelegate.h; sourceTree = "<group>"; };
 		335C92BD1BB71D7000DC1BD2 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = OSX/AppDelegate.m; sourceTree = "<group>"; };
@@ -78,14 +80,12 @@
 		335C93061BBB7F0C00DC1BD2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		335C93081BBB7F0C00DC1BD2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../SKUtilities2/iOS/Info.plist; sourceTree = "<group>"; };
 		335C931C1BBB8ADC00DC1BD2 /* SKUtilitiestvOSdemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SKUtilitiestvOSdemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		335C931F1BBB8ADC00DC1BD2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = main.m; path = ../SKUtilities2/tvOS/main.m; sourceTree = "<group>"; };
-		335C93211BBB8ADC00DC1BD2 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ../SKUtilities2/tvOS/AppDelegate.h; sourceTree = "<group>"; };
-		335C93221BBB8ADC00DC1BD2 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = ../SKUtilities2/tvOS/AppDelegate.m; sourceTree = "<group>"; };
-		335C93291BBB8ADC00DC1BD2 /* GameViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GameViewController.h; path = ../SKUtilities2/tvOS/GameViewController.h; sourceTree = "<group>"; };
-		335C932A1BBB8ADC00DC1BD2 /* GameViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = GameViewController.m; path = ../SKUtilities2/tvOS/GameViewController.m; sourceTree = "<group>"; };
-		335C932F1BBB8ADC00DC1BD2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		335C93311BBB8ADD00DC1BD2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../SKUtilities2/tvOS/Assets.xcassets; sourceTree = "<group>"; };
-		335C93331BBB8ADD00DC1BD2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../SKUtilities2/tvOS/Info.plist; sourceTree = "<group>"; };
+		335C93211BBB8ADC00DC1BD2 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = SKUtilities2/tvOS/AppDelegate.h; sourceTree = SOURCE_ROOT; };
+		335C93221BBB8ADC00DC1BD2 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = SKUtilities2/tvOS/AppDelegate.m; sourceTree = SOURCE_ROOT; };
+		335C93291BBB8ADC00DC1BD2 /* GameViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GameViewController.h; path = SKUtilities2/tvOS/GameViewController.h; sourceTree = SOURCE_ROOT; };
+		335C932A1BBB8ADC00DC1BD2 /* GameViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = GameViewController.m; path = SKUtilities2/tvOS/GameViewController.m; sourceTree = SOURCE_ROOT; };
+		335C93311BBB8ADD00DC1BD2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = SKUtilities2/tvOS/Assets.xcassets; sourceTree = SOURCE_ROOT; };
+		335C93331BBB8ADD00DC1BD2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = SKUtilities2/tvOS/Info.plist; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -217,9 +217,9 @@
 				335C93221BBB8ADC00DC1BD2 /* AppDelegate.m */,
 				335C93291BBB8ADC00DC1BD2 /* GameViewController.h */,
 				335C932A1BBB8ADC00DC1BD2 /* GameViewController.m */,
-				335C932E1BBB8ADC00DC1BD2 /* Main.storyboard */,
 				335C93311BBB8ADD00DC1BD2 /* Assets.xcassets */,
 				335C93331BBB8ADD00DC1BD2 /* Info.plist */,
+				3320465C1BC2FDF6008C9FCF /* Main.storyboard */,
 				335C931E1BBB8ADC00DC1BD2 /* Supporting Files */,
 			);
 			name = tvOS;
@@ -229,7 +229,7 @@
 		335C931E1BBB8ADC00DC1BD2 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				335C931F1BBB8ADC00DC1BD2 /* main.m */,
+				3320465F1BC2FE2F008C9FCF /* main.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -302,9 +302,11 @@
 					};
 					335C92EF1BBB7F0C00DC1BD2 = {
 						CreatedOnToolsVersion = 7.1;
+						DevelopmentTeam = L5UZAT7KA9;
 					};
 					335C931B1BBB8ADC00DC1BD2 = {
 						CreatedOnToolsVersion = 7.1;
+						DevelopmentTeam = L5UZAT7KA9;
 					};
 				};
 			};
@@ -352,7 +354,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				335C93301BBB8ADC00DC1BD2 /* Main.storyboard in Resources */,
+				3320465E1BC2FDF6008C9FCF /* Main.storyboard in Resources */,
 				335C93321BBB8ADD00DC1BD2 /* Assets.xcassets in Resources */,
 				335C933F1BBCA95F00DC1BD2 /* SceneAssets.xcassets in Resources */,
 			);
@@ -398,6 +400,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				332046601BC2FE2F008C9FCF /* main.m in Sources */,
 				335C933B1BBB8AFD00DC1BD2 /* 03VectorPoint.m in Sources */,
 				335C932B1BBB8ADC00DC1BD2 /* GameViewController.m in Sources */,
 				335C93371BBB8AFD00DC1BD2 /* SKUtilities2.m in Sources */,
@@ -406,7 +409,6 @@
 				335C933A1BBB8AFD00DC1BD2 /* 02rotationScene.m in Sources */,
 				335C93381BBB8AFD00DC1BD2 /* 01NumbersDemo.m in Sources */,
 				335C93231BBB8ADC00DC1BD2 /* AppDelegate.m in Sources */,
-				335C93201BBB8ADC00DC1BD2 /* main.m in Sources */,
 				335C933D1BBB8AFD00DC1BD2 /* 05ShapeDemo.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -414,6 +416,14 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		3320465C1BC2FDF6008C9FCF /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3320465D1BC2FDF6008C9FCF /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
 		335C92C91BB71D7000DC1BD2 /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -439,15 +449,6 @@
 			);
 			name = LaunchScreen.storyboard;
 			path = ../SKUtilities2/iOS;
-			sourceTree = "<group>";
-		};
-		335C932E1BBB8ADC00DC1BD2 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				335C932F1BBB8ADC00DC1BD2 /* Base */,
-			);
-			name = Main.storyboard;
-			path = ../SKUtilities2/tvOS;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -561,6 +562,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = "$(SRCROOT)/SKUtilities2/iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
@@ -576,6 +578,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = "$(SRCROOT)/SKUtilities2/iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
@@ -593,6 +596,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "$(SRCROOT)/SKUtilities2/tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.secretgamegroup.SKUtilitiestvOSdemo;
@@ -608,6 +612,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "$(SRCROOT)/SKUtilities2/tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.secretgamegroup.SKUtilitiestvOSdemo;
@@ -638,6 +643,7 @@
 				335C92D11BB71D7000DC1BD2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		335C93091BBB7F0C00DC1BD2 /* Build configuration list for PBXNativeTarget "SKUtilitiesiOSDemo" */ = {
 			isa = XCConfigurationList;
@@ -646,6 +652,7 @@
 				335C930B1BBB7F0C00DC1BD2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		335C93341BBB8ADD00DC1BD2 /* Build configuration list for PBXNativeTarget "SKUtilitiestvOSdemo" */ = {
 			isa = XCConfigurationList;
@@ -654,6 +661,7 @@
 				335C93361BBB8ADD00DC1BD2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

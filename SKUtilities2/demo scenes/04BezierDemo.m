@@ -20,6 +20,10 @@
 	
 	
 	SKLabelNode* xAndTvalueLabel;
+	
+	SKSpriteNode* cursor;
+	SKNode* lockedNode;
+
 }
 
 @end
@@ -70,7 +74,55 @@
 	xAndTvalueLabel.text = [NSString stringWithFormat:@"xVal: %f tVal:%f", self.size.width/2, bezierTValueAtXValue(self.size.width/2, 0.0, handle1.position.x, handle2.position.x, self.size.height)];
 	xAndTvalueLabel.fontColor = [SKColor whiteColor];
 	[self addChild:xAndTvalueLabel];
+	
+#if TARGET_OS_TV
+	
+	[self addNodeToNavNodes:handle1];
+	[self addNodeToNavNodes:handle2];
+	
+	[SKUtilities2 sharedUtilities].navMode = kSKUNavModeOn;
+	[[SKUtilities2 sharedUtilities] setNavFocus:self];
+	cursor = [SKSpriteNode spriteNodeWithColor:[SKColor greenColor] size:CGSizeMake(50, 50)];
+	cursor.position = pointMultiplyByPoint(CGPointMake(0.5, 0.25), pointFromCGSize(self.size));
+	cursor.zPosition = 50;
+	[self addChild:cursor];
+
+	[self setCurrentSelectedNode:handle1];
+	
+	SKView* scnView = (SKView*)self.view;
+	
+	UITapGestureRecognizer* tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gestureTap:)];
+	[scnView addGestureRecognizer:tapGesture];
+#endif
 }
+
+#if TARGET_OS_TV
+-(void)gestureTap:(UIGestureRecognizer*)gesture {
+	if (gesture.state == UIGestureRecognizerStateEnded) {
+		
+		if (!lockedNode) {
+			lockedNode = selectedNode;
+			if ([lockedNode isKindOfClass:[SKSpriteNode class]]) {
+				cursor.color = [SKColor blueColor];
+			}
+			[SKUtilities2 sharedUtilities].navMode = kSKUNavModeOff;
+		} else {
+			if ([lockedNode isKindOfClass:[SKSpriteNode class]]) {
+				cursor.color = [SKColor greenColor];
+			}
+			lockedNode = nil;
+			[SKUtilities2 sharedUtilities].navMode = kSKUNavModeOn;
+
+		}
+		
+		if ([lockedNode.name isEqualToString:@"tempButton"]) {
+			[self transferScene];
+		}
+		
+		
+	}
+}
+#endif
 
 
 -(void)updateBezierCurve {
@@ -102,11 +154,21 @@
 	buttonLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
 	buttonLabel.zPosition = 1.0;
 	[tempButton addChild:buttonLabel];
-	
+#if TARGET_OS_TV
+
+	[self addNodeToNavNodes:tempButton];
+#endif
 	
 }
 
+-(void)currentSelectedNodeUpdated:(SKNode *)node {
+	cursor.position = node.position;
+	selectedNode = node;
+}
+
 -(void)inputBegan:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+#if TARGET_OS_TV
+#else
 	NSArray* nodes = [self nodesAtPoint:location];
 	for (SKNode* node in nodes) {
 		if ([node.name isEqualToString:@"tempButton"]) {
@@ -120,18 +182,33 @@
 			break;
 		}
 	}
+#endif
 }
 
 -(void)inputMoved:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+#if TARGET_OS_TV
+	if (lockedNode) {
+		
+		UITouch* touch = eventDict[@"touch"];
+		CGPoint prevTouchLocation = [touch previousLocationInNode:self];
+		lockedNode.position = pointAdd(pointAdd(pointInverse(prevTouchLocation), location), lockedNode.position);
+		cursor.position = lockedNode.position;
+	}
+#else
 	if (![selectedNode.name isEqualToString:@"tempButton"]) {
 		selectedNode.position = location;
-		[self updateBezierCurve];
 	}
+#endif
+	[self updateBezierCurve];
+
+	
 	
 	xAndTvalueLabel.text = [NSString stringWithFormat:@"xVal: %f tVal:%f", location.x, bezierTValueAtXValue(location.x, 0.0, handle1.position.x, handle2.position.x, self.size.width)];
 }
 
 -(void)inputEnded:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+#if TARGET_OS_TV
+#else
 	NSArray* nodes = [self nodesAtPoint:location];
 	for (SKNode* node in nodes) {
 		if ([node.name isEqualToString:@"tempButton"] && [selectedNode.name isEqualToString:@"tempButton"]) {
@@ -141,6 +218,7 @@
 		}
 	}
 	selectedNode = nil;
+#endif
 }
 
 
