@@ -105,7 +105,7 @@
 	
 #if TARGET_OS_TV
 	
-	[SKUtilities2 sharedUtilities].navMode = kSKUNavModeOff;
+	SKUSharedUtilities.navMode = kSKUNavModeOff;
 	cursor = [SKSpriteNode spriteNodeWithColor:[SKColor greenColor] size:CGSizeMake(20, 20)];
 	cursor.position = pointMultiplyByPoint(CGPointMake(0.5, 0.25), pointFromCGSize(self.size));
 	cursor.zPosition = 20;

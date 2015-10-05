@@ -23,7 +23,7 @@
 
 -(void)didMoveToView:(SKView *)view {
 	
-	sharedUtilities = [SKUtilities2 sharedUtilities];
+	sharedUtilities = SKUSharedUtilities;
 	
 	NSLog(@"01NumbersDemo: demos number interpolation, random numbers, and distance functions");
 	
@@ -67,6 +67,14 @@
 
 -(void)setupButton {
 	
+	
+	SKLabelNode* logLabel = [SKLabelNode labelNodeWithText:@"Look in the console in Xcode to see some demo functions"];
+	logLabel.fontColor = [SKColor whiteColor];
+	logLabel.position = midPointOfRect(self.frame);
+	[self addChild:logLabel];
+	
+	
+	
 	SKNode* tempButton = [SKNode node];
 	tempButton.position = midPointOfRect(self.frame);
 	tempButton.position = CGPointMake(tempButton.position.x, tempButton.position.y * 0.5);
@@ -100,7 +108,7 @@
 	
 	[self setCurrentSelectedNode:tempButton];
 	
-	[[SKUtilities2 sharedUtilities] setNavFocus:self];
+	[SKUSharedUtilities setNavFocus:self];
 	
 	SKView* scnView = (SKView*)self.view;
 	

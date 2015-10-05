@@ -31,6 +31,8 @@
 #define SKUFont NSFont
 #endif
 
+#define SKUSharedUtilities [SKUtilities2 sharedUtilities] 
+
 
 #pragma mark NUMBER INTERPOLATION
 /**

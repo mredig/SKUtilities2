@@ -80,8 +80,8 @@
 	[self addNodeToNavNodes:handle1];
 	[self addNodeToNavNodes:handle2];
 	
-	[SKUtilities2 sharedUtilities].navMode = kSKUNavModeOn;
-	[[SKUtilities2 sharedUtilities] setNavFocus:self];
+	SKUSharedUtilities.navMode = kSKUNavModeOn;
+	[SKUSharedUtilities setNavFocus:self];
 	cursor = [SKSpriteNode spriteNodeWithColor:[SKColor greenColor] size:CGSizeMake(50, 50)];
 	cursor.position = pointMultiplyByPoint(CGPointMake(0.5, 0.25), pointFromCGSize(self.size));
 	cursor.zPosition = 50;
@@ -105,13 +105,13 @@
 			if ([lockedNode isKindOfClass:[SKSpriteNode class]]) {
 				cursor.color = [SKColor blueColor];
 			}
-			[SKUtilities2 sharedUtilities].navMode = kSKUNavModeOff;
+			SKUSharedUtilities.navMode = kSKUNavModeOff;
 		} else {
 			if ([lockedNode isKindOfClass:[SKSpriteNode class]]) {
 				cursor.color = [SKColor greenColor];
 			}
 			lockedNode = nil;
-			[SKUtilities2 sharedUtilities].navMode = kSKUNavModeOn;
+			SKUSharedUtilities.navMode = kSKUNavModeOn;
 
 		}
 		

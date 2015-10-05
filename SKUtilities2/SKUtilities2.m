@@ -1547,10 +1547,10 @@ static SKUtilities2* sharedUtilities = Nil;
 
 -(void)siriRemoteInputBegan:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
 	
-	if ([SKUtilities2 sharedUtilities].navMode == kSKUNavModeOn) {
+	if (SKUSharedUtilities.navMode == kSKUNavModeOn) {
 		UITouch* touch = eventDict[@"touch"];
-		if (![[SKUtilities2 sharedUtilities].touchTracker containsObject:touch]) {
-			[[SKUtilities2 sharedUtilities].touchTracker addObject:touch];
+		if (![SKUSharedUtilities.touchTracker containsObject:touch]) {
+			[SKUSharedUtilities.touchTracker addObject:touch];
 		}
 	}
 
@@ -1558,17 +1558,17 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 -(void)siriRemoteInputMoved:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
-	if ([SKUtilities2 sharedUtilities].navMode == kSKUNavModeOn) {
+	if (SKUSharedUtilities.navMode == kSKUNavModeOn) {
 		UITouch* touch = eventDict[@"touch"];
-		if ([[SKUtilities2 sharedUtilities].touchTracker containsObject:touch]) {
-			SKNode* prevSelection = [SKUtilities2 sharedUtilities].navFocus.userData[@"sku_currentSelectedNode"];
-			NSSet* nodeSet = [SKUtilities2 sharedUtilities].navFocus.userData[@"sku_navNodes"];
+		if ([SKUSharedUtilities.touchTracker containsObject:touch]) {
+			SKNode* prevSelection = SKUSharedUtilities.navFocus.userData[@"sku_currentSelectedNode"];
+			NSSet* nodeSet = SKUSharedUtilities.navFocus.userData[@"sku_navNodes"];
 			if (!prevSelection) {
-				NSLog(@"Error: no currently selected node - did you set the initial node selection (setCurrentSelectedNode:(SKNode*)) and set the navFocus on the singleton ([[SKUtilities2 sharedUtilities] setNavFocus:(SKNode*)]?");
+				NSLog(@"Error: no currently selected node - did you set the initial node selection (setCurrentSelectedNode:(SKNode*)) and set the navFocus on the singleton ([SKUSharedUtilities setNavFocus:(SKNode*)]?");
 			} else if (!nodeSet) {
-				NSLog(@"Error: no navNodes to navigate through - did you add nodes to the nav nodes (addNodeToNavNodes:(SKNode*)) and set the navFocus on the singleton ([[SKUtilities2 sharedUtilities] setNavFocus:(SKNode*)]?");
+				NSLog(@"Error: no navNodes to navigate through - did you add nodes to the nav nodes (addNodeToNavNodes:(SKNode*)) and set the navFocus on the singleton ([SKUSharedUtilities setNavFocus:(SKNode*)]?");
 			} else {
-				SKNode* currentSelectionNode = [[SKUtilities2 sharedUtilities] handleSubNodeMovement:location withCurrentSelection:prevSelection inSet:nodeSet inScene:self.scene];
+				SKNode* currentSelectionNode = [SKUSharedUtilities handleSubNodeMovement:location withCurrentSelection:prevSelection inSet:nodeSet inScene:self.scene];
 				[self updateCurrentSelectedNode:currentSelectionNode];
 			}
 		}
@@ -1577,10 +1577,10 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 -(void)siriRemoteInputEnded:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
-	if ([SKUtilities2 sharedUtilities].navMode == kSKUNavModeOn) {
+	if (SKUSharedUtilities.navMode == kSKUNavModeOn) {
 		UITouch* touch = eventDict[@"touch"];
-		if (![[SKUtilities2 sharedUtilities].touchTracker containsObject:touch]) {
-			[[SKUtilities2 sharedUtilities].touchTracker removeObject:touch];
+		if (![SKUSharedUtilities.touchTracker containsObject:touch]) {
+			[SKUSharedUtilities.touchTracker removeObject:touch];
 		}
 	}
 	[self inputEnded:location withEventDictionary:eventDict];
