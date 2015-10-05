@@ -554,8 +554,8 @@ Vulnerable to lag spikes if used.
 
 
 
-#pragma MARK CLASS CATEGORIES
-
+#pragma mark CLASS CATEGORIES
+#pragma mark SKNode Modifications
 
 @interface SKNode (ConsolidatedInput)
 
@@ -570,6 +570,14 @@ Vulnerable to lag spikes if used.
 -(void)inputBegan:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict ;
 -(void)inputMoved:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict ;
 -(void)inputEnded:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict ;
+
+@end
+
+#pragma mark SKColor Modifications
+
+@interface SKColor (Mixing)
+
++(SKColor*)blendColor:(SKColor*)color1 withColor:(SKColor*)color2 alpha:(CGFloat)alpha2;
 
 @end
 

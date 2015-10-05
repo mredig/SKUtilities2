@@ -18,7 +18,6 @@
 	NSLog(@"\n\n\n\n05ShapeDemo demo: demos shape stuff");
 	
 	
-#pragma mark BEZIER CALCUATIONS
 	[self setupSpriteDemos];
 	[self setupButton];
 }

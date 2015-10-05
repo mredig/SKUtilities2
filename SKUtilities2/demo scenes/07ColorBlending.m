@@ -1,59 +1,40 @@
 //
-//  06MultiLineDemo.m
+//  07ColorBlending.m
 //  SKUtilities2
 //
-//  Created by Michael Redig on 9/29/15.
+//  Created by Michael Redig on 10/5/15.
 //  Copyright © 2015 Michael Redig. All rights reserved.
 //
 
-#import "06MultiLineDemo.h"
-#import "SKUtilities2.h"
 #import "07ColorBlending.h"
+#import "SKUtilities2.h"
 
-@interface _6MultiLineDemo() {
-	SKU_MultiLineLabelNode* multiLineLabel;
+
+@interface _7ColorBlending() {
+	
+	CGPoint prevLocation;
+	CGFloat yAlpha, xAlpha;
 }
 
 @end
 
-@implementation _6MultiLineDemo
+
+@implementation _7ColorBlending
+
 
 -(void)didMoveToView:(SKView *)view {
 	
-	NSLog(@"\n\n\n\n06MultiLineDemo: demos multiline label stuff");
+	NSLog(@"\n\n\n\n07ColorBlending: demos color blending");
 	
+	self.backgroundColor = [SKColor blueColor];
 	
 	[self setupSpriteDemos];
 	[self setupButton];
-#if TARGET_OS_TV
-	
-	SKUSharedUtilities.navMode = kSKUNavModeOff;
-	
-	
-	SKView* scnView = (SKView*)self.view;
-	
-	UITapGestureRecognizer* tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gestureTap:)];
-	[scnView addGestureRecognizer:tapGesture];
-#endif
-	
 }
-
-#if TARGET_OS_TV
--(void)gestureTap:(UIGestureRecognizer*)gesture {
-	if (gesture.state == UIGestureRecognizerStateEnded) {
-		[self transferScene];
-		
-	}
-}
-#endif
 
 -(void)setupSpriteDemos {
 	
-	multiLineLabel = [SKU_MultiLineLabelNode labelNodeWithFontNamed:@"Helvetica Neue"];
-	multiLineLabel.paragraphWidth = 200.0;
-	multiLineLabel.text = @"This is text and stuff and this\nis\na\nnewline\netc.";
-	multiLineLabel.position = pointMultiplyByFactor(pointFromCGSize(self.size), 0.25);
-	[self addChild:multiLineLabel];
+
 	
 }
 
@@ -80,11 +61,43 @@
 	
 }
 -(void)inputBegan:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
-	multiLineLabel.position = location;
 }
 
 -(void)inputMoved:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
-	multiLineLabel.position = location;
+	
+	SKColor* redColor = [SKColor redColor];
+	SKColor* greenColor = [SKColor greenColor];
+	SKColor* blueColor = [SKColor blueColor];
+	
+#if TARGET_OS_TV
+	UITouch* touch = eventDict[@"touch"];
+	prevLocation = [touch previousLocationInNode:self];
+	
+#endif
+	CGFloat difference = 0.025;
+
+	if (location.x > prevLocation.x) {
+		xAlpha += difference;
+	} else if (location.x < prevLocation.x) {
+		xAlpha -= difference;
+	}
+	
+	if (location.y > prevLocation.y) {
+		yAlpha += difference;
+	} else if (location.y < prevLocation.y) {
+		yAlpha -= difference;
+	}
+	self.backgroundColor = [SKColor blendColor:blueColor withColor:greenColor alpha:xAlpha];
+	self.backgroundColor = [SKColor blendColor:self.backgroundColor withColor:redColor alpha:yAlpha];
+
+	yAlpha = fmin(yAlpha, 1.0);
+	yAlpha = fmax(yAlpha, 0.0);
+	
+	xAlpha = fmin(xAlpha, 1.0);
+	xAlpha = fmax(xAlpha, 0.0);
+	
+	prevLocation = location;
+	
 }
 
 -(void)inputEnded:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
@@ -102,9 +115,11 @@
 }
 
 
+
+
 -(void)transferScene {
 	
-	_7ColorBlending* scene = [_7ColorBlending sceneWithSize:self.size];
+	_7ColorBlending* scene = [[_7ColorBlending alloc] initWithSize:self.size];
 	scene.scaleMode = self.scaleMode;
 	
 	SKView* view = (SKView*)self.view;
