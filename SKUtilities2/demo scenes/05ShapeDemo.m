@@ -59,7 +59,27 @@
 	CGPathRelease(outlinePath);
 	CGPathRelease(rectPathRef);
 	
+#if TARGET_OS_TV
+	
+	SKUSharedUtilities.navMode = kSKUNavModeOff;
+	
+	
+	SKView* scnView = (SKView*)self.view;
+	
+	UITapGestureRecognizer* tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gestureTap:)];
+	[scnView addGestureRecognizer:tapGesture];
+#endif
+	
 }
+
+#if TARGET_OS_TV
+-(void)gestureTap:(UIGestureRecognizer*)gesture {
+	if (gesture.state == UIGestureRecognizerStateEnded) {
+		[self transferScene];
+		
+	}
+}
+#endif
 
 
 -(void)setupButton {
@@ -85,7 +105,8 @@
 }
 
 -(void)inputEnded:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
-	
+#if TARGET_OS_TV
+#else
 	NSArray* nodes = [self nodesAtPoint:location];
 	for (SKNode* node in nodes) {
 		if ([node.name isEqualToString:@"tempButton"]) {
@@ -94,6 +115,7 @@
 			break;
 		}
 	}
+#endif
 }
 
 
