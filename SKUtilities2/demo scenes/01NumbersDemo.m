@@ -65,13 +65,22 @@
 	
 }
 
+-(void)testButtonDown:(SKButton*)button {
+	NSLog(@"down: %@", button);
+}
+
+-(void)testButtonUp:(SKButton*)button {
+	NSLog(@"up: %@", button);
+}
+
+
 -(void)setupButton {
-	
 	
 	SKLabelNode* logLabel = [SKLabelNode labelNodeWithText:@"Look in the console in Xcode to see some demo functions"];
 	logLabel.fontColor = [SKColor whiteColor];
 	logLabel.position = midPointOfRect(self.frame);
 	[self addChild:logLabel];
+	
 	
 	
 	
@@ -92,6 +101,17 @@
 	buttonLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
 	buttonLabel.zPosition = 1.0;
 	[tempButton addChild:buttonLabel];
+	
+	SKButton* testButton = [SKButton buttonWithTextureNamed:@"Spaceship"];
+	testButton.position = pointAdd(tempButton.position, CGPointMake(0, 150));
+	[testButton setDownAction:@selector(testButtonDown:) toPerformOnTarget:self];
+	[testButton setUpAction:@selector(testButtonUp:) toPerformOnTarget:self];
+	testButton.baseTexturePressed = [SKTexture textureWithImageNamed:@"Spaceship"];
+	testButton.baseSpritePressed.alpha = 0.5;
+	[testButton disableButton];
+	[testButton enableButton];
+	[self addChild:testButton];
+
 	
 #if TARGET_OS_TV
 	
@@ -115,6 +135,9 @@
 	UITapGestureRecognizer* tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gestureTap:)];
 	[scnView addGestureRecognizer:tapGesture];
 #endif
+	
+//	[test invokeWithTarget:self];
+
 }
 
 #if TARGET_OS_TV

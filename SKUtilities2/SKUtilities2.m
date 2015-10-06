@@ -1225,11 +1225,290 @@ static SKUtilities2* sharedUtilities = Nil;
 
 @end
 
+#pragma mark SKButton
+@interface SKButton() {
+	NSInvocation* downSelector;
+	NSInvocation* upSelector;
+}
+
+@end
+
+@implementation SKButton
+#pragma mark INITERs
+-(id)init {
+	if (self = [super init]) {
+	}
+	[self internalDidInitialize];
+	return self;
+}
+
+-(id)initWithCoder:(NSCoder *)aDecoder {
+	if (self = [super initWithCoder:aDecoder]) {
+	}
+	[self internalDidInitialize];
+	return self;
+}
+
+//-(id)initWithTexture:(SKTexture *)texture {
+//	if (self = [super initWithColor:[SKColor clearColor] size:texture.size]) {
+//		_baseSprite = [SKSpriteNode spriteNodeWithTexture:texture];
+//	}
+//	[self internalDidInitialize];
+//	return self;
+//}
+//
+//-(id)initWithTexture:(SKTexture *)texture color:(NSColor *)color size:(CGSize)size {
+//	if (self = [super initWithColor:[SKColor clearColor] size:size]) {
+//		_baseSprite = [SKSpriteNode spriteNodeWithTexture:texture size:size];
+//		_baseSprite.color = color;
+//		
+//	}
+//	[self internalDidInitialize];
+//	return self;
+//}
+//
+//-(id)initWithImageNamed:(NSString *)name {
+//	SKTexture* tex = [SKTexture textureWithImageNamed:name];
+//	if (self = [super initWithColor:[SKColor clearColor] size:tex.size]) {
+//		_baseSprite = [SKSpriteNode spriteNodeWithTexture:tex];
+//		
+//	}
+//	[self internalDidInitialize];
+//	return self;
+//}
+
++(SKButton*)buttonWithTextureNamed:(NSString*)name {
+	SKButton* button = [SKButton node];
+	button.baseTexture = [SKTexture textureWithImageNamed:name];
+	return button;
+}
+
+-(void)internalDidInitialize { // note to self - call this super last when making base subclasses
+	if (!_baseSprite) _baseSprite = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor] size:CGSizeMake(10, 10)];
+	_baseSprite.zPosition = 0;
+	[self addChild:_baseSprite];
+	
+	if (!_baseSpritePressed) _baseSpritePressed = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor] size:_baseSprite.size];
+	_baseSpritePressed.zPosition = 0;
+	[self addChild:_baseSpritePressed];
+	
+	if (!_baseSpriteDisabled) _baseSpriteDisabled = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor] size:_baseSprite.size];
+	_baseSpriteDisabled.zPosition = 0;
+	[self addChild:_baseSpriteDisabled];
+	
+	[self enableButton];
+	[self didInitialize];
+}
+
+-(void)didInitialize {
+	
+}
+
+#pragma mark ACTION SETTERS
+
+-(void)setDownAction:(SEL)selector toPerformOnTarget:(NSObject*)target {
+	NSMethodSignature* sig = [target methodSignatureForSelector:selector];
+	downSelector = [NSInvocation invocationWithMethodSignature:sig];
+	[downSelector retainArguments];
+	[downSelector setSelector:selector];
+	SKButton* button = self;
+	[downSelector setArgument:&button atIndex:2];
+	[downSelector setTarget:target];
+	_buttonMethod = _buttonMethod | kSKButtonMethodRunActions;
+}
+
+-(void)setUpAction:(SEL)selector toPerformOnTarget:(NSObject*)target {
+	NSMethodSignature* sig = [target methodSignatureForSelector:selector];
+	upSelector = [NSInvocation invocationWithMethodSignature:sig];
+	[upSelector retainArguments];
+	[upSelector setSelector:selector];
+	SKButton* button = self;
+	[upSelector setArgument:&button atIndex:2];
+	[upSelector setTarget:target];
+	_buttonMethod = _buttonMethod | kSKButtonMethodRunActions;
+}
+
+#pragma mark OTHER SETTERS 
+
+-(void)setBaseTexture:(SKTexture *)baseTexture {
+	_baseTexture = baseTexture;
+	if (_baseSprite) {
+		_baseSprite.texture = _baseTexture;
+	} else {
+		_baseSprite = [SKSpriteNode spriteNodeWithTexture:_baseTexture];
+	}
+	_baseSprite.size = _baseTexture.size;
+}
+
+-(void)setBaseTexturePressed:(SKTexture *)baseTexturePressed {
+	_baseTexturePressed = baseTexturePressed;
+	if (_baseSpritePressed) {
+		_baseSpritePressed.texture = _baseTexturePressed;
+	} else {
+		_baseSpritePressed = [SKSpriteNode spriteNodeWithTexture:_baseTexturePressed];
+	}
+	_baseSpritePressed.size = _baseTexturePressed.size;
+	[self checkSizes];
+}
+
+-(void)setBaseTextureDisabled:(SKTexture *)baseTextureDisabled {
+	_baseTextureDisabled = baseTextureDisabled;
+	if (_baseSpriteDisabled) {
+		_baseSpriteDisabled.texture = _baseTextureDisabled;
+	} else {
+		_baseSpriteDisabled = [SKSpriteNode spriteNodeWithTexture:_baseTextureDisabled];
+	}
+	_baseSpriteDisabled.size = _baseTextureDisabled.size;
+	[self checkSizes];
+}
+
+-(void)checkSizes {
+	if ((_baseTexturePressed
+		&& (_baseTexture.size.width != _baseTexturePressed.size.width
+		|| _baseTexture.size.height != _baseTexturePressed.size.height)) ||
+		(_baseTextureDisabled
+		&& (_baseTexture.size.width != _baseTextureDisabled.size.width
+		|| _baseTexture.size.height != _baseTextureDisabled.size.height))
+		) {
+		NSLog(@"Texture sizes don't match. That probably won't look good.");
+	}
+}
+
+#pragma mark SKBUTTON METHODS
+
+-(void)enableButton {
+	_isEnabled = YES;
+	
+	[self enumerateChildNodesWithName:@"*" usingBlock:^(SKNode *node, BOOL *stop) {
+		if ([node isKindOfClass:[SKSpriteNode class]] || [node isKindOfClass:[SKLabelNode class]]) {
+			SKSpriteNode* sprite = (SKSpriteNode*) node;
+			sprite.colorBlendFactor = 0.0f;
+		}
+	}];
+	
+	self.hidden = VISIBLE;
+	self.alpha = 1.0f;
+	_baseSprite.hidden = VISIBLE;
+	_baseSpritePressed.hidden = HIDDEN;
+	_baseSpriteDisabled.hidden = HIDDEN;
+	
+	self.userInteractionEnabled = YES;
+}
+
+-(void)disableButton {
+	_isEnabled = NO;
+	
+	switch (_disableType) {
+		case kSKButtonDisableTypeDim:
+		{
+			SKColor* dimColor = [SKColor grayColor];
+			[self enumerateChildNodesWithName:@"*" usingBlock:^(SKNode *node, BOOL *stop) {
+				if ([node isKindOfClass:[SKSpriteNode class]] || [node isKindOfClass:[SKLabelNode class]]) {
+					SKSpriteNode* sprite = (SKSpriteNode*) node;
+					sprite.color = dimColor;
+					sprite.colorBlendFactor = 0.5f;
+				}
+			}];
+		}
+			break;
+		case kSKButtonDisableTypeOpacityHalf:
+			self.alpha = 0.5f;
+			break;
+		case kSKButtonDisableTypeOpacityNone:
+			self.alpha = 0.0f;
+			break;
+		case kSKButtonDisableTypeAlternateTexture:
+			_baseSprite.hidden = HIDDEN;
+			_baseSpritePressed.hidden = HIDDEN;
+			_baseSpriteDisabled.hidden = VISIBLE;
+			break;
+		case kSKButtonDisableTypeNoDifference:
+			break;
+		default:
+			break;
+	}
+	
+	self.userInteractionEnabled = NO;
+	
+}
+
+-(void)inputBegan:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+	[self buttonPressed:location];
+}
+
+-(void)buttonPressed:(CGPoint)location {
+	if (_isEnabled) {
+		_baseSpritePressed.hidden = VISIBLE;
+		_baseSprite.hidden = HIDDEN;
+		BOOL notificationMethod = kSKButtonMethodPostNotification & _buttonMethod;
+		BOOL delegateMethod = kSKButtonMethodDelegate & _buttonMethod;
+		BOOL actionMethod = kSKButtonMethodRunActions & _buttonMethod;
+		
+		if (notificationMethod) {
+			[[NSNotificationCenter defaultCenter] postNotificationName:_notificationNameDown object:self];
+		}
+		
+		if (delegateMethod) {
+			[_delegate doButtonDown:self];
+		}
+		
+		if (actionMethod) {
+			[downSelector invoke];
+		}
+	}
+}
+
+
+-(void)inputEnded:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+	[self buttonReleased:location];
+}
+
+-(void)buttonReleased:(CGPoint)location {
+	if (_isEnabled) {
+		_baseSpritePressed.hidden = HIDDEN;
+		_baseSprite.hidden = VISIBLE;
+		BOOL notificationMethod = kSKButtonMethodPostNotification & _buttonMethod;
+		BOOL delegateMethod = kSKButtonMethodDelegate & _buttonMethod;
+		BOOL actionMethod = kSKButtonMethodRunActions & _buttonMethod;
+		
+		BOOL locationIsInBounds = [self checkIfLocationIsWithinButtonBounds:location];
+		
+		if (notificationMethod && locationIsInBounds) {
+			[[NSNotificationCenter defaultCenter] postNotificationName:_notificationNameDown object:self];
+		}
+		
+		if (delegateMethod) {
+			[_delegate doButtonUp:self inBounds:locationIsInBounds];
+		}
+		
+		if (actionMethod && locationIsInBounds) {
+			[upSelector invoke];
+		}
+	}
+}
+
+-(BOOL)checkIfLocationIsWithinButtonBounds:(CGPoint)location {
+	CGRect newFrame = [self calculateAccumulatedFrame];
+	CGFloat width = newFrame.size.width;
+	CGFloat height = newFrame.size.height;
+	newFrame.origin = CGPointMake(-width * 0.5, -height * 0.5);
+	CGPathRef thePath = CGPathCreateWithRect(newFrame, NULL);
+	bool answer = CGPathContainsPoint(thePath, NULL, location, YES);
+	CGPathRelease(thePath);
+	return answer;
+}
+
+
+@end
+
+
 #pragma mark CLASS CATEGORIES
 
 #pragma mark SKNode Modifications
 
 @implementation SKNode (ConsolidatedInput)
+
+
 
 
 #if TARGET_OS_IPHONE
@@ -1526,10 +1805,10 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 -(void)setCurrentSelectedNode:(SKNode*)node {
-	[self updateCurrentSelectedNode:node];
+	[self skuInternalUpdateCurrentSelectedNode:node];
 }
 
--(void)updateCurrentSelectedNode:(SKNode*)node {
+-(void)skuInternalUpdateCurrentSelectedNode:(SKNode*)node {
 	if (!node || [self.userData[@"sku_currentSelectedNode"] isEqual:node]) {
 		return;
 	}
@@ -1570,7 +1849,7 @@ static SKUtilities2* sharedUtilities = Nil;
 				NSLog(@"Error: no navNodes to navigate through - did you add nodes to the nav nodes (addNodeToNavNodes:(SKNode*)) and set the navFocus on the singleton ([SKUSharedUtilities setNavFocus:(SKNode*)]?");
 			} else {
 				SKNode* currentSelectionNode = [SKUSharedUtilities handleSubNodeMovement:location withCurrentSelection:prevSelection inSet:nodeSet inScene:self.scene];
-				[self updateCurrentSelectedNode:currentSelectionNode];
+				[self skuInternalUpdateCurrentSelectedNode:currentSelectionNode];
 			}
 		}
 	}

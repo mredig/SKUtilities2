@@ -552,7 +552,82 @@ Vulnerable to lag spikes if used.
 
 @end
 
+#pragma mark SKButton
 
+typedef enum { //// might not use this
+	kSKButtonMethodPostNotification = 1,
+	kSKButtonMethodDelegate = 1 << 1,
+	kSKButtonMethodRunActions = 1 << 2,
+} kSKButtonMethods;
+
+typedef enum {
+	kSKButtonTypeToggle,
+	kSKButtonTypePush,
+	kSKButtonTypeSlider,
+} kSKButtonTypes;
+
+typedef enum {
+	kSKButtonDisableTypeDim,
+	kSKButtonDisableTypeOpacityHalf,
+	kSKButtonDisableTypeOpacityNone,
+	kSKButtonDisableTypeAlternateTexture,
+	kSKButtonDisableTypeNoDifference,
+} kSKButtonDisableTypes;
+
+@class SKButton;
+
+@protocol SKButtonDelegate   //define delegate protocol
+-(void)doButtonDown:(SKButton*)button;
+-(void)doButtonUp:(SKButton*)button inBounds:(BOOL)inBounds;
+@end //end protocol
+
+@interface SKButton : SKNode
+
+
+
+/* Used for enumeration of button ids */
+@property (nonatomic) NSInteger whichButton;
+/* Used for enumeration of button ids */
+@property (nonatomic) uint32_t buttonMethod;
+/* If button is set to call delegate, this is the delegate used. */
+@property (nonatomic, weak) id <SKButtonDelegate> delegate;
+/* Readonly: tells you if button is enabled or not */
+@property (nonatomic, readonly) BOOL isEnabled;
+/* Determines how disabling button is displayed. */
+@property (nonatomic, readonly) kSKButtonDisableTypes disableType;
+/* If button is set to send notifications, this is the name of the notification. */
+@property (nonatomic) NSString* notificationNameDown;
+/* If button is set to send notifications, this is the name of the notification. */
+@property (nonatomic) NSString* notificationNameUp;
+/* Use this to set the base sprite texture. */
+@property (nonatomic) SKTexture* baseTexture;
+/* Use this to set the base sprite texture for its pressed state. */
+@property (nonatomic) SKTexture* baseTexturePressed;
+/* Use this to set the base sprite texture for its disabled state. */
+@property (nonatomic) SKTexture* baseTextureDisabled;
+/* Readonly: access to the base sprite. */
+@property (nonatomic, readonly) SKSpriteNode* baseSprite;
+/* Readonly: access to the base sprite pressed state. */
+@property (nonatomic, readonly) SKSpriteNode* baseSpritePressed;
+/* Readonly: access to the base sprite disabled state. */
+@property (nonatomic, readonly) SKSpriteNode* baseSpriteDisabled;
+
++(SKButton*)buttonWithTextureNamed:(NSString*)name;
+/* This SHOULD be called after either raw init or initWithCoder. Meant to be overridden with post initialization purposes. */
+-(void)didInitialize;
+
+/* If button is set to call actions, set method and target to call on method when pressed down. Sets flag on self.buttonMethods to run actions. */
+-(void)setDownAction:(SEL)selector toPerformOnTarget:(NSObject*)target;
+/* If button is set to call actions, set method and target to call on method when released. Sets flag on self.buttonMethods to run actions. */
+-(void)setUpAction:(SEL)selector toPerformOnTarget:(NSObject*)target;
+
+/* Call to explicitly enable button (meant to reverse the state of being disabled). Be sure to call super method if you override. */
+-(void)enableButton;
+/* Call to explicitly disable button (meant to reverse the state of being enabled). Be sure to call super method if you override. */
+-(void)disableButton;
+
+
+@end
 
 #pragma mark CLASS CATEGORIES
 #pragma mark SKNode Modifications
