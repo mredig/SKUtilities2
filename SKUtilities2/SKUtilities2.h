@@ -561,7 +561,7 @@ typedef enum { //// might not use this
 } kSKButtonMethods;
 
 typedef enum {
-	kSKButtonTypeToggle,
+	kSKButtonTypeToggle = 1,
 	kSKButtonTypePush,
 	kSKButtonTypeSlider,
 } kSKButtonTypes;
@@ -581,9 +581,14 @@ typedef enum {
 -(void)doButtonUp:(SKButton*)button inBounds:(BOOL)inBounds;
 @end //end protocol
 
-/* SKButton: Intended as a cross platform, unified way to design buttons for menus and input, instead of designing a completely different interface for Mac, iOS, and tvOS. Still needs a bit more effort when used on tvOS, but shouldn't be too hard. */
-@interface SKButton : SKNode
+/* SKButton: Intended as a cross platform, unified way to design buttons for menus and input, instead of designing a completely different interface for Mac, iOS, and tvOS. Still needs a bit more effort when used on tvOS, but shouldn't be too hard. 
+ 
+ Note that anchorPoint (and potentially other) SKSpriteNode properties have no effect - it is only subclassed as a sprite to help with Xcode's scene creation tool. (Note to self: fall back to SKNode if that idea doesn't pan out) */
+@interface SKButton : SKSpriteNode
 
+
+/* Identifies button type. */
+@property (nonatomic) kSKButtonTypes buttonType;
 /* Used for enumeration of button ids */
 @property (nonatomic) NSInteger whichButton;
 /* Used for enumeration of button ids */
@@ -611,6 +616,12 @@ typedef enum {
 /* Readonly: access to the base sprite disabled state. */
 @property (nonatomic, readonly) SKSpriteNode* baseSpriteDisabled;
 
+
+/* Creates and returns a button with a base sprite of the image named. */
++(SKButton*)buttonWithImageNamed:(NSString*)name;
+/* Creates and returns a button with a base sprite of the texture. */
++(SKButton*)buttonWithTexture:(SKTexture*)texture;
+/* Creates and returns a button with a base sprite of the texture named. */
 +(SKButton*)buttonWithTextureNamed:(NSString*)name;
 /* This SHOULD be called after either raw init or initWithCoder. Meant to be overridden with post initialization purposes. */
 -(void)didInitialize;
@@ -624,6 +635,11 @@ typedef enum {
 -(void)enableButton;
 /* Call to explicitly disable button (meant to reverse the state of being enabled). Be sure to call super method if you override. Also, be sure the button is parented in the scene before using if you using kSKButtonDisableTypeDim. */
 -(void)disableButton;
+
+
+@end
+
+@interface SKPushButton : SKButton
 
 
 @end

@@ -110,6 +110,7 @@
 	[testButton setUpAction:@selector(testButtonUp:) toPerformOnTarget:self];
 	testButton.baseTexturePressed = [SKTexture textureWithImageNamed:@"Spaceship"];
 	testButton.baseSpritePressed.alpha = 0.5;
+	testButton.anchorPoint = CGPointMake(1.0, 1.0);
 	[self addChild:testButton];
 	[testButton disableButton];
 
