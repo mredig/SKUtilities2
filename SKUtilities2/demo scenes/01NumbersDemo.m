@@ -14,6 +14,8 @@
 	SKUtilities2* sharedUtilities;
 	SKSpriteNode* indicator;
 	SKNode* currentSelectedNode;
+	
+	SKButton* testButton;
 }
 
 @end
@@ -102,15 +104,14 @@
 	buttonLabel.zPosition = 1.0;
 	[tempButton addChild:buttonLabel];
 	
-	SKButton* testButton = [SKButton buttonWithTextureNamed:@"Spaceship"];
-	testButton.position = pointAdd(tempButton.position, CGPointMake(0, 150));
+	testButton = [SKButton buttonWithTextureNamed:@"Spaceship"];
+	testButton.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.5, 0.75));
 	[testButton setDownAction:@selector(testButtonDown:) toPerformOnTarget:self];
 	[testButton setUpAction:@selector(testButtonUp:) toPerformOnTarget:self];
 	testButton.baseTexturePressed = [SKTexture textureWithImageNamed:@"Spaceship"];
 	testButton.baseSpritePressed.alpha = 0.5;
-	[testButton disableButton];
-	[testButton enableButton];
 	[self addChild:testButton];
+	[testButton disableButton];
 
 	
 #if TARGET_OS_TV

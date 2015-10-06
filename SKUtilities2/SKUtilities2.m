@@ -1229,6 +1229,7 @@ static SKUtilities2* sharedUtilities = Nil;
 @interface SKButton() {
 	NSInvocation* downSelector;
 	NSInvocation* upSelector;
+	SKSpriteNode* overlay;
 }
 
 @end
@@ -1249,33 +1250,17 @@ static SKUtilities2* sharedUtilities = Nil;
 	return self;
 }
 
-//-(id)initWithTexture:(SKTexture *)texture {
-//	if (self = [super initWithColor:[SKColor clearColor] size:texture.size]) {
-//		_baseSprite = [SKSpriteNode spriteNodeWithTexture:texture];
-//	}
-//	[self internalDidInitialize];
-//	return self;
-//}
-//
-//-(id)initWithTexture:(SKTexture *)texture color:(NSColor *)color size:(CGSize)size {
-//	if (self = [super initWithColor:[SKColor clearColor] size:size]) {
-//		_baseSprite = [SKSpriteNode spriteNodeWithTexture:texture size:size];
-//		_baseSprite.color = color;
-//		
-//	}
-//	[self internalDidInitialize];
-//	return self;
-//}
-//
-//-(id)initWithImageNamed:(NSString *)name {
-//	SKTexture* tex = [SKTexture textureWithImageNamed:name];
-//	if (self = [super initWithColor:[SKColor clearColor] size:tex.size]) {
-//		_baseSprite = [SKSpriteNode spriteNodeWithTexture:tex];
-//		
-//	}
-//	[self internalDidInitialize];
-//	return self;
-//}
++(SKButton*)buttonWithImageNamed:(NSString*)name {
+	SKButton* button = [SKButton node];
+	button.baseTexture = [SKTexture textureWithImageNamed:name];
+	return button;
+}
+
++(SKButton*)buttonWithTexture:(SKTexture*)texture {
+	SKButton* button = [SKButton node];
+	button.baseTexture = texture;
+	return button;
+}
 
 +(SKButton*)buttonWithTextureNamed:(NSString*)name {
 	SKButton* button = [SKButton node];
@@ -1379,18 +1364,16 @@ static SKUtilities2* sharedUtilities = Nil;
 -(void)enableButton {
 	_isEnabled = YES;
 	
-	[self enumerateChildNodesWithName:@"*" usingBlock:^(SKNode *node, BOOL *stop) {
-		if ([node isKindOfClass:[SKSpriteNode class]] || [node isKindOfClass:[SKLabelNode class]]) {
-			SKSpriteNode* sprite = (SKSpriteNode*) node;
-			sprite.colorBlendFactor = 0.0f;
-		}
-	}];
-	
 	self.hidden = VISIBLE;
 	self.alpha = 1.0f;
 	_baseSprite.hidden = VISIBLE;
 	_baseSpritePressed.hidden = HIDDEN;
 	_baseSpriteDisabled.hidden = HIDDEN;
+	
+	if (overlay.parent) {
+		[overlay removeFromParent];
+		overlay = nil;
+	}
 	
 	self.userInteractionEnabled = YES;
 }
@@ -1401,14 +1384,20 @@ static SKUtilities2* sharedUtilities = Nil;
 	switch (_disableType) {
 		case kSKButtonDisableTypeDim:
 		{
-			SKColor* dimColor = [SKColor grayColor];
+			SKTexture* buttonTex = [self.scene.view textureFromNode:self];
 			[self enumerateChildNodesWithName:@"*" usingBlock:^(SKNode *node, BOOL *stop) {
-				if ([node isKindOfClass:[SKSpriteNode class]] || [node isKindOfClass:[SKLabelNode class]]) {
-					SKSpriteNode* sprite = (SKSpriteNode*) node;
-					sprite.color = dimColor;
-					sprite.colorBlendFactor = 0.5f;
-				}
+				node.hidden = HIDDEN;
 			}];
+			if (!overlay) {
+				overlay = [SKSpriteNode spriteNodeWithTexture:buttonTex];
+				overlay.color = [SKColor grayColor];
+				overlay.colorBlendFactor = 0.5f;
+				overlay.zPosition = 0.05;
+				overlay.hidden = VISIBLE;
+			}
+			if (!overlay.parent) {
+				[self addChild:overlay];
+			}
 		}
 			break;
 		case kSKButtonDisableTypeOpacityHalf:
@@ -1507,8 +1496,6 @@ static SKUtilities2* sharedUtilities = Nil;
 #pragma mark SKNode Modifications
 
 @implementation SKNode (ConsolidatedInput)
-
-
 
 
 #if TARGET_OS_IPHONE

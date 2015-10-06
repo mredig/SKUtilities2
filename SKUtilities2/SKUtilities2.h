@@ -581,9 +581,8 @@ typedef enum {
 -(void)doButtonUp:(SKButton*)button inBounds:(BOOL)inBounds;
 @end //end protocol
 
+/* SKButton: Intended as a cross platform, unified way to design buttons for menus and input, instead of designing a completely different interface for Mac, iOS, and tvOS. Still needs a bit more effort when used on tvOS, but shouldn't be too hard. */
 @interface SKButton : SKNode
-
-
 
 /* Used for enumeration of button ids */
 @property (nonatomic) NSInteger whichButton;
@@ -623,7 +622,7 @@ typedef enum {
 
 /* Call to explicitly enable button (meant to reverse the state of being disabled). Be sure to call super method if you override. */
 -(void)enableButton;
-/* Call to explicitly disable button (meant to reverse the state of being enabled). Be sure to call super method if you override. */
+/* Call to explicitly disable button (meant to reverse the state of being enabled). Be sure to call super method if you override. Also, be sure the button is parented in the scene before using if you using kSKButtonDisableTypeDim. */
 -(void)disableButton;
 
 
