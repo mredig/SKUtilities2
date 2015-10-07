@@ -1424,7 +1424,7 @@ static SKUtilities2* sharedUtilities = Nil;
 @end
 
 @implementation SKUButton
-#pragma mark INITERs
+#pragma mark SKUButton INITERs
 -(id)init {
 	if (self = [super init]) {
 	}
@@ -1492,7 +1492,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	
 }
 
-#pragma mark ACTION SETTERS
+#pragma mark SKUButton ACTION SETTERS
 
 -(void)setDownAction:(SEL)selector toPerformOnTarget:(NSObject*)target {
 	NSMethodSignature* sig = [target methodSignatureForSelector:selector];
@@ -1531,7 +1531,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	_buttonMethod = _buttonMethod | kSKUButtonMethodPostNotification;
 }
 
-#pragma mark OTHER SETTERS 
+#pragma mark SKUButton OTHER SETTERS
 
 -(void)setBaseStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package {
 	_baseSpriteDefaultProperties = package.propertiesDefaultState;
@@ -1764,6 +1764,26 @@ static SKUtilities2* sharedUtilities = Nil;
 	return button;
 }
 
++(SKUPushButton*)pushButtonWithBackgroundPropertiesPackage:(SKUButtonSpriteStatePropertiesPackage*)backgroundPackage andForeGroundSpritePropertiesPackage:(SKUButtonSpriteStatePropertiesPackage*)foregroundPackage {
+	SKUPushButton* button = [SKUPushButton node];
+	[button setBaseStatesWithPackage:backgroundPackage];
+	return button;
+}
+
++(SKUPushButton*)pushButtonWithBackgroundPropertiesPackage:(SKUButtonSpriteStatePropertiesPackage*)backgroundPackage andTitleLabelPropertiesPackage:(SKUButtonLabelPropertiesPackage*)foregroundPackage {
+	SKUPushButton* button = [SKUPushButton node];
+	[button setBaseStatesWithPackage:backgroundPackage];
+	[button setTitleLabelStatesWithPackage:foregroundPackage];
+	return button;
+}
+
++(SKUPushButton*)pushButtonWithBackgroundPropertiesPackage:(SKUButtonSpriteStatePropertiesPackage*)backgroundPackage andForeGroundSpritePropertiesPackage:(SKUButtonSpriteStatePropertiesPackage*)foregroundPackage andTitleLabelPropertiesPackage:(SKUButtonLabelPropertiesPackage*)titlePackage {
+	SKUPushButton* button = [SKUPushButton node];
+	[button setBaseStatesWithPackage:backgroundPackage];
+	[button setTitleSpriteStatesWithPackage:foregroundPackage];
+	[button setTitleLabelStatesWithPackage:titlePackage];
+	return button;
+}
 
 
 -(void)internalDidInitialize {
@@ -1777,7 +1797,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	[super internalDidInitialize];
 }
 
-#pragma mark SKUPushButton internal button stuff
+#pragma mark SKUPushButton setters
 
 -(void)updateCurrentSpriteStateProperties {
 	[super updateCurrentSpriteStateProperties];
@@ -1827,10 +1847,79 @@ static SKUtilities2* sharedUtilities = Nil;
 	}
 }
 
+-(void)setTitleSpriteDefaultProperties:(SKUButtonSpriteStateProperties *)titleSpriteDefaultProperties {
+	_titleSpriteDefaultProperties = titleSpriteDefaultProperties;
+	if (!_titleSprite) {
+		_titleSprite = [SKSpriteNode spriteNodeWithTexture:_titleSpriteDefaultProperties.texture];
+		_titleSprite.zPosition = 0.001;
+		[self addChild:_titleSprite];
+	}
+	stateTSpriteDefaultInitialized = YES;
+	
+	if (!stateTSpritePressedInitialized) {
+		_titleSpritePressedProperties = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_titleSpriteDefaultProperties].propertiesPressedState;
+		stateTSpritePressedInitialized = YES;
+	}
+	
+	if (!stateTSpriteDisabledInitialized) {
+		_titleSpriteDisabledProperties = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_titleSpriteDefaultProperties].propertiesDisabledState;
+		stateTSpriteDisabledInitialized = YES;
+	}
+	
+	[self updateCurrentSpriteStateProperties];
+}
+
+-(void)setTitleSpritePressedProperties:(SKUButtonSpriteStateProperties *)titleSpritePressedProperties {
+	_titleSpritePressedProperties = titleSpritePressedProperties;
+	stateTSpritePressedInitialized = YES;
+	[self updateCurrentSpriteStateProperties];
+}
+
+-(void)setTitleSpriteDisabledProperties:(SKUButtonSpriteStateProperties *)titleSpriteDisabledProperties {
+	_titleSpriteDisabledProperties = titleSpriteDisabledProperties;
+	stateTSpriteDisabledInitialized = YES;
+	[self updateCurrentSpriteStateProperties];
+}
+
+-(void)setLabelPropertiesDefault:(SKUButtonLabelProperties *)labelPropertiesDefault {
+	_labelPropertiesDefault = labelPropertiesDefault;
+	if (!_titleLabel) {
+		_titleLabel = [SKLabelNode labelNodeWithFontNamed:_labelPropertiesDefault.fontName];
+		_titleLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeCenter;
+		_titleLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
+		_titleLabel.zPosition = 0.002;
+		[self addChild:_titleLabel];
+	}
+	stateTLabelDefaultInitialized = YES;
+	
+	if (!stateTLabelPressedInitialized) {
+		_labelPropertiesPressed = [SKUButtonLabelPropertiesPackage packageWithPropertiesForDefaultState:_labelPropertiesDefault].propertiesPressedState;
+		stateTLabelPressedInitialized = YES;
+	}
+	
+	if (!stateTLabelDisabledInitialized) {
+		_labelPropertiesDisabled = [SKUButtonLabelPropertiesPackage packageWithPropertiesForDefaultState:_labelPropertiesDefault].propertiesDisabledState;
+		stateTLabelDisabledInitialized = YES;
+	}
+	[self updateCurrentSpriteStateProperties];
+}
+
+-(void)setLabelPropertiesPressed:(SKUButtonLabelProperties *)labelPropertiesPressed {
+	_labelPropertiesPressed = labelPropertiesPressed;
+	stateTLabelPressedInitialized = YES;
+	[self updateCurrentSpriteStateProperties];
+}
+
+-(void)setLabelPropertiesDisabled:(SKUButtonLabelProperties *)labelPropertiesDisabled {
+	_labelPropertiesDisabled = labelPropertiesDisabled;
+	stateTLabelDisabledInitialized = YES;
+	[self updateCurrentSpriteStateProperties];
+}
+
 -(void)setTitleSpriteStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package {
-	_titleSpriteDefaultProperties = package.propertiesDefaultState;
 	_titleSpritePressedProperties = package.propertiesPressedState;
 	_titleSpriteDisabledProperties = package.propertiesDisabledState;
+	self.titleSpriteDefaultProperties = package.propertiesDefaultState;
 	stateTSpriteDefaultInitialized = YES;
 	stateTSpritePressedInitialized = YES;
 	stateTSpriteDisabledInitialized = YES;
@@ -1838,9 +1927,9 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 -(void)setTitleLabelStatesWithPackage:(SKUButtonLabelPropertiesPackage*)package {
-	_labelPropertiesDefault = package.propertiesDefaultState;
 	_labelPropertiesPressed = package.propertiesPressedState;
 	_labelPropertiesDisabled = package.propertiesDisabledState;
+	self.labelPropertiesDefault = package.propertiesDefaultState;
 	stateTLabelDefaultInitialized = YES;
 	stateTLabelPressedInitialized = YES;
 	stateTLabelDisabledInitialized = YES;
