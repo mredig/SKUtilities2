@@ -1225,8 +1225,22 @@ static SKUtilities2* sharedUtilities = Nil;
 
 @end
 
-#pragma mark SKButton
-@interface SKButton() {
+#pragma mark SKUButtonLabelProperties
+@implementation SKUButtonLabelProperties
+
++(SKUButtonLabelProperties*)propertiesWithText:(NSString *)text andColor:(NSColor *)fontColor andSize :(CGFloat)fontSize andFontName:(NSString *)fontName {
+	SKUButtonLabelProperties* props = [[SKUButtonLabelProperties alloc] init];
+	props.text = text;
+	props.fontSize = fontSize;
+	props.fontColor = fontColor;
+	props.fontName = fontName;
+	return props;
+}
+
+@end
+
+#pragma mark SKUButton
+@interface SKUButton() {
 	NSInvocation* downSelector;
 	NSInvocation* upSelector;
 	SKSpriteNode* overlay;
@@ -1234,38 +1248,46 @@ static SKUtilities2* sharedUtilities = Nil;
 
 @end
 
-@implementation SKButton
+@implementation SKUButton
 #pragma mark INITERs
 -(id)init {
 	if (self = [super init]) {
 	}
-	[self internalDidInitialize];
+	[self internalPreDidInitialize];
 	return self;
 }
 
 -(id)initWithCoder:(NSCoder *)aDecoder {
 	if (self = [super initWithCoder:aDecoder]) {
 	}
-	[self internalDidInitialize];
+	[self internalPreDidInitialize];
 	return self;
 }
 
-+(SKButton*)buttonWithImageNamed:(NSString*)name {
-	SKButton* button = [SKButton node];
++(SKUButton*)buttonWithImageNamed:(NSString*)name {
+	SKUButton* button = [SKUButton node];
 	button.baseTexture = [SKTexture textureWithImageNamed:name];
 	return button;
 }
 
-+(SKButton*)buttonWithTexture:(SKTexture*)texture {
-	SKButton* button = [SKButton node];
++(SKUButton*)buttonWithTexture:(SKTexture*)texture {
+	SKUButton* button = [SKUButton node];
 	button.baseTexture = texture;
 	return button;
 }
 
-+(SKButton*)buttonWithTextureNamed:(NSString*)name {
-	SKButton* button = [SKButton node];
++(SKUButton*)buttonWithTextureNamed:(NSString*)name {
+	SKUButton* button = [SKUButton node];
 	button.baseTexture = [SKTexture textureWithImageNamed:name];
 	return button;
+}
+
+-(void)internalPreDidInitialize {
+	_buttonType = 0;
+	_whichButton = 0;
+	_buttonMethod = 0;
+	_disableType = kSKUButtonDisableTypeDim;
+	[self internalDidInitialize];
 }
 
 -(void)internalDidInitialize { // note to self - call this super last when making base subclasses
@@ -1296,10 +1318,10 @@ static SKUtilities2* sharedUtilities = Nil;
 	downSelector = [NSInvocation invocationWithMethodSignature:sig];
 	[downSelector retainArguments];
 	[downSelector setSelector:selector];
-	SKButton* button = self;
+	SKUButton* button = self;
 	[downSelector setArgument:&button atIndex:2];
 	[downSelector setTarget:target];
-	_buttonMethod = _buttonMethod | kSKButtonMethodRunActions;
+	_buttonMethod = _buttonMethod | kSKUButtonMethodRunActions;
 }
 
 -(void)setUpAction:(SEL)selector toPerformOnTarget:(NSObject*)target {
@@ -1307,13 +1329,29 @@ static SKUtilities2* sharedUtilities = Nil;
 	upSelector = [NSInvocation invocationWithMethodSignature:sig];
 	[upSelector retainArguments];
 	[upSelector setSelector:selector];
-	SKButton* button = self;
+	SKUButton* button = self;
 	[upSelector setArgument:&button atIndex:2];
 	[upSelector setTarget:target];
-	_buttonMethod = _buttonMethod | kSKButtonMethodRunActions;
+	_buttonMethod = _buttonMethod | kSKUButtonMethodRunActions;
+}
+
+-(void)setDelegate:(id<SKUButtonDelegate>)delegate {
+	_delegate = delegate;
+	_buttonMethod = _buttonMethod | kSKUButtonMethodDelegate;
+}
+
+-(void)setNotificationNameDown:(NSString *)notificationNameDown {
+	_notificationNameDown = notificationNameDown;
+	_buttonMethod = _buttonMethod | kSKUButtonMethodPostNotification;
+}
+
+-(void)setNotificationNameUp:(NSString *)notificationNameUp {
+	_notificationNameUp = notificationNameUp;
+	_buttonMethod = _buttonMethod | kSKUButtonMethodPostNotification;
 }
 
 #pragma mark OTHER SETTERS 
+
 
 -(void)setBaseTexture:(SKTexture *)baseTexture {
 	_baseTexture = baseTexture;
@@ -1359,7 +1397,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	}
 }
 
-#pragma mark SKBUTTON METHODS
+#pragma mark SKUButton METHODS
 
 -(void)enableButton {
 	_isEnabled = YES;
@@ -1382,7 +1420,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	_isEnabled = NO;
 	
 	switch (_disableType) {
-		case kSKButtonDisableTypeDim:
+		case kSKUButtonDisableTypeDim:
 		{
 			SKTexture* buttonTex = [self.scene.view textureFromNode:self];
 			[self enumerateChildNodesWithName:@"*" usingBlock:^(SKNode *node, BOOL *stop) {
@@ -1400,18 +1438,18 @@ static SKUtilities2* sharedUtilities = Nil;
 			}
 		}
 			break;
-		case kSKButtonDisableTypeOpacityHalf:
+		case kSKUButtonDisableTypeOpacityHalf:
 			self.alpha = 0.5f;
 			break;
-		case kSKButtonDisableTypeOpacityNone:
+		case kSKUButtonDisableTypeOpacityNone:
 			self.alpha = 0.0f;
 			break;
-		case kSKButtonDisableTypeAlternateTexture:
+		case kSKUButtonDisableTypeAlternateTexture:
 			_baseSprite.hidden = HIDDEN;
 			_baseSpritePressed.hidden = HIDDEN;
 			_baseSpriteDisabled.hidden = VISIBLE;
 			break;
-		case kSKButtonDisableTypeNoDifference:
+		case kSKUButtonDisableTypeNoDifference:
 			break;
 		default:
 			break;
@@ -1429,9 +1467,9 @@ static SKUtilities2* sharedUtilities = Nil;
 	if (_isEnabled) {
 		_baseSpritePressed.hidden = VISIBLE;
 		_baseSprite.hidden = HIDDEN;
-		BOOL notificationMethod = kSKButtonMethodPostNotification & _buttonMethod;
-		BOOL delegateMethod = kSKButtonMethodDelegate & _buttonMethod;
-		BOOL actionMethod = kSKButtonMethodRunActions & _buttonMethod;
+		BOOL notificationMethod = kSKUButtonMethodPostNotification & _buttonMethod;
+		BOOL delegateMethod = kSKUButtonMethodDelegate & _buttonMethod;
+		BOOL actionMethod = kSKUButtonMethodRunActions & _buttonMethod;
 		
 		if (notificationMethod) {
 			[[NSNotificationCenter defaultCenter] postNotificationName:_notificationNameDown object:self];
@@ -1456,9 +1494,9 @@ static SKUtilities2* sharedUtilities = Nil;
 	if (_isEnabled) {
 		_baseSpritePressed.hidden = HIDDEN;
 		_baseSprite.hidden = VISIBLE;
-		BOOL notificationMethod = kSKButtonMethodPostNotification & _buttonMethod;
-		BOOL delegateMethod = kSKButtonMethodDelegate & _buttonMethod;
-		BOOL actionMethod = kSKButtonMethodRunActions & _buttonMethod;
+		BOOL notificationMethod = kSKUButtonMethodPostNotification & _buttonMethod;
+		BOOL delegateMethod = kSKUButtonMethodDelegate & _buttonMethod;
+		BOOL actionMethod = kSKUButtonMethodRunActions & _buttonMethod;
 		
 		BOOL locationIsInBounds = [self checkIfLocationIsWithinButtonBounds:location];
 		
@@ -1486,6 +1524,11 @@ static SKUtilities2* sharedUtilities = Nil;
 	CGPathRelease(thePath);
 	return answer;
 }
+
+
+@end
+
+@implementation SKUPushButton
 
 
 @end

@@ -552,53 +552,66 @@ Vulnerable to lag spikes if used.
 
 @end
 
-#pragma mark SKButton
+#pragma mark SKUButtonLabelProperties
+
+@interface SKUButtonLabelProperties : NSObject
+
+@property (nonatomic) NSString* text;
+@property (nonatomic) SKColor* fontColor;
+@property (nonatomic) CGFloat fontSize;
+@property (nonatomic) NSString* fontName;
+
++(SKUButtonLabelProperties*)propertiesWithText:(NSString *)text andColor:(NSColor *)fontColor andSize :(CGFloat)fontSize andFontName:(NSString *)fontName;
+
+@end
+
+#pragma mark SKUButton
 
 typedef enum { //// might not use this
-	kSKButtonMethodPostNotification = 1,
-	kSKButtonMethodDelegate = 1 << 1,
-	kSKButtonMethodRunActions = 1 << 2,
-} kSKButtonMethods;
+	kSKUButtonMethodPostNotification = 1,
+	kSKUButtonMethodDelegate = 1 << 1,
+	kSKUButtonMethodRunActions = 1 << 2,
+} kSKUButtonMethods;
 
 typedef enum {
-	kSKButtonTypeToggle = 1,
-	kSKButtonTypePush,
-	kSKButtonTypeSlider,
-} kSKButtonTypes;
+	kSKUButtonTypeToggle = 1,
+	kSKUButtonTypePush,
+	kSKUButtonTypeSlider,
+} kSKUButtonTypes;
 
 typedef enum {
-	kSKButtonDisableTypeDim,
-	kSKButtonDisableTypeOpacityHalf,
-	kSKButtonDisableTypeOpacityNone,
-	kSKButtonDisableTypeAlternateTexture,
-	kSKButtonDisableTypeNoDifference,
-} kSKButtonDisableTypes;
+	kSKUButtonDisableTypeDim,
+	kSKUButtonDisableTypeOpacityHalf,
+	kSKUButtonDisableTypeOpacityNone,
+	kSKUButtonDisableTypeAlternateTexture,
+	kSKUButtonDisableTypeNoDifference,
+} kSKUButtonDisableTypes;
 
-@class SKButton;
+@class SKUButton;
 
-@protocol SKButtonDelegate   //define delegate protocol
--(void)doButtonDown:(SKButton*)button;
--(void)doButtonUp:(SKButton*)button inBounds:(BOOL)inBounds;
+@protocol SKUButtonDelegate   //define delegate protocol
+-(void)doButtonDown:(SKUButton*)button;
+-(void)doButtonUp:(SKUButton*)button inBounds:(BOOL)inBounds;
 @end //end protocol
 
-/* SKButton: Intended as a cross platform, unified way to design buttons for menus and input, instead of designing a completely different interface for Mac, iOS, and tvOS. Still needs a bit more effort when used on tvOS, but shouldn't be too hard. 
+/* SKUButton: Intended as a cross platform, unified way to design buttons for menus and input, instead of designing a completely different interface for Mac, iOS, and tvOS. Still needs a bit more effort when used on tvOS, but shouldn't be too hard. 
  
  Note that anchorPoint (and potentially other) SKSpriteNode properties have no effect - it is only subclassed as a sprite to help with Xcode's scene creation tool. (Note to self: fall back to SKNode if that idea doesn't pan out) */
-@interface SKButton : SKSpriteNode
+@interface SKUButton : SKSpriteNode
 
 
 /* Identifies button type. */
-@property (nonatomic) kSKButtonTypes buttonType;
+@property (nonatomic) kSKUButtonTypes buttonType;
 /* Used for enumeration of button ids */
 @property (nonatomic) NSInteger whichButton;
 /* Used for enumeration of button ids */
 @property (nonatomic) uint32_t buttonMethod;
 /* If button is set to call delegate, this is the delegate used. */
-@property (nonatomic, weak) id <SKButtonDelegate> delegate;
+@property (nonatomic, weak) id <SKUButtonDelegate> delegate;
 /* Readonly: tells you if button is enabled or not */
 @property (nonatomic, readonly) BOOL isEnabled;
 /* Determines how disabling button is displayed. */
-@property (nonatomic, readonly) kSKButtonDisableTypes disableType;
+@property (nonatomic, readonly) kSKUButtonDisableTypes disableType;
 /* If button is set to send notifications, this is the name of the notification. */
 @property (nonatomic) NSString* notificationNameDown;
 /* If button is set to send notifications, this is the name of the notification. */
@@ -618,11 +631,11 @@ typedef enum {
 
 
 /* Creates and returns a button with a base sprite of the image named. */
-+(SKButton*)buttonWithImageNamed:(NSString*)name;
++(SKUButton*)buttonWithImageNamed:(NSString*)name;
 /* Creates and returns a button with a base sprite of the texture. */
-+(SKButton*)buttonWithTexture:(SKTexture*)texture;
++(SKUButton*)buttonWithTexture:(SKTexture*)texture;
 /* Creates and returns a button with a base sprite of the texture named. */
-+(SKButton*)buttonWithTextureNamed:(NSString*)name;
++(SKUButton*)buttonWithTextureNamed:(NSString*)name;
 /* This SHOULD be called after either raw init or initWithCoder. Meant to be overridden with post initialization purposes. */
 -(void)didInitialize;
 
@@ -633,16 +646,34 @@ typedef enum {
 
 /* Call to explicitly enable button (meant to reverse the state of being disabled). Be sure to call super method if you override. */
 -(void)enableButton;
-/* Call to explicitly disable button (meant to reverse the state of being enabled). Be sure to call super method if you override. Also, be sure the button is parented in the scene before using if you using kSKButtonDisableTypeDim. */
+/* Call to explicitly disable button (meant to reverse the state of being enabled). Be sure to call super method if you override. Also, be sure the button is parented in the scene before using if you using kSKUButtonDisableTypeDim. */
 -(void)disableButton;
 
 
 @end
 
-@interface SKPushButton : SKButton
+@interface SKUPushButton : SKUButton
+
+/* Read only access to title label. */
+@property (nonatomic, strong, readonly) SKLabelNode* titleLabel;
+/* Set this to setup the title label. */
+@property (nonatomic) SKUButtonLabelProperties* labelProperties;
+/* Set this to setup the title label properties when the button is pressed. */
+@property (nonatomic) SKUButtonLabelProperties* labelPropertiesPressed;
+/* Set this to setup the title label properties when the button is disabled. */
+@property (nonatomic) SKUButtonLabelProperties* labelPropertiesDisabled;
+
+/* Read only access to title sprite. */
+@property (nonatomic, strong, readonly) SKSpriteNode* titleSprite;
+/* Set this to setup the title sprite displayed when the button is pressed. */
+@property (nonatomic, strong, readonly) SKSpriteNode* titleSpritePressed;
+/* Set this to setup the title sprite displayed when the button is pressed. */
+@property (nonatomic, strong, readonly) SKSpriteNode* titleSpriteDisabled;
+
 
 
 @end
+
 
 #pragma mark CLASS CATEGORIES
 #pragma mark SKNode Modifications
