@@ -1599,27 +1599,13 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 -(void)buttonStatesNormalize {
-	_baseSpriteDefaultProperties = [SKUButtonSpriteStateProperties propertiesWithTexture:_baseSpriteDefaultProperties.texture andAlpha:1.0f andColor:[SKColor whiteColor] andColorBlendFactor:0.0f andPositionOffset:CGPointZero andXScale:1.0f andYScale:1.0f];
-	_baseSpritePressedProperties = _baseSpriteDefaultProperties.copy;
-	_baseSpriteDisabledProperties = _baseSpriteDefaultProperties.copy;
+	SKUButtonSpriteStatePropertiesPackage* package = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_baseSpriteDefaultProperties andPressedState:_baseSpriteDefaultProperties andDisabledState:_baseSpriteDefaultProperties];
+	[self setBaseStatesWithPackage:package];
 }
 
 -(void)buttonStatesDefault {
-	_baseSpriteDefaultProperties = [SKUButtonSpriteStateProperties
-									propertiesWithTexture:_baseSpriteDefaultProperties.texture
-									andAlpha:1.0f];
-
-	_baseSpritePressedProperties = [SKUButtonSpriteStateProperties
-									propertiesWithTexture:_baseSpriteDefaultProperties.texture
-									andAlpha:1.0f
-									andColor:[SKColor grayColor]
-									andColorBlendFactor:0.75];
-
-	_baseSpriteDisabledProperties = [SKUButtonSpriteStateProperties
-									 propertiesWithTexture:_baseSpriteDefaultProperties.texture
-									 andAlpha:1.0f
-									 andColor:[SKColor grayColor]
-									 andColorBlendFactor:0.5];
+	SKUButtonSpriteStatePropertiesPackage* package = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_baseSpriteDefaultProperties];
+	[self setBaseStatesWithPackage:package];
 }
 
 -(void)inputBegan:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
