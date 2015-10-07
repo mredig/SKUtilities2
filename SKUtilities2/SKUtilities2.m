@@ -1416,6 +1416,10 @@ static SKUtilities2* sharedUtilities = Nil;
 	NSInvocation* upSelector;
 	SKUButtonSpriteStateProperties* defaultProperties;
 	BOOL baseSpritePropertiesInitialized;
+	
+	BOOL stateDefaultInitialized;
+	BOOL statePressedInitialized;
+	BOOL stateDisabledInitialized;
 }
 
 @end
@@ -1462,11 +1466,15 @@ static SKUtilities2* sharedUtilities = Nil;
 	_whichButton = 0;
 	_buttonMethod = 0;
 	_buttonState = kSKUButtonStateDefault;
+
 	SKTexture* tex = [SKTexture textureVectorNoiseWithSmoothness:1.0 size:CGSizeMake(2, 2)];
 	defaultProperties = [SKUButtonSpriteStateProperties propertiesWithTexture:tex andAlpha:1.0];
 	_baseSpriteDefaultProperties = defaultProperties.copy;
 	_baseSpritePressedProperties = defaultProperties.copy;
 	_baseSpriteDisabledProperties = defaultProperties.copy;
+	stateDefaultInitialized = NO;
+	statePressedInitialized = NO;
+	stateDisabledInitialized = NO;
 	
 	[self internalDidInitialize];
 	[self enableButton];
@@ -1530,21 +1538,35 @@ static SKUtilities2* sharedUtilities = Nil;
 	_baseSpriteDefaultProperties = package.propertiesDefaultState;
 	_baseSpritePressedProperties = package.propertiesPressedState;
 	_baseSpriteDisabledProperties = package.propertiesDisabledState;
+	stateDefaultInitialized = YES;
+	statePressedInitialized = YES;
+	stateDisabledInitialized = YES;
 	[self updateCurrentSpriteStateProperties];
 }
 
 -(void)setBaseSpriteDefaultProperties:(SKUButtonSpriteStateProperties *)baseSpriteDefaultProperties {
 	_baseSpriteDefaultProperties = baseSpriteDefaultProperties;
+	stateDefaultInitialized = YES;
+	if (!statePressedInitialized) {
+		_baseSpritePressedProperties = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_baseSpriteDefaultProperties].propertiesPressedState;
+		statePressedInitialized = YES;
+	}
+	if (!stateDisabledInitialized) {
+		_baseSpriteDisabledProperties = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_baseSpriteDefaultProperties].propertiesDisabledState;
+		stateDisabledInitialized = YES;
+	}
 	[self updateCurrentSpriteStateProperties];
 }
 
 -(void)setBaseSpritePressedProperties:(SKUButtonSpriteStateProperties *)baseSpritePressedProperties {
 	_baseSpritePressedProperties = baseSpritePressedProperties;
+	statePressedInitialized = YES;
 	[self updateCurrentSpriteStateProperties];
 }
 
 -(void)setBaseSpriteDisabledProperties:(SKUButtonSpriteStateProperties *)baseSpriteDisabledProperties {
 	_baseSpriteDisabledProperties = baseSpriteDisabledProperties;
+	stateDisabledInitialized = YES;
 	[self updateCurrentSpriteStateProperties];
 }
 

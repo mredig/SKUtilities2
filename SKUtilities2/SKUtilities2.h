@@ -723,7 +723,19 @@ typedef enum {
 /** Properties to use on the base sprite in disabled state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* baseSpriteDisabledProperties;
 
+/** Sets all states based off of the default state. 
+ @warning
+ baseSpriteDefaultProperties, baseSpritePressedProperties, and baseSpriteDisabledProperties all point to the same pointer as a result. If you edit one, they will all change. If you don't want them all to update, do
+ @code
+ SKUButton* button; // assuming this is properly set up
+ [button buttonStatesNormalize];
+ button.baseSpritePressedProperties = button.baseSpritePressedProperties.copy;
+ @endcode
+ */
 -(void)buttonStatesNormalize;
+/** Sets all states based off of the default state using the settings determined in 
+ [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:(SKUButtonSpriteStateProperties *)defaultState]
+  */
 -(void)buttonStatesDefault;
 
 /** Creates and returns a button with a base sprite of the image named. */
