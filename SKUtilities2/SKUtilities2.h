@@ -578,15 +578,16 @@ Vulnerable to lag spikes if used.
 @property (nonatomic) CGPoint position;
 @property (nonatomic) CGFloat xScale;
 @property (nonatomic) CGFloat yScale;
+@property (nonatomic, strong) SKTexture* texture;
 
 /** Returns a new object with the following properties. */
-+(SKUButtonSpriteStateProperties*)propertiesWithAlpha:(CGFloat)alpha andColor:(SKColor*)color andColorBlendFactor:(CGFloat)colorBlendFactor andPositionOffset:(CGPoint)position andXScale:(CGFloat)xScale andYScale:(CGFloat)yScale;
++(SKUButtonSpriteStateProperties*)propertiesWithTexture:(SKTexture*)texture andAlpha:(CGFloat)alpha andColor:(SKColor*)color andColorBlendFactor:(CGFloat)colorBlendFactor andPositionOffset:(CGPoint)position andXScale:(CGFloat)xScale andYScale:(CGFloat)yScale;
 /** Returns a new object with the following properties. */
-+(SKUButtonSpriteStateProperties*)propertiesWithAlpha:(CGFloat)alpha andColor:(SKColor*)color andColorBlendFactor:(CGFloat)colorBlendFactor andPositionOffset:(CGPoint)position;
++(SKUButtonSpriteStateProperties*)propertiesWithTexture:(SKTexture*)texture andAlpha:(CGFloat)alpha andColor:(SKColor*)color andColorBlendFactor:(CGFloat)colorBlendFactor andPositionOffset:(CGPoint)position;
 /** Returns a new object with the following properties. */
-+(SKUButtonSpriteStateProperties*)propertiesWithAlpha:(CGFloat)alpha andColor:(SKColor*)color andColorBlendFactor:(CGFloat)colorBlendFactor;
++(SKUButtonSpriteStateProperties*)propertiesWithTexture:(SKTexture*)texture andAlpha:(CGFloat)alpha andColor:(SKColor*)color andColorBlendFactor:(CGFloat)colorBlendFactor;
 /** Returns a new object with the following properties. */
-+(SKUButtonSpriteStateProperties*)propertiesWithAlpha:(CGFloat)alpha;
++(SKUButtonSpriteStateProperties*)propertiesWithTexture:(SKTexture*)texture andAlpha:(CGFloat)alpha;
 /** Sets the x and y scale together. */
 -(void)setScale:(CGFloat)scale;
 
@@ -594,25 +595,40 @@ Vulnerable to lag spikes if used.
 
 #pragma mark SKUButton
 
-typedef enum { //// might not use this
+typedef enum {
+/** Sends out an NSNotification with a name determined by either the notificationNameDown or notificationNameUp property. Only sends button release notifications if the release remained within the button bounds. */
 	kSKUButtonMethodPostNotification = 1,
+/** Calls doButtonDown or doButtonUp on the delegate, set with the delegate property. This is the only way to detech button releases that aren't within the bounds of the button. */
 	kSKUButtonMethodDelegate = 1 << 1,
+/** Calls selectors set with methods setDownAction and setUpAction. Only sends button release calls if the release remained within the button bounds. */
 	kSKUButtonMethodRunActions = 1 << 2,
 } kSKUButtonMethods;
 
 typedef enum {
-	kSKUButtonTypeToggle = 1,
-	kSKUButtonTypePush,
+	kSKUButtonTypePush = 1,
+	kSKUButtonTypeToggle,
 	kSKUButtonTypeSlider,
 } kSKUButtonTypes;
 
 typedef enum {
+/** This disable type ignores the baseSpriteDisabledProperties setting. */
 	kSKUButtonDisableTypeDim,
 	kSKUButtonDisableTypeOpacityHalf,
 	kSKUButtonDisableTypeOpacityNone,
+/** If texture isn't properly set, falls back to kSKUButtonDisableTypeDim. */
 	kSKUButtonDisableTypeAlternateTexture,
 	kSKUButtonDisableTypeNoDifference,
 } kSKUButtonDisableTypes;
+
+typedef enum {
+	kSKUButtonStateUndefined,
+	kSKUButtonStateDefault,
+	kSKUButtonStatePressed,
+	kSKUButtonStateDisabled,
+
+} kSKUButtonStates;
+
+
 
 @class SKUButton;
 
@@ -634,6 +650,8 @@ typedef enum {
 @property (nonatomic, readonly) kSKUButtonTypes buttonType;
 /** Used for enumeration of button ids */
 @property (nonatomic) NSInteger whichButton;
+/** Current state of the button */
+@property (nonatomic) kSKUButtonStates buttonState;
 /** Used for enumeration of button ids */
 @property (nonatomic) uint32_t buttonMethod;
 /** If button is set to call delegate, this is the delegate used. */
@@ -646,12 +664,6 @@ typedef enum {
 @property (nonatomic) NSString* notificationNameDown;
 /** If button is set to send notifications, this is the name of the notification. */
 @property (nonatomic) NSString* notificationNameUp;
-/** Use this to set the base sprite texture. */
-@property (nonatomic) SKTexture* baseTexture;
-/** Use this to set the base sprite texture for its pressed state. */
-@property (nonatomic) SKTexture* baseTexturePressed;
-/** Use this to set the base sprite texture for its disabled state. */
-@property (nonatomic) SKTexture* baseTextureDisabled;
 /** Readonly: access to the base sprite. */
 @property (nonatomic, readonly) SKSpriteNode* baseSprite;
 /** Properties to use on the base sprite in default state. */
@@ -661,7 +673,8 @@ typedef enum {
 /** Properties to use on the base sprite in disabled state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* baseSpriteDisabledProperties;
 
-
+-(void)buttonStatesNormalize;
+-(void)buttonStatesDefault;
 
 /** Creates and returns a button with a base sprite of the image named. */
 +(SKUButton*)buttonWithImageNamed:(NSString*)name;
@@ -689,19 +702,24 @@ typedef enum {
 /** Read only access to title label. */
 @property (nonatomic, strong, readonly) SKLabelNode* titleLabel;
 /** Set this to setup the title label. */
-@property (nonatomic) SKUButtonLabelProperties* labelProperties;
+@property (nonatomic) SKUButtonLabelProperties* labelPropertiesDefault;
 /** Set this to setup the title label properties when the button is pressed. */
 @property (nonatomic) SKUButtonLabelProperties* labelPropertiesPressed;
 /** Set this to setup the title label properties when the button is disabled. */
 @property (nonatomic) SKUButtonLabelProperties* labelPropertiesDisabled;
 
+
+
 /** Read only access to title sprite. */
 @property (nonatomic, strong, readonly) SKSpriteNode* titleSprite;
-/** Set this to setup the title sprite displayed when the button is pressed. */
-@property (nonatomic, strong, readonly) SKSpriteNode* titleSpritePressed;
-/** Set this to setup the title sprite displayed when the button is pressed. */
-@property (nonatomic, strong, readonly) SKSpriteNode* titleSpriteDisabled;
+/** Properties to use on the title sprite in default state. */
+@property (nonatomic) SKUButtonSpriteStateProperties* titleSpriteDefaultProperties;
+/** Properties to use on the title sprite in pressed state. */
+@property (nonatomic) SKUButtonSpriteStateProperties* titleSpritePressedProperties;
+/** Properties to use on the title sprite in disabled state. */
+@property (nonatomic) SKUButtonSpriteStateProperties* titleSpriteDisabledProperties;
 
++(SKUPushButton*)pushButtonWithBackgroundTexture:(SKTexture*)texture;
 
 
 @end

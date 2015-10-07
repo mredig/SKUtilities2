@@ -104,17 +104,23 @@
 	buttonLabel.zPosition = 1.0;
 	[tempButton addChild:buttonLabel];
 	
-	testButton = [SKUButton buttonWithTexture:[SKTexture textureWithImageNamed:@"Spaceship"]];
+	SKTexture* ship = [SKTexture textureWithImageNamed:@"Spaceship"];
+	SKTexture* noise1 = [SKTexture textureVectorNoiseWithSmoothness:0.01 size:ship.size];
+	SKTexture* noise2 = [SKTexture textureNoiseWithSmoothness:0.3 size:ship.size grayscale:YES];
+	
+	testButton = [SKUPushButton pushButtonWithBackgroundTexture:ship];
 	testButton.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.5, 0.75));
 	[testButton setDownAction:@selector(testButtonDown:) toPerformOnTarget:self];
 	[testButton setUpAction:@selector(testButtonUp:) toPerformOnTarget:self];
 	testButton.anchorPoint = CGPointMake(1.0, 1.0);
-	testButton.baseSpritePressedProperties = [SKUButtonSpriteStateProperties propertiesWithAlpha:0.25];
-	testButton.baseSpriteDisabledProperties = [SKUButtonSpriteStateProperties propertiesWithAlpha:1.0 andColor:[SKColor greenColor] andColorBlendFactor:1.0];
+//	testButton.baseSpritePressedProperties = [SKUButtonSpriteStateProperties propertiesWithTexture:noise1 andAlpha:0.25];
+//	testButton.baseSpriteDisabledProperties = [SKUButtonSpriteStateProperties propertiesWithTexture:noise2 andAlpha:1.0 andColor:[SKColor greenColor] andColorBlendFactor:1.0];
 	testButton.disableType = kSKUButtonDisableTypeAlternateTexture;
 	[self addChild:testButton];
 //	[testButton disableButton];
 
+	
+	NSLog(@"buttonType: %i", testButton.buttonType);
 	
 #if TARGET_OS_TV
 	
