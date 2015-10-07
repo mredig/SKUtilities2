@@ -553,7 +553,14 @@ Vulnerable to lag spikes if used.
 @end
 
 #pragma mark SKUButtonLabelProperties
-
+/** Stores a single state for labels in buttons. The properties set on this object gets passed to the button's label for the appropriate state.
+ @param text text value
+ @param fontColor fontColor object
+ @param fontSize fontSize value
+ @param fontName fontName value
+ @param position position value
+ @param scale scale value
+ */
 @interface SKUButtonLabelProperties : NSObject <NSCopying>
 
 @property (nonatomic) NSString* text;
@@ -567,9 +574,40 @@ Vulnerable to lag spikes if used.
 +(SKUButtonLabelProperties*)propertiesWithText:(NSString *)text andColor:(NSColor *)fontColor andSize :(CGFloat)fontSize andFontName:(NSString *)fontName andPositionOffset:(CGPoint)position andScale:(CGFloat)scale;
 
 @end
+/** Stores all states for a label in buttons. The properties collected on this object get passed to the button's states.
+ @param propertiesDefaultState propertiesDefaultState object
+ @param propertiesPressedState propertiesPressedState object
+ @param propertiesDisabledState propertiesDisabledState object
+ 
+ */
+@interface SKUButtonLabelPropertiesPackage : NSObject <NSCopying>
+
+@property (nonatomic) SKUButtonLabelProperties* propertiesDefaultState;
+@property (nonatomic) SKUButtonLabelProperties* propertiesPressedState;
+@property (nonatomic) SKUButtonLabelProperties* propertiesDisabledState;
+
+/** Allows you to explicitly set all states. */
++(SKUButtonLabelPropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonLabelProperties*)defaultState andPressedState:(SKUButtonLabelProperties*)pressedState andDisabledState:(SKUButtonLabelProperties*)disabledState;
+/** Allows you to explicitly set default and pressed states and derives the disabled state from default, but with a gray overlay. */
++(SKUButtonLabelPropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonLabelProperties *)defaultState andPressedState:(SKUButtonLabelProperties *)pressedState;
+/** Allows you to explicitly set default state, derives the pressed state from the default by scaling it down to a relative 90% size, and derives the disabled state from default, but with a gray overlay. */
++(SKUButtonLabelPropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonLabelProperties *)defaultState;
+
+/** Allows you to change the text for all states at once. */
+-(void)changeText:(NSString*)text;
+
+@end
 
 #pragma mark SKUButtonSpriteStateProperties
-
+/** Stores a single state for sprites in buttons. The properties set on this object gets passed to the button's sprite for the appropriate state. 
+ @param alpha alpha value
+ @param color color object
+ @param colorBlendFactor colorBlendFactor value
+ @param position position value
+ @param xScale xScale value
+ @param yScale yScale value
+ @param texture texture object
+ */
 @interface SKUButtonSpriteStateProperties : NSObject <NSCopying>
 
 @property (nonatomic) CGFloat alpha;
@@ -592,6 +630,28 @@ Vulnerable to lag spikes if used.
 -(void)setScale:(CGFloat)scale;
 
 @end
+/** Stores all states for a sprite in buttons. The properties collected on this object get passed to the button's states.
+ @param propertiesDefaultState propertiesDefaultState object
+ @param propertiesPressedState propertiesPressedState object
+ @param propertiesDisabledState propertiesDisabledState object
+
+ */
+@interface SKUButtonSpriteStatePropertiesPackage : NSObject <NSCopying>
+
+@property (nonatomic) SKUButtonSpriteStateProperties* propertiesDefaultState;
+@property (nonatomic) SKUButtonSpriteStateProperties* propertiesPressedState;
+@property (nonatomic) SKUButtonSpriteStateProperties* propertiesDisabledState;
+/** Allows you to explicitly set all states. */
++(SKUButtonSpriteStatePropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonSpriteStateProperties*)defaultState andPressedState:(SKUButtonSpriteStateProperties*)pressedState andDisabledState:(SKUButtonSpriteStateProperties*)disabledState;
+/** Allows you to explicitly set default and pressed states and derives the disabled state from default, but with half opacity. */
++(SKUButtonSpriteStatePropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonSpriteStateProperties *)defaultState andPressedState:(SKUButtonSpriteStateProperties *)pressedState;
+/** Allows you to explicitly set default state and derives the pressed state from the default with 0.5 blend factor of a gray color overlay, and the disabled state from default, but with half opacity. */
++(SKUButtonSpriteStatePropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonSpriteStateProperties *)defaultState;
+
+/** Allows you to change the texture for all states at once. */
+-(void)changeTexture:(SKTexture*)texture;
+
+@end
 
 #pragma mark SKUButton
 
@@ -610,20 +670,12 @@ typedef enum {
 	kSKUButtonTypeSlider,
 } kSKUButtonTypes;
 
-typedef enum {
-/** This disable type ignores the baseSpriteDisabledProperties setting. */
-	kSKUButtonDisableTypeDim,
-	kSKUButtonDisableTypeOpacityHalf,
-	kSKUButtonDisableTypeOpacityNone,
-/** If texture isn't properly set, falls back to kSKUButtonDisableTypeDim. */
-	kSKUButtonDisableTypeAlternateTexture,
-	kSKUButtonDisableTypeNoDifference,
-} kSKUButtonDisableTypes;
 
 typedef enum {
 	kSKUButtonStateUndefined,
 	kSKUButtonStateDefault,
 	kSKUButtonStatePressed,
+	kSKUButtonStatePressedOutOfBounds,
 	kSKUButtonStateDisabled,
 
 } kSKUButtonStates;
@@ -651,15 +703,13 @@ typedef enum {
 /** Used for enumeration of button ids */
 @property (nonatomic) NSInteger whichButton;
 /** Current state of the button */
-@property (nonatomic) kSKUButtonStates buttonState;
+@property (nonatomic, readonly) kSKUButtonStates buttonState;
 /** Used for enumeration of button ids */
 @property (nonatomic) uint32_t buttonMethod;
 /** If button is set to call delegate, this is the delegate used. */
 @property (nonatomic, weak) id <SKUButtonDelegate> delegate;
 /** Readonly: tells you if button is enabled or not */
 @property (nonatomic, readonly) BOOL isEnabled;
-/** Determines how disabling button is displayed. */
-@property (nonatomic) kSKUButtonDisableTypes disableType;
 /** If button is set to send notifications, this is the name of the notification. */
 @property (nonatomic) NSString* notificationNameDown;
 /** If button is set to send notifications, this is the name of the notification. */
@@ -680,6 +730,8 @@ typedef enum {
 +(SKUButton*)buttonWithImageNamed:(NSString*)name;
 /** Creates and returns a button with a base sprite of the texture. */
 +(SKUButton*)buttonWithTexture:(SKTexture*)texture;
+/** Creates and returns a button with a base sprite package. */
++(SKUButton*)buttonWithPropertiesPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
 
 /** This SHOULD be called after either raw init or initWithCoder. Meant to be overridden with post initialization purposes. */
 -(void)didInitialize;
@@ -688,6 +740,9 @@ typedef enum {
 -(void)setDownAction:(SEL)selector toPerformOnTarget:(NSObject*)target;
 /** If button is set to call actions, set method and target to call on method when released. Sets flag on self.buttonMethods to run actions. */
 -(void)setUpAction:(SEL)selector toPerformOnTarget:(NSObject*)target;
+
+/** Sets all base sprite states in one command. */
+-(void)setBaseStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
 
 /** Call to explicitly enable button (meant to reverse the state of being disabled). Be sure to call super method if you override. */
 -(void)enableButton;

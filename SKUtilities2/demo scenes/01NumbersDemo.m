@@ -15,7 +15,7 @@
 	SKSpriteNode* indicator;
 	SKNode* currentSelectedNode;
 	
-	SKUButton* testButton;
+	SKUPushButton* testButton;
 }
 
 @end
@@ -68,11 +68,22 @@
 }
 
 -(void)testButtonDown:(SKUButton*)button {
-	NSLog(@"down: %@", button);
 }
 
 -(void)testButtonUp:(SKUButton*)button {
-	NSLog(@"up: %@", button);
+	SKUButton* but2 = (SKUButton*)[self childNodeWithName:@"buttonTwo"];
+	if (but2.isEnabled) {
+		[but2 disableButton];
+	} else {
+		[but2 enableButton];
+	}}
+
+-(void)buttonTwoUp:(SKUButton*)button {
+	if (testButton.isEnabled) {
+		[testButton disableButton];
+	} else {
+		[testButton enableButton];
+	}
 }
 
 
@@ -105,19 +116,31 @@
 	[tempButton addChild:buttonLabel];
 	
 	SKTexture* ship = [SKTexture textureWithImageNamed:@"Spaceship"];
-	SKTexture* noise1 = [SKTexture textureVectorNoiseWithSmoothness:0.01 size:ship.size];
-	SKTexture* noise2 = [SKTexture textureNoiseWithSmoothness:0.3 size:ship.size grayscale:YES];
+	SKTexture* shipSmall = [SKTexture textureWithImageNamed:@"Spaceship_small"];
+	SKTexture* shipSmallBlur = [SKTexture textureWithImageNamed:@"Spaceship_sm_bl"];
 	
 	testButton = [SKUPushButton pushButtonWithBackgroundTexture:ship];
-	testButton.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.5, 0.75));
+	testButton.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.25, 0.65));
 	[testButton setDownAction:@selector(testButtonDown:) toPerformOnTarget:self];
 	[testButton setUpAction:@selector(testButtonUp:) toPerformOnTarget:self];
 	testButton.anchorPoint = CGPointMake(1.0, 1.0);
 //	testButton.baseSpritePressedProperties = [SKUButtonSpriteStateProperties propertiesWithTexture:noise1 andAlpha:0.25];
 //	testButton.baseSpriteDisabledProperties = [SKUButtonSpriteStateProperties propertiesWithTexture:noise2 andAlpha:1.0 andColor:[SKColor greenColor] andColorBlendFactor:1.0];
-	testButton.disableType = kSKUButtonDisableTypeAlternateTexture;
+	testButton.zPosition = 0.2;
 	[self addChild:testButton];
 //	[testButton disableButton];
+	
+	SKUButtonSpriteStateProperties* defaultProps = [SKUButtonSpriteStateProperties propertiesWithTexture:shipSmall andAlpha:1.0];
+	SKUButtonSpriteStateProperties* pressedProperties = [SKUButtonSpriteStateProperties propertiesWithTexture:shipSmallBlur andAlpha:1.0 andColor:[SKColor greenColor] andColorBlendFactor:0.5];
+	SKUButtonSpriteStateProperties* disabledProperties = [SKUButtonSpriteStateProperties propertiesWithTexture:shipSmall andAlpha:0.9 andColor:[SKColor blackColor] andColorBlendFactor:0.0 andPositionOffset:CGPointMake(10, 10) andXScale:1.0 andYScale:1.0];
+	SKUButtonSpriteStatePropertiesPackage* basePackage = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:defaultProps andPressedState:pressedProperties andDisabledState:disabledProperties];
+	
+	
+	SKUButton* buttonTwo = [SKUButton buttonWithPropertiesPackage:basePackage];
+	buttonTwo.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.75, 0.65));
+	[buttonTwo setUpAction:@selector(buttonTwoUp:) toPerformOnTarget:self];
+	buttonTwo.name = @"buttonTwo";
+	[self addChild:buttonTwo];
 
 	
 	NSLog(@"buttonType: %i", testButton.buttonType);
