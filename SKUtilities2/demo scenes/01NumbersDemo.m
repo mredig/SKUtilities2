@@ -104,13 +104,14 @@
 	buttonLabel.zPosition = 1.0;
 	[tempButton addChild:buttonLabel];
 	
-	testButton = [SKUButton buttonWithTextureNamed:@"Spaceship"];
+	testButton = [SKUButton buttonWithTexture:[SKTexture textureWithImageNamed:@"Spaceship"]];
 	testButton.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.5, 0.75));
 	[testButton setDownAction:@selector(testButtonDown:) toPerformOnTarget:self];
 	[testButton setUpAction:@selector(testButtonUp:) toPerformOnTarget:self];
-	testButton.baseTexturePressed = [SKTexture textureWithImageNamed:@"Spaceship"];
-	testButton.baseSpritePressed.alpha = 0.5;
 	testButton.anchorPoint = CGPointMake(1.0, 1.0);
+	testButton.baseSpritePressedProperties = [SKUButtonSpriteStateProperties propertiesWithAlpha:0.25];
+	testButton.baseSpriteDisabledProperties = [SKUButtonSpriteStateProperties propertiesWithAlpha:1.0 andColor:[SKColor greenColor] andColorBlendFactor:1.0];
+	testButton.disableType = kSKUButtonDisableTypeAlternateTexture;
 	[self addChild:testButton];
 //	[testButton disableButton];
 

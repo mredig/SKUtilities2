@@ -554,14 +554,41 @@ Vulnerable to lag spikes if used.
 
 #pragma mark SKUButtonLabelProperties
 
-@interface SKUButtonLabelProperties : NSObject
+@interface SKUButtonLabelProperties : NSObject <NSCopying>
 
 @property (nonatomic) NSString* text;
 @property (nonatomic) SKColor* fontColor;
 @property (nonatomic) CGFloat fontSize;
 @property (nonatomic) NSString* fontName;
+@property (nonatomic) CGPoint position;
+@property (nonatomic) CGFloat scale;
 
 +(SKUButtonLabelProperties*)propertiesWithText:(NSString *)text andColor:(NSColor *)fontColor andSize :(CGFloat)fontSize andFontName:(NSString *)fontName;
++(SKUButtonLabelProperties*)propertiesWithText:(NSString *)text andColor:(NSColor *)fontColor andSize :(CGFloat)fontSize andFontName:(NSString *)fontName andPositionOffset:(CGPoint)position andScale:(CGFloat)scale;
+
+@end
+
+#pragma mark SKUButtonSpriteStateProperties
+
+@interface SKUButtonSpriteStateProperties : NSObject <NSCopying>
+
+@property (nonatomic) CGFloat alpha;
+@property (nonatomic, strong) SKColor* color;
+@property (nonatomic) CGFloat colorBlendFactor;
+@property (nonatomic) CGPoint position;
+@property (nonatomic) CGFloat xScale;
+@property (nonatomic) CGFloat yScale;
+
+/* Returns a new object with the following properties. */
++(SKUButtonSpriteStateProperties*)propertiesWithAlpha:(CGFloat)alpha andColor:(SKColor*)color andColorBlendFactor:(CGFloat)colorBlendFactor andPositionOffset:(CGPoint)position andXScale:(CGFloat)xScale andYScale:(CGFloat)yScale;
+/* Returns a new object with the following properties. */
++(SKUButtonSpriteStateProperties*)propertiesWithAlpha:(CGFloat)alpha andColor:(SKColor*)color andColorBlendFactor:(CGFloat)colorBlendFactor andPositionOffset:(CGPoint)position;
+/* Returns a new object with the following properties. */
++(SKUButtonSpriteStateProperties*)propertiesWithAlpha:(CGFloat)alpha andColor:(SKColor*)color andColorBlendFactor:(CGFloat)colorBlendFactor;
+/* Returns a new object with the following properties. */
++(SKUButtonSpriteStateProperties*)propertiesWithAlpha:(CGFloat)alpha;
+/* Sets the x and y scale together. */
+-(void)setScale:(CGFloat)scale;
 
 @end
 
@@ -601,7 +628,7 @@ typedef enum {
 
 
 /* Identifies button type. */
-@property (nonatomic) kSKUButtonTypes buttonType;
+@property (nonatomic, readonly) kSKUButtonTypes buttonType;
 /* Used for enumeration of button ids */
 @property (nonatomic) NSInteger whichButton;
 /* Used for enumeration of button ids */
@@ -611,7 +638,7 @@ typedef enum {
 /* Readonly: tells you if button is enabled or not */
 @property (nonatomic, readonly) BOOL isEnabled;
 /* Determines how disabling button is displayed. */
-@property (nonatomic, readonly) kSKUButtonDisableTypes disableType;
+@property (nonatomic) kSKUButtonDisableTypes disableType;
 /* If button is set to send notifications, this is the name of the notification. */
 @property (nonatomic) NSString* notificationNameDown;
 /* If button is set to send notifications, this is the name of the notification. */
@@ -624,18 +651,20 @@ typedef enum {
 @property (nonatomic) SKTexture* baseTextureDisabled;
 /* Readonly: access to the base sprite. */
 @property (nonatomic, readonly) SKSpriteNode* baseSprite;
-/* Readonly: access to the base sprite pressed state. */
-@property (nonatomic, readonly) SKSpriteNode* baseSpritePressed;
-/* Readonly: access to the base sprite disabled state. */
-@property (nonatomic, readonly) SKSpriteNode* baseSpriteDisabled;
+/* Properties to use on the base sprite in default state. */
+@property (nonatomic) SKUButtonSpriteStateProperties* baseSpriteDefaultProperties;
+/* Properties to use on the base sprite in pressed state. */
+@property (nonatomic) SKUButtonSpriteStateProperties* baseSpritePressedProperties;
+/* Properties to use on the base sprite in disabled state. */
+@property (nonatomic) SKUButtonSpriteStateProperties* baseSpriteDisabledProperties;
+
 
 
 /* Creates and returns a button with a base sprite of the image named. */
 +(SKUButton*)buttonWithImageNamed:(NSString*)name;
 /* Creates and returns a button with a base sprite of the texture. */
 +(SKUButton*)buttonWithTexture:(SKTexture*)texture;
-/* Creates and returns a button with a base sprite of the texture named. */
-+(SKUButton*)buttonWithTextureNamed:(NSString*)name;
+
 /* This SHOULD be called after either raw init or initWithCoder. Meant to be overridden with post initialization purposes. */
 -(void)didInitialize;
 

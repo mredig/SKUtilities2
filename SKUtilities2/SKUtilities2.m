@@ -1228,13 +1228,87 @@ static SKUtilities2* sharedUtilities = Nil;
 #pragma mark SKUButtonLabelProperties
 @implementation SKUButtonLabelProperties
 
+-(id)copyWithZone:(NSZone *)zone {
+	return [SKUButtonLabelProperties propertiesWithText:_text andColor:_fontColor andSize:_fontSize andFontName:_fontName andPositionOffset:_position andScale:_scale];
+}
+
++(SKUButtonLabelProperties*)propertiesWithText:(NSString *)text andColor:(NSColor *)fontColor andSize:(CGFloat)fontSize andFontName:(NSString *)fontName andPositionOffset:(CGPoint)position andScale:(CGFloat)scale {
+	SKUButtonLabelProperties* props = [[SKUButtonLabelProperties alloc] init];
+	props.text = text;
+	props.fontSize = fontSize;
+	props.fontColor = fontColor;
+	props.fontName = fontName;
+	props.position = position;
+	props.scale = scale;
+	return props;
+}
+
 +(SKUButtonLabelProperties*)propertiesWithText:(NSString *)text andColor:(NSColor *)fontColor andSize :(CGFloat)fontSize andFontName:(NSString *)fontName {
 	SKUButtonLabelProperties* props = [[SKUButtonLabelProperties alloc] init];
 	props.text = text;
 	props.fontSize = fontSize;
 	props.fontColor = fontColor;
 	props.fontName = fontName;
+	props.position = CGPointZero;
+	props.scale = 1.0f;
 	return props;
+}
+
+@end
+
+@implementation SKUButtonSpriteStateProperties
+
+-(id)copyWithZone:(NSZone *)zone {
+	return [SKUButtonSpriteStateProperties propertiesWithAlpha:_alpha andColor:_color andColorBlendFactor:_colorBlendFactor andPositionOffset:_position andXScale:_xScale andYScale:_yScale];
+}
+
++(SKUButtonSpriteStateProperties*)propertiesWithAlpha:(CGFloat)alpha andColor:(NSColor *)color andColorBlendFactor:(CGFloat)colorBlendFactor andPositionOffset:(CGPoint)position andXScale:(CGFloat)xScale andYScale:(CGFloat)yScale {
+	SKUButtonSpriteStateProperties* props = [[SKUButtonSpriteStateProperties alloc] init];
+	props.alpha = alpha;
+	props.color = color;
+	props.colorBlendFactor = colorBlendFactor;
+	props.position = position;
+	props.xScale = xScale;
+	props.yScale = yScale;
+	return props;
+}
+
++(SKUButtonSpriteStateProperties*)propertiesWithAlpha:(CGFloat)alpha andColor:(SKColor*)color andColorBlendFactor:(CGFloat)colorBlendFactor andPositionOffset:(CGPoint)position {
+	SKUButtonSpriteStateProperties* props = [[SKUButtonSpriteStateProperties alloc] init];
+	props.alpha = alpha;
+	props.color = color;
+	props.colorBlendFactor = colorBlendFactor;
+	props.position = position;
+	props.xScale = 1.0f;
+	props.yScale = 1.0f;
+	return props;
+}
+
++(SKUButtonSpriteStateProperties*)propertiesWithAlpha:(CGFloat)alpha andColor:(NSColor *)color andColorBlendFactor:(CGFloat)colorBlendFactor {
+	SKUButtonSpriteStateProperties* props = [[SKUButtonSpriteStateProperties alloc] init];
+	props.alpha = alpha;
+	props.color = color;
+	props.colorBlendFactor = colorBlendFactor;
+	props.position = CGPointZero;
+	props.xScale = 1.0f;
+	props.yScale = 1.0f;
+	return props;
+}
+
++(SKUButtonSpriteStateProperties*)propertiesWithAlpha:(CGFloat)alpha {
+	SKUButtonSpriteStateProperties* props = [[SKUButtonSpriteStateProperties alloc] init];
+	props.alpha = alpha;
+	props.color = [SKColor clearColor];
+	props.colorBlendFactor = 0.0f;
+	props.position = CGPointZero;
+	props.xScale = 1.0f;
+	props.yScale = 1.0f;
+	return props;
+}
+
+-(void)setScale:(CGFloat)scale {
+	_xScale = scale;
+	_yScale = scale;
 }
 
 @end
@@ -1276,33 +1350,24 @@ static SKUtilities2* sharedUtilities = Nil;
 	return button;
 }
 
-+(SKUButton*)buttonWithTextureNamed:(NSString*)name {
-	SKUButton* button = [SKUButton node];
-	button.baseTexture = [SKTexture textureWithImageNamed:name];
-	return button;
-}
 
 -(void)internalPreDidInitialize {
 	_buttonType = 0;
 	_whichButton = 0;
 	_buttonMethod = 0;
 	_disableType = kSKUButtonDisableTypeDim;
+	_baseSpriteDefaultProperties = [SKUButtonSpriteStateProperties propertiesWithAlpha:1.0];
+	_baseSpritePressedProperties = _baseSpriteDefaultProperties.copy;
+	_baseSpriteDisabledProperties = _baseSpriteDefaultProperties.copy;
 	[self internalDidInitialize];
 }
 
 -(void)internalDidInitialize { // note to self - call this super last when making base subclasses
-	if (!_baseSprite) _baseSprite = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor] size:CGSizeMake(10, 10)];
-	_baseSprite.zPosition = 0;
-	[self addChild:_baseSprite];
-	
-	if (!_baseSpritePressed) _baseSpritePressed = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor] size:_baseSprite.size];
-	_baseSpritePressed.zPosition = 0;
-	[self addChild:_baseSpritePressed];
-	
-	if (!_baseSpriteDisabled) _baseSpriteDisabled = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor] size:_baseSprite.size];
-	_baseSpriteDisabled.zPosition = 0;
-	[self addChild:_baseSpriteDisabled];
-	
+	if (!_baseSprite) {
+		_baseSprite = [SKSpriteNode spriteNodeWithTexture:_baseTexture];
+		_baseSprite.zPosition = 0.0;
+		[self addChild:_baseSprite];
+	}
 	[self enableButton];
 	[self didInitialize];
 }
@@ -1355,33 +1420,23 @@ static SKUtilities2* sharedUtilities = Nil;
 
 -(void)setBaseTexture:(SKTexture *)baseTexture {
 	_baseTexture = baseTexture;
-	if (_baseSprite) {
-		_baseSprite.texture = _baseTexture;
-	} else {
-		_baseSprite = [SKSpriteNode spriteNodeWithTexture:_baseTexture];
+	if (!_baseTexturePressed) {
+		_baseTexturePressed = _baseTexture;
 	}
+	if (!_baseTextureDisabled) {
+		_baseTextureDisabled = _baseTexture;
+	}
+	_baseSprite.texture = _baseTexture;
 	_baseSprite.size = _baseTexture.size;
 }
 
 -(void)setBaseTexturePressed:(SKTexture *)baseTexturePressed {
 	_baseTexturePressed = baseTexturePressed;
-	if (_baseSpritePressed) {
-		_baseSpritePressed.texture = _baseTexturePressed;
-	} else {
-		_baseSpritePressed = [SKSpriteNode spriteNodeWithTexture:_baseTexturePressed];
-	}
-	_baseSpritePressed.size = _baseTexturePressed.size;
 	[self checkSizes];
 }
 
 -(void)setBaseTextureDisabled:(SKTexture *)baseTextureDisabled {
 	_baseTextureDisabled = baseTextureDisabled;
-	if (_baseSpriteDisabled) {
-		_baseSpriteDisabled.texture = _baseTextureDisabled;
-	} else {
-		_baseSpriteDisabled = [SKSpriteNode spriteNodeWithTexture:_baseTextureDisabled];
-	}
-	_baseSpriteDisabled.size = _baseTextureDisabled.size;
 	[self checkSizes];
 }
 
@@ -1397,21 +1452,36 @@ static SKUtilities2* sharedUtilities = Nil;
 	}
 }
 
+-(void)setCurrentSpriteStateProperties:(SKUButtonSpriteStateProperties*)properties {
+	_baseSprite.position = properties.position;
+	_baseSprite.color = properties.color;
+	_baseSprite.colorBlendFactor = properties.colorBlendFactor;
+	_baseSprite.alpha = properties.alpha;
+	_baseSprite.xScale = properties.xScale;
+	_baseSprite.yScale = properties.yScale;
+}
+
 #pragma mark SKUButton METHODS
 
 -(void)enableButton {
 	_isEnabled = YES;
 	
-	self.hidden = VISIBLE;
 	self.alpha = 1.0f;
-	_baseSprite.hidden = VISIBLE;
-	_baseSpritePressed.hidden = HIDDEN;
-	_baseSpriteDisabled.hidden = HIDDEN;
+	if (!_baseTexture) {
+		_baseTexture = [SKTexture textureNoiseWithSmoothness:0.5 size:CGSizeMake(200, 75) grayscale:YES];
+	}
+	_baseSprite.texture = _baseTexture;
+	_baseSprite.size = _baseTexture.size;
+	[self enumerateChildNodesWithName:@"*" usingBlock:^(SKNode *node, BOOL *stop) {
+		node.hidden = VISIBLE;
+	}];
 	
 	if (overlay.parent) {
 		[overlay removeFromParent];
 		overlay = nil;
 	}
+	
+	[self setCurrentSpriteStateProperties:_baseSpriteDefaultProperties];
 	
 	self.userInteractionEnabled = YES;
 }
@@ -1445,9 +1515,14 @@ static SKUtilities2* sharedUtilities = Nil;
 			self.alpha = 0.0f;
 			break;
 		case kSKUButtonDisableTypeAlternateTexture:
-			_baseSprite.hidden = HIDDEN;
-			_baseSpritePressed.hidden = HIDDEN;
-			_baseSpriteDisabled.hidden = VISIBLE;
+			if (_baseTextureDisabled) {
+				_baseSprite.texture = _baseTextureDisabled;
+				_baseSprite.size = _baseTextureDisabled.size;
+			} else {
+				_disableType = kSKUButtonDisableTypeDim;
+				NSLog(@"No disable texture provided. Falling back to kSKUButtonDisableTypeDim.");
+				[self disableButton];
+			}
 			break;
 		case kSKUButtonDisableTypeNoDifference:
 			break;
@@ -1455,6 +1530,7 @@ static SKUtilities2* sharedUtilities = Nil;
 			break;
 	}
 	
+	[self setCurrentSpriteStateProperties:_baseSpriteDisabledProperties];
 	self.userInteractionEnabled = NO;
 	
 }
@@ -1465,8 +1541,11 @@ static SKUtilities2* sharedUtilities = Nil;
 
 -(void)buttonPressed:(CGPoint)location {
 	if (_isEnabled) {
-		_baseSpritePressed.hidden = VISIBLE;
-		_baseSprite.hidden = HIDDEN;
+		if (_baseTexturePressed) {
+			_baseSprite.texture = _baseTexturePressed;
+			_baseSprite.size = _baseTexturePressed.size;
+		}
+		[self setCurrentSpriteStateProperties:_baseSpritePressedProperties];
 		BOOL notificationMethod = kSKUButtonMethodPostNotification & _buttonMethod;
 		BOOL delegateMethod = kSKUButtonMethodDelegate & _buttonMethod;
 		BOOL actionMethod = kSKUButtonMethodRunActions & _buttonMethod;
@@ -1492,8 +1571,9 @@ static SKUtilities2* sharedUtilities = Nil;
 
 -(void)buttonReleased:(CGPoint)location {
 	if (_isEnabled) {
-		_baseSpritePressed.hidden = HIDDEN;
-		_baseSprite.hidden = VISIBLE;
+		_baseSprite.texture = _baseTexture;
+		_baseSprite.size = _baseTexture.size;
+		[self setCurrentSpriteStateProperties:_baseSpriteDefaultProperties];
 		BOOL notificationMethod = kSKUButtonMethodPostNotification & _buttonMethod;
 		BOOL delegateMethod = kSKUButtonMethodDelegate & _buttonMethod;
 		BOOL actionMethod = kSKUButtonMethodRunActions & _buttonMethod;
