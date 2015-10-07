@@ -507,7 +507,7 @@ Vulnerable to lag spikes if used.
 @property (nonatomic) CGFloat lineWidth;
 
 
-/* The fill rule used when filling the path. Options are `non-zero' and
+/** The fill rule used when filling the path. Options are `non-zero' and
  * `even-odd'. Defaults to `non-zero'. */
 @property (nonatomic, assign) NSString* fillRule;
 
@@ -579,15 +579,15 @@ Vulnerable to lag spikes if used.
 @property (nonatomic) CGFloat xScale;
 @property (nonatomic) CGFloat yScale;
 
-/* Returns a new object with the following properties. */
+/** Returns a new object with the following properties. */
 +(SKUButtonSpriteStateProperties*)propertiesWithAlpha:(CGFloat)alpha andColor:(SKColor*)color andColorBlendFactor:(CGFloat)colorBlendFactor andPositionOffset:(CGPoint)position andXScale:(CGFloat)xScale andYScale:(CGFloat)yScale;
-/* Returns a new object with the following properties. */
+/** Returns a new object with the following properties. */
 +(SKUButtonSpriteStateProperties*)propertiesWithAlpha:(CGFloat)alpha andColor:(SKColor*)color andColorBlendFactor:(CGFloat)colorBlendFactor andPositionOffset:(CGPoint)position;
-/* Returns a new object with the following properties. */
+/** Returns a new object with the following properties. */
 +(SKUButtonSpriteStateProperties*)propertiesWithAlpha:(CGFloat)alpha andColor:(SKColor*)color andColorBlendFactor:(CGFloat)colorBlendFactor;
-/* Returns a new object with the following properties. */
+/** Returns a new object with the following properties. */
 +(SKUButtonSpriteStateProperties*)propertiesWithAlpha:(CGFloat)alpha;
-/* Sets the x and y scale together. */
+/** Sets the x and y scale together. */
 -(void)setScale:(CGFloat)scale;
 
 @end
@@ -621,61 +621,64 @@ typedef enum {
 -(void)doButtonUp:(SKUButton*)button inBounds:(BOOL)inBounds;
 @end //end protocol
 
-/* SKUButton: Intended as a cross platform, unified way to design buttons for menus and input, instead of designing a completely different interface for Mac, iOS, and tvOS. Still needs a bit more effort when used on tvOS, but shouldn't be too hard. 
+/** SKUButton: Intended as a cross platform, unified way to design buttons for menus and input, instead of designing a completely different interface for Mac, iOS, and tvOS. Still needs a bit more effort when used on tvOS, but shouldn't be too hard. 
  
- Note that anchorPoint (and potentially other) SKSpriteNode properties have no effect - it is only subclassed as a sprite to help with Xcode's scene creation tool. (Note to self: fall back to SKNode if that idea doesn't pan out) */
+ Note: anchorPoint (and potentially other) SKSpriteNode properties have no effect - it is only subclassed as a sprite to help with Xcode's scene creation tool. (Note to self: fall back to SKNode if that idea doesn't pan out)
+ 
+ Also Note: when using action or notification button methods, the release of a button will only trigger the button release methods when the release is in the bounds of the button. However, using the delegate method, you will see the delegate called in both situations as well as a boolean passed that will tell you if the release is in bounds or not.
+ */
 @interface SKUButton : SKSpriteNode
 
 
-/* Identifies button type. */
+/** Identifies button type. */
 @property (nonatomic, readonly) kSKUButtonTypes buttonType;
-/* Used for enumeration of button ids */
+/** Used for enumeration of button ids */
 @property (nonatomic) NSInteger whichButton;
-/* Used for enumeration of button ids */
+/** Used for enumeration of button ids */
 @property (nonatomic) uint32_t buttonMethod;
-/* If button is set to call delegate, this is the delegate used. */
+/** If button is set to call delegate, this is the delegate used. */
 @property (nonatomic, weak) id <SKUButtonDelegate> delegate;
-/* Readonly: tells you if button is enabled or not */
+/** Readonly: tells you if button is enabled or not */
 @property (nonatomic, readonly) BOOL isEnabled;
-/* Determines how disabling button is displayed. */
+/** Determines how disabling button is displayed. */
 @property (nonatomic) kSKUButtonDisableTypes disableType;
-/* If button is set to send notifications, this is the name of the notification. */
+/** If button is set to send notifications, this is the name of the notification. */
 @property (nonatomic) NSString* notificationNameDown;
-/* If button is set to send notifications, this is the name of the notification. */
+/** If button is set to send notifications, this is the name of the notification. */
 @property (nonatomic) NSString* notificationNameUp;
-/* Use this to set the base sprite texture. */
+/** Use this to set the base sprite texture. */
 @property (nonatomic) SKTexture* baseTexture;
-/* Use this to set the base sprite texture for its pressed state. */
+/** Use this to set the base sprite texture for its pressed state. */
 @property (nonatomic) SKTexture* baseTexturePressed;
-/* Use this to set the base sprite texture for its disabled state. */
+/** Use this to set the base sprite texture for its disabled state. */
 @property (nonatomic) SKTexture* baseTextureDisabled;
-/* Readonly: access to the base sprite. */
+/** Readonly: access to the base sprite. */
 @property (nonatomic, readonly) SKSpriteNode* baseSprite;
-/* Properties to use on the base sprite in default state. */
+/** Properties to use on the base sprite in default state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* baseSpriteDefaultProperties;
-/* Properties to use on the base sprite in pressed state. */
+/** Properties to use on the base sprite in pressed state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* baseSpritePressedProperties;
-/* Properties to use on the base sprite in disabled state. */
+/** Properties to use on the base sprite in disabled state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* baseSpriteDisabledProperties;
 
 
 
-/* Creates and returns a button with a base sprite of the image named. */
+/** Creates and returns a button with a base sprite of the image named. */
 +(SKUButton*)buttonWithImageNamed:(NSString*)name;
-/* Creates and returns a button with a base sprite of the texture. */
+/** Creates and returns a button with a base sprite of the texture. */
 +(SKUButton*)buttonWithTexture:(SKTexture*)texture;
 
-/* This SHOULD be called after either raw init or initWithCoder. Meant to be overridden with post initialization purposes. */
+/** This SHOULD be called after either raw init or initWithCoder. Meant to be overridden with post initialization purposes. */
 -(void)didInitialize;
 
-/* If button is set to call actions, set method and target to call on method when pressed down. Sets flag on self.buttonMethods to run actions. */
+/** If button is set to call actions, set method and target to call on method when pressed down. Sets flag on self.buttonMethods to run actions. */
 -(void)setDownAction:(SEL)selector toPerformOnTarget:(NSObject*)target;
-/* If button is set to call actions, set method and target to call on method when released. Sets flag on self.buttonMethods to run actions. */
+/** If button is set to call actions, set method and target to call on method when released. Sets flag on self.buttonMethods to run actions. */
 -(void)setUpAction:(SEL)selector toPerformOnTarget:(NSObject*)target;
 
-/* Call to explicitly enable button (meant to reverse the state of being disabled). Be sure to call super method if you override. */
+/** Call to explicitly enable button (meant to reverse the state of being disabled). Be sure to call super method if you override. */
 -(void)enableButton;
-/* Call to explicitly disable button (meant to reverse the state of being enabled). Be sure to call super method if you override. Also, be sure the button is parented in the scene before using if you using kSKUButtonDisableTypeDim. */
+/** Call to explicitly disable button (meant to reverse the state of being enabled). Be sure to call super method if you override. Also, be sure the button is parented in the scene before using if you using kSKUButtonDisableTypeDim. */
 -(void)disableButton;
 
 
@@ -683,20 +686,20 @@ typedef enum {
 
 @interface SKUPushButton : SKUButton
 
-/* Read only access to title label. */
+/** Read only access to title label. */
 @property (nonatomic, strong, readonly) SKLabelNode* titleLabel;
-/* Set this to setup the title label. */
+/** Set this to setup the title label. */
 @property (nonatomic) SKUButtonLabelProperties* labelProperties;
-/* Set this to setup the title label properties when the button is pressed. */
+/** Set this to setup the title label properties when the button is pressed. */
 @property (nonatomic) SKUButtonLabelProperties* labelPropertiesPressed;
-/* Set this to setup the title label properties when the button is disabled. */
+/** Set this to setup the title label properties when the button is disabled. */
 @property (nonatomic) SKUButtonLabelProperties* labelPropertiesDisabled;
 
-/* Read only access to title sprite. */
+/** Read only access to title sprite. */
 @property (nonatomic, strong, readonly) SKSpriteNode* titleSprite;
-/* Set this to setup the title sprite displayed when the button is pressed. */
+/** Set this to setup the title sprite displayed when the button is pressed. */
 @property (nonatomic, strong, readonly) SKSpriteNode* titleSpritePressed;
-/* Set this to setup the title sprite displayed when the button is pressed. */
+/** Set this to setup the title sprite displayed when the button is pressed. */
 @property (nonatomic, strong, readonly) SKSpriteNode* titleSpriteDisabled;
 
 

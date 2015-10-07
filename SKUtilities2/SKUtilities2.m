@@ -1581,7 +1581,7 @@ static SKUtilities2* sharedUtilities = Nil;
 		BOOL locationIsInBounds = [self checkIfLocationIsWithinButtonBounds:location];
 		
 		if (notificationMethod && locationIsInBounds) {
-			[[NSNotificationCenter defaultCenter] postNotificationName:_notificationNameDown object:self];
+			[[NSNotificationCenter defaultCenter] postNotificationName:_notificationNameUp object:self];
 		}
 		
 		if (delegateMethod) {
