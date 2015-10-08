@@ -564,14 +564,14 @@ Vulnerable to lag spikes if used.
 @interface SKUButtonLabelProperties : NSObject <NSCopying>
 
 @property (nonatomic) NSString* text;
-@property (nonatomic) SKColor* fontColor;
+@property (atomic, strong) SKColor* fontColor;
 @property (nonatomic) CGFloat fontSize;
 @property (nonatomic) NSString* fontName;
 @property (nonatomic) CGPoint position;
 @property (nonatomic) CGFloat scale;
 
-+(SKUButtonLabelProperties*)propertiesWithText:(NSString *)text andColor:(NSColor *)fontColor andSize :(CGFloat)fontSize andFontName:(NSString *)fontName;
-+(SKUButtonLabelProperties*)propertiesWithText:(NSString *)text andColor:(NSColor *)fontColor andSize :(CGFloat)fontSize andFontName:(NSString *)fontName andPositionOffset:(CGPoint)position andScale:(CGFloat)scale;
++(SKUButtonLabelProperties*)propertiesWithText:(NSString *)text andColor:(SKColor *)fontColor andSize :(CGFloat)fontSize andFontName:(NSString *)fontName;
++(SKUButtonLabelProperties*)propertiesWithText:(NSString *)text andColor:(SKColor *)fontColor andSize :(CGFloat)fontSize andFontName:(NSString *)fontName andPositionOffset:(CGPoint)position andScale:(CGFloat)scale;
 
 @end
 /** Stores all states for a label in buttons. The properties collected on this object get passed to the button's states.
@@ -764,6 +764,8 @@ typedef enum {
 
 @end
 
+#pragma mark SKUPushButton
+
 @interface SKUPushButton : SKUButton
 
 /** Read only access to title label. */
@@ -785,6 +787,7 @@ typedef enum {
 @property (nonatomic) SKUButtonSpriteStateProperties* titleSpritePressedProperties;
 /** Properties to use on the title sprite in disabled state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* titleSpriteDisabledProperties;
+#pragma mark SKUPushButton inits
 
 +(SKUPushButton*)pushButtonWithBackgroundTexture:(SKTexture*)texture;
 +(SKUPushButton*)pushButtonWithImageNamed:(NSString*)name;

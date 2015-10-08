@@ -76,7 +76,8 @@
 		[but2 disableButton];
 	} else {
 		[but2 enableButton];
-	}}
+	}
+}
 
 -(void)buttonTwoUp:(SKUButton*)button {
 	if (testButton.isEnabled) {
@@ -119,20 +120,36 @@
 	SKTexture* shipSmall = [SKTexture textureWithImageNamed:@"Spaceship_small"];
 	SKTexture* shipSmallBlur = [SKTexture textureWithImageNamed:@"Spaceship_sm_bl"];
 	
-	testButton = [SKUPushButton pushButtonWithBackgroundTexture:ship];
+	SKUButtonSpriteStateProperties* backgroundDefState = [SKUButtonSpriteStateProperties propertiesWithTexture:ship andAlpha:1.0];
+	SKUButtonSpriteStateProperties* backgroundPresState = [SKUButtonSpriteStateProperties propertiesWithTexture:ship andAlpha:1.0 andColor:[SKColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1.0] andColorBlendFactor:1.0];
+	SKUButtonSpriteStateProperties* backgroundDisState = [SKUButtonSpriteStateProperties propertiesWithTexture:ship andAlpha:0.2 andColor:[SKColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1.0] andColorBlendFactor:0.5];
+	
+	SKUButtonSpriteStatePropertiesPackage* backgroundPackage = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:backgroundDefState andPressedState:backgroundPresState andDisabledState:backgroundDisState];
+	
+	SKUButtonLabelProperties* labelPropsDef = [SKUButtonLabelProperties propertiesWithText:@"Button" andColor:[SKColor whiteColor] andSize:50.0 andFontName:@"Helvetica Neue UltraLight"];
+	SKUButtonLabelProperties* labelPropsPres = [SKUButtonLabelProperties propertiesWithText:@"ButtonPressed" andColor:[SKColor redColor] andSize:45.0 andFontName:@"Arial"];
+	SKUButtonLabelProperties* labelPropsDis = [SKUButtonLabelProperties propertiesWithText:@"ButtonDisabled" andColor:[SKColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1.0] andSize:45.0 andFontName:@"Arial"];
+	
+	SKUButtonLabelPropertiesPackage* labelPack = [SKUButtonLabelPropertiesPackage packageWithPropertiesForDefaultState:labelPropsDef andPressedState:labelPropsPres andDisabledState:labelPropsDis];
+	
+	SKUButtonSpriteStateProperties* foregroundDefState = [SKUButtonSpriteStateProperties propertiesWithTexture:shipSmall andAlpha:1.0];
+	SKUButtonSpriteStateProperties* foregroundPresState = [SKUButtonSpriteStateProperties propertiesWithTexture:shipSmall andAlpha:1.0 andColor:[SKColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1.0] andColorBlendFactor:1.0];
+	SKUButtonSpriteStateProperties* foregroundDisState = [SKUButtonSpriteStateProperties propertiesWithTexture:shipSmallBlur andAlpha:1.0 andColor:[SKColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1.0] andColorBlendFactor:0.5];
+	
+	SKUButtonSpriteStatePropertiesPackage* foregroundPackage = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:foregroundDefState andPressedState:foregroundPresState andDisabledState:foregroundDisState];
+	
+	testButton = [SKUPushButton pushButtonWithBackgroundPropertiesPackage:backgroundPackage andForeGroundSpritePropertiesPackage:foregroundPackage andTitleLabelPropertiesPackage:labelPack];
 	testButton.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.25, 0.65));
 	[testButton setDownAction:@selector(testButtonDown:) toPerformOnTarget:self];
 	[testButton setUpAction:@selector(testButtonUp:) toPerformOnTarget:self];
 	testButton.anchorPoint = CGPointMake(1.0, 1.0);
-//	testButton.baseSpritePressedProperties = [SKUButtonSpriteStateProperties propertiesWithTexture:noise1 andAlpha:0.25];
-//	testButton.baseSpriteDisabledProperties = [SKUButtonSpriteStateProperties propertiesWithTexture:noise2 andAlpha:1.0 andColor:[SKColor greenColor] andColorBlendFactor:1.0];
 	testButton.zPosition = 0.2;
+	
 	[self addChild:testButton];
-//	[testButton disableButton];
 	
 	SKUButtonSpriteStateProperties* defaultProps = [SKUButtonSpriteStateProperties propertiesWithTexture:shipSmall andAlpha:1.0];
 	SKUButtonSpriteStateProperties* pressedProperties = [SKUButtonSpriteStateProperties propertiesWithTexture:shipSmallBlur andAlpha:1.0 andColor:[SKColor greenColor] andColorBlendFactor:0.5];
-	SKUButtonSpriteStateProperties* disabledProperties = [SKUButtonSpriteStateProperties propertiesWithTexture:shipSmall andAlpha:0.9 andColor:[SKColor blackColor] andColorBlendFactor:0.0 andPositionOffset:CGPointMake(10, 10) andXScale:1.0 andYScale:1.0];
+	SKUButtonSpriteStateProperties* disabledProperties = [SKUButtonSpriteStateProperties propertiesWithTexture:shipSmall andAlpha:0.25];
 	SKUButtonSpriteStatePropertiesPackage* basePackage = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:defaultProps andPressedState:pressedProperties andDisabledState:disabledProperties];
 	
 	

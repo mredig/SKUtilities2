@@ -1232,7 +1232,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	return [SKUButtonLabelProperties propertiesWithText:_text andColor:_fontColor andSize:_fontSize andFontName:_fontName andPositionOffset:_position andScale:_scale];
 }
 
-+(SKUButtonLabelProperties*)propertiesWithText:(NSString *)text andColor:(NSColor *)fontColor andSize:(CGFloat)fontSize andFontName:(NSString *)fontName andPositionOffset:(CGPoint)position andScale:(CGFloat)scale {
++(SKUButtonLabelProperties*)propertiesWithText:(NSString *)text andColor:(SKColor *)fontColor andSize:(CGFloat)fontSize andFontName:(NSString *)fontName andPositionOffset:(CGPoint)position andScale:(CGFloat)scale {
 	SKUButtonLabelProperties* props = [[SKUButtonLabelProperties alloc] init];
 	props.text = text;
 	props.fontSize = fontSize;
@@ -1243,7 +1243,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	return props;
 }
 
-+(SKUButtonLabelProperties*)propertiesWithText:(NSString *)text andColor:(NSColor *)fontColor andSize :(CGFloat)fontSize andFontName:(NSString *)fontName {
++(SKUButtonLabelProperties*)propertiesWithText:(NSString *)text andColor:(SKColor *)fontColor andSize :(CGFloat)fontSize andFontName:(NSString *)fontName {
 	SKUButtonLabelProperties* props = [[SKUButtonLabelProperties alloc] init];
 	props.text = text;
 	props.fontSize = fontSize;
@@ -1305,7 +1305,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	return [SKUButtonSpriteStateProperties propertiesWithTexture:_texture andAlpha:_alpha andColor:_color andColorBlendFactor:_colorBlendFactor andPositionOffset:_position andXScale:_xScale andYScale:_yScale];
 }
 
-+(SKUButtonSpriteStateProperties*)propertiesWithTexture:(SKTexture*)texture andAlpha:(CGFloat)alpha andColor:(NSColor *)color andColorBlendFactor:(CGFloat)colorBlendFactor andPositionOffset:(CGPoint)position andXScale:(CGFloat)xScale andYScale:(CGFloat)yScale {
++(SKUButtonSpriteStateProperties*)propertiesWithTexture:(SKTexture*)texture andAlpha:(CGFloat)alpha andColor:(SKColor *)color andColorBlendFactor:(CGFloat)colorBlendFactor andPositionOffset:(CGPoint)position andXScale:(CGFloat)xScale andYScale:(CGFloat)yScale {
 	SKUButtonSpriteStateProperties* props = [[SKUButtonSpriteStateProperties alloc] init];
 	props.alpha = alpha;
 	props.color = color;
@@ -1329,7 +1329,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	return props;
 }
 
-+(SKUButtonSpriteStateProperties*)propertiesWithTexture:(SKTexture*)texture andAlpha:(CGFloat)alpha andColor:(NSColor *)color andColorBlendFactor:(CGFloat)colorBlendFactor {
++(SKUButtonSpriteStateProperties*)propertiesWithTexture:(SKTexture*)texture andAlpha:(CGFloat)alpha andColor:(SKColor *)color andColorBlendFactor:(CGFloat)colorBlendFactor {
 	SKUButtonSpriteStateProperties* props = [[SKUButtonSpriteStateProperties alloc] init];
 	props.alpha = alpha;
 	props.color = color;
@@ -1713,6 +1713,9 @@ static SKUtilities2* sharedUtilities = Nil;
 
 @end
 
+
+#pragma mark SKUPushButton
+
 @interface SKUPushButton() {
 	BOOL stateTSpriteDefaultInitialized;
 	BOOL stateTSpritePressedInitialized;
@@ -1767,13 +1770,14 @@ static SKUtilities2* sharedUtilities = Nil;
 +(SKUPushButton*)pushButtonWithBackgroundPropertiesPackage:(SKUButtonSpriteStatePropertiesPackage*)backgroundPackage andForeGroundSpritePropertiesPackage:(SKUButtonSpriteStatePropertiesPackage*)foregroundPackage {
 	SKUPushButton* button = [SKUPushButton node];
 	[button setBaseStatesWithPackage:backgroundPackage];
+	[button setTitleSpriteStatesWithPackage:foregroundPackage];
 	return button;
 }
 
-+(SKUPushButton*)pushButtonWithBackgroundPropertiesPackage:(SKUButtonSpriteStatePropertiesPackage*)backgroundPackage andTitleLabelPropertiesPackage:(SKUButtonLabelPropertiesPackage*)foregroundPackage {
++(SKUPushButton*)pushButtonWithBackgroundPropertiesPackage:(SKUButtonSpriteStatePropertiesPackage*)backgroundPackage andTitleLabelPropertiesPackage:(SKUButtonLabelPropertiesPackage*)titlePackage {
 	SKUPushButton* button = [SKUPushButton node];
 	[button setBaseStatesWithPackage:backgroundPackage];
-	[button setTitleLabelStatesWithPackage:foregroundPackage];
+	[button setTitleLabelStatesWithPackage:titlePackage];
 	return button;
 }
 
@@ -1918,21 +1922,21 @@ static SKUtilities2* sharedUtilities = Nil;
 
 -(void)setTitleSpriteStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package {
 	_titleSpritePressedProperties = package.propertiesPressedState;
+	stateTSpritePressedInitialized = YES;
 	_titleSpriteDisabledProperties = package.propertiesDisabledState;
+	stateTSpriteDisabledInitialized = YES;
 	self.titleSpriteDefaultProperties = package.propertiesDefaultState;
 	stateTSpriteDefaultInitialized = YES;
-	stateTSpritePressedInitialized = YES;
-	stateTSpriteDisabledInitialized = YES;
 	[self updateCurrentSpriteStateProperties];
 }
 
 -(void)setTitleLabelStatesWithPackage:(SKUButtonLabelPropertiesPackage*)package {
 	_labelPropertiesPressed = package.propertiesPressedState;
+	stateTLabelPressedInitialized = YES;
 	_labelPropertiesDisabled = package.propertiesDisabledState;
+	stateTLabelDisabledInitialized = YES;
 	self.labelPropertiesDefault = package.propertiesDefaultState;
 	stateTLabelDefaultInitialized = YES;
-	stateTLabelPressedInitialized = YES;
-	stateTLabelDisabledInitialized = YES;
 	[self updateCurrentSpriteStateProperties];
 }
 
@@ -2377,11 +2381,27 @@ static SKUtilities2* sharedUtilities = Nil;
 @implementation SKColor (Mixing)
 
 -(SKColor*)blendWithColor:(SKColor*)color2 alpha:(CGFloat)alpha2 {
+	SKColor* tColor1 = self;
+	SKColor* tColor2 = color2;
+	
+#if	TARGET_OS_IPHONE
+#else
+	if ([tColor1.colorSpaceName isEqualToString:@"NSCalibratedWhiteColorSpace"]) {
+		tColor1 = [SKColor convertGrayscaleColor:tColor1];
+	}
+	if ([tColor2.colorSpaceName isEqualToString:@"NSCalibratedWhiteColorSpace"]) {
+		tColor2 = [SKColor convertGrayscaleColor:tColor2];
+	}
+	if (![self.colorSpaceName isEqualToString:color2.colorSpaceName]) {
+		tColor2 = [color2 colorUsingColorSpace:self.colorSpace];
+	}
+#endif
+	
 	alpha2 = MIN( 1.0, MAX( 0.0, alpha2 ) );
 	CGFloat beta = 1.0 - alpha2;
 	CGFloat r1, g1, b1, a1, r2, g2, b2, a2;
-	[self getRed:&r1 green:&g1 blue:&b1 alpha:&a1];
-	[color2 getRed:&r2 green:&g2 blue:&b2 alpha:&a2];
+	[tColor1 getRed:&r1 green:&g1 blue:&b1 alpha:&a1];
+	[tColor2 getRed:&r2 green:&g2 blue:&b2 alpha:&a2];
 	CGFloat red     = r1 * beta + r2 * alpha2;
 	CGFloat green   = g1 * beta + g2 * alpha2;
 	CGFloat blue    = b1 * beta + b2 * alpha2;
@@ -2394,6 +2414,11 @@ static SKUtilities2* sharedUtilities = Nil;
 	return [tColor1 blendWithColor:color2 alpha:alpha2];
 }
 
++(SKColor*)convertGrayscaleColor:(SKColor*)grayScaleColor {
+	CGFloat w, a;
+	[grayScaleColor getWhite:&w alpha:&a];
+	return [SKColor colorWithRed:w green:w blue:w alpha:a];
+}
 
 @end
 
