@@ -24,7 +24,7 @@
 
 -(void)didMoveToView:(SKView *)view {
 	shapesSet = [NSMutableSet set];
-	squareBase = 25;
+	squareBase = 20;
 	[self setupButton];
 	
 }
@@ -42,7 +42,7 @@
 	
 	SKTexture* tex = [SKTexture textureWithImageNamed:@"Spaceship_small"];
 	
-	SKUButtonLabelProperties* labelProps = [SKUButtonLabelProperties propertiesWithText:@"SKUShape" andColor:[SKColor whiteColor] andSize:50 andFontName:@"Helvetica Neue"];
+	SKUButtonLabelProperties* labelProps = [SKUButtonLabelProperties propertiesWithText:@"SKUShapeNode" andColor:[SKColor whiteColor] andSize:50 andFontName:@"Helvetica Neue"];
 	SKUButtonLabelPropertiesPackage* labelPack = [SKUButtonLabelPropertiesPackage packageWithPropertiesForDefaultState:labelProps];
 	
 	SKUButtonSpriteStateProperties* spriteProps = [SKUButtonSpriteStateProperties propertiesWithTexture:tex andAlpha:1.0];
