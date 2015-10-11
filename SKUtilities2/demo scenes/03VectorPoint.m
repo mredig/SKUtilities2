@@ -24,7 +24,7 @@
 	
 	SKUtilities2* sharedUtilities;
 	
-    SKSpriteNode* cursor;
+	SKSpriteNode* cursor;
 
 }
 
@@ -207,14 +207,14 @@
 	}
 	
 	[self updatePartColor];
-    
+	
 #if TARGET_OS_TV
-    
-    SKUSharedUtilities.navMode = kSKUNavModeOff;
-    cursor = [SKSpriteNode spriteNodeWithColor:[SKColor greenColor] size:CGSizeMake(20, 20)];
-    cursor.position = pointMultiplyByPoint(CGPointMake(0.5, 0.25), pointFromCGSize(self.size));
-    cursor.zPosition = 20;
-    [self addChild:cursor];
+	
+	SKUSharedUtilities.navMode = kSKUNavModeOff;
+	cursor = [SKSpriteNode spriteNodeWithColor:[SKColor greenColor] size:CGSizeMake(20, 20)];
+	cursor.position = pointMultiplyByPoint(CGPointMake(0.5, 0.25), pointFromCGSize(self.size));
+	cursor.zPosition = 20;
+	[self addChild:cursor];
 #endif
 	
 }
@@ -284,9 +284,9 @@
 	latValue = fmin(1.0, latValue);
 	previousLocation = location;
 #if TARGET_OS_TV
-    UITouch* touch = eventDict[@"touch"];
-    CGPoint prevTouchLocation = [touch previousLocationInNode:self];
-    cursor.position = pointAdd(pointAdd(pointInverse(prevTouchLocation), location), cursor.position);
+	UITouch* touch = eventDict[@"touch"];
+	CGPoint prevTouchLocation = [touch previousLocationInNode:self];
+	cursor.position = pointAdd(pointAdd(pointInverse(prevTouchLocation), location), cursor.position);
 #endif
 }
 
