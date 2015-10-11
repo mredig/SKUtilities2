@@ -9,6 +9,7 @@
 #import "01NumbersDemo.h"
 #import "SKUtilities2.h"
 #import "02rotationScene.h"
+#import "shapeBenchmark.h"
 
 @interface _1NumbersDemo() {
 	SKUtilities2* sharedUtilities;
@@ -24,6 +25,11 @@
 @implementation _1NumbersDemo
 
 -(void)didMoveToView:(SKView *)view {
+	
+//	shapeBenchmark* shapeTestScene = [shapeBenchmark sceneWithSize:self.size];
+//	shapeTestScene.scaleMode = self.scaleMode;
+//	[self.view presentScene:shapeTestScene];
+	
 	
 	sharedUtilities = SKUSharedUtilities;
 	

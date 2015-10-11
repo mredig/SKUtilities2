@@ -47,6 +47,9 @@
 		335C933D1BBB8AFD00DC1BD2 /* 05ShapeDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92E41BBB4F7700DC1BD2 /* 05ShapeDemo.m */; };
 		335C933E1BBB8AFD00DC1BD2 /* 06MultiLineDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 335C92EA1BBB7C5C00DC1BD2 /* 06MultiLineDemo.m */; };
 		335C933F1BBCA95F00DC1BD2 /* SceneAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 335C92C71BB71D7000DC1BD2 /* SceneAssets.xcassets */; };
+		33A199CB1BC9FF6D00A98913 /* shapeBenchmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 33A199CA1BC9FF6D00A98913 /* shapeBenchmark.m */; };
+		33A199CC1BC9FF6D00A98913 /* shapeBenchmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 33A199CA1BC9FF6D00A98913 /* shapeBenchmark.m */; };
+		33A199CD1BC9FF6D00A98913 /* shapeBenchmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 33A199CA1BC9FF6D00A98913 /* shapeBenchmark.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,10 +59,10 @@
 		332046621BC32ED3008C9FCF /* 07ColorBlending.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = 07ColorBlending.m; path = "demo scenes/07ColorBlending.m"; sourceTree = "<group>"; };
 		335C92B91BB71D7000DC1BD2 /* SKUtilities2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SKUtilities2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		335C92BC1BB71D7000DC1BD2 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = OSX/AppDelegate.h; sourceTree = "<group>"; };
-		335C92BD1BB71D7000DC1BD2 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = OSX/AppDelegate.m; sourceTree = "<group>"; };
+		335C92BD1BB71D7000DC1BD2 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = AppDelegate.m; path = OSX/AppDelegate.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		335C92C01BB71D7000DC1BD2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = main.m; path = OSX/main.m; sourceTree = "<group>"; };
 		335C92C21BB71D7000DC1BD2 /* 01NumbersDemo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = 01NumbersDemo.h; path = "demo scenes/01NumbersDemo.h"; sourceTree = "<group>"; };
-		335C92C31BB71D7000DC1BD2 /* 01NumbersDemo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = 01NumbersDemo.m; path = "demo scenes/01NumbersDemo.m"; sourceTree = "<group>"; };
+		335C92C31BB71D7000DC1BD2 /* 01NumbersDemo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = 01NumbersDemo.m; path = "demo scenes/01NumbersDemo.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		335C92C71BB71D7000DC1BD2 /* SceneAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = SceneAssets.xcassets; path = OSX/SceneAssets.xcassets; sourceTree = "<group>"; };
 		335C92CA1BB71D7000DC1BD2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		335C92CC1BB71D7000DC1BD2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = OSX/Info.plist; sourceTree = "<group>"; };
@@ -68,7 +71,7 @@
 		335C92D61BB7AEB100DC1BD2 /* 02rotationScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = 02rotationScene.h; path = "demo scenes/02rotationScene.h"; sourceTree = "<group>"; };
 		335C92D71BB7AEB100DC1BD2 /* 02rotationScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = 02rotationScene.m; path = "demo scenes/02rotationScene.m"; sourceTree = "<group>"; };
 		335C92D91BB8959400DC1BD2 /* 03VectorPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = 03VectorPoint.h; path = "demo scenes/03VectorPoint.h"; sourceTree = "<group>"; };
-		335C92DA1BB8959400DC1BD2 /* 03VectorPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = 03VectorPoint.m; path = "demo scenes/03VectorPoint.m"; sourceTree = "<group>"; };
+		335C92DA1BB8959400DC1BD2 /* 03VectorPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = 03VectorPoint.m; path = "demo scenes/03VectorPoint.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		335C92E01BB9D01200DC1BD2 /* 04BezierDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = 04BezierDemo.h; path = "demo scenes/04BezierDemo.h"; sourceTree = "<group>"; };
 		335C92E11BB9D01200DC1BD2 /* 04BezierDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = 04BezierDemo.m; path = "demo scenes/04BezierDemo.m"; sourceTree = "<group>"; };
 		335C92E31BBB4F7700DC1BD2 /* 05ShapeDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = 05ShapeDemo.h; path = "demo scenes/05ShapeDemo.h"; sourceTree = "<group>"; };
@@ -91,6 +94,8 @@
 		335C932A1BBB8ADC00DC1BD2 /* GameViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = GameViewController.m; path = SKUtilities2/tvOS/GameViewController.m; sourceTree = SOURCE_ROOT; };
 		335C93311BBB8ADD00DC1BD2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = SKUtilities2/tvOS/Assets.xcassets; sourceTree = SOURCE_ROOT; };
 		335C93331BBB8ADD00DC1BD2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = SKUtilities2/tvOS/Info.plist; sourceTree = SOURCE_ROOT; };
+		33A199C91BC9FF6D00A98913 /* shapeBenchmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = shapeBenchmark.h; path = "demo scenes/shapeBenchmark.h"; sourceTree = "<group>"; };
+		33A199CA1BC9FF6D00A98913 /* shapeBenchmark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = shapeBenchmark.m; path = "demo scenes/shapeBenchmark.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -208,6 +213,8 @@
 				335C92E11BB9D01200DC1BD2 /* 04BezierDemo.m */,
 				335C92E31BBB4F7700DC1BD2 /* 05ShapeDemo.h */,
 				335C92E41BBB4F7700DC1BD2 /* 05ShapeDemo.m */,
+				33A199C91BC9FF6D00A98913 /* shapeBenchmark.h */,
+				33A199CA1BC9FF6D00A98913 /* shapeBenchmark.m */,
 				335C92E91BBB7C5C00DC1BD2 /* 06MultiLineDemo.h */,
 				335C92EA1BBB7C5C00DC1BD2 /* 06MultiLineDemo.m */,
 				332046611BC32ED3008C9FCF /* 07ColorBlending.h */,
@@ -384,6 +391,7 @@
 				335C92BE1BB71D7000DC1BD2 /* AppDelegate.m in Sources */,
 				335C92D81BB7AEB100DC1BD2 /* 02rotationScene.m in Sources */,
 				332046631BC32ED4008C9FCF /* 07ColorBlending.m in Sources */,
+				33A199CB1BC9FF6D00A98913 /* shapeBenchmark.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -398,6 +406,7 @@
 				335C93141BBB7F2E00DC1BD2 /* 06MultiLineDemo.m in Sources */,
 				335C93101BBB7F2E00DC1BD2 /* 02rotationScene.m in Sources */,
 				335C930E1BBB7F2E00DC1BD2 /* 01NumbersDemo.m in Sources */,
+				33A199CC1BC9FF6D00A98913 /* shapeBenchmark.m in Sources */,
 				335C92F71BBB7F0C00DC1BD2 /* AppDelegate.m in Sources */,
 				335C92F41BBB7F0C00DC1BD2 /* main.m in Sources */,
 				335C93151BBB7F3100DC1BD2 /* SKUtilities2.m in Sources */,
@@ -416,6 +425,7 @@
 				335C93371BBB8AFD00DC1BD2 /* SKUtilities2.m in Sources */,
 				335C933C1BBB8AFD00DC1BD2 /* 04BezierDemo.m in Sources */,
 				335C933E1BBB8AFD00DC1BD2 /* 06MultiLineDemo.m in Sources */,
+				33A199CD1BC9FF6D00A98913 /* shapeBenchmark.m in Sources */,
 				335C933A1BBB8AFD00DC1BD2 /* 02rotationScene.m in Sources */,
 				335C93381BBB8AFD00DC1BD2 /* 01NumbersDemo.m in Sources */,
 				335C93231BBB8ADC00DC1BD2 /* AppDelegate.m in Sources */,

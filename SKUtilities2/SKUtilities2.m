@@ -1259,7 +1259,7 @@ static SKUtilities2* sharedUtilities = Nil;
 @implementation SKUButtonLabelPropertiesPackage
 
 -(id)copyWithZone:(NSZone *)zone {
-	return [SKUButtonLabelPropertiesPackage packageWithPropertiesForDefaultState:_propertiesDefaultState andPressedState:_propertiesPressedState andDisabledState:_propertiesDisabledState];
+	return [SKUButtonLabelPropertiesPackage packageWithPropertiesForDefaultState:_propertiesDefaultState.copy andPressedState:_propertiesPressedState.copy andDisabledState:_propertiesDisabledState.copy];
 }
 
 +(SKUButtonLabelPropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonLabelProperties *)defaultState andPressedState:(SKUButtonLabelProperties *)pressedState andDisabledState:(SKUButtonLabelProperties *)disabledState {
@@ -1371,7 +1371,7 @@ static SKUtilities2* sharedUtilities = Nil;
 
 
 -(id)copyWithZone:(NSZone *)zone {
-	return [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_propertiesDefaultState andPressedState:_propertiesPressedState andDisabledState:_propertiesDisabledState];
+	return [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_propertiesDefaultState.copy andPressedState:_propertiesPressedState.copy andDisabledState:_propertiesDisabledState.copy];
 }
 
 +(SKUButtonSpriteStatePropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonSpriteStateProperties *)defaultState andPressedState:(SKUButtonSpriteStateProperties *)pressedState andDisabledState:(SKUButtonSpriteStateProperties *)disabledState {
