@@ -482,7 +482,7 @@ Vulnerable to lag spikes if used.
 #pragma mark SKU_ShapeNode
 
 /**
- Apple's first shape generator for SpriteKit (OS 10.9) caused performance issues. It might have been addressed in later versions of SpriteKit, but it appeared that the shapes were rerendered each frame, despite a lack of change in appearance. This method uses CAShapeLayer to render a shape, which is slightly more costly than the rendering of the SKShapeNode, but once it's rendered, is cached as a bitmap and renders very quickly in SpriteKit thereafter.
+ Apple's shape generator for SpriteKit causes performance issues. It appears that shapes are rerendered each frame, despite a lack of change in appearance. This method uses CAShapeLayer to render a shape, which is slightly more costly than the rendering of the SKShapeNode, but once it's rendered, is cached as a bitmap and renders very quickly in SpriteKit thereafter. TLDR: SpriteKit's shape node fast redner, slow draw. SKUShapeNode is slow render, fast draw.
  */
 @interface SKU_ShapeNode : SKNode
 
