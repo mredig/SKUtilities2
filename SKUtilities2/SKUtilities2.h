@@ -391,6 +391,10 @@ CGPoint bezierPoint (CGFloat t, CGPoint point0, CGPoint point1, CGPoint point2, 
 
 double bezierTValueAtXValue (double x, double p0x, double p1x, double p2x, double p3x);
 
+#pragma mark LOGGING
+
+void SKULog(NSInteger verbosityLevel, NSString *format, ...);
+
 
 #pragma mark SKUTILITES SINGLETON
 
@@ -421,6 +425,10 @@ Vulnerable to lag spikes if used.
  Defaults to 1.0f.
  */
 @property (nonatomic) CGFloat deltaMaxTime;
+/**
+ Used to determine how many logs print to the console.
+ */
+@property (nonatomic) NSInteger verbosityLevel;
 
 #if TARGET_OS_TV
 

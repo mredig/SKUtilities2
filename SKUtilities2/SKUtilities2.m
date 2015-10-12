@@ -480,6 +480,22 @@ double bezierTValueAtXValue (double x, double p0x, double p1x, double p2x, doubl
 
 ////end x bezier algorithm
 
+#pragma mark LOGGING
+
+void SKULog(const NSInteger verbosityLevel, NSString* format, ...) {
+	if (SKUSharedUtilities.verbosityLevel < verbosityLevel) return;
+	va_list args;
+	va_start(args, format);
+	NSLogv(format, args);
+	va_end(args);
+}
+
+
+
+
+#pragma mark SKUTILITES SINGLETON
+
+
 @interface SKUtilities2() {
 	CGPoint selectLocation; // initial value could be wonky... look into this
 }
@@ -506,6 +522,7 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 -(void)initialSetup {
+	_verbosityLevel = 0;
 	_deltaMaxTime = 1.0f;
 	_deltaFrameTime = 1.0f/60.0f;
 	_deltaFrameTimeUncapped = 1.0f/60.0f;
