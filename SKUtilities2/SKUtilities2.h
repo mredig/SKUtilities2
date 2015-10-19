@@ -407,6 +407,17 @@ typedef enum {
 
 #endif
 
+#if TARGET_OS_IPHONE
+#else
+
+typedef enum {
+	kSKUMouseButtonFlagLeft = 1 << 0,
+	kSKUMouseButtonFlagRight = 1 << 1,
+	kSKUMouseButtonFlagOther = 1 << 2,
+} kSKUMouseButtonFlags;
+
+#endif
+
 @interface SKUtilities2 : NSObject
 /**
  Current time passed in from scene update method, but must be set up properly. This allows you to get the currentTime into other objects or methods without directly calling them from the update method.
@@ -429,6 +440,11 @@ Vulnerable to lag spikes if used.
  Used to determine how many logs print to the console.
  */
 @property (nonatomic) NSInteger verbosityLevel;
+/**
+ Flags to determine what sort of mouse button is passed onto nodes. By default, it only passes left mouse button events, but adding other kSKUMouseButtonFlags flags allows to respond to other mouse buttons.
+ */
+@property (nonatomic) kSKUMouseButtonFlags macButtonFlags;
+
 
 #if TARGET_OS_TV
 
@@ -810,28 +826,54 @@ typedef enum {
 
 
 #pragma mark CLASS CATEGORIES
+
+#pragma mark SKView Modifications
+
+@interface SKView (AdditionalMouseSupport)
+
+@end
+
+
 #pragma mark SKNode Modifications
 
 @interface SKNode (ConsolidatedInput)
 
 #if TARGET_OS_TV
 
+/** Call this method to set the currently highlighted node within the navNodes set. */
 -(void)setCurrentSelectedNode:(SKNode*)node;
+/** Call this method to add a node to the list of navigation nodes paired with this node. */
 -(void)addNodeToNavNodes:(SKNode*)node;
--(void)currentSelectedNodeUpdated:(SKNode *)node; //override this method to update visuals
+/** Override this method to update visuals. */
+-(void)currentSelectedNodeUpdated:(SKNode *)node;
 
 #endif
 
--(void)inputBegan:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict ;
--(void)inputMoved:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict ;
--(void)inputEnded:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict ;
+/** Called when relative type input begins (Currently only AppleTV's Siri Remote touches) Remember to call [super relativeInputBeganSKU] when overrding.  */
+-(void)relativeInputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
+/** Called when relative type input moves (Currently only AppleTV's Siri Remote touches). Remember to call [super relativeInputMovedSKU] when overrding.  */
+-(void)relativeInputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
+/** Called when relative type input ends (Currently only AppleTV's Siri Remote touches). Remember to call [super relativeInputEndedSKU] when overrding.  */
+-(void)relativeInputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
+/** Called when absolute type input begins (Currently iOS touches and Mac mouse clicks). Remember to call [super absoluteInputBeganSKU] when overrding.  */
+-(void)absoluteInputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
+/** Called when absolute type input moves (Currently iOS touches and Mac mouse clicks). Remember to call [super absoluteInputMovedSKU] when overrding.  */
+-(void)absoluteInputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
+/** Called when absolute type input ends (Currently iOS touches and Mac mouse clicks). Remember to call [super absoluteInputEndedSKU] when overrding.  */
+-(void)absoluteInputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
+/** Called when any input location based input begins (Currently iOS touches, Mac mouse clicks, and AppleTV Siri Remote touches). */
+-(void)inputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
+/** Called when any input location based input moves (Currently iOS touches, Mac mouse clicks, and AppleTV Siri Remote touches). */
+-(void)inputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
+/** Called when any input location based input ends (Currently iOS touches, Mac mouse clicks, and AppleTV Siri Remote touches). */
+-(void)inputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
 
 @end
 
 #pragma mark SKColor Modifications
 
 @interface SKColor (Mixing)
-
+/** Blends two colors together. May run into issues if using convenience methods (grayColor, whiteColor, etc). */
 +(SKColor*)blendColor:(SKColor*)color1 withColor:(SKColor*)color2 alpha:(CGFloat)alpha2;
 
 @end

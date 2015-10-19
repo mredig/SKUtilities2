@@ -79,15 +79,15 @@
 	
 	
 }
--(void)inputBegan:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+-(void)inputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 	multiLineLabel.position = location;
 }
 
--(void)inputMoved:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+-(void)inputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 	multiLineLabel.position = location;
 }
 
--(void)inputEnded:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+-(void)inputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 #if TARGET_OS_TV
 #else
 	NSArray* nodes = [self nodesAtPoint:location];

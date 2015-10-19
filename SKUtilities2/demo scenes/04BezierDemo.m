@@ -166,7 +166,7 @@
 	selectedNode = node;
 }
 
--(void)inputBegan:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+-(void)inputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 #if TARGET_OS_TV
 #else
 	NSArray* nodes = [self nodesAtPoint:location];
@@ -185,7 +185,7 @@
 #endif
 }
 
--(void)inputMoved:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+-(void)inputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 #if TARGET_OS_TV
 	if (lockedNode) {
 		
@@ -206,7 +206,7 @@
 	xAndTvalueLabel.text = [NSString stringWithFormat:@"xVal: %f tVal:%f", location.x, bezierTValueAtXValue(location.x, 0.0, handle1.position.x, handle2.position.x, self.size.width)];
 }
 
--(void)inputEnded:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+-(void)inputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 #if TARGET_OS_TV
 #else
 	NSArray* nodes = [self nodesAtPoint:location];

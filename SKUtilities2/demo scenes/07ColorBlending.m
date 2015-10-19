@@ -60,10 +60,10 @@
 	
 	
 }
--(void)inputBegan:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+-(void)inputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 }
 
--(void)inputMoved:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+-(void)inputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 	
 	SKColor* redColor = [SKColor redColor];
 	SKColor* greenColor = [SKColor greenColor];
@@ -100,7 +100,7 @@
 	
 }
 
--(void)inputEnded:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+-(void)inputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 #if TARGET_OS_TV
 #else
 	NSArray* nodes = [self nodesAtPoint:location];

@@ -6,17 +6,10 @@ shapenode needs to accomodate for retina displays when rendering
 multiline node needs copy zone and might need retina rendering
 skbuttons probably need copy zone
 
-skview for mac needs multibutton support
-
 perhaps add time updates to singleton IN ADDITION to c functions (ability to track delta etc automatically)
 
 might wanna add archiving support?
 
 
-sknode category should break input down into a hierarchy of calls
-	platform dependent calls "absoluteInputBegan" and "relativeInputBegan" should then call "inputBegan"
-		all should be accessible by derivatives
-	remove siriRemote calls (become relative)
 
-
-rename category method calls to start with SKU or something (avoid namespace conflicts)
+rename category method calls to end with SKU or something (avoid namespace conflicts)

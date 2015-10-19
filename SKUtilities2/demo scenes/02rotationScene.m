@@ -135,10 +135,10 @@
 	
 }
 
--(void)inputBegan:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+-(void)inputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 }
 
--(void)inputMoved:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+-(void)inputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 #if TARGET_OS_TV
 	UITouch* touch = eventDict[@"touch"];
 	CGPoint prevLocation = [touch previousLocationInNode:self];
@@ -156,7 +156,7 @@
 	orientDownNode.zRotation = orientToFromDownFace(location, orientDownNode.position);
 }
 
--(void)inputEnded:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+-(void)inputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 #if TARGET_OS_TV
 	NSArray* nodes = [self nodesAtPoint:cursor.position];
 #else

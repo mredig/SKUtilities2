@@ -29,7 +29,7 @@
 //	shapeTestScene.scaleMode = self.scaleMode;
 //	[self.view presentScene:shapeTestScene];
 	
-	
+//	SKUSharedUtilities.macButtonFlags = kSKUMouseButtonFlagLeft | kSKUMouseButtonFlagRight | kSKUMouseButtonFlagOther;
 	
 	NSLog(@"01NumbersDemo: demos number interpolation, random numbers, and distance functions");
 	
@@ -194,7 +194,7 @@
 
 #if TARGET_OS_TV
 -(void)gestureTap:(UIGestureRecognizer*)gesture {
-	if ([sharedUtilities.navFocus isEqual:self]) {
+	if ([SKUSharedUtilities.navFocus isEqual:self]) {
 		if ([currentSelectedNode.name isEqualToString:@"tempButton"]) {
 			[self transferScene];
 		}
@@ -207,8 +207,11 @@
 	currentSelectedNode = node;
 }
 
+-(void)inputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+	SKULog(0, @"began called");
+}
 
--(void)inputEnded:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+-(void)inputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 
 	NSArray* nodes = [self nodesAtPoint:location];
 	for (SKNode* node in nodes) {

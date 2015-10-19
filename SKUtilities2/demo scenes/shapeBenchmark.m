@@ -119,21 +119,16 @@
 
 #if TARGET_OS_TV
 -(void)gestureTap:(UIGestureRecognizer*)gesture {
-	if ([sharedUtilities.navFocus isEqual:self]) {
-		if ([currentSelectedNode.name isEqualToString:@"tempButton"]) {
-			[self transferScene];
-		}
-	}
+
 }
 #endif
 
 -(void)currentSelectedNodeUpdated:(SKNode *)node {
-//	indicator.position = node.position;
-//	currentSelectedNode = node;
+
 }
 
 
--(void)inputEnded:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+-(void)inputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 	
 	NSArray* nodes = [self nodesAtPoint:location];
 	for (SKNode* node in nodes) {

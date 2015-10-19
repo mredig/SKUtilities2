@@ -271,7 +271,7 @@
 	
 }
 
--(void)inputMoved:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+-(void)inputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 	
 	CGFloat difference = 0.05;
 	if (location.y > previousLocation.y) {
@@ -290,7 +290,7 @@
 #endif
 }
 
--(void)inputEnded:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+-(void)inputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 
 #if TARGET_OS_TV
 	NSArray* nodes = [self nodesAtPoint:cursor.position];

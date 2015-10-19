@@ -103,7 +103,7 @@
 	
 }
 
--(void)inputEnded:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+-(void)inputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 #if TARGET_OS_TV
 #else
 	NSArray* nodes = [self nodesAtPoint:location];
