@@ -221,18 +221,30 @@ CGPoint pointMultiplyByFactor (CGPoint point, CGFloat factor){
 	return CGPointMake(point.x * factor, point.y * factor);
 }
 
-CGPoint pointStepVectorFromPointWithInterval (CGPoint origin, CGVector normalVector, CFTimeInterval interval, CFTimeInterval maxInterval, CGFloat speed, CGFloat speedModifiers) {
+CGFloat processIntervals(CGFloat pInterval, CGFloat pMaxInterval) {
 	
-	if (interval == 0) {
-		NSLog(@"Please provide a time interval to calculate how far your node has moved in the time alotted. Assuming interval of 0.016666666666666666");
-		interval = 0.016666666666666666;
+	double rInterval = pInterval;
+	double rMaxInterval = pMaxInterval;
+	
+	if (rInterval == 0) {
+		rInterval = SKUSharedUtilities.deltaFrameTime;
+		if (SKUSharedUtilities.deltaFrameTime == 0) {
+			rInterval = 0.016666666666666666;
+			NSLog(@"Please either set the interval in the point step call, or properly set [SKUSharedUtilities updateCurrentTime] in your update method. Assuming interval of 0.016666666666666666.");
+		}
 	}
-	if (maxInterval <= 0) {
-		maxInterval = 0.05;
+	if (rMaxInterval <= 0) {
+		rMaxInterval = 0.05;
 	}
-	if (interval > maxInterval) {
-		interval = maxInterval;
+	if (rInterval > rMaxInterval) {
+		rInterval = rMaxInterval;
 	}
+	return rInterval;
+}
+
+CGPoint pointStepVectorFromPointWithInterval (CGPoint origin, CGVector normalVector, CFTimeInterval pInterval, CFTimeInterval pMaxInterval, CGFloat speed, CGFloat speedModifiers) {
+	
+	CGFloat interval = processIntervals(pInterval, pMaxInterval);
 	
 	CGFloat adjustedSpeed = speed * speedModifiers * interval;
 	CGPoint destination = CGPointMake(origin.x + normalVector.dx * adjustedSpeed,
@@ -245,26 +257,18 @@ CGPoint pointStepVectorFromPoint (CGPoint origin, CGVector normalVector, CGFloat
 	return CGPointMake(vector.dx + origin.x, vector.dy + origin.y);
 }
 
-CGPoint pointStepTowardsPointWithInterval (CGPoint origin, CGPoint destination, CFTimeInterval interval, CFTimeInterval maxInterval, CGFloat speed, CGFloat speedModifiers) {
-	if (interval == 0) {
-		NSLog(@"Please provide a time interval to calculate how far your node has moved in the time alotted. Assuming interval of 0.016666666666666666");
-		interval = 0.016666666666666666;
-	}
-	if (maxInterval <= 0) {
-		maxInterval = 0.05;
-	}
-	if (interval > maxInterval) {
-		interval = maxInterval;
-	}
+CGPoint pointStepTowardsPointWithInterval (CGPoint origin, CGPoint destination, CFTimeInterval pInterval, CFTimeInterval pMaxInterval, CGFloat speed, CGFloat speedModifiers) {
+
+	CGFloat interval = processIntervals(pInterval, pMaxInterval);
 	
 	CGFloat adjustedSpeed = speed * speedModifiers * interval;
-	
 	CGVector vectorBetweenPoints = vectorFacingPoint(destination, origin, YES);
-	
 	CGPoint newDestination = CGPointMake(origin.x + vectorBetweenPoints.dx * adjustedSpeed,
 										 origin.y + vectorBetweenPoints.dy * adjustedSpeed);
 	return newDestination;
 }
+
+
 
 CGPoint pointInterpolationLinearBetweenTwoPoints (CGPoint pointA, CGPoint pointB, CGFloat factorBetween) {
 	return CGPointMake(pointA.x + (pointB.x-pointA.x)*factorBetween, pointA.y + (pointB.y-pointA.y)*factorBetween);
