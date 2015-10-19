@@ -644,6 +644,10 @@ static SKUtilities2* sharedUtilities = Nil;
 
 @implementation SKU_PositionObject
 
+-(id)copyWithZone:(NSZone *)zone {
+	return [SKU_PositionObject rect:_rect];
+}
+
 -(id)init {
 	if (self = [super init]) {
 		
@@ -756,6 +760,24 @@ static SKUtilities2* sharedUtilities = Nil;
 
 
 @implementation SKU_ShapeNode
+
+-(id)copyWithZone:(NSZone *)zone {
+	SKU_ShapeNode* shape = [SKU_ShapeNode node];
+	shape.strokeColor = _strokeColor.copy;
+	shape.fillColor = _fillColor.copy;
+	shape.lineWidth = _lineWidth;
+	shape.fillRule = _fillRule;
+	shape.lineCap = _lineCap;
+	shape.lineDashPattern = _lineDashPattern;
+	shape.lineDashPhase = _lineDashPhase;
+	shape.lineJoin = _lineJoin;
+	shape.miterLimit = _miterLimit;
+	shape.strokeEnd = _strokeEnd;
+	shape.strokeStart = _strokeStart;
+	shape.anchorPoint = _anchorPoint;
+	shape.path = _path;
+	return shape;
+}
 
 +(SKU_ShapeNode*)circleWithRadius:(CGFloat)radius andColor:(SKColor*)color{
 	CGRect rect = CGRectMake(-radius, -radius, radius*2.0, radius*2.0);

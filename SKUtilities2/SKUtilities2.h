@@ -463,7 +463,7 @@ Vulnerable to lag spikes if used.
 /**
  For easy passing of struct data through mediums that only accept objects, like NSArrays or performSelectors that only accept passing of objects.
  */
-@interface SKU_PositionObject : NSObject
+@interface SKU_PositionObject : NSObject  <NSCopying>
 
 @property (nonatomic) CGPoint position;
 @property (nonatomic) CGSize size;
@@ -492,7 +492,7 @@ Vulnerable to lag spikes if used.
 /**
  Apple's shape generator for SpriteKit causes performance issues. It appears that shapes are rerendered each frame, despite a lack of change in appearance. This method uses CAShapeLayer to render a shape, which is slightly more costly than the rendering of the SKShapeNode, but once it's rendered, is cached as a bitmap and renders very quickly in SpriteKit thereafter. TLDR: SpriteKit's shape node fast redner, slow draw. SKUShapeNode is slow render, fast draw.
  */
-@interface SKU_ShapeNode : SKNode
+@interface SKU_ShapeNode : SKNode <NSCopying>
 
 /**
  The CGPath to be drawn (in the Node's coordinate space) (will only redraw the image if the path is non-nil, so it's best to set the path as the last property and save some CPU cycles)

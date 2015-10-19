@@ -12,7 +12,6 @@
 #import "shapeBenchmark.h"
 
 @interface _1NumbersDemo() {
-	SKUtilities2* sharedUtilities;
 	SKSpriteNode* indicator;
 	SKNode* currentSelectedNode;
 	
@@ -31,7 +30,6 @@
 //	[self.view presentScene:shapeTestScene];
 	
 	
-	sharedUtilities = SKUSharedUtilities;
 	
 	NSLog(@"01NumbersDemo: demos number interpolation, random numbers, and distance functions");
 	
@@ -101,8 +99,7 @@
 	logLabel.position = midPointOfRect(self.frame);
 	[self addChild:logLabel];
 	
-	
-	
+
 	
 	SKNode* tempButton = [SKNode node];
 	tempButton.position = midPointOfRect(self.frame);
