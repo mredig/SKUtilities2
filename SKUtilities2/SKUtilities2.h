@@ -743,19 +743,19 @@ typedef enum {
 /** Readonly: access to the base sprite. */
 @property (nonatomic, readonly) SKSpriteNode* baseSprite;
 /** Properties to use on the base sprite in default state. */
-@property (nonatomic) SKUButtonSpriteStateProperties* baseSpriteDefaultProperties;
+@property (nonatomic) SKUButtonSpriteStateProperties* baseSpritePropertiesDefault;
 /** Properties to use on the base sprite in pressed state. */
-@property (nonatomic) SKUButtonSpriteStateProperties* baseSpritePressedProperties;
+@property (nonatomic) SKUButtonSpriteStateProperties* baseSpritePropertiesPressed;
 /** Properties to use on the base sprite in disabled state. */
-@property (nonatomic) SKUButtonSpriteStateProperties* baseSpriteDisabledProperties;
+@property (nonatomic) SKUButtonSpriteStateProperties* baseSpritePropertiesDisabled;
 
 /** Sets all states based off of the default state. 
  @warning
- baseSpriteDefaultProperties, baseSpritePressedProperties, and baseSpriteDisabledProperties all point to the same pointer as a result. If you edit one, they will all change. If you don't want them all to update, do
+ baseSpritePropertiesDefault, baseSpritePropertiesPressed, and baseSpritePropertiesDisabled all point to the same pointer as a result. If you edit one, they will all change. If you don't want them all to update, do
  @code
  SKUButton* button; // assuming this is properly set up
  [button buttonStatesNormalize];
- button.baseSpritePressedProperties = button.baseSpritePressedProperties.copy;
+ button.baseSpritePropertiesPressed = button.baseSpritePropertiesPressed.copy;
  @endcode
  */
 -(void)buttonStatesNormalize;
@@ -808,11 +808,11 @@ typedef enum {
 /** Read only access to title sprite. */
 @property (nonatomic, strong, readonly) SKSpriteNode* titleSprite;
 /** Properties to use on the title sprite in default state. */
-@property (nonatomic) SKUButtonSpriteStateProperties* titleSpriteDefaultProperties;
+@property (nonatomic) SKUButtonSpriteStateProperties* titleSpritePropertiesDefault;
 /** Properties to use on the title sprite in pressed state. */
-@property (nonatomic) SKUButtonSpriteStateProperties* titleSpritePressedProperties;
+@property (nonatomic) SKUButtonSpriteStateProperties* titleSpritePropertiesPressed;
 /** Properties to use on the title sprite in disabled state. */
-@property (nonatomic) SKUButtonSpriteStateProperties* titleSpriteDisabledProperties;
+@property (nonatomic) SKUButtonSpriteStateProperties* titleSpritePropertiesDisabled;
 #pragma mark SKUPushButton inits
 
 +(SKUPushButton*)pushButtonWithBackgroundTexture:(SKTexture*)texture;

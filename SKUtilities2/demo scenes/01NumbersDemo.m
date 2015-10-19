@@ -207,10 +207,6 @@
 	currentSelectedNode = node;
 }
 
--(void)inputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
-	SKULog(0, @"began called");
-}
-
 -(void)inputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 
 	NSArray* nodes = [self nodesAtPoint:location];
