@@ -10,6 +10,3 @@ perhaps add time updates to singleton IN ADDITION to c functions (ability to tra
 
 might wanna add archiving support?
 
-
-
-rename category method calls to end with SKU or something (avoid namespace conflicts)

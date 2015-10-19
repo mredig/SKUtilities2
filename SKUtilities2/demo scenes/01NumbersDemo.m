@@ -167,18 +167,18 @@
 	
 #if TARGET_OS_TV
 	
-	[self addNodeToNavNodes:tempButton];
+	[self addNodeToNavNodesSKU:tempButton];
 	
 	SKSpriteNode* otherButton = [SKSpriteNode spriteNodeWithColor:[SKColor redColor] size:CGSizeMake(200, 50)];
 	otherButton.position = pointAdd(CGPointMake(0, 100.0), tempButton.position);
 	[self addChild:otherButton];
-	[self addNodeToNavNodes:otherButton];
+	[self addNodeToNavNodesSKU:otherButton];
 	
 	indicator = [SKSpriteNode spriteNodeWithColor:[SKColor greenColor] size:CGSizeMake(10, 10)];
 	indicator.zPosition = 20.0;
 	[self addChild:indicator];
 	
-	[self setCurrentSelectedNode:tempButton];
+	[self setCurrentSelectedNodeSKU:tempButton];
 	
 	[SKUSharedUtilities setNavFocus:self];
 	
@@ -202,7 +202,7 @@
 }
 #endif
 
--(void)currentSelectedNodeUpdated:(SKNode *)node {
+-(void)currentSelectedNodeUpdatedSKU:(SKNode *)node {
 	indicator.position = node.position;
 	currentSelectedNode = node;
 }

@@ -526,8 +526,11 @@ static SKUtilities2* sharedUtilities = Nil;
 	_deltaMaxTime = 1.0f;
 	_deltaFrameTime = 1.0f/60.0f;
 	_deltaFrameTimeUncapped = 1.0f/60.0f;
+#if TARGET_OS_IPHONE
+#else
 	_macButtonFlags = 0;
 	_macButtonFlags = _macButtonFlags | kSKUMouseButtonFlagLeft;
+#endif
 #if TARGET_OS_TV
 	_touchTracker = [NSMutableSet set];
 	_navThresholdDistance = 125.0;
@@ -1316,7 +1319,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	package.propertiesDefaultState = defaultState;
 	package.propertiesPressedState = pressedState;
 	package.propertiesDisabledState = defaultState.copy;
-	package.propertiesDisabledState.fontColor = [SKColor blendColor:defaultState.fontColor withColor:[SKColor grayColor] alpha:0.5];
+	package.propertiesDisabledState.fontColor = [SKColor blendColorSKU:defaultState.fontColor withColor:[SKColor grayColor] alpha:0.5];
 	return package;
 }
 
@@ -1326,7 +1329,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	package.propertiesPressedState = defaultState.copy;
 	package.propertiesPressedState.scale *= 0.9;
 	package.propertiesDisabledState = defaultState.copy;
-	package.propertiesDisabledState.fontColor = [SKColor blendColor:defaultState.fontColor withColor:[SKColor grayColor] alpha:0.5];
+	package.propertiesDisabledState.fontColor = [SKColor blendColorSKU:defaultState.fontColor withColor:[SKColor grayColor] alpha:0.5];
 	return package;
 }
 
@@ -2052,7 +2055,7 @@ static SKUtilities2* sharedUtilities = Nil;
 		for (SKNode* node in nodes) {
 			if (node.userInteractionEnabled) {
 				[node rightMouseDown:theEvent];
-				[self initDict];
+				[self initDictSKU];
 				self.scene.userData[@"sku_rightMouseDown"] = node;
 				return;
 			}
@@ -2089,7 +2092,7 @@ static SKUtilities2* sharedUtilities = Nil;
 		for (SKNode* node in nodes) {
 			if (node.userInteractionEnabled) {
 				[node otherMouseDown:theEvent];
-				[self initDict];
+				[self initDictSKU];
 				self.scene.userData[@"sku_otherMouseDown"] = node;
 				return;
 			}
@@ -2117,7 +2120,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	}
 }
 
--(void)initDict {
+-(void)initDictSKU {
 	if (!self.scene.userData) {
 		self.scene.userData = [NSMutableDictionary dictionary];
 	}
@@ -2223,11 +2226,6 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 #else
-
--(BOOL)acceptsFirstResponder{
-	return YES;
-}
-
 
 -(void)mouseDown:(NSEvent *)theEvent {
 	if ((SKUSharedUtilities.macButtonFlags & kSKUMouseButtonFlagLeft) == 0) return;
@@ -2415,7 +2413,7 @@ static SKUtilities2* sharedUtilities = Nil;
 #if TARGET_OS_TV
 
 
--(void)addNodeToNavNodes:(SKNode*)node {
+-(void)addNodeToNavNodesSKU:(SKNode*)node {
 	
 	if (!self.userData) {
 		self.userData = [NSMutableDictionary dictionary];
@@ -2438,7 +2436,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	}
 }
 
--(void)setCurrentSelectedNode:(SKNode*)node {
+-(void)setCurrentSelectedNodeSKU:(SKNode*)node {
 	[self skuInternalUpdateCurrentSelectedNode:node];
 }
 
@@ -2452,10 +2450,10 @@ static SKUtilities2* sharedUtilities = Nil;
 	}
 	
 	self.userData[@"sku_currentSelectedNode"] = node;
-	[self currentSelectedNodeUpdated:node];
+	[self currentSelectedNodeUpdatedSKU:node];
 }
 
--(void)currentSelectedNodeUpdated:(SKNode *)node {
+-(void)currentSelectedNodeUpdatedSKU:(SKNode *)node {
 	//override this method to update visuals
 }
 
@@ -2478,9 +2476,9 @@ static SKUtilities2* sharedUtilities = Nil;
 			SKNode* prevSelection = SKUSharedUtilities.navFocus.userData[@"sku_currentSelectedNode"];
 			NSSet* nodeSet = SKUSharedUtilities.navFocus.userData[@"sku_navNodes"];
 			if (!prevSelection) {
-				NSLog(@"Error: no currently selected node - did you set the initial node selection (setCurrentSelectedNode:(SKNode*)) and set the navFocus on the singleton ([SKUSharedUtilities setNavFocus:(SKNode*)]?");
+				NSLog(@"Error: no currently selected node - did you set the initial node selection (setCurrentSelectedNodeSKU:(SKNode*)) and set the navFocus on the singleton ([SKUSharedUtilities setNavFocus:(SKNode*)]?");
 			} else if (!nodeSet) {
-				NSLog(@"Error: no navNodes to navigate through - did you add nodes to the nav nodes (addNodeToNavNodes:(SKNode*)) and set the navFocus on the singleton ([SKUSharedUtilities setNavFocus:(SKNode*)]?");
+				NSLog(@"Error: no navNodes to navigate through - did you add nodes to the nav nodes (addNodeToNavNodesSKU:(SKNode*)) and set the navFocus on the singleton ([SKUSharedUtilities setNavFocus:(SKNode*)]?");
 			} else {
 				SKNode* currentSelectionNode = [SKUSharedUtilities handleSubNodeMovement:location withCurrentSelection:prevSelection inSet:nodeSet inScene:self.scene];
 				[self skuInternalUpdateCurrentSelectedNode:currentSelectionNode];
@@ -2545,17 +2543,17 @@ static SKUtilities2* sharedUtilities = Nil;
 
 @implementation SKColor (Mixing)
 
--(SKColor*)blendWithColor:(SKColor*)color2 alpha:(CGFloat)alpha2 {
+-(SKColor*)blendWithColorSKU:(SKColor*)color2 alpha:(CGFloat)alpha2 {
 	SKColor* tColor1 = self;
 	SKColor* tColor2 = color2;
 	
 #if	TARGET_OS_IPHONE
 #else
 	if ([tColor1.colorSpaceName isEqualToString:@"NSCalibratedWhiteColorSpace"]) {
-		tColor1 = [SKColor convertGrayscaleColor:tColor1];
+		tColor1 = [SKColor convertGrayscaleColorSKU:tColor1];
 	}
 	if ([tColor2.colorSpaceName isEqualToString:@"NSCalibratedWhiteColorSpace"]) {
-		tColor2 = [SKColor convertGrayscaleColor:tColor2];
+		tColor2 = [SKColor convertGrayscaleColorSKU:tColor2];
 	}
 	if (![self.colorSpaceName isEqualToString:color2.colorSpaceName]) {
 		tColor2 = [color2 colorUsingColorSpace:self.colorSpace];
@@ -2574,12 +2572,12 @@ static SKUtilities2* sharedUtilities = Nil;
 	return [SKColor colorWithRed:red green:green blue:blue alpha:alpha];
 }
 
-+(SKColor*)blendColor:(SKColor *)color1 withColor:(SKColor *)color2 alpha:(CGFloat)alpha2 {
++(SKColor*)blendColorSKU:(SKColor *)color1 withColor:(SKColor *)color2 alpha:(CGFloat)alpha2 {
 	SKColor* tColor1 = color1.copy;
-	return [tColor1 blendWithColor:color2 alpha:alpha2];
+	return [tColor1 blendWithColorSKU:color2 alpha:alpha2];
 }
 
-+(SKColor*)convertGrayscaleColor:(SKColor*)grayScaleColor {
++(SKColor*)convertGrayscaleColorSKU:(SKColor*)grayScaleColor {
 	CGFloat w, a;
 	[grayScaleColor getWhite:&w alpha:&a];
 	return [SKColor colorWithRed:w green:w blue:w alpha:a];

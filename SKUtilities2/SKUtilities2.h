@@ -440,11 +440,13 @@ Vulnerable to lag spikes if used.
  Used to determine how many logs print to the console.
  */
 @property (nonatomic) NSInteger verbosityLevel;
+#if TARGET_OS_IPHONE
+#else
 /**
  Flags to determine what sort of mouse button is passed onto nodes. By default, it only passes left mouse button events, but adding other kSKUMouseButtonFlags flags allows to respond to other mouse buttons.
  */
 @property (nonatomic) kSKUMouseButtonFlags macButtonFlags;
-
+#endif
 
 #if TARGET_OS_TV
 
@@ -841,11 +843,11 @@ typedef enum {
 #if TARGET_OS_TV
 
 /** Call this method to set the currently highlighted node within the navNodes set. */
--(void)setCurrentSelectedNode:(SKNode*)node;
+-(void)setCurrentSelectedNodeSKU:(SKNode*)node;
 /** Call this method to add a node to the list of navigation nodes paired with this node. */
--(void)addNodeToNavNodes:(SKNode*)node;
+-(void)addNodeToNavNodesSKU:(SKNode*)node;
 /** Override this method to update visuals. */
--(void)currentSelectedNodeUpdated:(SKNode *)node;
+-(void)currentSelectedNodeUpdatedSKU:(SKNode *)node;
 
 #endif
 
@@ -874,7 +876,7 @@ typedef enum {
 
 @interface SKColor (Mixing)
 /** Blends two colors together. May run into issues if using convenience methods (grayColor, whiteColor, etc). */
-+(SKColor*)blendColor:(SKColor*)color1 withColor:(SKColor*)color2 alpha:(CGFloat)alpha2;
++(SKColor*)blendColorSKU:(SKColor*)color1 withColor:(SKColor*)color2 alpha:(CGFloat)alpha2;
 
 @end
 

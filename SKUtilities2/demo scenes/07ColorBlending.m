@@ -87,8 +87,8 @@
 	} else if (location.y < prevLocation.y) {
 		yAlpha -= difference;
 	}
-	self.backgroundColor = [SKColor blendColor:blueColor withColor:greenColor alpha:xAlpha];
-	self.backgroundColor = [SKColor blendColor:self.backgroundColor withColor:redColor alpha:yAlpha];
+	self.backgroundColor = [SKColor blendColorSKU:blueColor withColor:greenColor alpha:xAlpha];
+	self.backgroundColor = [SKColor blendColorSKU:self.backgroundColor withColor:redColor alpha:yAlpha];
 
 	yAlpha = fmin(yAlpha, 1.0);
 	yAlpha = fmax(yAlpha, 0.0);

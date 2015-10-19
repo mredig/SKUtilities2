@@ -77,8 +77,8 @@
 	
 #if TARGET_OS_TV
 	
-	[self addNodeToNavNodes:handle1];
-	[self addNodeToNavNodes:handle2];
+	[self addNodeToNavNodesSKU:handle1];
+	[self addNodeToNavNodesSKU:handle2];
 	
 	SKUSharedUtilities.navMode = kSKUNavModeOn;
 	[SKUSharedUtilities setNavFocus:self];
@@ -87,7 +87,7 @@
 	cursor.zPosition = 50;
 	[self addChild:cursor];
 
-	[self setCurrentSelectedNode:handle1];
+	[self setCurrentSelectedNodeSKU:handle1];
 	
 	SKView* scnView = (SKView*)self.view;
 	
@@ -156,12 +156,12 @@
 	[tempButton addChild:buttonLabel];
 #if TARGET_OS_TV
 
-	[self addNodeToNavNodes:tempButton];
+	[self addNodeToNavNodesSKU:tempButton];
 #endif
 	
 }
 
--(void)currentSelectedNodeUpdated:(SKNode *)node {
+-(void)currentSelectedNodeUpdatedSKU:(SKNode *)node {
 	cursor.position = node.position;
 	selectedNode = node;
 }

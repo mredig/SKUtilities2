@@ -123,7 +123,7 @@
 }
 #endif
 
--(void)currentSelectedNodeUpdated:(SKNode *)node {
+-(void)currentSelectedNodeUpdatedSKU:(SKNode *)node {
 
 }
 
