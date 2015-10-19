@@ -6,7 +6,5 @@ shapenode needs to accomodate for retina displays when rendering
 multiline node needs copy zone and might need retina rendering
 skbuttons probably need copy zone
 
-perhaps add time updates to singleton IN ADDITION to c functions (ability to track delta etc automatically)
-
 might wanna add archiving support?
 
