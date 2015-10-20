@@ -608,15 +608,20 @@ Vulnerable to lag spikes if used.
  */
 @interface SKUButtonLabelPropertiesPackage : NSObject <NSCopying>
 
+#define skuHoverScale ((CGFloat) 1.1)
+
 @property (nonatomic) SKUButtonLabelProperties* propertiesDefaultState;
 @property (nonatomic) SKUButtonLabelProperties* propertiesPressedState;
+@property (nonatomic) SKUButtonLabelProperties* propertiesHoveredState;
 @property (nonatomic) SKUButtonLabelProperties* propertiesDisabledState;
 
 /** Allows you to explicitly set all states. */
++(SKUButtonLabelPropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonLabelProperties *)defaultState andPressedState:(SKUButtonLabelProperties *)pressedState andHoveredState:(SKUButtonLabelProperties *)hoveredState andDisabledState:(SKUButtonLabelProperties *)disabledState;
+/** Allows you to explicitly set default and pressed states, derives the disabled state from default, but with a gray overlay, and derives the hovered state from the default at a skuHoverScale scale. */
 +(SKUButtonLabelPropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonLabelProperties*)defaultState andPressedState:(SKUButtonLabelProperties*)pressedState andDisabledState:(SKUButtonLabelProperties*)disabledState;
-/** Allows you to explicitly set default and pressed states and derives the disabled state from default, but with a gray overlay. */
+/** Allows you to explicitly set default and pressed states and derives the disabled state from default, but with a gray overlay, and derives the hovered state from the default at a skuHoverScale scale. */
 +(SKUButtonLabelPropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonLabelProperties *)defaultState andPressedState:(SKUButtonLabelProperties *)pressedState;
-/** Allows you to explicitly set default state, derives the pressed state from the default by scaling it down to a relative 90% size, and derives the disabled state from default, but with a gray overlay. */
+/** Allows you to explicitly set default state, derives the pressed state from the default by scaling it down to a relative 90% size, and derives the disabled state from default, but with a gray overlay, and derives the hovered state from the default at a skuHoverScale scale. */
 +(SKUButtonLabelPropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonLabelProperties *)defaultState;
 
 /** Allows you to change the text for all states at once. */
@@ -666,12 +671,15 @@ Vulnerable to lag spikes if used.
 
 @property (nonatomic) SKUButtonSpriteStateProperties* propertiesDefaultState;
 @property (nonatomic) SKUButtonSpriteStateProperties* propertiesPressedState;
+@property (nonatomic) SKUButtonSpriteStateProperties* propertiesHoveredState;
 @property (nonatomic) SKUButtonSpriteStateProperties* propertiesDisabledState;
 /** Allows you to explicitly set all states. */
++(SKUButtonSpriteStatePropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonSpriteStateProperties*)defaultState andPressedState:(SKUButtonSpriteStateProperties*)pressedState andHoveredState:(SKUButtonSpriteStateProperties*)hoveredState andDisabledState:(SKUButtonSpriteStateProperties*)disabledState;
+/** Allows you to explicitly set default and pressed states and derives the disabled state from default, but with half opacity, and the hovered state from the default with skuHoverScale scale. */
 +(SKUButtonSpriteStatePropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonSpriteStateProperties*)defaultState andPressedState:(SKUButtonSpriteStateProperties*)pressedState andDisabledState:(SKUButtonSpriteStateProperties*)disabledState;
-/** Allows you to explicitly set default and pressed states and derives the disabled state from default, but with half opacity. */
+/** Allows you to explicitly set default and pressed states and derives the disabled state from default, but with half opacity, and the hovered state from the default with skuHoverScale scale. */
 +(SKUButtonSpriteStatePropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonSpriteStateProperties *)defaultState andPressedState:(SKUButtonSpriteStateProperties *)pressedState;
-/** Allows you to explicitly set default state and derives the pressed state from the default with 0.5 blend factor of a gray color overlay, and the disabled state from default, but with half opacity. */
+/** Allows you to explicitly set default state and derives the pressed state from the default with 0.5 blend factor of a gray color overlay, and the disabled state from default, but with half opacity, and the hovered state from the default with skuHoverScale scale. */
 +(SKUButtonSpriteStatePropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonSpriteStateProperties *)defaultState;
 
 /** Allows you to change the texture for all states at once. */
@@ -702,6 +710,7 @@ typedef enum {
 	kSKUButtonStateDefault,
 	kSKUButtonStatePressed,
 	kSKUButtonStatePressedOutOfBounds,
+	kSKUButtonStateHovered,
 	kSKUButtonStateDisabled,
 
 } kSKUButtonStates;
@@ -730,8 +739,10 @@ typedef enum {
 @property (nonatomic) NSInteger whichButton;
 /** Current state of the button */
 @property (nonatomic, readonly) kSKUButtonStates buttonState;
+/** Returns whether the button is currently being hovered. */
+@property (nonatomic, readonly) BOOL isHovered;
 /** Used for enumeration of button ids */
-@property (nonatomic) uint32_t buttonMethod;
+@property (nonatomic) uint8_t buttonMethod;
 /** If button is set to call delegate, this is the delegate used. */
 @property (nonatomic, weak) id <SKUButtonDelegate> delegate;
 /** Readonly: tells you if button is enabled or not */
@@ -746,12 +757,14 @@ typedef enum {
 @property (nonatomic) SKUButtonSpriteStateProperties* baseSpritePropertiesDefault;
 /** Properties to use on the base sprite in pressed state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* baseSpritePropertiesPressed;
+/** Properties to use on the base sprite in hovered state. */
+@property (nonatomic) SKUButtonSpriteStateProperties* baseSpritePropertiesHovered;
 /** Properties to use on the base sprite in disabled state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* baseSpritePropertiesDisabled;
 
 /** Sets all states based off of the default state. 
  @warning
- baseSpritePropertiesDefault, baseSpritePropertiesPressed, and baseSpritePropertiesDisabled all point to the same pointer as a result. If you edit one, they will all change. If you don't want them all to update, do
+ baseSpritePropertiesDefault, baseSpritePropertiesPressed, baseSpritePropertiesHovered, and baseSpritePropertiesDisabled all point to the same pointer as a result. If you edit one, they will all change. If you don't want them all to update, do
  @code
  SKUButton* button; // assuming this is properly set up
  [button buttonStatesNormalize];
@@ -851,18 +864,20 @@ typedef enum {
 
 #endif
 
-/** Called when relative type input begins (Currently only AppleTV's Siri Remote touches) Remember to call [super relativeInputBeganSKU] when overrding.  */
+/** Called when relative type input begins (Currently only AppleTV's Siri Remote touches) Remember to call [super relativeInputBeganSKU] when overrding. Harmless to include on other platforms. */
 -(void)relativeInputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
-/** Called when relative type input moves (Currently only AppleTV's Siri Remote touches). Remember to call [super relativeInputMovedSKU] when overrding.  */
+/** Called when relative type input moves (Currently only AppleTV's Siri Remote touches). Remember to call [super relativeInputMovedSKU] when overrding. Harmless to include on other platforms. */
 -(void)relativeInputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
-/** Called when relative type input ends (Currently only AppleTV's Siri Remote touches). Remember to call [super relativeInputEndedSKU] when overrding.  */
+/** Called when relative type input ends (Currently only AppleTV's Siri Remote touches). Remember to call [super relativeInputEndedSKU] when overrding. Harmless to include on other platforms. */
 -(void)relativeInputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
-/** Called when absolute type input begins (Currently iOS touches and Mac mouse clicks). Remember to call [super absoluteInputBeganSKU] when overrding.  */
+/** Called when absolute type input begins (Currently iOS touches and Mac mouse clicks). Remember to call [super absoluteInputBeganSKU] when overrding. Harmless to include on other platforms. */
 -(void)absoluteInputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
-/** Called when absolute type input moves (Currently iOS touches and Mac mouse clicks). Remember to call [super absoluteInputMovedSKU] when overrding.  */
+/** Called when absolute type input moves (Currently iOS touches and Mac mouse clicks). Remember to call [super absoluteInputMovedSKU] when overrding. Harmless to include on other platforms. */
 -(void)absoluteInputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
-/** Called when absolute type input ends (Currently iOS touches and Mac mouse clicks). Remember to call [super absoluteInputEndedSKU] when overrding.  */
+/** Called when absolute type input ends (Currently iOS touches and Mac mouse clicks). Remember to call [super absoluteInputEndedSKU] when overrding. Harmless to include on other platforms. */
 -(void)absoluteInputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
+/** Called only on OSX when the mouse moves around the screen unclicked. Harmless to include on other platforms. */
+-(void)mouseMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
 /** Called when any input location based input begins (Currently iOS touches, Mac mouse clicks, and AppleTV Siri Remote touches). */
 -(void)inputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
 /** Called when any input location based input moves (Currently iOS touches, Mac mouse clicks, and AppleTV Siri Remote touches). */

@@ -1307,13 +1307,24 @@ static SKUtilities2* sharedUtilities = Nil;
 @implementation SKUButtonLabelPropertiesPackage
 
 -(id)copyWithZone:(NSZone *)zone {
-	return [SKUButtonLabelPropertiesPackage packageWithPropertiesForDefaultState:_propertiesDefaultState.copy andPressedState:_propertiesPressedState.copy andDisabledState:_propertiesDisabledState.copy];
+	return [SKUButtonLabelPropertiesPackage packageWithPropertiesForDefaultState:_propertiesDefaultState.copy andPressedState:_propertiesPressedState.copy andHoveredState:_propertiesHoveredState.copy andDisabledState:_propertiesDisabledState.copy];
+}
+
++(SKUButtonLabelPropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonLabelProperties *)defaultState andPressedState:(SKUButtonLabelProperties *)pressedState andHoveredState:(SKUButtonLabelProperties *)hoveredState andDisabledState:(SKUButtonLabelProperties *)disabledState {
+	SKUButtonLabelPropertiesPackage* package = [[SKUButtonLabelPropertiesPackage alloc] init];
+	package.propertiesDefaultState = defaultState;
+	package.propertiesPressedState = pressedState;
+	package.propertiesHoveredState = hoveredState;
+	package.propertiesDisabledState = disabledState;
+	return package;
 }
 
 +(SKUButtonLabelPropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonLabelProperties *)defaultState andPressedState:(SKUButtonLabelProperties *)pressedState andDisabledState:(SKUButtonLabelProperties *)disabledState {
 	SKUButtonLabelPropertiesPackage* package = [[SKUButtonLabelPropertiesPackage alloc] init];
 	package.propertiesDefaultState = defaultState;
 	package.propertiesPressedState = pressedState;
+	package.propertiesHoveredState = defaultState.copy;
+	package.propertiesHoveredState.scale *= skuHoverScale;
 	package.propertiesDisabledState = disabledState;
 	return package;
 }
@@ -1322,6 +1333,8 @@ static SKUtilities2* sharedUtilities = Nil;
 	SKUButtonLabelPropertiesPackage* package = [[SKUButtonLabelPropertiesPackage alloc] init];
 	package.propertiesDefaultState = defaultState;
 	package.propertiesPressedState = pressedState;
+	package.propertiesHoveredState = defaultState.copy;
+	package.propertiesHoveredState.scale *= skuHoverScale;
 	package.propertiesDisabledState = defaultState.copy;
 	package.propertiesDisabledState.fontColor = [SKColor blendColorSKU:defaultState.fontColor withColor:[SKColor grayColor] alpha:0.5];
 	return package;
@@ -1332,6 +1345,8 @@ static SKUtilities2* sharedUtilities = Nil;
 	package.propertiesDefaultState = defaultState;
 	package.propertiesPressedState = defaultState.copy;
 	package.propertiesPressedState.scale *= 0.9;
+	package.propertiesHoveredState = defaultState.copy;
+	package.propertiesHoveredState.scale *= skuHoverScale;
 	package.propertiesDisabledState = defaultState.copy;
 	package.propertiesDisabledState.fontColor = [SKColor blendColorSKU:defaultState.fontColor withColor:[SKColor grayColor] alpha:0.5];
 	return package;
@@ -1340,6 +1355,7 @@ static SKUtilities2* sharedUtilities = Nil;
 -(void)changeText:(NSString *)text {
 	_propertiesDefaultState.text = text;
 	_propertiesPressedState.text = text;
+	_propertiesHoveredState.text = text;
 	_propertiesDisabledState.text = text;
 }
 
@@ -1351,6 +1367,10 @@ static SKUtilities2* sharedUtilities = Nil;
 
 -(id)copyWithZone:(NSZone *)zone {
 	return [SKUButtonSpriteStateProperties propertiesWithTexture:_texture andAlpha:_alpha andColor:_color andColorBlendFactor:_colorBlendFactor andPositionOffset:_position andXScale:_xScale andYScale:_yScale];
+}
+
+-(NSString*)description {
+	return [NSString stringWithFormat:@"SKUButtonSpriteStateProperties texture: %@ alpha: %f color: %@ colorBlendFactor: %f positionOffset: %f, %f scale: %f, %f", _texture, _alpha, _color, _colorBlendFactor, _position.x, _position.y, _xScale, _yScale];
 }
 
 +(SKUButtonSpriteStateProperties*)propertiesWithTexture:(SKTexture*)texture andAlpha:(CGFloat)alpha andColor:(SKColor *)color andColorBlendFactor:(CGFloat)colorBlendFactor andPositionOffset:(CGPoint)position andXScale:(CGFloat)xScale andYScale:(CGFloat)yScale {
@@ -1417,15 +1437,30 @@ static SKUtilities2* sharedUtilities = Nil;
 	return self;
 }
 
+-(NSString*)description {
+	return [NSString stringWithFormat:@"SKUButtonSpriteStatePropertiesPackage: {\n\tDefaultState: %@\n\tPressedState: %@\n\tHoveredState: %@\n\tDisabledState: %@\n}", _propertiesDefaultState, _propertiesPressedState, _propertiesHoveredState, _propertiesDisabledState];
+}
 
 -(id)copyWithZone:(NSZone *)zone {
-	return [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_propertiesDefaultState.copy andPressedState:_propertiesPressedState.copy andDisabledState:_propertiesDisabledState.copy];
+	return [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_propertiesDefaultState.copy andPressedState:_propertiesPressedState.copy andHoveredState:_propertiesHoveredState.copy andDisabledState:_propertiesDisabledState.copy];
 }
+
++(SKUButtonSpriteStatePropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonSpriteStateProperties*)defaultState andPressedState:(SKUButtonSpriteStateProperties*)pressedState andHoveredState:(SKUButtonSpriteStateProperties*)hoveredState andDisabledState:(SKUButtonSpriteStateProperties*)disabledState {
+	SKUButtonSpriteStatePropertiesPackage* package = [[SKUButtonSpriteStatePropertiesPackage alloc] init];
+	package.propertiesDefaultState = defaultState;
+	package.propertiesPressedState = pressedState;
+	package.propertiesHoveredState = hoveredState;
+	package.propertiesDisabledState = disabledState;
+	return package;}
+
 
 +(SKUButtonSpriteStatePropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonSpriteStateProperties *)defaultState andPressedState:(SKUButtonSpriteStateProperties *)pressedState andDisabledState:(SKUButtonSpriteStateProperties *)disabledState {
 	SKUButtonSpriteStatePropertiesPackage* package = [[SKUButtonSpriteStatePropertiesPackage alloc] init];
 	package.propertiesDefaultState = defaultState;
 	package.propertiesPressedState = pressedState;
+	package.propertiesHoveredState = defaultState.copy;
+	package.propertiesHoveredState.xScale *= skuHoverScale;
+	package.propertiesHoveredState.yScale *= skuHoverScale;
 	package.propertiesDisabledState = disabledState;
 	return package;
 }
@@ -1434,6 +1469,9 @@ static SKUtilities2* sharedUtilities = Nil;
 	SKUButtonSpriteStatePropertiesPackage* package = [[SKUButtonSpriteStatePropertiesPackage alloc] init];
 	package.propertiesDefaultState = defaultState;
 	package.propertiesPressedState = pressedState;
+	package.propertiesHoveredState = defaultState.copy;
+	package.propertiesHoveredState.xScale *= skuHoverScale;
+	package.propertiesHoveredState.yScale *= skuHoverScale;
 	package.propertiesDisabledState = defaultState.copy;
 	package.propertiesDisabledState.alpha *= 0.5;
 	return package;
@@ -1445,6 +1483,9 @@ static SKUtilities2* sharedUtilities = Nil;
 	package.propertiesPressedState = defaultState.copy;
 	package.propertiesPressedState.color = [SKColor grayColor];
 	package.propertiesPressedState.colorBlendFactor = 0.5;
+	package.propertiesHoveredState = defaultState.copy;
+	package.propertiesHoveredState.xScale *= skuHoverScale;
+	package.propertiesHoveredState.yScale *= skuHoverScale;
 	package.propertiesDisabledState = defaultState.copy;
 	package.propertiesDisabledState.alpha *= 0.5;
 	return package;
@@ -1454,6 +1495,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	_propertiesDefaultState.texture = texture;
 	_propertiesPressedState.texture = texture;
 	_propertiesDisabledState.texture = texture;
+	_propertiesHoveredState.texture = texture;
 }
 
 @end
@@ -1467,6 +1509,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	BOOL stateDefaultInitialized;
 	BOOL statePressedInitialized;
 	BOOL stateDisabledInitialized;
+	BOOL stateHoveredInitialized;
 }
 
 @end
@@ -1519,9 +1562,11 @@ static SKUtilities2* sharedUtilities = Nil;
 	_baseSpritePropertiesDefault = defaultProperties.copy;
 	_baseSpritePropertiesPressed = defaultProperties.copy;
 	_baseSpritePropertiesDisabled = defaultProperties.copy;
+	_baseSpritePropertiesHovered = defaultProperties.copy;
 	stateDefaultInitialized = NO;
 	statePressedInitialized = NO;
 	stateDisabledInitialized = NO;
+	stateHoveredInitialized = NO;
 	
 	[self internalDidInitialize];
 	[self enableButton];
@@ -1585,9 +1630,11 @@ static SKUtilities2* sharedUtilities = Nil;
 	_baseSpritePropertiesDefault = package.propertiesDefaultState;
 	_baseSpritePropertiesPressed = package.propertiesPressedState;
 	_baseSpritePropertiesDisabled = package.propertiesDisabledState;
+	_baseSpritePropertiesHovered = package.propertiesHoveredState;
 	stateDefaultInitialized = YES;
 	statePressedInitialized = YES;
 	stateDisabledInitialized = YES;
+	stateHoveredInitialized = YES;
 	[self updateCurrentSpriteStateProperties];
 }
 
@@ -1602,6 +1649,11 @@ static SKUtilities2* sharedUtilities = Nil;
 		_baseSpritePropertiesDisabled = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_baseSpritePropertiesDefault].propertiesDisabledState;
 		stateDisabledInitialized = YES;
 	}
+	if (!stateHoveredInitialized) {
+		_baseSpritePropertiesHovered = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_baseSpritePropertiesDefault].propertiesHoveredState;
+		stateHoveredInitialized = YES;
+	}
+	
 	[self updateCurrentSpriteStateProperties];
 }
 
@@ -1614,6 +1666,12 @@ static SKUtilities2* sharedUtilities = Nil;
 -(void)setBaseSpritePropertiesDisabled:(SKUButtonSpriteStateProperties *)baseSpritePropertiesDisabled {
 	_baseSpritePropertiesDisabled = baseSpritePropertiesDisabled;
 	stateDisabledInitialized = YES;
+	[self updateCurrentSpriteStateProperties];
+}
+
+-(void)setBaseSpritePropertiesHovered:(SKUButtonSpriteStateProperties *)baseSpritePropertiesHovered {
+	_baseSpritePropertiesHovered = baseSpritePropertiesHovered;
+	stateHoveredInitialized = YES;
 	[self updateCurrentSpriteStateProperties];
 }
 
@@ -1632,13 +1690,19 @@ static SKUtilities2* sharedUtilities = Nil;
 		case kSKUButtonStatePressedOutOfBounds:
 			properties = _baseSpritePropertiesDefault;
 			break;
+		case kSKUButtonStateHovered:
+			properties = _baseSpritePropertiesHovered;
+			break;
 			
 		default:
 			break;
 	}
 	
+	SKTexture* prevTex = _baseSprite.texture;
 	_baseSprite.texture = properties.texture;
-	_baseSprite.size = properties.texture.size;
+	if (![prevTex isEqual:_baseSprite.texture]) {
+		_baseSprite.size = properties.texture.size;
+	}
 	_baseSprite.position = properties.position;
 	_baseSprite.color = properties.color;
 	_baseSprite.colorBlendFactor = properties.colorBlendFactor;
@@ -1668,7 +1732,7 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 -(void)buttonStatesNormalize {
-	SKUButtonSpriteStatePropertiesPackage* package = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_baseSpritePropertiesDefault andPressedState:_baseSpritePropertiesDefault andDisabledState:_baseSpritePropertiesDefault];
+	SKUButtonSpriteStatePropertiesPackage* package = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_baseSpritePropertiesDefault andPressedState:_baseSpritePropertiesDefault andHoveredState:_baseSpritePropertiesDefault andDisabledState:_baseSpritePropertiesDefault];
 	[self setBaseStatesWithPackage:package];
 }
 
@@ -1758,6 +1822,23 @@ static SKUtilities2* sharedUtilities = Nil;
 	return answer;
 }
 
+#pragma mark HOVER STUFF
+
+-(void)hoverButton {
+	_isHovered = YES;
+	if (_buttonState != kSKUButtonStatePressed && _buttonState != kSKUButtonStateDisabled) {
+		_buttonState = kSKUButtonStateHovered;
+		[self updateCurrentSpriteStateProperties];
+	}
+}
+
+-(void)unhoverButton {
+	_isHovered = NO;
+	if (_buttonState != kSKUButtonStatePressed && _buttonState != kSKUButtonStateDisabled) {
+		_buttonState = kSKUButtonStateDefault;
+		[self updateCurrentSpriteStateProperties];
+	}
+}
 
 @end
 
@@ -2130,6 +2211,10 @@ static SKUtilities2* sharedUtilities = Nil;
 	}
 }
 
+-(void)mouseMoved:(NSEvent *)theEvent {
+	[self.scene mouseMoved:theEvent];
+}
+
 #endif
 
 @end
@@ -2411,6 +2496,23 @@ static SKUtilities2* sharedUtilities = Nil;
 	
 }
 
+-(void)mouseMoved:(NSEvent *)theEvent {
+	CGPoint location = [theEvent locationInNode:self];
+	NSTimeInterval intervalTime = theEvent.timestamp;
+	NSInteger clickCount = theEvent.clickCount;
+	NSInteger buttonNumber = theEvent.buttonNumber;
+	
+	NSArray* keys = [NSArray arrayWithObjects:@"intervalTime", @"inputIteration", @"buttonNumber", @"event", nil];
+	NSArray* objects = [NSArray arrayWithObjects:[NSNumber numberWithDouble:intervalTime],
+						[NSNumber numberWithInteger:clickCount],
+						[NSNumber numberWithInteger:buttonNumber],
+						theEvent,
+						nil];
+	
+	NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+	[self mouseMovedSKU:location withEventDictionary:eventDict];
+}
+
 #endif
 
 
@@ -2454,6 +2556,16 @@ static SKUtilities2* sharedUtilities = Nil;
 	}
 	
 	self.userData[@"sku_currentSelectedNode"] = node;
+	NSSet* navNodes = self.userData[@"sku_navNodes"];
+	for (SKNode* tNode in navNodes) {
+		if ([tNode isKindOfClass:[SKUButton class]]) {
+			SKUButton* button = (SKUButton*)tNode;
+			[button unhoverButton];
+		}
+	}
+	if ([node isKindOfClass:[SKUButton class]]) {
+		[(SKUButton*)node hoverButton];
+	}
 	[self currentSelectedNodeUpdatedSKU:node];
 }
 
@@ -2530,7 +2642,9 @@ static SKUtilities2* sharedUtilities = Nil;
 	[self inputEndedSKU:location withEventDictionary:eventDict];
 }
 
-
+-(void)mouseMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
+	
+}
 
 -(void)inputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
 }
