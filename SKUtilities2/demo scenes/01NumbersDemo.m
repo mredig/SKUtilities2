@@ -172,7 +172,6 @@
 	
 #if TARGET_OS_TV
 	
-	[SKUSharedUtilities registerForSiriRemoteTapsOnView:self.view];
 	[self addNodeToNavNodesSKU:testButton];
 	[self addNodeToNavNodesSKU:buttonTwo];
 	

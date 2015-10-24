@@ -412,6 +412,7 @@ void SKULog(NSInteger verbosityLevel, NSString *format, ...);
 typedef enum {
 	kSKUNavModeOn = 1,
 	kSKUNavModeOff,
+	kSKUNavModePressed,
 } kSKUNavModes;
 
 #endif
@@ -467,8 +468,8 @@ Vulnerable to lag spikes if used.
 
 -(SKNode*)handleSubNodeMovement:(CGPoint)location withCurrentSelection:(SKNode*)currentSelectedNode inSet:(NSSet*)navNodeSet inScene:(SKScene*)scene;
 -(void)setNavFocus:(SKNode *)navFocus;
--(void)registerForSiriRemoteTapsOnView:(UIView*)view;
-
+-(void)gestureTapDown;
+-(void)gestureTapUp;
 #endif
 
 

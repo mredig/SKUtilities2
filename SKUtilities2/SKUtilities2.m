@@ -540,7 +540,6 @@ static SKUtilities2* sharedUtilities = Nil;
 	_navThresholdDistance = 125.0;
 	selectLocation = CGPointMake(960.0, 540.0); //midpoint of 1080p
 	_navMode = kSKUNavModeOn;
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gestureTapDown:) name:@"pressBeganSelectSKU" object:nil]; //// can be removed if button gesture states get resolved
 #endif
 }
 
@@ -647,33 +646,22 @@ static SKUtilities2* sharedUtilities = Nil;
 	return newNode;
 }
 
--(void)registerForSiriRemoteTapsOnView:(UIView *)view {
-	UITapGestureRecognizer* tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gestureTap:)];
-	tapGesture.allowedPressTypes = @[[NSNumber numberWithInteger:UIPressTypeSelect]];
-	[view addGestureRecognizer:tapGesture];
-}
-
--(void)gestureTap:(UITapGestureRecognizer*)gesture {
+-(void)gestureTapDown {
 	if (_navMode == kSKUNavModeOn) {
+		_navMode = kSKUNavModePressed;
 		SKNode* currentSelectedNode = SKUSharedUtilities.navFocus.userData[@"sku_currentSelectedNode"];
-		if (gesture.state == UIGestureRecognizerStateBegan) { //// this doesn't work. I'm leaving it commented here though in case apple changes this behavior in the future and invalidates the need for the method under here.
-//			if ([currentSelectedNode isKindOfClass:[SKUButton class]]) {
-//				[(SKUButton*)currentSelectedNode buttonPressed:CGPointZero];
-//			}
-			SKULog(0, @"gestures now recieve state began from presses"); // canary to let me know if this works in the future
-		} else if (gesture.state == UIGestureRecognizerStateEnded) {
-			if ([currentSelectedNode isKindOfClass:[SKUButton class]]) {
-				[(SKUButton*)currentSelectedNode buttonReleased:CGPointZero];
-			}
+		if ([currentSelectedNode isKindOfClass:[SKUButton class]]) {
+			[(SKUButton*)currentSelectedNode buttonPressed:CGPointZero];
 		}
 	}
 }
 
--(void)gestureTapDown:(NSNotification*)notification { //// can be removed if prior method gets resolved
-	if (_navMode == kSKUNavModeOn) {
+-(void)gestureTapUp {
+	if (_navMode == kSKUNavModeOn || _navMode == kSKUNavModePressed) {
+		_navMode = kSKUNavModeOn;
 		SKNode* currentSelectedNode = SKUSharedUtilities.navFocus.userData[@"sku_currentSelectedNode"];
 		if ([currentSelectedNode isKindOfClass:[SKUButton class]]) {
-			[(SKUButton*)currentSelectedNode buttonPressed:CGPointZero];
+			[(SKUButton*)currentSelectedNode buttonReleased:CGPointZero];
 		}
 	}
 }
@@ -2195,9 +2183,6 @@ static SKUtilities2* sharedUtilities = Nil;
 	}
 }
 
-
-//-(void)set
-
 @end
 
 
@@ -2209,11 +2194,11 @@ static SKUtilities2* sharedUtilities = Nil;
 
 
 #if TARGET_OS_TV
--(void)pressesBegan:(NSSet<UIPress *> *)presses withEvent:(UIPressesEvent *)event { //// can be removed if button gesture states get resolved
+-(void)pressesBegan:(NSSet<UIPress *> *)presses withEvent:(UIPressesEvent *)event {
 	for (UIPress* press in presses) {
 		switch (press.type) {
 			case UIPressTypeSelect: {
-				[[NSNotificationCenter defaultCenter] postNotificationName:@"pressBeganSelectSKU" object:nil];
+				[SKUSharedUtilities gestureTapDown];
 			}
 				break;
 				
@@ -2224,6 +2209,40 @@ static SKUtilities2* sharedUtilities = Nil;
 	}
 	[super pressesBegan:presses withEvent:event];
 }
+
+-(void)pressesEnded:(NSSet<UIPress *> *)presses withEvent:(UIPressesEvent *)event {
+	for (UIPress* press in presses) {
+		switch (press.type) {
+			case UIPressTypeSelect: {
+				[SKUSharedUtilities gestureTapUp];
+			}
+				break;
+				
+			default:
+				break;
+		}
+		
+	}
+	[super pressesEnded:presses withEvent:event];
+}
+
+-(void)pressesCancelled:(NSSet<UIPress *> *)presses withEvent:(UIPressesEvent *)event {
+	for (UIPress* press in presses) {
+		switch (press.type) {
+			case UIPressTypeSelect: {
+				[SKUSharedUtilities gestureTapUp];
+			}
+				break;
+				
+			default:
+				break;
+		}
+		
+	}
+	[super pressesCancelled:presses withEvent:event];
+}
+
+
 #elif TARGET_OS_IPHONE
 #else
 //http://opensource.apple.com/source/CarbonHeaders/CarbonHeaders-18.1/TargetConditionals.h
