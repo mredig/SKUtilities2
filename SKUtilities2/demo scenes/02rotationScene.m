@@ -105,34 +105,68 @@
 	
 #if TARGET_OS_TV
 	
-	SKUSharedUtilities.navMode = kSKUNavModeOff;
+	SKUSharedUtilities.navMode = kSKUNavModeOn;
 	cursor = [SKSpriteNode spriteNodeWithColor:[SKColor greenColor] size:CGSizeMake(20, 20)];
-	cursor.position = pointMultiplyByPoint(CGPointMake(0.5, 0.25), pointFromCGSize(self.size));
+	cursor.position = pointMultiplyByPoint(CGPointMake(0.5, 0.5), pointFromCGSize(self.size));
 	cursor.zPosition = 20;
+	cursor.hidden = HIDDEN;
 	[self addChild:cursor];
+	
+	SKLabelNode* menuNotice = [SKLabelNode labelNodeWithText:@"Press Menu to return to nav mode"];
+	menuNotice.fontSize = 28.0;
+	menuNotice.position = midPointOfRect(self.frame);
+	menuNotice.name = @"menuNotice";
+	[self addChild:menuNotice];
+	menuNotice.hidden = HIDDEN;
 #endif
 }
 
 -(void)setupButton {
-	
-	SKNode* tempButton = [SKNode node];
-	tempButton.position = midPointOfRect(self.frame);
-	tempButton.zPosition = 1.0;
-	tempButton.name = @"tempButton";
-	[self addChild:tempButton];
-	
-	SKSpriteNode* buttonBG = [SKSpriteNode spriteNodeWithColor:[SKColor whiteColor] size:CGSizeMake(200, 50)];
-	[tempButton addChild:buttonBG];
-	
-	SKLabelNode* buttonLabel = [SKLabelNode labelNodeWithText:@"Next Scene"];
-	buttonLabel.fontColor = [SKColor blackColor];
-	buttonLabel.fontSize = 28;
-	buttonLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeCenter;
-	buttonLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
-	buttonLabel.zPosition = 1.0;
-	[tempButton addChild:buttonLabel];
+	SKUButtonLabelPropertiesPackage* labelPack = SKUSharedUtilities.userData[@"buttonLabelPackage"];
+	SKUButtonSpriteStatePropertiesPackage* backgroundPack = SKUSharedUtilities.userData[@"buttonBackgroundPackage"];
+	SKUPushButton* nextSlide = [SKUPushButton pushButtonWithBackgroundPropertiesPackage:backgroundPack andTitleLabelPropertiesPackage:labelPack];
+	nextSlide.position = pointMultiplyByPoint(midPointOfRect(self.frame), CGPointMake(1.0, 0.5));
+	nextSlide.zPosition = 1.0;
+	[nextSlide setUpAction:@selector(transferScene:) toPerformOnTarget:self];
+	[self addChild:nextSlide];
 	
 	
+#if TARGET_OS_TV
+	SKUButtonLabelPropertiesPackage* labelPack2 = labelPack.copy;
+	[labelPack2 changeText:@"Demo Rotation"];
+	SKUPushButton* activateCursor = [SKUPushButton pushButtonWithBackgroundPropertiesPackage:backgroundPack andTitleLabelPropertiesPackage:labelPack2];
+	activateCursor.position = pointAdd(nextSlide.position, CGPointMake(0, 100));
+	activateCursor.zPosition = 1.0;
+	[activateCursor setUpAction:@selector(toggleDemoMode:) toPerformOnTarget:self];
+	[self addChild:activateCursor];
+	
+	[self addNodeToNavNodesSKU:nextSlide];
+	[self addNodeToNavNodesSKU:activateCursor];
+	[self setCurrentSelectedNodeSKU:nextSlide];
+	
+	[SKUSharedUtilities setNavFocus:self];
+	
+}
+
+-(void)menuPressed:(UIGestureRecognizer*)gesture {
+	[self toggleDemoMode:nil];
+	[self.view removeGestureRecognizer:gesture];
+}
+
+-(void)toggleDemoMode:(SKUButton*)button {
+	if (SKUSharedUtilities.navMode == kSKUNavModeOn) {
+		SKUSharedUtilities.navMode = kSKUNavModeOff;
+		cursor.hidden = VISIBLE;
+		[self childNodeWithName:@"menuNotice"].hidden = VISIBLE;
+		UITapGestureRecognizer* menuPressed = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(menuPressed:)];
+		menuPressed.allowedPressTypes = @[[NSNumber numberWithInteger:UIPressTypeMenu]];
+		[self.view addGestureRecognizer:menuPressed];
+	} else {
+		SKUSharedUtilities.navMode = kSKUNavModeOn;
+		cursor.hidden = HIDDEN;
+		[self childNodeWithName:@"menuNotice"].hidden = HIDDEN;
+	}
+#endif
 }
 
 -(void)inputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
@@ -140,10 +174,12 @@
 
 -(void)inputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 #if TARGET_OS_TV
-	UITouch* touch = eventDict[@"touch"];
-	CGPoint prevLocation = [touch previousLocationInNode:self];
-	cursor.position = pointAdd(pointAdd(pointInverse(prevLocation), location), cursor.position);
-	[self rotations:cursor.position];
+	if (cursor.hidden == VISIBLE) {
+		UITouch* touch = eventDict[@"touch"];
+		CGPoint prevLocation = [touch previousLocationInNode:self];
+		cursor.position = pointAdd(pointAdd(pointInverse(prevLocation), location), cursor.position);
+		[self rotations:cursor.position];
+	}
 #else
 	[self rotations:location];
 #endif
@@ -156,24 +192,10 @@
 	orientDownNode.zRotation = orientToFromDownFace(location, orientDownNode.position);
 }
 
--(void)inputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
-#if TARGET_OS_TV
-	NSArray* nodes = [self nodesAtPoint:cursor.position];
-#else
-	NSArray* nodes = [self nodesAtPoint:location];
-#endif
-	for (SKNode* node in nodes) {
-		if ([node.name isEqualToString:@"tempButton"]) {
-			//next scene
-			[self transferScene];
-			break;
-		}
-	}
-	
-}
 
 
--(void)transferScene {
+
+-(void)transferScene:(SKUButton*)button {
 	
 	_3VectorPoint* scene = [[_3VectorPoint alloc] initWithSize:self.size];
 	scene.scaleMode = self.scaleMode;
