@@ -1387,11 +1387,24 @@ static SKUtilities2* sharedUtilities = Nil;
 @implementation SKUButtonSpriteStateProperties
 
 -(id)copyWithZone:(NSZone *)zone {
-	return [SKUButtonSpriteStateProperties propertiesWithTexture:_texture andAlpha:_alpha andColor:_color andColorBlendFactor:_colorBlendFactor andPositionOffset:_position andXScale:_xScale andYScale:_yScale];
+	return [SKUButtonSpriteStateProperties propertiesWithTexture:_texture andAlpha:_alpha andColor:_color andColorBlendFactor:_colorBlendFactor andPositionOffset:_position andXScale:_xScale andYScale:_yScale andCenterRect:_centerRect];
 }
 
 -(NSString*)description {
-	return [NSString stringWithFormat:@"SKUButtonSpriteStateProperties texture: %@ alpha: %f color: %@ colorBlendFactor: %f positionOffset: %f, %f scale: %f, %f", _texture, _alpha, _color, _colorBlendFactor, _position.x, _position.y, _xScale, _yScale];
+	return [NSString stringWithFormat:@"SKUButtonSpriteStateProperties texture: %@ alpha: %f color: %@ colorBlendFactor: %f positionOffset: %f, %f scale: %f, %f centerRect x: %f y: %f width: %f height %f", _texture, _alpha, _color, _colorBlendFactor, _position.x, _position.y, _xScale, _yScale, _centerRect.origin.x, _centerRect.origin.y, _centerRect.size.width, _centerRect.size.height];
+}
+
++(SKUButtonSpriteStateProperties*)propertiesWithTexture:(SKTexture*)texture andAlpha:(CGFloat)alpha andColor:(SKColor *)color andColorBlendFactor:(CGFloat)colorBlendFactor andPositionOffset:(CGPoint)position andXScale:(CGFloat)xScale andYScale:(CGFloat)yScale andCenterRect:(CGRect)centerRect {
+	SKUButtonSpriteStateProperties* props = [[SKUButtonSpriteStateProperties alloc] init];
+	props.alpha = alpha;
+	props.color = color;
+	props.colorBlendFactor = colorBlendFactor;
+	props.position = position;
+	props.xScale = xScale;
+	props.yScale = yScale;
+	props.texture = texture;
+	props.centerRect = centerRect;
+	return props;
 }
 
 +(SKUButtonSpriteStateProperties*)propertiesWithTexture:(SKTexture*)texture andAlpha:(CGFloat)alpha andColor:(SKColor *)color andColorBlendFactor:(CGFloat)colorBlendFactor andPositionOffset:(CGPoint)position andXScale:(CGFloat)xScale andYScale:(CGFloat)yScale {
@@ -1403,6 +1416,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	props.xScale = xScale;
 	props.yScale = yScale;
 	props.texture = texture;
+	props.centerRect = CGRectMake(0, 0, 1.0, 1.0);
 	return props;
 }
 
@@ -1415,6 +1429,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	props.xScale = 1.0f;
 	props.yScale = 1.0f;
 	props.texture = texture;
+	props.centerRect = CGRectMake(0, 0, 1.0, 1.0);
 	return props;
 }
 
@@ -1427,6 +1442,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	props.xScale = 1.0f;
 	props.yScale = 1.0f;
 	props.texture = texture;
+	props.centerRect = CGRectMake(0, 0, 1.0, 1.0);
 	return props;
 }
 
@@ -1439,6 +1455,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	props.xScale = 1.0f;
 	props.yScale = 1.0f;
 	props.texture = texture;
+	props.centerRect = CGRectMake(0, 0, 1.0, 1.0);
 	return props;
 }
 
@@ -1588,6 +1605,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	statePressedInitialized = NO;
 	stateDisabledInitialized = NO;
 	stateHoveredInitialized = NO;
+	_padding = 30.0f;
 	
 	[self internalDidInitialize];
 	[self enableButton];
@@ -1728,8 +1746,18 @@ static SKUtilities2* sharedUtilities = Nil;
 	_baseSprite.color = properties.color;
 	_baseSprite.colorBlendFactor = properties.colorBlendFactor;
 	_baseSprite.alpha = properties.alpha;
+	_baseSprite.centerRect = properties.centerRect;
 	_baseSprite.xScale = properties.xScale;
 	_baseSprite.yScale = properties.yScale;
+	
+	if (_baseSprite.centerRect.origin.x != 0.0 || _baseSprite.centerRect.origin.y != 0.0 || _baseSprite.centerRect.size.width != 1.0 || _baseSprite.centerRect.size.height != 1.0) {
+		[_baseSprite removeFromParent];
+		CGSize thisSize = [self calculateAccumulatedFrame].size;
+		[self addChild:_baseSprite];
+		thisSize = CGSizeMake(thisSize.width + _padding * 2.0f, thisSize.height + _padding * 2.0f);
+		_baseSprite.xScale = thisSize.width / properties.texture.size.width;
+		_baseSprite.yScale = thisSize.height / properties.texture.size.height;
+	}
 }
 
 -(void)setButtonType:(kSKUButtonTypes)buttonType {
@@ -1962,7 +1990,6 @@ static SKUtilities2* sharedUtilities = Nil;
 #pragma mark SKUPushButton setters
 
 -(void)updateCurrentSpriteStateProperties {
-	[super updateCurrentSpriteStateProperties];
 	SKUButtonSpriteStateProperties* propertiesSprite;
 	SKUButtonLabelProperties* propertiesLabel;
 	switch (self.buttonState) {
@@ -2001,6 +2028,7 @@ static SKUtilities2* sharedUtilities = Nil;
 		_titleSprite.color = propertiesSprite.color;
 		_titleSprite.colorBlendFactor = propertiesSprite.colorBlendFactor;
 		_titleSprite.alpha = propertiesSprite.alpha;
+		_titleSprite.centerRect = propertiesSprite.centerRect;
 		_titleSprite.xScale = propertiesSprite.xScale;
 		_titleSprite.yScale = propertiesSprite.yScale;
 	}
@@ -2014,6 +2042,8 @@ static SKUtilities2* sharedUtilities = Nil;
 		_titleLabel.xScale = propertiesLabel.scale;
 		_titleLabel.yScale = propertiesLabel.scale;
 	}
+	[super updateCurrentSpriteStateProperties];
+
 }
 
 -(void)setTitleSpritePropertiesDefault:(SKUButtonSpriteStateProperties *)titleSpritePropertiesDefault {

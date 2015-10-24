@@ -450,6 +450,10 @@ Vulnerable to lag spikes if used.
  Used to determine how many logs print to the console.
  */
 @property (nonatomic) NSInteger verbosityLevel;
+/**
+ This mutable dictionary is similar in concept to the item of the same name on all SKNodes that Apple does, but on the singleton allows you to store objects for access game wide, not just on one node. It remains uninitialized until you initialize it.
+ */
+@property (nonatomic, strong) NSMutableDictionary* userData;
 #if TARGET_OS_IPHONE
 #else
 /**
@@ -646,6 +650,7 @@ Vulnerable to lag spikes if used.
  @param color color object
  @param colorBlendFactor colorBlendFactor value
  @param position position value
+ @param centerRect centerRect value (if set, ignores the xScale and yScale values)
  @param xScale xScale value
  @param yScale yScale value
  @param texture texture object
@@ -656,10 +661,14 @@ Vulnerable to lag spikes if used.
 @property (nonatomic, strong) SKColor* color;
 @property (nonatomic) CGFloat colorBlendFactor;
 @property (nonatomic) CGPoint position;
+
+@property (nonatomic) CGRect centerRect;
 @property (nonatomic) CGFloat xScale;
 @property (nonatomic) CGFloat yScale;
 @property (nonatomic, strong) SKTexture* texture;
 
+/** Returns a new object with the following properties. */
++(SKUButtonSpriteStateProperties*)propertiesWithTexture:(SKTexture*)texture andAlpha:(CGFloat)alpha andColor:(SKColor *)color andColorBlendFactor:(CGFloat)colorBlendFactor andPositionOffset:(CGPoint)position andXScale:(CGFloat)xScale andYScale:(CGFloat)yScale andCenterRect:(CGRect)centerRect;
 /** Returns a new object with the following properties. */
 +(SKUButtonSpriteStateProperties*)propertiesWithTexture:(SKTexture*)texture andAlpha:(CGFloat)alpha andColor:(SKColor*)color andColorBlendFactor:(CGFloat)colorBlendFactor andPositionOffset:(CGPoint)position andXScale:(CGFloat)xScale andYScale:(CGFloat)yScale;
 /** Returns a new object with the following properties. */
@@ -764,6 +773,8 @@ typedef enum {
 @property (nonatomic) NSString* notificationNameUp;
 /** Readonly: access to the base sprite. */
 @property (nonatomic, readonly) SKSpriteNode* baseSprite;
+/** Used for padding around buttons when using centerRect to scale imagery. */
+@property (nonatomic) CGFloat padding;
 /** Properties to use on the base sprite in default state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* baseSpritePropertiesDefault;
 /** Properties to use on the base sprite in pressed state. */

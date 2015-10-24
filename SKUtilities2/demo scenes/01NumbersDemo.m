@@ -12,10 +12,6 @@
 #import "shapeBenchmark.h"
 
 @interface _1NumbersDemo() {
-	SKSpriteNode* indicator;
-	SKNode* currentSelectedNode;
-	
-	SKUPushButton* testButton;
 }
 
 @end
@@ -68,163 +64,79 @@
 	NSLog(@"distance is closer than %f: %i", comparison, distanceBetweenIsWithinXDistancePreSquared(pointA, pointB, comparison * comparison));
 
 	
-
-	[self setupButton];
-	
-}
-
--(void)testButtonDown:(SKUButton*)button {
-}
-
--(void)testButtonUp:(SKUButton*)button {
-	SKUButton* but2 = (SKUButton*)[self childNodeWithName:@"buttonTwo"];
-	if (but2.isEnabled) {
-		[but2 disableButton];
-	} else {
-		[but2 enableButton];
-	}
-}
-
--(void)buttonTwoUp:(SKUButton*)button {
-	if (testButton.isEnabled) {
-		[testButton disableButton];
-	} else {
-		[testButton enableButton];
-	}
-}
-
-
--(void)setupButton {
 	
 	SKLabelNode* logLabel = [SKLabelNode labelNodeWithText:@"Look in the console in Xcode to see some demo functions"];
 	logLabel.fontColor = [SKColor whiteColor];
 	logLabel.position = midPointOfRect(self.frame);
 	[self addChild:logLabel];
 	
+	[self setupButtonPackages];
+	[self setupButton];
+	
+}
 
+-(void)setupButton {
+	SKUButtonLabelPropertiesPackage* labelPack = SKUSharedUtilities.userData[@"buttonLabelPackage"];
+	SKUButtonSpriteStatePropertiesPackage* backgroundPack = SKUSharedUtilities.userData[@"buttonBackgroundPackage"];
+	SKUPushButton* nextSlide = [SKUPushButton pushButtonWithBackgroundPropertiesPackage:backgroundPack andTitleLabelPropertiesPackage:labelPack];
+	nextSlide.position = pointMultiplyByPoint(midPointOfRect(self.frame), CGPointMake(1.0, 0.5));
+	nextSlide.zPosition = 1.0;
+	[nextSlide setUpAction:@selector(transferScene:) toPerformOnTarget:self];
+	[self addChild:nextSlide];
 	
-	SKNode* tempButton = [SKNode node];
-	tempButton.position = midPointOfRect(self.frame);
-	tempButton.position = CGPointMake(tempButton.position.x, tempButton.position.y * 0.5);
-	tempButton.zPosition = 1.0;
-	tempButton.name = @"tempButton";
-	[self addChild:tempButton];
-	
-	SKSpriteNode* buttonBG = [SKSpriteNode spriteNodeWithColor:[SKColor whiteColor] size:CGSizeMake(200, 50)];
-	[tempButton addChild:buttonBG];
-	
-	SKLabelNode* buttonLabel = [SKLabelNode labelNodeWithText:@"Next Scene"];
-	buttonLabel.fontColor = [SKColor blackColor];
-	buttonLabel.fontSize = 28;
-	buttonLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeCenter;
-	buttonLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
-	buttonLabel.zPosition = 1.0;
-	[tempButton addChild:buttonLabel];
-	
-	SKTexture* ship = [SKTexture textureWithImageNamed:@"Spaceship"];
-	SKTexture* shipSmall = [SKTexture textureWithImageNamed:@"Spaceship_small"];
-	SKTexture* shipSmallBlur = [SKTexture textureWithImageNamed:@"Spaceship_sm_bl"];
-	
-	SKUButtonSpriteStateProperties* backgroundDefState = [SKUButtonSpriteStateProperties propertiesWithTexture:ship andAlpha:1.0];
-	SKUButtonSpriteStateProperties* backgroundPresState = [SKUButtonSpriteStateProperties propertiesWithTexture:ship andAlpha:1.0 andColor:[SKColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1.0] andColorBlendFactor:1.0];
-	SKUButtonSpriteStateProperties* backgroundDisState = [SKUButtonSpriteStateProperties propertiesWithTexture:ship andAlpha:0.2 andColor:[SKColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1.0] andColorBlendFactor:0.5];
-	
-	SKUButtonSpriteStatePropertiesPackage* backgroundPackage = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:backgroundDefState andPressedState:backgroundPresState andDisabledState:backgroundDisState];
-	
-	SKUButtonLabelProperties* labelPropsDef = [SKUButtonLabelProperties propertiesWithText:@"Button" andColor:[SKColor whiteColor] andSize:50.0 andFontName:@"Helvetica Neue UltraLight"];
-	SKUButtonLabelProperties* labelPropsPres = [SKUButtonLabelProperties propertiesWithText:@"ButtonPressed" andColor:[SKColor redColor] andSize:45.0 andFontName:@"Arial"];
-	SKUButtonLabelProperties* labelPropsDis = [SKUButtonLabelProperties propertiesWithText:@"ButtonDisabled" andColor:[SKColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1.0] andSize:45.0 andFontName:@"Arial"];
-	
-	SKUButtonLabelPropertiesPackage* labelPack = [SKUButtonLabelPropertiesPackage packageWithPropertiesForDefaultState:labelPropsDef andPressedState:labelPropsPres andDisabledState:labelPropsDis];
-	
-	SKUButtonSpriteStateProperties* foregroundDefState = [SKUButtonSpriteStateProperties propertiesWithTexture:shipSmall andAlpha:1.0];
-	SKUButtonSpriteStateProperties* foregroundPresState = [SKUButtonSpriteStateProperties propertiesWithTexture:shipSmall andAlpha:1.0 andColor:[SKColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1.0] andColorBlendFactor:1.0];
-	SKUButtonSpriteStateProperties* foregroundDisState = [SKUButtonSpriteStateProperties propertiesWithTexture:shipSmallBlur andAlpha:1.0 andColor:[SKColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1.0] andColorBlendFactor:0.5];
-	
-	SKUButtonSpriteStatePropertiesPackage* foregroundPackage = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:foregroundDefState andPressedState:foregroundPresState andDisabledState:foregroundDisState];
-	
-	testButton = [SKUPushButton pushButtonWithBackgroundPropertiesPackage:backgroundPackage andForeGroundSpritePropertiesPackage:foregroundPackage andTitleLabelPropertiesPackage:labelPack];
-	testButton.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.25, 0.65));
-	[testButton setDownAction:@selector(testButtonDown:) toPerformOnTarget:self];
-	[testButton setUpAction:@selector(testButtonUp:) toPerformOnTarget:self];
-	testButton.anchorPoint = CGPointMake(1.0, 1.0);
-	testButton.zPosition = 0.2;
-	
-	[self addChild:testButton];
-	
-	SKUButtonSpriteStateProperties* defaultProps = [SKUButtonSpriteStateProperties propertiesWithTexture:shipSmall andAlpha:1.0];
-	SKUButtonSpriteStateProperties* pressedProperties = [SKUButtonSpriteStateProperties propertiesWithTexture:shipSmallBlur andAlpha:1.0 andColor:[SKColor greenColor] andColorBlendFactor:0.5];
-	SKUButtonSpriteStateProperties* disabledProperties = [SKUButtonSpriteStateProperties propertiesWithTexture:shipSmall andAlpha:0.25];
-	SKUButtonSpriteStatePropertiesPackage* basePackage = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:defaultProps andPressedState:pressedProperties andDisabledState:disabledProperties];
-	
-//	SKULog(0, @"basePackage: %@", basePackage);
-	
-	
-	SKUButton* buttonTwo = [SKUButton buttonWithPropertiesPackage:basePackage];
-	buttonTwo.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.75, 0.65));
-	[buttonTwo setUpAction:@selector(buttonTwoUp:) toPerformOnTarget:self];
-	buttonTwo.name = @"buttonTwo";
-	[self addChild:buttonTwo];
-	
-
-	
-	NSLog(@"buttonType: %i", testButton.buttonType);
 	
 #if TARGET_OS_TV
-	
-	[self addNodeToNavNodesSKU:testButton];
-	[self addNodeToNavNodesSKU:buttonTwo];
-	
-	[self addNodeToNavNodesSKU:tempButton];
-	
-	SKSpriteNode* otherButton = [SKSpriteNode spriteNodeWithColor:[SKColor redColor] size:CGSizeMake(200, 50)];
-	otherButton.position = pointAdd(CGPointMake(0, 100.0), tempButton.position);
-	[self addChild:otherButton];
-	[self addNodeToNavNodesSKU:otherButton];
-	
-	indicator = [SKSpriteNode spriteNodeWithColor:[SKColor greenColor] size:CGSizeMake(10, 10)];
-	indicator.zPosition = 20.0;
-	[self addChild:indicator];
-	
-	[self setCurrentSelectedNodeSKU:tempButton];
+
+	[self addNodeToNavNodesSKU:nextSlide];
+	[self setCurrentSelectedNodeSKU:nextSlide];
 	
 	[SKUSharedUtilities setNavFocus:self];
 	
-
 #endif
-
 }
 
--(void)currentSelectedNodeUpdatedSKU:(SKNode *)node {
-	indicator.position = node.position;
-	currentSelectedNode = node;
-	SKUButton* testButton = (SKUButton*)[self childNodeWithName:@"buttonTwo"];
-//	SKULog(0, @"button: %@", testButton);
+-(void)setupButtonPackages {
+	SKUSharedUtilities.userData = [NSMutableDictionary dictionary];
+	
+	SKTexture* buttonBG = [SKTexture textureWithImageNamed:@"buttonBG"];
+
+	SKUButtonSpriteStateProperties* backgroundProps = [SKUButtonSpriteStateProperties
+												  propertiesWithTexture:buttonBG
+												  andAlpha:1.0f
+												  andColor:nil
+												  andColorBlendFactor:0.0f
+												  andPositionOffset:CGPointMake(0, -5.0)
+												  andXScale:1.0f
+												  andYScale:1.0f
+												  andCenterRect:CGRectMake(40.0/buttonBG.size.width, 50.0/buttonBG.size.height, 40.0/buttonBG.size.width, 40.0/buttonBG.size.height)];
+	
+	SKUButtonSpriteStatePropertiesPackage* backgroundPackage = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:backgroundProps];
+	
+	SKUButtonLabelProperties* labelProps = [SKUButtonLabelProperties
+											propertiesWithText:@"Next Slide"
+											andColor:[SKColor blackColor]
+											andSize:28
+											andFontName:@"Helvetica Neue Light"];
+	
+	SKUButtonLabelPropertiesPackage* labelPackage = [SKUButtonLabelPropertiesPackage packageWithPropertiesForDefaultState:labelProps];
+	
+	[SKUSharedUtilities.userData setObject:backgroundPackage forKey:@"buttonBackgroundPackage"];
+	[SKUSharedUtilities.userData setObject:labelPackage forKey:@"buttonLabelPackage"];
+	
 }
 
--(void)absoluteInputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
-	NSArray* nodes = [self nodesAtPoint:location];
-	for (SKNode* node in nodes) {
-		if ([node.name isEqualToString:@"tempButton"]) {
-			//next scene
-			[self transferScene];
-			break;
-		}
-	}
-	[super absoluteInputMovedSKU:location withEventDictionary:eventDict];
-}
 
 -(void)inputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 
 }
 
 -(void)mouseMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
-//	SKULog(0, @"adsf");
+	SKULog(0, @"adsf");
 }
 
 
 
--(void)transferScene {
+-(void)transferScene:(SKUButton*)button {
 	
 	_2rotationScene* scene = [[_2rotationScene alloc] initWithSize:self.size];
 	scene.scaleMode = self.scaleMode;
