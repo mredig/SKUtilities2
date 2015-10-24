@@ -540,6 +540,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	_navThresholdDistance = 125.0;
 	selectLocation = CGPointMake(960.0, 540.0); //midpoint of 1080p
 	_navMode = kSKUNavModeOn;
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gestureTapDown:) name:@"pressBeganSelectSKU" object:nil]; //// can be removed if button gesture states get resolved
 #endif
 }
 
@@ -655,10 +656,11 @@ static SKUtilities2* sharedUtilities = Nil;
 -(void)gestureTap:(UITapGestureRecognizer*)gesture {
 	if (_navMode == kSKUNavModeOn) {
 		SKNode* currentSelectedNode = SKUSharedUtilities.navFocus.userData[@"sku_currentSelectedNode"];
-		if (gesture.state == UIGestureRecognizerStateBegan) { //// this is a farce - the began state isn't sent here, only the ended state. I'm keeping this here as a sort of note if I can ever figure out how to implement UIPresses with a similar method.
-			if ([currentSelectedNode isKindOfClass:[SKUButton class]]) {
-				[(SKUButton*)currentSelectedNode buttonPressed:CGPointZero];
-			}
+		if (gesture.state == UIGestureRecognizerStateBegan) { //// this doesn't work. I'm leaving it commented here though in case apple changes this behavior in the future and invalidates the need for the method under here.
+//			if ([currentSelectedNode isKindOfClass:[SKUButton class]]) {
+//				[(SKUButton*)currentSelectedNode buttonPressed:CGPointZero];
+//			}
+			SKULog(0, @"gestures now recieve state began from presses"); // canary to let me know if this works in the future
 		} else if (gesture.state == UIGestureRecognizerStateEnded) {
 			if ([currentSelectedNode isKindOfClass:[SKUButton class]]) {
 				[(SKUButton*)currentSelectedNode buttonReleased:CGPointZero];
@@ -666,6 +668,16 @@ static SKUtilities2* sharedUtilities = Nil;
 		}
 	}
 }
+
+-(void)gestureTapDown:(NSNotification*)notification { //// can be removed if prior method gets resolved
+	if (_navMode == kSKUNavModeOn) {
+		SKNode* currentSelectedNode = SKUSharedUtilities.navFocus.userData[@"sku_currentSelectedNode"];
+		if ([currentSelectedNode isKindOfClass:[SKUButton class]]) {
+			[(SKUButton*)currentSelectedNode buttonPressed:CGPointZero];
+		}
+	}
+}
+
 #endif
 
 @end
@@ -2195,7 +2207,24 @@ static SKUtilities2* sharedUtilities = Nil;
 
 @implementation SKView (AdditionalMouseSupport)
 
-#if TARGET_OS_IPHONE
+
+#if TARGET_OS_TV
+-(void)pressesBegan:(NSSet<UIPress *> *)presses withEvent:(UIPressesEvent *)event { //// can be removed if button gesture states get resolved
+	for (UIPress* press in presses) {
+		switch (press.type) {
+			case UIPressTypeSelect: {
+				[[NSNotificationCenter defaultCenter] postNotificationName:@"pressBeganSelectSKU" object:nil];
+			}
+				break;
+				
+			default:
+				break;
+		}
+		
+	}
+	[super pressesBegan:presses withEvent:event];
+}
+#elif TARGET_OS_IPHONE
 #else
 //http://opensource.apple.com/source/CarbonHeaders/CarbonHeaders-18.1/TargetConditionals.h
 
