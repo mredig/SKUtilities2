@@ -1770,7 +1770,10 @@ static SKUtilities2* sharedUtilities = Nil;
 	_isEnabled = YES;
 	_buttonState = kSKUButtonStateDefault;
 	[self updateCurrentSpriteStateProperties];
+#if TARGET_OS_TV
+#else
 	self.userInteractionEnabled = YES;
+#endif
 }
 
 -(void)disableButton {
@@ -2683,6 +2686,13 @@ static SKUtilities2* sharedUtilities = Nil;
 	
 	if (!self.userData[@"sku_navNodes"]) {
 		self.userData[@"sku_navNodes"] = navNodes;
+	}
+}
+
+-(void)removeNodeFromNavNodesSKU:(SKNode*)node {
+	NSMutableSet* navNodes = self.userData[@"sku_navNodes"];
+	if (navNodes && [navNodes containsObject:node]) {
+		[navNodes removeObject:node];
 	}
 }
 

@@ -22,10 +22,7 @@
 	CGFloat latValue;
 	CGPoint previousLocation;
 	
-	SKUtilities2* sharedUtilities;
 	
-	SKSpriteNode* cursor;
-
 }
 
 @end
@@ -34,7 +31,6 @@
 
 
 -(void) didMoveToView:(SKView *)view {
-	sharedUtilities = SKUSharedUtilities;
 	
 	NSLog(@"\n\n\n\n03VectorPoint: demos vector and point functions");
 	
@@ -196,7 +192,7 @@
 	CGFloat xStart = ((CGFloat)iterations / 2.0) * -space + space * 0.5;
 	CGFloat yStart = ((CGFloat)iterations / 2.0) * space - space * 0.5;
 
-	for (int y = 0; y < iterations; y++) {
+	for (int y = 0; y < iterations; y++) { //create node grid
 		for (int x = 0; x < iterations; x++) {
 			SKSpriteNode* part = [SKSpriteNode spriteNodeWithColor:[SKColor whiteColor] size:CGSizeMake(10, 10)];
 			part.position = CGPointMake(xStart + x * space, yStart - y * space);
@@ -207,15 +203,6 @@
 	}
 	
 	[self updatePartColor];
-	
-#if TARGET_OS_TV
-	
-	SKUSharedUtilities.navMode = kSKUNavModeOff;
-	cursor = [SKSpriteNode spriteNodeWithColor:[SKColor greenColor] size:CGSizeMake(20, 20)];
-	cursor.position = pointMultiplyByPoint(CGPointMake(0.5, 0.25), pointFromCGSize(self.size));
-	cursor.zPosition = 20;
-	[self addChild:cursor];
-#endif
 	
 }
 
@@ -236,9 +223,9 @@
 
 -(void)moveNodes {
 		
-	spriteVectorInterval.position = pointStepVectorFromPointWithInterval(spriteVectorInterval.position, CGVectorMake(1.0, 0.0), sharedUtilities.deltaFrameTime, 5.0f/60.0f, 100.0f, 1.0f);
+	spriteVectorInterval.position = pointStepVectorFromPointWithInterval(spriteVectorInterval.position, CGVectorMake(1.0, 0.0), SKUSharedUtilities.deltaFrameTime, 5.0f/60.0f, 100.0f, 1.0f);
 	
-	spritePoint.position = pointStepTowardsPointWithInterval(spritePoint.position, CGPointMake(5000.0, spritePoint.position.y), sharedUtilities.deltaFrameTime, 5.0f/60.0f, 100.0f, 1.0f);
+	spritePoint.position = pointStepTowardsPointWithInterval(spritePoint.position, CGPointMake(5000.0, spritePoint.position.y), SKUSharedUtilities.deltaFrameTime, 5.0f/60.0f, 100.0f, 1.0f);
 	
 	spriteVector.position = pointStepVectorFromPoint(spriteVector.position, CGVectorMake(1.0, 0.0), 100.0f/60.0f);
 	
@@ -251,24 +238,24 @@
 
 -(void)setupButton {
 	
-	SKNode* tempButton = [SKNode node];
-	tempButton.position = midPointOfRect(self.frame);
-	tempButton.zPosition = 1.0;
-	tempButton.name = @"tempButton";
-	[self addChild:tempButton];
-	
-	SKSpriteNode* buttonBG = [SKSpriteNode spriteNodeWithColor:[SKColor whiteColor] size:CGSizeMake(200, 50)];
-	[tempButton addChild:buttonBG];
-	
-	SKLabelNode* buttonLabel = [SKLabelNode labelNodeWithText:@"Next Scene"];
-	buttonLabel.fontColor = [SKColor blackColor];
-	buttonLabel.fontSize = 28;
-	buttonLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeCenter;
-	buttonLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
-	buttonLabel.zPosition = 1.0;
-	[tempButton addChild:buttonLabel];
+	SKUButtonLabelPropertiesPackage* labelPack = SKUSharedUtilities.userData[@"buttonLabelPackage"];
+	SKUButtonSpriteStatePropertiesPackage* backgroundPack = SKUSharedUtilities.userData[@"buttonBackgroundPackage"];
+	SKUPushButton* nextSlide = [SKUPushButton pushButtonWithBackgroundPropertiesPackage:backgroundPack andTitleLabelPropertiesPackage:labelPack];
+	nextSlide.position = midPointOfRect(self.frame);
+	nextSlide.zPosition = 1.0;
+	[nextSlide setUpAction:@selector(transferScene:) toPerformOnTarget:self];
+	[self addChild:nextSlide];
 	
 	
+#if TARGET_OS_TV
+	
+	SKUSharedUtilities.navMode = kSKUNavModeOn;
+	[self addNodeToNavNodesSKU:nextSlide];
+	[self setCurrentSelectedNodeSKU:nextSlide];
+	
+	[SKUSharedUtilities setNavFocus:self];
+	
+#endif
 }
 
 -(void)inputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
@@ -283,28 +270,9 @@
 	latValue = fmax(-1.0, latValue);
 	latValue = fmin(1.0, latValue);
 	previousLocation = location;
-#if TARGET_OS_TV
-	UITouch* touch = eventDict[@"touch"];
-	CGPoint prevTouchLocation = [touch previousLocationInNode:self];
-	cursor.position = pointAdd(pointAdd(pointInverse(prevTouchLocation), location), cursor.position);
-#endif
+
 }
 
--(void)inputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
-
-#if TARGET_OS_TV
-	NSArray* nodes = [self nodesAtPoint:cursor.position];
-#else
-	NSArray* nodes = [self nodesAtPoint:location];
-#endif
-	for (SKNode* node in nodes) {
-		if ([node.name isEqualToString:@"tempButton"]) {
-			//next scene
-			[self transferScene];
-			break;
-		}
-	}
-}
 
 -(void)updatePartColor {
 	
@@ -322,7 +290,7 @@
 	}
 }
 
--(void)transferScene {
+-(void)transferScene:(SKUButton*)button {
 	
 	_4BezierDemo* scene = [[_4BezierDemo alloc] initWithSize:self.size];
 	scene.scaleMode = self.scaleMode;

@@ -438,7 +438,7 @@ typedef enum {
  */
 @property (nonatomic, readonly) CFTimeInterval deltaFrameTime;
 /**
- Amount of time passed since last frame. This value is capped by deltaMaxTime.
+ Amount of time passed since last frame. This value is NOT capped by deltaMaxTime.
 Vulnerable to lag spikes if used.
  */
 @property (nonatomic, readonly) CFTimeInterval deltaFrameTimeUncapped;
@@ -889,6 +889,8 @@ typedef enum {
 -(void)setCurrentSelectedNodeSKU:(SKNode*)node;
 /** Call this method to add a node to the list of navigation nodes paired with this node. */
 -(void)addNodeToNavNodesSKU:(SKNode*)node;
+/** Call this method to remove a node from the list of navigation nodes paired with this node. */
+-(void)removeNodeFromNavNodesSKU:(SKNode*)node;
 /** Override this method to update visuals. */
 -(void)currentSelectedNodeUpdatedSKU:(SKNode *)node;
 
