@@ -125,60 +125,6 @@
 	SKTexture* shipSmall = [SKTexture textureWithImageNamed:@"Spaceship_small"];
 	SKTexture* shipSmallBlur = [SKTexture textureWithImageNamed:@"Spaceship_sm_bl"];
 	
-
-	
-	SKUButtonSpriteStateProperties* defaultProps = [SKUButtonSpriteStateProperties propertiesWithTexture:shipSmall andAlpha:1.0];
-	SKUButtonSpriteStateProperties* pressedProperties = [SKUButtonSpriteStateProperties propertiesWithTexture:shipSmallBlur andAlpha:1.0 andColor:[SKColor greenColor] andColorBlendFactor:0.5];
-	SKUButtonSpriteStateProperties* disabledProperties = [SKUButtonSpriteStateProperties propertiesWithTexture:shipSmall andAlpha:0.25];
-	SKUButtonSpriteStatePropertiesPackage* basePackage = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:defaultProps andPressedState:pressedProperties andDisabledState:disabledProperties];
-	
-//	SKULog(0, @"basePackage: %@", basePackage);
-	
-	
-	SKUButton* buttonTwo = [SKUButton buttonWithPropertiesPackage:basePackage];
-	buttonTwo.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.75, 0.65));
-	[buttonTwo setUpAction:@selector(buttonTwoUp:) toPerformOnTarget:self];
-	buttonTwo.name = @"buttonTwo";
-	[self addChild:buttonTwo];
-	
-
-	
-	NSLog(@"buttonType: %i", testButton.buttonType);
-	
-#if TARGET_OS_TV
-	//	[self addNodeToNavNodesSKU:testButton];
-	[self addNodeToNavNodesSKU:buttonTwo];
-	
-	[self addNodeToNavNodesSKU:tempButton];
-	
-	SKSpriteNode* otherButton = [SKSpriteNode spriteNodeWithColor:[SKColor redColor] size:CGSizeMake(200, 50)];
-	otherButton.position = pointAdd(CGPointMake(0, 100.0), tempButton.position);
-	[self addChild:otherButton];
-	[self addNodeToNavNodesSKU:otherButton];
-	
-	indicator = [SKSpriteNode spriteNodeWithColor:[SKColor greenColor] size:CGSizeMake(10, 10)];
-	indicator.zPosition = 20.0;
-	[self addChild:indicator];
-	
-	[self setCurrentSelectedNodeSKU:tempButton];
-	
-	[SKUSharedUtilities setNavFocus:self];
-	
-	SKView* scnView = (SKView*)self.view;
-	
-	UITapGestureRecognizer* tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gestureTap:)];
-	[scnView addGestureRecognizer:tapGesture];
-#endif
-	
-//	[test invokeWithTarget:self];
-
-}
-
--(void)fold {
-	SKTexture* ship = [SKTexture textureWithImageNamed:@"Spaceship"];
-	SKTexture* shipSmall = [SKTexture textureWithImageNamed:@"Spaceship_small"];
-	SKTexture* shipSmallBlur = [SKTexture textureWithImageNamed:@"Spaceship_sm_bl"];
-	
 	SKUButtonSpriteStateProperties* backgroundDefState = [SKUButtonSpriteStateProperties propertiesWithTexture:ship andAlpha:1.0];
 	SKUButtonSpriteStateProperties* backgroundPresState = [SKUButtonSpriteStateProperties propertiesWithTexture:ship andAlpha:1.0 andColor:[SKColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1.0] andColorBlendFactor:1.0];
 	SKUButtonSpriteStateProperties* backgroundDisState = [SKUButtonSpriteStateProperties propertiesWithTexture:ship andAlpha:0.2 andColor:[SKColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1.0] andColorBlendFactor:0.5];
@@ -205,17 +151,50 @@
 	testButton.zPosition = 0.2;
 	
 	[self addChild:testButton];
-}
+	
+	SKUButtonSpriteStateProperties* defaultProps = [SKUButtonSpriteStateProperties propertiesWithTexture:shipSmall andAlpha:1.0];
+	SKUButtonSpriteStateProperties* pressedProperties = [SKUButtonSpriteStateProperties propertiesWithTexture:shipSmallBlur andAlpha:1.0 andColor:[SKColor greenColor] andColorBlendFactor:0.5];
+	SKUButtonSpriteStateProperties* disabledProperties = [SKUButtonSpriteStateProperties propertiesWithTexture:shipSmall andAlpha:0.25];
+	SKUButtonSpriteStatePropertiesPackage* basePackage = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:defaultProps andPressedState:pressedProperties andDisabledState:disabledProperties];
+	
+//	SKULog(0, @"basePackage: %@", basePackage);
+	
+	
+	SKUButton* buttonTwo = [SKUButton buttonWithPropertiesPackage:basePackage];
+	buttonTwo.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.75, 0.65));
+	[buttonTwo setUpAction:@selector(buttonTwoUp:) toPerformOnTarget:self];
+	buttonTwo.name = @"buttonTwo";
+	[self addChild:buttonTwo];
+	
 
+	
+	NSLog(@"buttonType: %i", testButton.buttonType);
+	
 #if TARGET_OS_TV
--(void)gestureTap:(UIGestureRecognizer*)gesture {
-	if ([SKUSharedUtilities.navFocus isEqual:self]) {
-		if ([currentSelectedNode.name isEqualToString:@"tempButton"]) {
-			[self transferScene];
-		}
-	}
-}
+	
+	[SKUSharedUtilities registerForSiriRemoteTapsOnView:self.view];
+	[self addNodeToNavNodesSKU:testButton];
+	[self addNodeToNavNodesSKU:buttonTwo];
+	
+	[self addNodeToNavNodesSKU:tempButton];
+	
+	SKSpriteNode* otherButton = [SKSpriteNode spriteNodeWithColor:[SKColor redColor] size:CGSizeMake(200, 50)];
+	otherButton.position = pointAdd(CGPointMake(0, 100.0), tempButton.position);
+	[self addChild:otherButton];
+	[self addNodeToNavNodesSKU:otherButton];
+	
+	indicator = [SKSpriteNode spriteNodeWithColor:[SKColor greenColor] size:CGSizeMake(10, 10)];
+	indicator.zPosition = 20.0;
+	[self addChild:indicator];
+	
+	[self setCurrentSelectedNodeSKU:tempButton];
+	
+	[SKUSharedUtilities setNavFocus:self];
+	
+
 #endif
+
+}
 
 -(void)currentSelectedNodeUpdatedSKU:(SKNode *)node {
 	indicator.position = node.position;

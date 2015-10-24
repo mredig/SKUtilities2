@@ -6,6 +6,15 @@
 //  Copyright © 2015 Michael Redig. All rights reserved.
 //
 
+
+// run this as a script in a build phase to automatically increment build numbers
+
+// #!/bin/bash
+// bN=$(/usr/libexec/PlistBuddy -c "Print CFBundleVersion" "$INFOPLIST_FILE")
+// bN=$((bN += 1))
+// bN=$(printf "%d" $bN)
+// /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $bN" "$INFOPLIST_FILE"
+
 #import <Foundation/Foundation.h>
 #import <QuartzCore/QuartzCore.h>
 #import <SpriteKit/SpriteKit.h>
@@ -458,6 +467,7 @@ Vulnerable to lag spikes if used.
 
 -(SKNode*)handleSubNodeMovement:(CGPoint)location withCurrentSelection:(SKNode*)currentSelectedNode inSet:(NSSet*)navNodeSet inScene:(SKScene*)scene;
 -(void)setNavFocus:(SKNode *)navFocus;
+-(void)registerForSiriRemoteTapsOnView:(UIView*)view;
 
 #endif
 
@@ -794,6 +804,10 @@ typedef enum {
 
 /** Sets all base sprite states in one command. */
 -(void)setBaseStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
+/** Calls the actions for button down press. Location is in local space. */
+-(void)buttonPressed:(CGPoint)location;
+/** Calls the actions for button release. Location is in local space. */
+-(void)buttonReleased:(CGPoint)location;
 
 /** Call to explicitly enable button (meant to reverse the state of being disabled). Be sure to call super method if you override. */
 -(void)enableButton;
@@ -813,6 +827,8 @@ typedef enum {
 @property (nonatomic) SKUButtonLabelProperties* labelPropertiesDefault;
 /** Set this to setup the title label properties when the button is pressed. */
 @property (nonatomic) SKUButtonLabelProperties* labelPropertiesPressed;
+/** Set this to setup the title label properties when the button is hovered. */
+@property (nonatomic) SKUButtonLabelProperties* labelPropertiesHovered;
 /** Set this to setup the title label properties when the button is disabled. */
 @property (nonatomic) SKUButtonLabelProperties* labelPropertiesDisabled;
 
@@ -824,6 +840,8 @@ typedef enum {
 @property (nonatomic) SKUButtonSpriteStateProperties* titleSpritePropertiesDefault;
 /** Properties to use on the title sprite in pressed state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* titleSpritePropertiesPressed;
+/** Properties to use on the title sprite in hovered state. */
+@property (nonatomic) SKUButtonSpriteStateProperties* titleSpritePropertiesHovered;
 /** Properties to use on the title sprite in disabled state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* titleSpritePropertiesDisabled;
 #pragma mark SKUPushButton inits

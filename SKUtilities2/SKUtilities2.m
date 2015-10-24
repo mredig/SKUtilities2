@@ -645,6 +645,27 @@ static SKUtilities2* sharedUtilities = Nil;
 	}
 	return newNode;
 }
+
+-(void)registerForSiriRemoteTapsOnView:(UIView *)view {
+	UITapGestureRecognizer* tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gestureTap:)];
+	tapGesture.allowedPressTypes = @[[NSNumber numberWithInteger:UIPressTypeSelect]];
+	[view addGestureRecognizer:tapGesture];
+}
+
+-(void)gestureTap:(UITapGestureRecognizer*)gesture {
+	if (_navMode == kSKUNavModeOn) {
+		SKNode* currentSelectedNode = SKUSharedUtilities.navFocus.userData[@"sku_currentSelectedNode"];
+		if (gesture.state == UIGestureRecognizerStateBegan) { //// this is a farce - the began state isn't sent here, only the ended state. I'm keeping this here as a sort of note if I can ever figure out how to implement UIPresses with a similar method.
+			if ([currentSelectedNode isKindOfClass:[SKUButton class]]) {
+				[(SKUButton*)currentSelectedNode buttonPressed:CGPointZero];
+			}
+		} else if (gesture.state == UIGestureRecognizerStateEnded) {
+			if ([currentSelectedNode isKindOfClass:[SKUButton class]]) {
+				[(SKUButton*)currentSelectedNode buttonReleased:CGPointZero];
+			}
+		}
+	}
+}
 #endif
 
 @end
@@ -1788,7 +1809,11 @@ static SKUtilities2* sharedUtilities = Nil;
 
 -(void)buttonReleased:(CGPoint)location {
 	if (_isEnabled) {
-		_buttonState = kSKUButtonStateDefault;
+		if (_isHovered) {
+			_buttonState = kSKUButtonStateHovered;
+		} else {
+			_buttonState = kSKUButtonStateDefault;
+		}
 		
 		[self updateCurrentSpriteStateProperties];
 		BOOL notificationMethod = kSKUButtonMethodPostNotification & _buttonMethod;
@@ -1822,7 +1847,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	return answer;
 }
 
-#pragma mark HOVER STUFF
+#pragma mark SKUButton HOVER STUFF
 
 -(void)hoverButton {
 	_isHovered = YES;
@@ -1848,9 +1873,11 @@ static SKUtilities2* sharedUtilities = Nil;
 @interface SKUPushButton() {
 	BOOL stateTSpriteDefaultInitialized;
 	BOOL stateTSpritePressedInitialized;
+	BOOL stateTSpriteHoveredInitialized;
 	BOOL stateTSpriteDisabledInitialized;
 	BOOL stateTLabelDefaultInitialized;
 	BOOL stateTLabelPressedInitialized;
+	BOOL stateTLabelHoveredInitialized;
 	BOOL stateTLabelDisabledInitialized;
 }
 
@@ -1922,9 +1949,11 @@ static SKUtilities2* sharedUtilities = Nil;
 -(void)internalDidInitialize {
 	stateTSpriteDefaultInitialized = NO;
 	stateTSpritePressedInitialized = NO;
+	stateTSpriteHoveredInitialized = NO;
 	stateTSpriteDisabledInitialized = NO;
 	stateTLabelDefaultInitialized = NO;
 	stateTLabelPressedInitialized = NO;
+	stateTLabelHoveredInitialized = NO;
 	stateTLabelDisabledInitialized = NO;
 	[self setButtonType:kSKUButtonTypePush];
 	[super internalDidInitialize];
@@ -1945,6 +1974,10 @@ static SKUtilities2* sharedUtilities = Nil;
 			propertiesSprite = _titleSpritePropertiesPressed;
 			propertiesLabel = _labelPropertiesPressed;
 			break;
+		case kSKUButtonStateHovered:
+			propertiesSprite = _titleSpritePropertiesHovered;
+			propertiesLabel = _labelPropertiesHovered;
+			break;
 		case kSKUButtonStateDisabled:
 			propertiesSprite = _titleSpritePropertiesDisabled;
 			propertiesLabel = _labelPropertiesDisabled;
@@ -1959,8 +1992,11 @@ static SKUtilities2* sharedUtilities = Nil;
 	}
 	
 	if (_titleSprite) {
+		SKTexture* prevTex = _titleSprite.texture;
 		_titleSprite.texture = propertiesSprite.texture;
-		_titleSprite.size = propertiesSprite.texture.size;
+		if (![prevTex isEqual:_titleSprite.texture]) {
+			_titleSprite.size = propertiesSprite.texture.size;
+		}
 		_titleSprite.position = propertiesSprite.position;
 		_titleSprite.color = propertiesSprite.color;
 		_titleSprite.colorBlendFactor = propertiesSprite.colorBlendFactor;
@@ -1994,6 +2030,11 @@ static SKUtilities2* sharedUtilities = Nil;
 		stateTSpritePressedInitialized = YES;
 	}
 	
+	if (!stateTSpriteHoveredInitialized) {
+		_titleSpritePropertiesHovered = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_titleSpritePropertiesDefault].propertiesHoveredState;
+		stateTSpriteHoveredInitialized = YES;
+	}
+	
 	if (!stateTSpriteDisabledInitialized) {
 		_titleSpritePropertiesDisabled = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_titleSpritePropertiesDefault].propertiesDisabledState;
 		stateTSpriteDisabledInitialized = YES;
@@ -2005,6 +2046,12 @@ static SKUtilities2* sharedUtilities = Nil;
 -(void)setTitleSpritePropertiesPressed:(SKUButtonSpriteStateProperties *)titleSpritePropertiesPressed {
 	_titleSpritePropertiesPressed = titleSpritePropertiesPressed;
 	stateTSpritePressedInitialized = YES;
+	[self updateCurrentSpriteStateProperties];
+}
+
+-(void)setTitleSpritePropertiesHovered:(SKUButtonSpriteStateProperties *)titleSpritePropertiesHovered {
+	_titleSpritePropertiesHovered = titleSpritePropertiesHovered;
+	stateTSpriteHoveredInitialized = YES;
 	[self updateCurrentSpriteStateProperties];
 }
 
@@ -2030,6 +2077,11 @@ static SKUtilities2* sharedUtilities = Nil;
 		stateTLabelPressedInitialized = YES;
 	}
 	
+	if (!stateTLabelHoveredInitialized) {
+		_labelPropertiesHovered = [SKUButtonLabelPropertiesPackage packageWithPropertiesForDefaultState:_labelPropertiesDefault].propertiesHoveredState;
+		stateTLabelHoveredInitialized = YES;
+	}
+	
 	if (!stateTLabelDisabledInitialized) {
 		_labelPropertiesDisabled = [SKUButtonLabelPropertiesPackage packageWithPropertiesForDefaultState:_labelPropertiesDefault].propertiesDisabledState;
 		stateTLabelDisabledInitialized = YES;
@@ -2043,6 +2095,12 @@ static SKUtilities2* sharedUtilities = Nil;
 	[self updateCurrentSpriteStateProperties];
 }
 
+-(void)setLabelPropertiesHovered:(SKUButtonLabelProperties *)labelPropertiesHovered {
+	_labelPropertiesHovered = labelPropertiesHovered;
+	stateTLabelHoveredInitialized = YES;
+	[self updateCurrentSpriteStateProperties];
+}
+
 -(void)setLabelPropertiesDisabled:(SKUButtonLabelProperties *)labelPropertiesDisabled {
 	_labelPropertiesDisabled = labelPropertiesDisabled;
 	stateTLabelDisabledInitialized = YES;
@@ -2052,6 +2110,8 @@ static SKUtilities2* sharedUtilities = Nil;
 -(void)setTitleSpriteStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package {
 	_titleSpritePropertiesPressed = package.propertiesPressedState;
 	stateTSpritePressedInitialized = YES;
+	_titleSpritePropertiesHovered = package.propertiesHoveredState;
+	stateTSpriteHoveredInitialized = YES;
 	_titleSpritePropertiesDisabled = package.propertiesDisabledState;
 	stateTSpriteDisabledInitialized = YES;
 	self.titleSpritePropertiesDefault = package.propertiesDefaultState;
@@ -2062,6 +2122,8 @@ static SKUtilities2* sharedUtilities = Nil;
 -(void)setTitleLabelStatesWithPackage:(SKUButtonLabelPropertiesPackage*)package {
 	_labelPropertiesPressed = package.propertiesPressedState;
 	stateTLabelPressedInitialized = YES;
+	_labelPropertiesHovered = package.propertiesHoveredState;
+	stateTLabelHoveredInitialized = YES;
 	_labelPropertiesDisabled = package.propertiesDisabledState;
 	stateTLabelDisabledInitialized = YES;
 	self.labelPropertiesDefault = package.propertiesDefaultState;
@@ -2079,6 +2141,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	} else {
 		stateTSpriteDefaultInitialized = NO;
 		stateTSpritePressedInitialized = NO;
+		stateTSpriteHoveredInitialized = NO;
 		stateTSpriteDisabledInitialized = NO;
 	}
 
@@ -2089,6 +2152,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	} else {
 		stateTLabelDefaultInitialized = NO;
 		stateTLabelPressedInitialized = NO;
+		stateTLabelHoveredInitialized = NO;
 		stateTLabelDisabledInitialized = NO;
 	}
 
@@ -2103,6 +2167,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	} else {
 		stateTSpriteDefaultInitialized = NO;
 		stateTSpritePressedInitialized = NO;
+		stateTSpriteHoveredInitialized = NO;
 		stateTSpriteDisabledInitialized = NO;
 	}
 	
@@ -2113,6 +2178,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	} else {
 		stateTLabelDefaultInitialized = NO;
 		stateTLabelPressedInitialized = NO;
+		stateTLabelHoveredInitialized = NO;
 		stateTLabelDisabledInitialized = NO;
 	}
 }
