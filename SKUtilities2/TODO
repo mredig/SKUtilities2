@@ -1,7 +1,4 @@
-SKU_Buttons needs a toggle button
-	subclass pushbutton and have sprite properties (not packages) for on and off state that can slide horizontally to account for button size
 SKU_Buttons needs a slider
-
 
 shapenode needs to accomodate for retina displays when rendering
 
