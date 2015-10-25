@@ -132,6 +132,7 @@
 	// this will only be called if you do
 	//	 self.view.window.acceptsMouseMovedEvents = YES;
 	// this also activates SKUButton hovering on OSX
+	// note that this setting will persist regardless of scene change
 }
 
 
