@@ -1,6 +1,6 @@
 The MIT License (MIT)
 
-Copyright (c) 2014 Michael Redig
+Copyright (c) 2015 Michael Redig
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -21,4 +21,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 DISCLAIMER: the sample filler text is not my property and was sourced from bluthipsum.com
 
-With all this being said, I would absolutely LOVE to see what you make with this. If you use it, it would make me super duper happy to get a link to your creation! Not at all required, but it'd be cool. :)
+With all this being said, I would absolutely LOVE to see what you make with this. 
+If you use it, it would make me super duper happy to get a link to your creation! 
+Not at all required, but it'd be cool. :)
