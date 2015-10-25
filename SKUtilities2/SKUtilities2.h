@@ -716,6 +716,7 @@ Vulnerable to lag spikes if used.
 /** Stores all states for a sprite in buttons. The properties collected on this object get passed to the button's states.
  @param propertiesDefaultState propertiesDefaultState object
  @param propertiesPressedState propertiesPressedState object
+ @param propertiesHoveredState propertiesHoveredState object
  @param propertiesDisabledState propertiesDisabledState object
 
  */

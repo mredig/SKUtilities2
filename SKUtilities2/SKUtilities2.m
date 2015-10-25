@@ -2321,7 +2321,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	[super buttonStatesNormalize];
 	
 	if (_titleSpritePropertiesDefault.texture) {
-		SKUButtonSpriteStatePropertiesPackage* package = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_titleSpritePropertiesDefault andPressedState:_titleSpritePropertiesDefault andDisabledState:_titleSpritePropertiesDefault];
+		SKUButtonSpriteStatePropertiesPackage* package = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_titleSpritePropertiesDefault andPressedState:_titleSpritePropertiesDefault andHoveredState:_titleSpritePropertiesDefault andDisabledState:_titleSpritePropertiesDefault];
 		[self setTitleSpriteStatesWithPackage:package];
 	} else {
 		stateTSpriteDefaultInitialized = NO;
@@ -2331,7 +2331,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	}
 	
 	if (_labelPropertiesDefault.text) {
-		SKUButtonLabelPropertiesPackage* package = [SKUButtonLabelPropertiesPackage packageWithPropertiesForDefaultState:_labelPropertiesDefault andPressedState:_labelPropertiesDefault andDisabledState:_labelPropertiesDefault];
+		SKUButtonLabelPropertiesPackage* package = [SKUButtonLabelPropertiesPackage packageWithPropertiesForDefaultState:_labelPropertiesDefault andPressedState:_labelPropertiesDefault andHoveredState:_labelPropertiesDefault andDisabledState:_labelPropertiesDefault];
 		[self setTitleLabelStatesWithPackage:package];
 		
 	} else {
