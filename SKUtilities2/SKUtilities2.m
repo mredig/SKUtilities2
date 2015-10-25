@@ -2357,10 +2357,35 @@ static SKUtilities2* sharedUtilities = Nil;
 -(void)initDictSKU {
 	if (!self.scene.userData) {
 		self.scene.userData = [NSMutableDictionary dictionary];
+		NSMutableSet* hoverSet = [NSMutableSet set];
+		[self.scene.userData setObject:hoverSet forKey:@"sku_hoverSet"];
 	}
 }
 
 -(void)mouseMoved:(NSEvent *)theEvent {
+	CGPoint location = [theEvent locationInNode:self.scene];
+	NSArray* nodes = [self.scene nodesAtPoint:location];
+	if (nodes.count > 0) {
+		for (SKNode* node in nodes) {
+			if ([node isKindOfClass:[SKUButton class]]) {
+				SKUButton* button = (SKUButton*)node;
+				[self initDictSKU];
+				NSMutableSet* hoverSet = self.scene.userData[@"sku_hoverSet"];
+				if (![hoverSet containsObject:button]) {
+					[hoverSet addObject:button];
+					[button hoverButton];
+				}
+			}
+		}
+	}
+	NSMutableSet* hoverSet = self.scene.userData[@"sku_hoverSet"];
+	for (SKUButton* button in hoverSet) {
+		bool inBounds = [button checkIfLocationIsWithinButtonBounds:[self.scene convertPoint:location toNode:button]];
+		if (!inBounds) {
+			[button unhoverButton];
+			[hoverSet removeObject:button];
+		}
+	}
 	[self.scene mouseMoved:theEvent];
 }
 

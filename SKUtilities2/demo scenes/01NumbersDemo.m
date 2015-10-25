@@ -128,7 +128,10 @@
 }
 
 -(void)mouseMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
-	SKULog(0, @"mouselocation");
+	// you can do mouse location things here - this is OSX only
+	// this will only be called if you do
+	//	 self.view.window.acceptsMouseMovedEvents = YES;
+	// this also activates SKUButton hovering on OSX
 }
 
 
