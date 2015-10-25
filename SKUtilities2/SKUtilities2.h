@@ -38,6 +38,7 @@
 #else
 #define SKUImage NSImage
 #define SKUFont NSFont
+#define TARGET_OS_OSX_SKU 1
 #endif
 
 #define SKUSharedUtilities [SKUtilities2 sharedUtilities] 
@@ -417,8 +418,7 @@ typedef enum {
 
 #endif
 
-#if TARGET_OS_IPHONE
-#else
+#if TARGET_OS_OSX_SKU
 
 typedef enum {
 	kSKUMouseButtonFlagLeft = 1 << 0,
@@ -454,8 +454,7 @@ Vulnerable to lag spikes if used.
  This mutable dictionary is similar in concept to the item of the same name on all SKNodes that Apple does, but on the singleton allows you to store objects for access game wide, not just on one node. It remains uninitialized until you initialize it.
  */
 @property (nonatomic, strong) NSMutableDictionary* userData;
-#if TARGET_OS_IPHONE
-#else
+#if TARGET_OS_OSX_SKU
 /**
  Flags to determine what sort of mouse button is passed onto nodes. By default, it only passes left mouse button events, but adding other kSKUMouseButtonFlags flags allows to respond to other mouse buttons.
  */

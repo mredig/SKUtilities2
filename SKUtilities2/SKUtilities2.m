@@ -530,12 +530,10 @@ static SKUtilities2* sharedUtilities = Nil;
 	_deltaMaxTime = 1.0f;
 	_deltaFrameTime = 1.0f/60.0f;
 	_deltaFrameTimeUncapped = 1.0f/60.0f;
-#if TARGET_OS_IPHONE
-#else
+#if TARGET_OS_OSX_SKU
 	_macButtonFlags = 0;
 	_macButtonFlags = _macButtonFlags | kSKUMouseButtonFlagLeft;
-#endif
-#if TARGET_OS_TV
+#elif TARGET_OS_TV
 	_touchTracker = [NSMutableSet set];
 	_navThresholdDistance = 125.0;
 	selectLocation = CGPointMake(960.0, 540.0); //midpoint of 1080p
