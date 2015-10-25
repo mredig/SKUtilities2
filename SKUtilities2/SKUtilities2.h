@@ -622,7 +622,7 @@ Vulnerable to lag spikes if used.
  */
 @interface SKUButtonLabelPropertiesPackage : NSObject <NSCopying>
 
-#define skuHoverScale ((CGFloat) 1.1)
+#define skuHoverScale ((CGFloat) 1.3)
 
 @property (nonatomic) SKUButtonLabelProperties* propertiesDefaultState;
 @property (nonatomic) SKUButtonLabelProperties* propertiesPressedState;

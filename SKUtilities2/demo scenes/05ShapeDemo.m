@@ -9,6 +9,7 @@
 #import "05ShapeDemo.h"
 #import "SKUtilities2.h"
 #import "06MultiLineDemo.h"
+#import "shapeBenchmark.h"
 
 @implementation _5ShapeDemo
 
@@ -57,73 +58,53 @@
 	
 	CGPathRelease(outlinePath);
 	CGPathRelease(rectPathRef);
-	
-#if TARGET_OS_TV
-	
-	SKUSharedUtilities.navMode = kSKUNavModeOff;
-	
-	
-	SKView* scnView = (SKView*)self.view;
-	
-	UITapGestureRecognizer* tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gestureTap:)];
-	[scnView addGestureRecognizer:tapGesture];
-#endif
+
 	
 }
-
-#if TARGET_OS_TV
--(void)gestureTap:(UIGestureRecognizer*)gesture {
-	if (gesture.state == UIGestureRecognizerStateEnded) {
-		[self transferScene];
-		
-	}
-}
-#endif
-
 
 -(void)setupButton {
 	
-	SKNode* tempButton = [SKNode node];
-	tempButton.position = midPointOfRect(self.frame);
-	tempButton.zPosition = 1.0;
-	tempButton.name = @"tempButton";
-	[self addChild:tempButton];
+	SKUButtonLabelPropertiesPackage* labelPack = SKUSharedUtilities.userData[@"buttonLabelPackage"];
+	SKUButtonSpriteStatePropertiesPackage* backgroundPack = SKUSharedUtilities.userData[@"buttonBackgroundPackage"];
+	SKUPushButton* nextSlide = [SKUPushButton pushButtonWithBackgroundPropertiesPackage:backgroundPack andTitleLabelPropertiesPackage:labelPack];
+	nextSlide.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.5, 0.33)) ;
+	nextSlide.zPosition = 1.0;
+	[nextSlide setUpAction:@selector(transferScene:) toPerformOnTarget:self];
+	nextSlide.name = @"next";
+	[self addChild:nextSlide];
 	
-	SKSpriteNode* buttonBG = [SKSpriteNode spriteNodeWithColor:[SKColor whiteColor] size:CGSizeMake(200, 50)];
-	[tempButton addChild:buttonBG];
-	
-	SKLabelNode* buttonLabel = [SKLabelNode labelNodeWithText:@"Next Scene"];
-	buttonLabel.fontColor = [SKColor blackColor];
-	buttonLabel.fontSize = 28;
-	buttonLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeCenter;
-	buttonLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
-	buttonLabel.zPosition = 1.0;
-	[tempButton addChild:buttonLabel];
+	SKUButtonLabelPropertiesPackage* benchmarkLabel = labelPack.copy;
+	[benchmarkLabel changeText:@"Benchmark Shapes"];
+	SKUPushButton* benchmark = [SKUPushButton pushButtonWithBackgroundPropertiesPackage:backgroundPack andTitleLabelPropertiesPackage:benchmarkLabel];
+	benchmark.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.5, 0.66)) ;
+	benchmark.zPosition = 1.0;
+	[benchmark setUpAction:@selector(transferScene:) toPerformOnTarget:self];
+	benchmark.name = @"benchmark";
+	[self addChild:benchmark];
 	
 	
-}
-
--(void)inputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 #if TARGET_OS_TV
-#else
-	NSArray* nodes = [self nodesAtPoint:location];
-	for (SKNode* node in nodes) {
-		if ([node.name isEqualToString:@"tempButton"]) {
-			//next scene
-			[self transferScene];
-			break;
-		}
-	}
+	
+	SKUSharedUtilities.navMode = kSKUNavModeOn;
+	[self addNodeToNavNodesSKU:nextSlide];
+	[self addNodeToNavNodesSKU:benchmark];
+	[self setCurrentSelectedNodeSKU:nextSlide];
+	
+	[SKUSharedUtilities setNavFocus:self];
+	
 #endif
 }
 
+-(void)transferScene:(SKUButton*)button {
+	SKScene* scene;
+	if ([button.name isEqualToString:@"next"]) {
+		scene = [[_6MultiLineDemo alloc] initWithSize:self.size];
+		scene.scaleMode = self.scaleMode;
+	} else if ([button.name isEqualToString:@"benchmark"]) {
+		scene = [[shapeBenchmark alloc] initWithSize:self.size];
+		scene.scaleMode = self.scaleMode;
+	}
 
-
--(void)transferScene {
-	
-	_6MultiLineDemo* scene = [[_6MultiLineDemo alloc] initWithSize:self.size];
-	scene.scaleMode = self.scaleMode;
-	
 	SKView* view = (SKView*)self.view;
 	[view presentScene:scene];
 	

@@ -20,16 +20,14 @@
 @implementation _1NumbersDemo
 
 -(void)didMoveToView:(SKView *)view {
-	
-//	shapeBenchmark* shapeTestScene = [shapeBenchmark sceneWithSize:self.size];
-//	shapeTestScene.scaleMode = self.scaleMode;
-//	[self.view presentScene:shapeTestScene];
-	
-//	SKUSharedUtilities.macButtonFlags = kSKUMouseButtonFlagLeft | kSKUMouseButtonFlagRight | kSKUMouseButtonFlagOther;
-	
+	[self setupButtonPackages];
+
+#if TARGET_OS_OSX_SKU
+	SKUSharedUtilities.macButtonFlags = kSKUMouseButtonFlagLeft | kSKUMouseButtonFlagRight | kSKUMouseButtonFlagOther;
+	self.view.window.acceptsMouseMovedEvents = YES;
+#endif
 	NSLog(@"01NumbersDemo: demos number interpolation, random numbers, and distance functions");
 	
-//	self.view.window.acceptsMouseMovedEvents = YES;
 	
 #pragma mark NUMBER INTERPOLATION
 
@@ -70,7 +68,6 @@
 	logLabel.position = midPointOfRect(self.frame);
 	[self addChild:logLabel];
 	
-	[self setupButtonPackages];
 	[self setupButton];
 	
 }
@@ -131,7 +128,7 @@
 }
 
 -(void)mouseMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
-	SKULog(0, @"adsf");
+	SKULog(0, @"mouselocation");
 }
 
 
