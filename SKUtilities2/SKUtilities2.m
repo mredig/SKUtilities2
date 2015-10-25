@@ -1514,6 +1514,35 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 
++(SKUButtonSpriteStateProperties*)propertiesWithDefaultsToggleOnSKU {
+	SKTexture* buttonBG = [SKTexture textureWithImageNamed:@"checkBoxOnSKU"];
+	SKUButtonSpriteStateProperties* props = [[SKUButtonSpriteStateProperties alloc] init];
+	props.alpha = 1.0f;
+	props.color = [SKColor clearColor];
+	props.colorBlendFactor = 0.0f;
+	props.position = CGPointMake(0, -5.0);
+	props.xScale = 1.0f;
+	props.yScale = 1.0f;
+	props.texture = buttonBG;
+	props.centerRect = CGRectMake(0, 0, 1.0, 1.0);
+	return props;
+}
+
++(SKUButtonSpriteStateProperties*)propertiesWithDefaultsToggleOffSKU {
+	SKTexture* buttonBG = [SKTexture textureWithImageNamed:@"checkBoxOffSKU"];
+	SKUButtonSpriteStateProperties* props = [[SKUButtonSpriteStateProperties alloc] init];
+	props.alpha = 1.0f;
+	props.color = [SKColor clearColor];
+	props.colorBlendFactor = 0.0f;
+	props.position = CGPointMake(0, -5.0);
+	props.xScale = 1.0f;
+	props.yScale = 1.0f;
+	props.texture = buttonBG;
+	props.centerRect = CGRectMake(0, 0, 1.0, 1.0);
+	return props;
+}
+
+
 -(void)setScale:(CGFloat)scale {
 	_xScale = scale;
 	_yScale = scale;
@@ -1596,6 +1625,14 @@ static SKUtilities2* sharedUtilities = Nil;
 	package.propertiesDisabledState = package.propertiesDefaultState.copy;
 	package.propertiesDisabledState.alpha *= 0.5;
 	return package;
+}
+
++(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultToggleOnPropertiesSKU {
+	return [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:[SKUButtonSpriteStateProperties propertiesWithDefaultsToggleOnSKU]];
+}
+
++(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultToggleOffPropertiesSKU {
+	return [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:[SKUButtonSpriteStateProperties propertiesWithDefaultsToggleOffSKU]];
 }
 
 -(void)changeTexture:(SKTexture *)texture {
@@ -1820,13 +1857,25 @@ static SKUtilities2* sharedUtilities = Nil;
 	_baseSprite.yScale = properties.yScale;
 	
 	if (_baseSprite.centerRect.origin.x != 0.0 || _baseSprite.centerRect.origin.y != 0.0 || _baseSprite.centerRect.size.width != 1.0 || _baseSprite.centerRect.size.height != 1.0) {
-		[_baseSprite removeFromParent];
-		CGSize thisSize = [self calculateAccumulatedFrame].size;
-		[self addChild:_baseSprite];
+		CGSize thisSize = [self getButtonSize];
 		thisSize = CGSizeMake(thisSize.width + _padding * 2.0f, thisSize.height + _padding * 2.0f);
 		_baseSprite.xScale = thisSize.width / properties.texture.size.width;
 		_baseSprite.yScale = thisSize.height / properties.texture.size.height;
 	}
+}
+
+-(CGSize)getButtonSize {
+	SKNode* baseParent;
+	if (_baseSprite.parent) {
+		baseParent = _baseSprite.parent;
+		[_baseSprite removeFromParent];
+	}
+	[_baseSprite removeFromParent];
+	CGSize thisSize = [self calculateAccumulatedFrame].size;
+	if (baseParent) {
+		[self addChild:_baseSprite];
+	}
+	return thisSize;
 }
 
 -(void)setButtonType:(kSKUButtonTypes)buttonType {
@@ -1990,7 +2039,6 @@ static SKUtilities2* sharedUtilities = Nil;
 	SKUPushButton* button = [SKUPushButton node];
 	[button setBaseStatesWithPackage:[SKUButtonSpriteStatePropertiesPackage packageWithDefaultPropertiesSKU]];
 	[button setTitleLabelStatesWithPackage:[SKUButtonLabelPropertiesPackage packageWithDefaultPropertiesWithText:text]];
-//	[button buttonStatesDefault];
 	return button;
 }
 
@@ -2296,6 +2344,340 @@ static SKUtilities2* sharedUtilities = Nil;
 
 @end
 
+#pragma mark SKUToggleButton
+
+@interface SKUToggleButton() {
+	BOOL stateToggleOnDefaultInitialized;
+	BOOL stateToggleOnPressedInitialized;
+	BOOL stateToggleOnHoveredInitialized;
+	BOOL stateToggleOnDisabledInitialized;
+	BOOL stateToggleOffDefaultInitialized;
+	BOOL stateToggleOffPressedInitialized;
+	BOOL stateToggleOffHoveredInitialized;
+	BOOL stateToggleOffDisabledInitialized;
+}
+
+@end
+
+@implementation SKUToggleButton
+
++(SKUToggleButton*)toggleButtonWithBackgroundPropertiesPackage:(SKUButtonSpriteStatePropertiesPackage*)backgroundPackage andForeGroundSpritePropertiesPackage:(SKUButtonSpriteStatePropertiesPackage*)foregroundPackage {
+	
+	SKUToggleButton* button = [SKUToggleButton node];
+	[button setBaseStatesWithPackage:backgroundPackage];
+	[button setTitleSpriteStatesWithPackage:foregroundPackage];
+	[button setToggleSpriteOnStatesWithPackage:[SKUButtonSpriteStatePropertiesPackage packageWithDefaultToggleOnPropertiesSKU]];
+	[button setToggleSpriteOffStatesWithPackage:[SKUButtonSpriteStatePropertiesPackage packageWithDefaultToggleOffPropertiesSKU]];
+	return button;
+}
+
++(SKUToggleButton*)toggleButtonWithBackgroundPropertiesPackage:(SKUButtonSpriteStatePropertiesPackage*)backgroundPackage andTitleLabelPropertiesPackage:(SKUButtonLabelPropertiesPackage*)foregroundPackage {
+	
+	SKUToggleButton* button = [SKUToggleButton node];
+	[button setBaseStatesWithPackage:backgroundPackage];
+	[button setTitleLabelStatesWithPackage:foregroundPackage];
+	[button setToggleSpriteOnStatesWithPackage:[SKUButtonSpriteStatePropertiesPackage packageWithDefaultToggleOnPropertiesSKU]];
+	[button setToggleSpriteOffStatesWithPackage:[SKUButtonSpriteStatePropertiesPackage packageWithDefaultToggleOffPropertiesSKU]];
+	return button;
+}
+
++(SKUToggleButton*)toggleButtonWithBackgroundPropertiesPackage:(SKUButtonSpriteStatePropertiesPackage*)backgroundPackage andForeGroundSpritePropertiesPackage:(SKUButtonSpriteStatePropertiesPackage*)foregroundPackage andToggleOnPackage:(SKUButtonSpriteStatePropertiesPackage*)toggleSpriteOnPropertiesPackage andToggleOffPackage:(SKUButtonSpriteStatePropertiesPackage*)toggleSpriteOffPropertiesPackage {
+	
+	SKUToggleButton* button = [SKUToggleButton node];
+	[button setBaseStatesWithPackage:backgroundPackage];
+	[button setTitleSpriteStatesWithPackage:foregroundPackage];
+	[button setToggleSpriteOnStatesWithPackage:toggleSpriteOnPropertiesPackage];
+	[button setToggleSpriteOffStatesWithPackage:toggleSpriteOffPropertiesPackage];
+	return button;
+}
+
++(SKUToggleButton*)toggleButtonWithBackgroundPropertiesPackage:(SKUButtonSpriteStatePropertiesPackage*)backgroundPackage andTitleLabelPropertiesPackage:(SKUButtonLabelPropertiesPackage*)foregroundPackage andToggleOnPackage:(SKUButtonSpriteStatePropertiesPackage*)toggleSpriteOnPropertiesPackage andToggleOffPackage:(SKUButtonSpriteStatePropertiesPackage*)toggleSpriteOffPropertiesPackage {
+	
+	SKUToggleButton* button = [SKUToggleButton node];
+	[button setBaseStatesWithPackage:backgroundPackage];
+	[button setTitleLabelStatesWithPackage:foregroundPackage];
+	[button setToggleSpriteOnStatesWithPackage:toggleSpriteOnPropertiesPackage];
+	[button setToggleSpriteOffStatesWithPackage:toggleSpriteOffPropertiesPackage];
+	return button;
+}
+
+-(void)internalDidInitialize {
+	stateToggleOnDefaultInitialized = NO;
+	stateToggleOnPressedInitialized = NO;
+	stateToggleOnHoveredInitialized = NO;
+	stateToggleOnDisabledInitialized = NO;
+	stateToggleOffDefaultInitialized = NO;
+	stateToggleOffPressedInitialized = NO;
+	stateToggleOffHoveredInitialized = NO;
+	stateToggleOffDisabledInitialized = NO;
+	[self setButtonType:kSKUButtonTypeToggle];
+	[super internalDidInitialize];
+}
+
+-(void)updateCurrentSpriteStateProperties {
+	SKUButtonSpriteStateProperties* propertiesSprite;
+	if (_on) {
+		switch (self.buttonState) {
+			case kSKUButtonStateDefault:
+				propertiesSprite = _toggleSpritePropertiesOnDefault;
+				break;
+			case kSKUButtonStatePressed:
+				propertiesSprite = _toggleSpritePropertiesOnPressed;
+				break;
+			case kSKUButtonStateHovered:
+				propertiesSprite = _toggleSpritePropertiesOnHovered;
+				break;
+			case kSKUButtonStateDisabled:
+				propertiesSprite = _toggleSpritePropertiesOnDisabled;
+				break;
+			case kSKUButtonStatePressedOutOfBounds:
+				propertiesSprite = _toggleSpritePropertiesOnDefault;
+				break;
+				
+			default:
+				break;
+		}
+	} else {
+		switch (self.buttonState) {
+			case kSKUButtonStateDefault:
+				propertiesSprite = _toggleSpritePropertiesOffDefault;
+				break;
+			case kSKUButtonStatePressed:
+				propertiesSprite = _toggleSpritePropertiesOffPressed;
+				break;
+			case kSKUButtonStateHovered:
+				propertiesSprite = _toggleSpritePropertiesOffHovered;
+				break;
+			case kSKUButtonStateDisabled:
+				propertiesSprite = _toggleSpritePropertiesOffDisabled;
+				break;
+			case kSKUButtonStatePressedOutOfBounds:
+				propertiesSprite = _toggleSpritePropertiesOffDefault;
+				break;
+				
+			default:
+				break;
+		}
+	}
+	
+	[super updateCurrentSpriteStateProperties]; //might need to get moved in order of operations
+	
+	if (_toggleSprite) {
+		SKTexture* prevTex = _toggleSprite.texture;
+		_toggleSprite.texture = propertiesSprite.texture;
+		if (![prevTex isEqual:_toggleSprite.texture]) {
+			_toggleSprite.size = propertiesSprite.texture.size;
+		}
+		_toggleSprite.position = propertiesSprite.position;
+		_toggleSprite.color = propertiesSprite.color;
+		_toggleSprite.colorBlendFactor = propertiesSprite.colorBlendFactor;
+		_toggleSprite.alpha = propertiesSprite.alpha;
+		_toggleSprite.centerRect = propertiesSprite.centerRect;
+		_toggleSprite.xScale = propertiesSprite.xScale;
+		_toggleSprite.yScale = propertiesSprite.yScale;
+		
+		CGSize buttonSize = [self getButtonSize];
+		_toggleSprite.position = pointAdd(_toggleSprite.position, CGPointMake((-buttonSize.width), 0.0));
+	}
+}
+
+-(void)setOn:(BOOL)on {
+	_on	= on;
+	[self updateCurrentSpriteStateProperties];
+}
+
+-(void)setToggleSpritePropertiesOnDefault:(SKUButtonSpriteStateProperties *)toggleSpritePropertiesOnDefault {
+	_toggleSpritePropertiesOnDefault = toggleSpritePropertiesOnDefault;
+	if (!_toggleSprite) {
+		_toggleSprite = [SKSpriteNode spriteNodeWithTexture:_toggleSpritePropertiesOnDefault.texture];
+		_toggleSprite.zPosition = self.titleLabel.zPosition + 0.001;
+		[self addChild:_toggleSprite];
+	}
+	stateToggleOnDefaultInitialized = YES;
+	
+	if (!stateToggleOnPressedInitialized) {
+		_toggleSpritePropertiesOnPressed = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_toggleSpritePropertiesOnDefault].propertiesPressedState;
+		stateToggleOnPressedInitialized = YES;
+	}
+	
+	if (!stateToggleOnHoveredInitialized) {
+		_toggleSpritePropertiesOnHovered = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_toggleSpritePropertiesOnDefault].propertiesHoveredState;
+		stateToggleOnHoveredInitialized = YES;
+	}
+	
+	if (!stateToggleOnDisabledInitialized) {
+		_toggleSpritePropertiesOnDisabled = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_toggleSpritePropertiesOnDefault].propertiesDisabledState;
+		stateToggleOnDisabledInitialized = YES;
+	}
+	[self updateCurrentSpriteStateProperties];
+}
+
+-(void)setToggleSpritePropertiesOnPressed:(SKUButtonSpriteStateProperties *)toggleSpritePropertiesOnPressed {
+	_toggleSpritePropertiesOnPressed = toggleSpritePropertiesOnPressed;
+	stateToggleOnPressedInitialized = YES;
+	[self updateCurrentSpriteStateProperties];
+}
+
+-(void)setToggleSpritePropertiesOnHovered:(SKUButtonSpriteStateProperties *)toggleSpritePropertiesOnHovered {
+	_toggleSpritePropertiesOnHovered = toggleSpritePropertiesOnHovered;
+	stateToggleOnHoveredInitialized = YES;
+	[self updateCurrentSpriteStateProperties];
+}
+
+-(void)setToggleSpritePropertiesOnDisabled:(SKUButtonSpriteStateProperties *)toggleSpritePropertiesOnDisabled {
+	_toggleSpritePropertiesOnDisabled = toggleSpritePropertiesOnDisabled;
+	stateToggleOnDisabledInitialized = YES;
+	[self updateCurrentSpriteStateProperties];
+}
+
+-(void)setToggleSpritePropertiesOffDefault:(SKUButtonSpriteStateProperties *)toggleSpritePropertiesOffDefault {
+	_toggleSpritePropertiesOffDefault = toggleSpritePropertiesOffDefault;
+	if (!_toggleSprite) {
+		_toggleSprite = [SKSpriteNode spriteNodeWithTexture:_toggleSpritePropertiesOffDefault.texture];
+		_toggleSprite.zPosition = self.titleLabel.zPosition + 0.001;
+		[self addChild:_toggleSprite];
+	}
+	stateToggleOffDefaultInitialized = YES;
+	
+	if (!stateToggleOffPressedInitialized) {
+		_toggleSpritePropertiesOffPressed = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_toggleSpritePropertiesOffDefault].propertiesPressedState;
+		stateToggleOffPressedInitialized = YES;
+	}
+	
+	if (!stateToggleOffHoveredInitialized) {
+		_toggleSpritePropertiesOffHovered = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_toggleSpritePropertiesOffDefault].propertiesHoveredState;
+		stateToggleOffHoveredInitialized = YES;
+	}
+	
+	if (!stateToggleOffDisabledInitialized) {
+		_toggleSpritePropertiesOffDisabled = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_toggleSpritePropertiesOffDefault].propertiesDisabledState;
+		stateToggleOffDisabledInitialized = YES;
+	}
+	[self updateCurrentSpriteStateProperties];
+}
+
+-(void)setToggleSpritePropertiesOffPressed:(SKUButtonSpriteStateProperties *)toggleSpritePropertiesOffPressed {
+	_toggleSpritePropertiesOffPressed = toggleSpritePropertiesOffPressed;
+	stateToggleOffPressedInitialized = YES;
+	[self updateCurrentSpriteStateProperties];
+}
+
+-(void)setToggleSpritePropertiesOffHovered:(SKUButtonSpriteStateProperties *)toggleSpritePropertiesOffHovered {
+	_toggleSpritePropertiesOffHovered = toggleSpritePropertiesOffHovered;
+	stateToggleOffHoveredInitialized = YES;
+	[self updateCurrentSpriteStateProperties];
+}
+
+-(void)setToggleSpritePropertiesOffDisabled:(SKUButtonSpriteStateProperties *)toggleSpritePropertiesOffDisabled {
+	_toggleSpritePropertiesOffDisabled = toggleSpritePropertiesOffDisabled;
+	stateToggleOffDisabledInitialized = YES;
+	[self updateCurrentSpriteStateProperties];
+}
+
+-(void)setToggleSpriteOnStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package {
+	_toggleSpritePropertiesOnPressed = package.propertiesPressedState;
+	stateToggleOnPressedInitialized = YES;
+	_toggleSpritePropertiesOnHovered = package.propertiesHoveredState;
+	stateToggleOnHoveredInitialized = YES;
+	_toggleSpritePropertiesOnDisabled = package.propertiesDisabledState;
+	stateToggleOnDisabledInitialized = YES;
+	self.toggleSpritePropertiesOnDefault = package.propertiesDefaultState;
+	[self updateCurrentSpriteStateProperties];
+}
+
+-(void)setToggleSpriteOffStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package {
+	_toggleSpritePropertiesOffPressed = package.propertiesPressedState;
+	stateToggleOffPressedInitialized = YES;
+	_toggleSpritePropertiesOffHovered = package.propertiesHoveredState;
+	stateToggleOffHoveredInitialized = YES;
+	_toggleSpritePropertiesOffDisabled = package.propertiesDisabledState;
+	stateToggleOffDisabledInitialized = YES;
+	self.toggleSpritePropertiesOffDefault = package.propertiesDefaultState;
+	[self updateCurrentSpriteStateProperties];
+}
+
+-(void)buttonStatesDefault {
+	[super buttonStatesDefault];
+	
+	if (_toggleSpritePropertiesOnDefault.texture) {
+		SKUButtonSpriteStatePropertiesPackage* package = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_toggleSpritePropertiesOnDefault];
+		[self setToggleSpriteOnStatesWithPackage:package];
+	} else {
+		stateToggleOnDefaultInitialized = NO;
+		stateToggleOnPressedInitialized = NO;
+		stateToggleOnHoveredInitialized = NO;
+		stateToggleOnDisabledInitialized = NO;
+	}
+	
+	if (_toggleSpritePropertiesOffDefault.texture) {
+		SKUButtonSpriteStatePropertiesPackage* package = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_toggleSpritePropertiesOffDefault];
+		[self setToggleSpriteOffStatesWithPackage:package];
+	} else {
+		stateToggleOffDefaultInitialized = NO;
+		stateToggleOffPressedInitialized = NO;
+		stateToggleOffHoveredInitialized = NO;
+		stateToggleOffDisabledInitialized = NO;
+	}
+}
+
+-(void)buttonStatesNormalize {
+	[super buttonStatesNormalize];
+	
+	if (_toggleSpritePropertiesOnDefault.texture) {
+		SKUButtonSpriteStatePropertiesPackage* package = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_toggleSpritePropertiesOnDefault andPressedState:_toggleSpritePropertiesOnDefault andHoveredState:_toggleSpritePropertiesOnDefault andDisabledState:_toggleSpritePropertiesOnDefault];
+		[self setToggleSpriteOnStatesWithPackage:package];
+	} else {
+		stateToggleOnDefaultInitialized = NO;
+		stateToggleOnPressedInitialized = NO;
+		stateToggleOnHoveredInitialized = NO;
+		stateToggleOnDisabledInitialized = NO;
+	}
+	
+	if (_toggleSpritePropertiesOffDefault.texture) {
+		SKUButtonSpriteStatePropertiesPackage* package = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_toggleSpritePropertiesOffDefault andPressedState:_toggleSpritePropertiesOffDefault andHoveredState:_toggleSpritePropertiesOffDefault andDisabledState:_toggleSpritePropertiesOffDefault];
+		[self setToggleSpriteOffStatesWithPackage:package];
+	} else {
+		stateToggleOffDefaultInitialized = NO;
+		stateToggleOffPressedInitialized = NO;
+		stateToggleOffHoveredInitialized = NO;
+		stateToggleOffDisabledInitialized = NO;
+	}
+}
+
+-(void)buttonReleased:(CGPoint)location {
+	if (self.isEnabled) {
+		if ([self checkIfLocationIsWithinButtonBounds:location]) {
+			[self toggleOnOff];
+		}
+	}
+	[super buttonReleased:location];
+}
+
+-(void)toggleOnOff {
+	self.on = !_on;
+}
+
+-(CGSize)getButtonSize {
+	SKNode* baseParent, *toggleParent;
+	if (self.baseSprite.parent) {
+		baseParent = self.baseSprite.parent;
+		[self.baseSprite removeFromParent];
+	}
+	if (_toggleSprite.parent) {
+		toggleParent = _toggleSprite.parent;
+		[_toggleSprite removeFromParent];
+	}
+	CGSize thisSize = [self calculateAccumulatedFrame].size;
+	if (baseParent) {
+		[self addChild:self.baseSprite];
+	}
+	if (toggleParent) {
+		[self addChild:_toggleSprite];
+	}
+	return thisSize;
+}
+
+@end
 
 #pragma mark CLASS CATEGORIES
 

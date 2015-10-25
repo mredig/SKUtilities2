@@ -9,6 +9,7 @@
 #import "07ColorBlending.h"
 #import "SKUtilities2.h"
 #import "06MultiLineDemo.h"
+#import "08ButtonDemo.h"
 
 @interface _7ColorBlending() {
 	
@@ -47,7 +48,7 @@
 	nextSlide.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.66, 0.5));
 	nextSlide.zPosition = 1.0;
 	[nextSlide setUpAction:@selector(transferScene:) toPerformOnTarget:self];
-//	[self addChild:nextSlide];
+	[self addChild:nextSlide];
 	
 	SKUPushButton* prevSlide = [SKUPushButton pushButtonWithText:@"Previous Scene"];
 	prevSlide.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.33, 0.5));
@@ -118,7 +119,7 @@
 
 -(void)transferScene:(SKUButton*)button {
 	
-	_7ColorBlending* scene = [[_7ColorBlending alloc] initWithSize:self.size];
+	_8ButtonDemo* scene = [[_8ButtonDemo alloc] initWithSize:self.size];
 	scene.scaleMode = self.scaleMode;
 	
 	SKView* view = (SKView*)self.view;

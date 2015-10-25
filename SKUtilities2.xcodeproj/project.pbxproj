@@ -53,6 +53,9 @@
 		33BA01BC1BDB34360012F8B3 /* SKUtilities2.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 33BA01BB1BDB34360012F8B3 /* SKUtilities2.xcassets */; };
 		33BA01BD1BDB34360012F8B3 /* SKUtilities2.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 33BA01BB1BDB34360012F8B3 /* SKUtilities2.xcassets */; };
 		33BA01BE1BDB34360012F8B3 /* SKUtilities2.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 33BA01BB1BDB34360012F8B3 /* SKUtilities2.xcassets */; };
+		33E0A6061BDD72DB00FB0414 /* 08ButtonDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 33E0A6051BDD72DB00FB0414 /* 08ButtonDemo.m */; };
+		33E0A6071BDD72DB00FB0414 /* 08ButtonDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 33E0A6051BDD72DB00FB0414 /* 08ButtonDemo.m */; };
+		33E0A6081BDD72DB00FB0414 /* 08ButtonDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 33E0A6051BDD72DB00FB0414 /* 08ButtonDemo.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -101,6 +104,8 @@
 		33A199CA1BC9FF6D00A98913 /* shapeBenchmark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = shapeBenchmark.m; path = "demo scenes/shapeBenchmark.m"; sourceTree = "<group>"; };
 		33B260761BD4923B0004CB3A /* TODO */ = {isa = PBXFileReference; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
 		33BA01BB1BDB34360012F8B3 /* SKUtilities2.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = SKUtilities2.xcassets; sourceTree = "<group>"; };
+		33E0A6041BDD72DB00FB0414 /* 08ButtonDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = 08ButtonDemo.h; path = "demo scenes/08ButtonDemo.h"; sourceTree = "<group>"; };
+		33E0A6051BDD72DB00FB0414 /* 08ButtonDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = 08ButtonDemo.m; path = "demo scenes/08ButtonDemo.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -226,6 +231,8 @@
 				335C92EA1BBB7C5C00DC1BD2 /* 06MultiLineDemo.m */,
 				332046611BC32ED3008C9FCF /* 07ColorBlending.h */,
 				332046621BC32ED3008C9FCF /* 07ColorBlending.m */,
+				33E0A6041BDD72DB00FB0414 /* 08ButtonDemo.h */,
+				33E0A6051BDD72DB00FB0414 /* 08ButtonDemo.m */,
 			);
 			name = "demo scenes";
 			path = SKUtilities2;
@@ -393,6 +400,7 @@
 			files = (
 				335C92DB1BB8959400DC1BD2 /* 03VectorPoint.m in Sources */,
 				335C92C11BB71D7000DC1BD2 /* main.m in Sources */,
+				33E0A6061BDD72DB00FB0414 /* 08ButtonDemo.m in Sources */,
 				335C92D51BB71EEA00DC1BD2 /* SKUtilities2.m in Sources */,
 				335C92E51BBB4F7700DC1BD2 /* 05ShapeDemo.m in Sources */,
 				335C92EB1BBB7C5C00DC1BD2 /* 06MultiLineDemo.m in Sources */,
@@ -413,6 +421,7 @@
 				335C92FF1BBB7F0C00DC1BD2 /* GameViewController.m in Sources */,
 				332046641BC32ED4008C9FCF /* 07ColorBlending.m in Sources */,
 				335C93121BBB7F2E00DC1BD2 /* 04BezierDemo.m in Sources */,
+				33E0A6071BDD72DB00FB0414 /* 08ButtonDemo.m in Sources */,
 				335C93141BBB7F2E00DC1BD2 /* 06MultiLineDemo.m in Sources */,
 				335C93101BBB7F2E00DC1BD2 /* 02rotationScene.m in Sources */,
 				335C930E1BBB7F2E00DC1BD2 /* 01NumbersDemo.m in Sources */,
@@ -432,6 +441,7 @@
 				335C933B1BBB8AFD00DC1BD2 /* 03VectorPoint.m in Sources */,
 				332046651BC32ED4008C9FCF /* 07ColorBlending.m in Sources */,
 				335C932B1BBB8ADC00DC1BD2 /* GameViewController.m in Sources */,
+				33E0A6081BDD72DB00FB0414 /* 08ButtonDemo.m in Sources */,
 				335C93371BBB8AFD00DC1BD2 /* SKUtilities2.m in Sources */,
 				335C933C1BBB8AFD00DC1BD2 /* 04BezierDemo.m in Sources */,
 				335C933E1BBB8AFD00DC1BD2 /* 06MultiLineDemo.m in Sources */,

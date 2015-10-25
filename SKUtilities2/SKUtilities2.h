@@ -641,6 +641,7 @@ Vulnerable to lag spikes if used.
 /** Stores all states for a label in buttons. The properties collected on this object get passed to the button's states.
  @param propertiesDefaultState propertiesDefaultState object
  @param propertiesPressedState propertiesPressedState object
+ @param propertiesHoveredState propertiesHoveredState object
  @param propertiesDisabledState propertiesDisabledState object
  
  */
@@ -704,6 +705,10 @@ Vulnerable to lag spikes if used.
 +(SKUButtonSpriteStateProperties*)propertiesWithTexture:(SKTexture*)texture andAlpha:(CGFloat)alpha;
 /** Returns a new object with the included default properties. */
 +(SKUButtonSpriteStateProperties*)propertiesWithDefaultsSKU;
+/** Returns a new object with the included default toggle on properties. */
++(SKUButtonSpriteStateProperties*)propertiesWithDefaultsToggleOnSKU;
+/** Returns a new object with the included default toggle off properties. */
++(SKUButtonSpriteStateProperties*)propertiesWithDefaultsToggleOffSKU;
 /** Sets the x and y scale together. */
 -(void)setScale:(CGFloat)scale;
 
@@ -730,6 +735,10 @@ Vulnerable to lag spikes if used.
 +(SKUButtonSpriteStatePropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonSpriteStateProperties *)defaultState;
 /** Returns a package based on the included assets. */
 +(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultPropertiesSKU;
+/** Returns a package based on the included assets. */
++(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultToggleOnPropertiesSKU;
+/** Returns a package based on the included assets. */
++(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultToggleOffPropertiesSKU;
 
 /** Allows you to change the texture for all states at once. */
 -(void)changeTexture:(SKTexture*)texture;
@@ -897,8 +906,53 @@ typedef enum {
 +(SKUPushButton*)pushButtonWithBackgroundPropertiesPackage:(SKUButtonSpriteStatePropertiesPackage*)backgroundPackage andTitleLabelPropertiesPackage:(SKUButtonLabelPropertiesPackage*)foregroundPackage;
 +(SKUPushButton*)pushButtonWithBackgroundPropertiesPackage:(SKUButtonSpriteStatePropertiesPackage*)backgroundPackage andForeGroundSpritePropertiesPackage:(SKUButtonSpriteStatePropertiesPackage*)foregroundPackage andTitleLabelPropertiesPackage:(SKUButtonLabelPropertiesPackage*)titlePackage;
 
+-(void)setTitleSpriteStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
+-(void)setTitleLabelStatesWithPackage:(SKUButtonLabelPropertiesPackage*)package;
 @end
 
+#pragma mark SKUToggleButton
+
+@interface SKUToggleButton : SKUPushButton
+/** Read only access to toggle sprite. */
+@property (nonatomic, strong, readonly) SKSpriteNode* toggleSprite;
+/** Properties to use on the toggle sprite in default on state. */
+@property (nonatomic) SKUButtonSpriteStateProperties* toggleSpritePropertiesOnDefault;
+/** Properties to use on the toggle sprite in pressed on state. */
+@property (nonatomic) SKUButtonSpriteStateProperties* toggleSpritePropertiesOnPressed;
+/** Properties to use on the toggle sprite in hovered on state. */
+@property (nonatomic) SKUButtonSpriteStateProperties* toggleSpritePropertiesOnHovered;
+/** Properties to use on the toggle sprite in disabled on state. */
+@property (nonatomic) SKUButtonSpriteStateProperties* toggleSpritePropertiesOnDisabled;
+
+/** Properties to use on the toggle sprite in default off state. */
+@property (nonatomic) SKUButtonSpriteStateProperties* toggleSpritePropertiesOffDefault;
+/** Properties to use on the toggle sprite in pressed off state. */
+@property (nonatomic) SKUButtonSpriteStateProperties* toggleSpritePropertiesOffPressed;
+/** Properties to use on the toggle sprite in hovered off state. */
+@property (nonatomic) SKUButtonSpriteStateProperties* toggleSpritePropertiesOffHovered;
+/** Properties to use on the toggle sprite in disabled off state. */
+@property (nonatomic) SKUButtonSpriteStateProperties* toggleSpritePropertiesOffDisabled;
+
+/** Boolean determining whether the button is in an on state or not. */
+@property (nonatomic) BOOL on;
+
+
++(SKUToggleButton*)toggleButtonWithBackgroundPropertiesPackage:(SKUButtonSpriteStatePropertiesPackage*)backgroundPackage andForeGroundSpritePropertiesPackage:(SKUButtonSpriteStatePropertiesPackage*)foregroundPackage;
+
++(SKUToggleButton*)toggleButtonWithBackgroundPropertiesPackage:(SKUButtonSpriteStatePropertiesPackage*)backgroundPackage andTitleLabelPropertiesPackage:(SKUButtonLabelPropertiesPackage*)foregroundPackage;
+
++(SKUToggleButton*)toggleButtonWithBackgroundPropertiesPackage:(SKUButtonSpriteStatePropertiesPackage*)backgroundPackage andForeGroundSpritePropertiesPackage:(SKUButtonSpriteStatePropertiesPackage*)foregroundPackage andToggleOnPackage:(SKUButtonSpriteStatePropertiesPackage*)toggleSpriteOnPropertiesPackage andToggleOffPackage:(SKUButtonSpriteStatePropertiesPackage*)toggleSpriteOffPropertiesPackage;
+
++(SKUToggleButton*)toggleButtonWithBackgroundPropertiesPackage:(SKUButtonSpriteStatePropertiesPackage*)backgroundPackage andTitleLabelPropertiesPackage:(SKUButtonLabelPropertiesPackage*)foregroundPackage andToggleOnPackage:(SKUButtonSpriteStatePropertiesPackage*)toggleSpriteOnPropertiesPackage andToggleOffPackage:(SKUButtonSpriteStatePropertiesPackage*)toggleSpriteOffPropertiesPackage;
+
+
+/** Toggles button on/off state. */
+-(void)toggleOnOff;
+-(void)setToggleSpriteOnStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
+-(void)setToggleSpriteOffStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
+
+
+@end
 
 #pragma mark CLASS CATEGORIES
 
