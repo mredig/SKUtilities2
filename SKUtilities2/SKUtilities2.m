@@ -1488,7 +1488,7 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 +(SKUButtonSpriteStateProperties*)propertiesWithDefaultsSKU {
-	SKTexture* buttonBG = [SKTexture textureWithImageNamed:@"buttonBG"];
+	SKTexture* buttonBG = [SKTexture textureWithImageNamed:@"buttonBG_SKU"];
 	SKUButtonSpriteStateProperties* props = [[SKUButtonSpriteStateProperties alloc] init];
 	props.alpha = 1.0f;
 	props.color = [SKColor clearColor];

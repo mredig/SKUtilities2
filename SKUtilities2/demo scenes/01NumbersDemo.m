@@ -95,7 +95,7 @@
 -(void)setupButtonPackages {
 	SKUSharedUtilities.userData = [NSMutableDictionary dictionary];
 	
-	SKTexture* buttonBG = [SKTexture textureWithImageNamed:@"buttonBG"];
+	SKTexture* buttonBG = [SKTexture textureWithImageNamed:@"buttonBG_SKU"];
 
 	SKUButtonSpriteStateProperties* backgroundProps = [SKUButtonSpriteStateProperties
 												  propertiesWithTexture:buttonBG
