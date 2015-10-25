@@ -249,12 +249,6 @@ float cpu_usage()
 	[self timerStop];
 }
 
-#if TARGET_OS_TV
--(void)gestureTap:(UIGestureRecognizer*)gesture {
-
-}
-#endif
-
 
 -(void)transferScene:(SKUButton*)button {
 	

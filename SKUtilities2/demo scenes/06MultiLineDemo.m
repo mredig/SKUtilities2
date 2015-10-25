@@ -25,27 +25,8 @@
 	
 	[self setupSpriteDemos];
 	[self setupButton];
-#if TARGET_OS_TV
-	
-	SKUSharedUtilities.navMode = kSKUNavModeOff;
-	
-	
-	SKView* scnView = (SKView*)self.view;
-	
-	UITapGestureRecognizer* tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gestureTap:)];
-	[scnView addGestureRecognizer:tapGesture];
-#endif
 	
 }
-
-#if TARGET_OS_TV
--(void)gestureTap:(UIGestureRecognizer*)gesture {
-	if (gesture.state == UIGestureRecognizerStateEnded) {
-		[self transferScene];
-		
-	}
-}
-#endif
 
 -(void)setupSpriteDemos {
 	
@@ -60,49 +41,44 @@
 
 -(void)setupButton {
 	
-	SKNode* tempButton = [SKNode node];
-	tempButton.position = midPointOfRect(self.frame);
-	tempButton.zPosition = 1.0;
-	tempButton.name = @"tempButton";
-	[self addChild:tempButton];
-	
-	SKSpriteNode* buttonBG = [SKSpriteNode spriteNodeWithColor:[SKColor whiteColor] size:CGSizeMake(200, 50)];
-	[tempButton addChild:buttonBG];
-	
-	SKLabelNode* buttonLabel = [SKLabelNode labelNodeWithText:@"Next Scene"];
-	buttonLabel.fontColor = [SKColor blackColor];
-	buttonLabel.fontSize = 28;
-	buttonLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeCenter;
-	buttonLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
-	buttonLabel.zPosition = 1.0;
-	[tempButton addChild:buttonLabel];
+	SKUButtonLabelPropertiesPackage* labelPack = SKUSharedUtilities.userData[@"buttonLabelPackage"];
+	SKUButtonSpriteStatePropertiesPackage* backgroundPack = SKUSharedUtilities.userData[@"buttonBackgroundPackage"];
+	SKUPushButton* nextSlide = [SKUPushButton pushButtonWithBackgroundPropertiesPackage:backgroundPack andTitleLabelPropertiesPackage:labelPack];
+	nextSlide.position = midPointOfRect(self.frame);
+	nextSlide.zPosition = 1.0;
+	[nextSlide setUpAction:@selector(transferScene:) toPerformOnTarget:self];
+	[self addChild:nextSlide];
 	
 	
+#if TARGET_OS_TV
+	
+	SKUSharedUtilities.navMode = kSKUNavModeOn;
+	[self addNodeToNavNodesSKU:nextSlide];
+	[self setCurrentSelectedNodeSKU:nextSlide];
+	
+	[SKUSharedUtilities setNavFocus:self];
+	
+#endif
 }
--(void)inputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+
+-(void)absoluteInputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 	multiLineLabel.position = location;
 }
 
--(void)inputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+-(void)relativeInputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
+	multiLineLabel.position = pointAdd(delta, multiLineLabel.position);
+}
+
+-(void)absoluteInputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 	multiLineLabel.position = location;
 }
 
 -(void)inputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
-#if TARGET_OS_TV
-#else
-	NSArray* nodes = [self nodesAtPoint:location];
-	for (SKNode* node in nodes) {
-		if ([node.name isEqualToString:@"tempButton"]) {
-			//next scene
-			[self transferScene];
-			break;
-		}
-	}
-#endif
+
 }
 
 
--(void)transferScene {
+-(void)transferScene:(SKUButton*)button {
 	
 	_7ColorBlending* scene = [_7ColorBlending sceneWithSize:self.size];
 	scene.scaleMode = self.scaleMode;

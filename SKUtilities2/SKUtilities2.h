@@ -901,9 +901,9 @@ typedef enum {
 /** Called when relative type input begins (Currently only AppleTV's Siri Remote touches) Remember to call [super relativeInputBeganSKU] when overrding. Harmless to include on other platforms. */
 -(void)relativeInputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
 /** Called when relative type input moves (Currently only AppleTV's Siri Remote touches). Remember to call [super relativeInputMovedSKU] when overrding. Harmless to include on other platforms. */
--(void)relativeInputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
+-(void)relativeInputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary*)eventDict;
 /** Called when relative type input ends (Currently only AppleTV's Siri Remote touches). Remember to call [super relativeInputEndedSKU] when overrding. Harmless to include on other platforms. */
--(void)relativeInputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
+-(void)relativeInputEndedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary*)eventDict;
 /** Called when absolute type input begins (Currently iOS touches and Mac mouse clicks). Remember to call [super absoluteInputBeganSKU] when overrding. Harmless to include on other platforms. */
 -(void)absoluteInputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
 /** Called when absolute type input moves (Currently iOS touches and Mac mouse clicks). Remember to call [super absoluteInputMovedSKU] when overrding. Harmless to include on other platforms. */

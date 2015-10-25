@@ -169,21 +169,21 @@
 #endif
 }
 
--(void)inputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
-}
 
--(void)inputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
-#if TARGET_OS_TV
+
+-(void)relativeInputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
+	[super relativeInputMovedSKU:location withDelta:delta withEventDictionary:eventDict];
 	if (cursor.hidden == VISIBLE) {
-		UITouch* touch = eventDict[@"touch"];
-		CGPoint prevLocation = [touch previousLocationInNode:self];
-		cursor.position = pointAdd(pointAdd(pointInverse(prevLocation), location), cursor.position);
+		cursor.position = pointAdd(delta, cursor.position);
 		[self rotations:cursor.position];
 	}
-#else
-	[self rotations:location];
-#endif
 }
+
+-(void)absoluteInputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+	[self rotations:location];
+
+}
+
 
 -(void)rotations:(CGPoint)location {
 	orientUpNode.zRotation = orientToFromUpFace(location, orientUpNode.position);

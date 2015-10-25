@@ -2782,7 +2782,10 @@ static SKUtilities2* sharedUtilities = Nil;
 			}
 		}
 	}
-	[self relativeInputMovedSKU:location withEventDictionary:eventDict];
+	UITouch* touch = eventDict[@"touch"];
+	CGPoint prevLocation = [touch previousLocationInNode:self];
+	CGPoint delta = pointAdd(pointInverse(prevLocation), location);
+	[self relativeInputMovedSKU:location withDelta:delta withEventDictionary:eventDict];
 }
 
 -(void)siriRemoteinputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
@@ -2792,7 +2795,10 @@ static SKUtilities2* sharedUtilities = Nil;
 			[SKUSharedUtilities.touchTracker removeObject:touch];
 		}
 	}
-	[self relativeInputEndedSKU:location withEventDictionary:eventDict];
+	UITouch* touch = eventDict[@"touch"];
+	CGPoint prevLocation = [touch previousLocationInNode:self];
+	CGPoint delta = pointAdd(pointInverse(prevLocation), location);
+	[self relativeInputEndedSKU:location withDelta:delta withEventDictionary:eventDict];
 }
 
 -(void)nodePressedDownSKU:(SKNode*)node {
@@ -2809,11 +2815,11 @@ static SKUtilities2* sharedUtilities = Nil;
 	[self inputBeganSKU:location withEventDictionary:eventDict];
 }
 
--(void)relativeInputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
+-(void)relativeInputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
 	[self inputMovedSKU:location withEventDictionary:eventDict];
 }
 
--(void)relativeInputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
+-(void)relativeInputEndedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
 	[self inputEndedSKU:location withEventDictionary:eventDict];
 }
 
