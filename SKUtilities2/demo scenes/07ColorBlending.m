@@ -99,11 +99,8 @@
 	self.backgroundColor = [SKColor blendColorSKU:blueColor withColor:greenColor alpha:xAlpha];
 	self.backgroundColor = [SKColor blendColorSKU:self.backgroundColor withColor:redColor alpha:yAlpha];
 
-	yAlpha = fmin(yAlpha, 1.0);
-	yAlpha = fmax(yAlpha, 0.0);
-	
-	xAlpha = fmin(xAlpha, 1.0);
-	xAlpha = fmax(xAlpha, 0.0);
+	yAlpha = clipFloatWithinRange(yAlpha, 0.0, 1.0);
+	xAlpha = clipFloatWithinRange(xAlpha, 0.0, 1.0);
 	
 	prevLocation = location;
 	

@@ -275,8 +275,7 @@
 		latValue -= difference;
 	}
 	
-	latValue = fmax(-1.0, latValue);
-	latValue = fmin(1.0, latValue);
+	latValue = clipFloatWithinRange(latValue, -1.0, 1.0);
 	previousLocation = location;
 
 }

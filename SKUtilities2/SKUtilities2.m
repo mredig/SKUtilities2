@@ -14,12 +14,11 @@
 #pragma mark NUMBER INTERPOLATION
 
 CGFloat linearInterpolationBetweenFloatValues (CGFloat valueA, CGFloat valueB, CGFloat pointBetween, bool clipped ) {
-	
+	CGFloat tPointBetween = pointBetween;
 	if (clipped) {
-		pointBetween = MAX(0.0, pointBetween);
-		pointBetween = MIN(1.0, pointBetween);
+		tPointBetween = clipFloatWithinRange(tPointBetween, 0.0, 1.0);
 	}
-	return valueA + (valueB - valueA)* pointBetween;
+	return valueA + (valueB - valueA)* tPointBetween;
 }
 
 CGFloat reverseLinearInterpolationBetweenFloatValues (CGFloat valueA, CGFloat valueB, CGFloat valueBetween, bool clipped) {
@@ -29,8 +28,7 @@ CGFloat reverseLinearInterpolationBetweenFloatValues (CGFloat valueA, CGFloat va
 	CGFloat rFloat = diff * xFactor;
 	
 	if (clipped) {
-		rFloat = MAX(0.0, rFloat);
-		rFloat = MIN(1.0, rFloat);
+		rFloat = clipFloatWithinRange(rFloat, 0.0, 1.0);
 	}
 	
 	return rFloat;
