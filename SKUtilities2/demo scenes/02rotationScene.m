@@ -139,7 +139,7 @@
 	SKUButtonLabelPropertiesPackage* labelPack2 = labelPack.copy;
 	[labelPack2 changeText:@"Demo Rotation"];
 	SKUPushButton* activateCursor = [SKUPushButton pushButtonWithBackgroundPropertiesPackage:backgroundPack andTitleLabelPropertiesPackage:labelPack2];
-	activateCursor.position = pointAdd(nextSlide.position, CGPointMake(0, 100));
+	activateCursor.position = pointAdd(nextSlide.position, CGPointMake(0, -100));
 	activateCursor.zPosition = 1.0;
 	[activateCursor setUpAction:@selector(toggleDemoMode:) toPerformOnTarget:self];
 	[self addChild:activateCursor];
