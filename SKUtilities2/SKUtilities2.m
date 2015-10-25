@@ -2278,9 +2278,7 @@ static SKUtilities2* sharedUtilities = Nil;
 //}
 
 
-#elif TARGET_OS_IPHONE
-#else
-//http://opensource.apple.com/source/CarbonHeaders/CarbonHeaders-18.1/TargetConditionals.h
+#elif TARGET_OS_OSX_SKU
 
 -(void)rightMouseDown:(NSEvent *)theEvent {
 	CGPoint location = [theEvent locationInNode:self.scene];
@@ -2358,7 +2356,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	if (!self.scene.userData) {
 		self.scene.userData = [NSMutableDictionary dictionary];
 		NSMutableArray* hoverArray = [NSMutableArray array];
-		[self.scene.userData setObject:hoverArray forKey:@"sku_hoverSet"];
+		[self.scene.userData setObject:hoverArray forKey:@"sku_hoverArray"];
 	}
 }
 
