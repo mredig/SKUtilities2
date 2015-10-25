@@ -1857,14 +1857,14 @@ static SKUtilities2* sharedUtilities = Nil;
 	_baseSprite.yScale = properties.yScale;
 	
 	if (_baseSprite.centerRect.origin.x != 0.0 || _baseSprite.centerRect.origin.y != 0.0 || _baseSprite.centerRect.size.width != 1.0 || _baseSprite.centerRect.size.height != 1.0) {
-		CGSize thisSize = [self getButtonSize];
+		CGSize thisSize = [self getButtonSizeMinusBase];
 		thisSize = CGSizeMake(thisSize.width + _padding * 2.0f, thisSize.height + _padding * 2.0f);
 		_baseSprite.xScale = thisSize.width / properties.texture.size.width;
 		_baseSprite.yScale = thisSize.height / properties.texture.size.height;
 	}
 }
 
--(CGSize)getButtonSize {
+-(CGSize)getButtonSizeMinusBase {
 	SKNode* baseParent;
 	if (_baseSprite.parent) {
 		baseParent = _baseSprite.parent;
@@ -2476,7 +2476,7 @@ static SKUtilities2* sharedUtilities = Nil;
 		_toggleSprite.xScale = propertiesSprite.xScale;
 		_toggleSprite.yScale = propertiesSprite.yScale;
 		
-		CGSize buttonSize = [self getButtonSize];
+		CGSize buttonSize = [self getButtonSizeMinusBase];
 		_toggleSprite.position = pointAdd(_toggleSprite.position, CGPointMake((-buttonSize.width), 0.0));
 	}
 }
@@ -2657,7 +2657,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	self.on = !_on;
 }
 
--(CGSize)getButtonSize {
+-(CGSize)getButtonSizeMinusBase {
 	SKNode* baseParent, *toggleParent;
 	if (self.baseSprite.parent) {
 		baseParent = self.baseSprite.parent;
