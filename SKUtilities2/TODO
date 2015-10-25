@@ -2,8 +2,6 @@ SKU_Buttons needs a toggle button
 	subclass pushbutton and have sprite properties (not packages) for on and off state that can slide horizontally to account for button size
 SKU_Buttons needs a slider
 
-SKUButtons need AppleTV nav built in
-	basis set - just keep it up for further subclasses
 
 shapenode needs to accomodate for retina displays when rendering
 
@@ -12,7 +10,3 @@ skbuttons probably need copy zone
 
 might wanna add archiving support?
 might wanna add descriptions to other classes
-
-
-SKView category handling for pressBegan etc
-	play with motionBegan

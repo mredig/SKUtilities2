@@ -193,8 +193,6 @@
 }
 
 
-
-
 -(void)transferScene:(SKUButton*)button {
 	
 	_3VectorPoint* scene = [[_3VectorPoint alloc] initWithSize:self.size];
