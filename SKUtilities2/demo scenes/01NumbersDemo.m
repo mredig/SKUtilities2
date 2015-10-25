@@ -113,10 +113,10 @@
 	SKUButtonSpriteStatePropertiesPackage* backgroundPackage = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:backgroundProps];
 	
 	SKUButtonLabelProperties* labelProps = [SKUButtonLabelProperties
-											propertiesWithText:@"Next Slide"
+											propertiesWithText:@"Next Scene"
 											andColor:[SKColor blackColor]
 											andSize:28
-											andFontName:@"Helvetica Neue Light"];
+											andFontName:@"Helvetica Neue UltraLight"];
 	
 	SKUButtonLabelPropertiesPackage* labelPackage = [SKUButtonLabelPropertiesPackage packageWithPropertiesForDefaultState:labelProps];
 	

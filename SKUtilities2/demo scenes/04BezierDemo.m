@@ -16,12 +16,11 @@
 	
 	SKSpriteNode* handle1, *handle2;
 	
-	SKNode* selectedNode;
+	SKNode* prevSelectedNode;
 	
 	
 	SKLabelNode* xAndTvalueLabel;
 	
-	SKSpriteNode* cursor;
 	SKNode* lockedNode;
 
 }
@@ -82,88 +81,76 @@
 	
 	SKUSharedUtilities.navMode = kSKUNavModeOn;
 	[SKUSharedUtilities setNavFocus:self];
-	cursor = [SKSpriteNode spriteNodeWithColor:[SKColor greenColor] size:CGSizeMake(50, 50)];
-	cursor.position = pointMultiplyByPoint(CGPointMake(0.5, 0.25), pointFromCGSize(self.size));
-	cursor.zPosition = 50;
-	[self addChild:cursor];
 
 	[self setCurrentSelectedNodeSKU:handle1];
-	
-	SKView* scnView = (SKView*)self.view;
-	
-	UITapGestureRecognizer* tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gestureTap:)];
-	[scnView addGestureRecognizer:tapGesture];
 #endif
 }
 
 #if TARGET_OS_TV
 -(void)gestureTap:(UIGestureRecognizer*)gesture {
-	if (gesture.state == UIGestureRecognizerStateEnded) {
-		
-		if (!lockedNode) {
-			lockedNode = selectedNode;
-			if ([lockedNode isKindOfClass:[SKSpriteNode class]]) {
-				cursor.color = [SKColor blueColor];
-			}
-			SKUSharedUtilities.navMode = kSKUNavModeOff;
-		} else {
-			if ([lockedNode isKindOfClass:[SKSpriteNode class]]) {
-				cursor.color = [SKColor greenColor];
-			}
-			lockedNode = nil;
-			SKUSharedUtilities.navMode = kSKUNavModeOn;
+	if ([lockedNode.name containsString:@"handle"]) {
+		SKSpriteNode* sprite = (SKSpriteNode*)lockedNode;
+		sprite.color = [SKColor greenColor];
+	}
+	lockedNode = nil;
+	SKUSharedUtilities.navMode = kSKUNavModeOn;
+	[self.view removeGestureRecognizer:gesture];
+}
 
+-(void)nodePressedUpSKU:(SKNode *)node {
+	if (!lockedNode) {
+		lockedNode = node;
+		if ([lockedNode.name containsString:@"handle"]) {
+			SKSpriteNode* sprite = (SKSpriteNode*)lockedNode;
+			sprite.color = [SKColor blueColor];
 		}
+		SKUSharedUtilities.navMode = kSKUNavModeOff;
+		SKView* scnView = (SKView*)self.view;
 		
-		if ([lockedNode.name isEqualToString:@"tempButton"]) {
-			[self transferScene];
-		}
-		
-		
+		UITapGestureRecognizer* tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gestureTap:)];
+		tapGesture.allowedPressTypes = @[[NSNumber numberWithInteger:UIPressTypeSelect]];
+		[scnView addGestureRecognizer:tapGesture]; //// have to add a gesture since nav mode is off in this case. we won't get navigation signals, including presses and press releases until nav mode is back on
 	}
 }
 #endif
 
 
 -(void)updateBezierCurve {
-	
 	for (NSInteger i = 0; i < bezParts.count; i++) {
 		SKSpriteNode* part = bezParts[i];
 		part.position = bezierPoint((CGFloat)i/bezParts.count, CGPointZero, handle1.position, handle2.position, pointFromCGSize(self.size));
 	}
-	
-	
 }
 
 
 -(void)setupButton {
 	
-	SKNode* tempButton = [SKNode node];
-	tempButton.position = midPointOfRect(self.frame);
-	tempButton.zPosition = 1.0;
-	tempButton.name = @"tempButton";
-	[self addChild:tempButton];
+	SKUButtonLabelPropertiesPackage* labelPack = SKUSharedUtilities.userData[@"buttonLabelPackage"];
+	SKUButtonSpriteStatePropertiesPackage* backgroundPack = SKUSharedUtilities.userData[@"buttonBackgroundPackage"];
+	SKUPushButton* nextSlide = [SKUPushButton pushButtonWithBackgroundPropertiesPackage:backgroundPack andTitleLabelPropertiesPackage:labelPack];
+	nextSlide.position = midPointOfRect(self.frame);
+	nextSlide.zPosition = 1.0;
+	[nextSlide setUpAction:@selector(transferScene:) toPerformOnTarget:self];
+	[self addChild:nextSlide];
 	
-	SKSpriteNode* buttonBG = [SKSpriteNode spriteNodeWithColor:[SKColor whiteColor] size:CGSizeMake(200, 50)];
-	[tempButton addChild:buttonBG];
 	
-	SKLabelNode* buttonLabel = [SKLabelNode labelNodeWithText:@"Next Scene"];
-	buttonLabel.fontColor = [SKColor blackColor];
-	buttonLabel.fontSize = 28;
-	buttonLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeCenter;
-	buttonLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
-	buttonLabel.zPosition = 1.0;
-	[tempButton addChild:buttonLabel];
 #if TARGET_OS_TV
-
-	[self addNodeToNavNodesSKU:tempButton];
-#endif
 	
+	SKUSharedUtilities.navMode = kSKUNavModeOn;
+	[self addNodeToNavNodesSKU:nextSlide];
+	[self setCurrentSelectedNodeSKU:nextSlide];
+	
+	[SKUSharedUtilities setNavFocus:self];
+	
+#endif
 }
 
 -(void)currentSelectedNodeUpdatedSKU:(SKNode *)node {
-	cursor.position = node.position;
-	selectedNode = node;
+	if ([node.name containsString:@"handle"]) {
+		[node setScale:3.0f];
+	}
+	[prevSelectedNode setScale:1.0f];
+	prevSelectedNode = node;
 }
 
 -(void)inputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
@@ -171,14 +158,11 @@
 #else
 	NSArray* nodes = [self nodesAtPoint:location];
 	for (SKNode* node in nodes) {
-		if ([node.name isEqualToString:@"tempButton"]) {
-			selectedNode = [self childNodeWithName:@"tempButton"];
-			break;
-		} else if ([node isEqual:handle1]){
-			selectedNode = handle1;
+		if ([node isEqual:handle1]){
+			lockedNode = handle1;
 			break;
 		} else if ([node isEqual:handle2]){
-			selectedNode = handle2;
+			lockedNode = handle2;
 			break;
 		}
 	}
@@ -192,38 +176,19 @@
 		UITouch* touch = eventDict[@"touch"];
 		CGPoint prevTouchLocation = [touch previousLocationInNode:self];
 		lockedNode.position = pointAdd(pointAdd(pointInverse(prevTouchLocation), location), lockedNode.position);
-		cursor.position = lockedNode.position;
 	}
 #else
-	if (![selectedNode.name isEqualToString:@"tempButton"]) {
-		selectedNode.position = location;
+	if (![lockedNode.name isEqualToString:@"tempButton"]) {
+		lockedNode.position = location;
 	}
 #endif
 	[self updateBezierCurve];
 
-	
-	
 	xAndTvalueLabel.text = [NSString stringWithFormat:@"xVal: %f tVal:%f", location.x, bezierTValueAtXValue(location.x, 0.0, handle1.position.x, handle2.position.x, self.size.width)];
 }
 
--(void)inputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
-#if TARGET_OS_TV
-#else
-	NSArray* nodes = [self nodesAtPoint:location];
-	for (SKNode* node in nodes) {
-		if ([node.name isEqualToString:@"tempButton"] && [selectedNode.name isEqualToString:@"tempButton"]) {
-			//next scene
-			[self transferScene];
-			break;
-		}
-	}
-	selectedNode = nil;
-#endif
-}
 
-
-
--(void)transferScene {
+-(void)transferScene:(SKUButton*)button {
 	
 	_5ShapeDemo* scene = [[_5ShapeDemo alloc] initWithSize:self.size];
 	scene.scaleMode = self.scaleMode;

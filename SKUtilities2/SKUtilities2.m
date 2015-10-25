@@ -652,6 +652,8 @@ static SKUtilities2* sharedUtilities = Nil;
 		SKNode* currentSelectedNode = SKUSharedUtilities.navFocus.userData[@"sku_currentSelectedNode"];
 		if ([currentSelectedNode isKindOfClass:[SKUButton class]]) {
 			[(SKUButton*)currentSelectedNode buttonPressed:CGPointZero];
+		} else {
+			[SKUSharedUtilities.navFocus nodePressedDownSKU:currentSelectedNode];
 		}
 	}
 }
@@ -662,6 +664,8 @@ static SKUtilities2* sharedUtilities = Nil;
 		SKNode* currentSelectedNode = SKUSharedUtilities.navFocus.userData[@"sku_currentSelectedNode"];
 		if ([currentSelectedNode isKindOfClass:[SKUButton class]]) {
 			[(SKUButton*)currentSelectedNode buttonReleased:CGPointZero];
+		} else {
+			[SKUSharedUtilities.navFocus nodePressedUpSKU:currentSelectedNode];
 		}
 	}
 }
@@ -2228,6 +2232,7 @@ static SKUtilities2* sharedUtilities = Nil;
 
 #if TARGET_OS_TV
 -(void)pressesBegan:(NSSet<UIPress *> *)presses withEvent:(UIPressesEvent *)event {
+	[super pressesBegan:presses withEvent:event];
 	for (UIPress* press in presses) {
 		switch (press.type) {
 			case UIPressTypeSelect: {
@@ -2240,10 +2245,10 @@ static SKUtilities2* sharedUtilities = Nil;
 		}
 		
 	}
-	[super pressesBegan:presses withEvent:event];
 }
 
 -(void)pressesEnded:(NSSet<UIPress *> *)presses withEvent:(UIPressesEvent *)event {
+	[super pressesEnded:presses withEvent:event];
 	for (UIPress* press in presses) {
 		switch (press.type) {
 			case UIPressTypeSelect: {
@@ -2256,24 +2261,23 @@ static SKUtilities2* sharedUtilities = Nil;
 		}
 		
 	}
-	[super pressesEnded:presses withEvent:event];
 }
 
--(void)pressesCancelled:(NSSet<UIPress *> *)presses withEvent:(UIPressesEvent *)event {
-	for (UIPress* press in presses) {
-		switch (press.type) {
-			case UIPressTypeSelect: {
-				[SKUSharedUtilities gestureTapUp];
-			}
-				break;
-				
-			default:
-				break;
-		}
-		
-	}
-	[super pressesCancelled:presses withEvent:event];
-}
+//-(void)pressesCancelled:(NSSet<UIPress *> *)presses withEvent:(UIPressesEvent *)event { //not sure if this should send signals to tapUp (when it is there, it causes misfires on 04BezierDemo
+//	[super pressesCancelled:presses withEvent:event];
+//	for (UIPress* press in presses) {
+//		switch (press.type) {
+//			case UIPressTypeSelect: {
+//				[SKUSharedUtilities gestureTapUp];
+//			}
+//				break;
+//				
+//			default:
+//				break;
+//		}
+//		
+//	}
+//}
 
 
 #elif TARGET_OS_IPHONE
@@ -2768,7 +2772,13 @@ static SKUtilities2* sharedUtilities = Nil;
 	[self relativeInputEndedSKU:location withEventDictionary:eventDict];
 }
 
+-(void)nodePressedDownSKU:(SKNode*)node {
+	
+}
 
+-(void)nodePressedUpSKU:(SKNode*)node {
+	
+}
 
 #endif
 

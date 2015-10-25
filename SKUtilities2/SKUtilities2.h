@@ -893,7 +893,10 @@ typedef enum {
 -(void)removeNodeFromNavNodesSKU:(SKNode*)node;
 /** Override this method to update visuals. */
 -(void)currentSelectedNodeUpdatedSKU:(SKNode *)node;
-
+/** Override this method to perform logic with non SKUButton nodes when pressed. */
+-(void)nodePressedDownSKU:(SKNode*)node;
+/** Override this method to perform logic with non SKUButton nodes when released. */
+-(void)nodePressedUpSKU:(SKNode*)node;
 #endif
 
 /** Called when relative type input begins (Currently only AppleTV's Siri Remote touches) Remember to call [super relativeInputBeganSKU] when overrding. Harmless to include on other platforms. */
