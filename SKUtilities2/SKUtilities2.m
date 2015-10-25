@@ -67,6 +67,20 @@ CGFloat rampToValue (CGFloat idealValue, CGFloat currentValue, CGFloat stepValue
 	return newValue;
 }
 
+CGFloat clipFloatWithinRange (CGFloat value, CGFloat minimum, CGFloat maximum) {
+	CGFloat rValue = value;
+	rValue = fmin(rValue, maximum);
+	rValue = fmax(rValue, minimum);
+	return rValue;
+}
+
+NSInteger clipIntegerWithinRange (NSInteger value, NSInteger minimum, NSInteger maximum) {
+	NSInteger rValue = value;
+	rValue = MIN(rValue, maximum);
+	rValue = MAX(rValue, minimum);
+	return rValue;
+}
+
 #pragma mark RANDOM NUMBERS
 
 u_int32_t randomUnsignedIntegerBetweenTwoValues (u_int32_t lowend, u_int32_t highend) {

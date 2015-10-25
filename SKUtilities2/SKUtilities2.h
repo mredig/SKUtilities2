@@ -83,6 +83,29 @@ CGFloat reverseLinearInterpolationBetweenFloatValues (CGFloat valueA, CGFloat va
  */
 CGFloat rampToValue (CGFloat idealValue, CGFloat currentValue, CGFloat stepValue);
 
+/**
+ Returns a CGFloat clipped within the range provided.
+ @param value
+ CGFloat value that is evaluated
+ @param minimum
+ CGFloat input of the low end range of what the output value could be
+ @param maximum
+ CGFloat input of the high end range of what the output value could be
+ */
+CGFloat clipFloatWithinRange (CGFloat value, CGFloat minimum, CGFloat maximum);
+
+/**
+ Returns an NSInteger clipped within the range provided.
+ @param value
+ NSInteger value that is evaluated
+ @param minimum
+ NSInteger input of the low end range of what the output value could be
+ @param maximum
+ NSInteger input of the high end range of what the output value could be
+ */
+NSInteger clipIntegerWithinRange (NSInteger value, NSInteger minimum, NSInteger maximum);
+
+
 #pragma mark RANDOM NUMBERS
 
 /**
