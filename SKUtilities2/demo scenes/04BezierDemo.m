@@ -9,6 +9,7 @@
 #import "04BezierDemo.h"
 #import "SKUtilities2.h"
 #import "05ShapeDemo.h"
+#import "03VectorPoint.h"
 
 @interface _4BezierDemo() {
 	
@@ -124,20 +125,27 @@
 
 
 -(void)setupButton {
-	
+
 	SKUButtonLabelPropertiesPackage* labelPack = SKUSharedUtilities.userData[@"buttonLabelPackage"];
 	SKUButtonSpriteStatePropertiesPackage* backgroundPack = SKUSharedUtilities.userData[@"buttonBackgroundPackage"];
 	SKUPushButton* nextSlide = [SKUPushButton pushButtonWithBackgroundPropertiesPackage:backgroundPack andTitleLabelPropertiesPackage:labelPack];
-	nextSlide.position = midPointOfRect(self.frame);
+	nextSlide.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.66, 0.5));
 	nextSlide.zPosition = 1.0;
 	[nextSlide setUpAction:@selector(transferScene:) toPerformOnTarget:self];
 	[self addChild:nextSlide];
+	
+	SKUPushButton* prevSlide = [SKUPushButton pushButtonWithText:@"Previous Scene"];
+	prevSlide.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.33, 0.5));
+	prevSlide.zPosition = 1.0;
+	[prevSlide setUpAction:@selector(prevScene:) toPerformOnTarget:self];
+	[self addChild:prevSlide];
 	
 	
 #if TARGET_OS_TV
 	
 	SKUSharedUtilities.navMode = kSKUNavModeOn;
 	[self addNodeToNavNodesSKU:nextSlide];
+	[self addNodeToNavNodesSKU:prevSlide];
 	[self setCurrentSelectedNodeSKU:nextSlide];
 	
 	[SKUSharedUtilities setNavFocus:self];
@@ -187,6 +195,16 @@
 	xAndTvalueLabel.text = [NSString stringWithFormat:@"xVal: %f tVal:%f", location.x, bezierTValueAtXValue(location.x, 0.0, handle1.position.x, handle2.position.x, self.size.width)];
 }
 
+
+-(void)prevScene:(SKUButton*)button {
+	
+	_3VectorPoint* scene = [[_3VectorPoint alloc] initWithSize:self.size];
+	scene.scaleMode = self.scaleMode;
+	
+	SKView* view = (SKView*)self.view;
+	[view presentScene:scene];
+	
+}
 
 -(void)transferScene:(SKUButton*)button {
 	

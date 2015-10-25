@@ -9,6 +9,7 @@
 #import "03VectorPoint.h"
 #import "04BezierDemo.h"
 #import "SKUtilities2.h"
+#import "02rotationScene.h"
 
 @interface _3VectorPoint() {
 	
@@ -241,16 +242,23 @@
 	SKUButtonLabelPropertiesPackage* labelPack = SKUSharedUtilities.userData[@"buttonLabelPackage"];
 	SKUButtonSpriteStatePropertiesPackage* backgroundPack = SKUSharedUtilities.userData[@"buttonBackgroundPackage"];
 	SKUPushButton* nextSlide = [SKUPushButton pushButtonWithBackgroundPropertiesPackage:backgroundPack andTitleLabelPropertiesPackage:labelPack];
-	nextSlide.position = midPointOfRect(self.frame);
+	nextSlide.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.66, 0.5));
 	nextSlide.zPosition = 1.0;
 	[nextSlide setUpAction:@selector(transferScene:) toPerformOnTarget:self];
 	[self addChild:nextSlide];
+	
+	SKUPushButton* prevSlide = [SKUPushButton pushButtonWithText:@"Previous Scene"];
+	prevSlide.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.33, 0.5));
+	prevSlide.zPosition = 1.0;
+	[prevSlide setUpAction:@selector(prevScene:) toPerformOnTarget:self];
+	[self addChild:prevSlide];
 	
 	
 #if TARGET_OS_TV
 	
 	SKUSharedUtilities.navMode = kSKUNavModeOn;
 	[self addNodeToNavNodesSKU:nextSlide];
+	[self addNodeToNavNodesSKU:prevSlide];
 	[self setCurrentSelectedNodeSKU:nextSlide];
 	
 	[SKUSharedUtilities setNavFocus:self];
@@ -288,6 +296,16 @@
 			part.color = [SKColor redColor];
 		}
 	}
+}
+
+-(void)prevScene:(SKUButton*)button {
+	
+	_2rotationScene* scene = [[_2rotationScene alloc] initWithSize:self.size];
+	scene.scaleMode = self.scaleMode;
+	
+	SKView* view = (SKView*)self.view;
+	[view presentScene:scene];
+	
 }
 
 -(void)transferScene:(SKUButton*)button {

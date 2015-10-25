@@ -10,6 +10,7 @@
 #import "SKUtilities2.h"
 #import "06MultiLineDemo.h"
 #import "shapeBenchmark.h"
+#import "04BezierDemo.h"
 
 @implementation _5ShapeDemo
 
@@ -67,11 +68,22 @@
 	SKUButtonLabelPropertiesPackage* labelPack = SKUSharedUtilities.userData[@"buttonLabelPackage"];
 	SKUButtonSpriteStatePropertiesPackage* backgroundPack = SKUSharedUtilities.userData[@"buttonBackgroundPackage"];
 	SKUPushButton* nextSlide = [SKUPushButton pushButtonWithBackgroundPropertiesPackage:backgroundPack andTitleLabelPropertiesPackage:labelPack];
-	nextSlide.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.5, 0.33)) ;
+	nextSlide.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.66, 0.5)) ;
 	nextSlide.zPosition = 1.0;
 	[nextSlide setUpAction:@selector(transferScene:) toPerformOnTarget:self];
 	nextSlide.name = @"next";
 	[self addChild:nextSlide];
+	
+
+	
+	SKUPushButton* prevSlide = [SKUPushButton pushButtonWithText:@"Previous Scene"];
+	prevSlide.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.33, 0.5));
+	prevSlide.zPosition = 1.0;
+	[prevSlide setUpAction:@selector(transferScene:) toPerformOnTarget:self];
+	prevSlide.name = @"prev";
+	[self addChild:prevSlide];
+	
+	
 	
 	SKUButtonLabelPropertiesPackage* benchmarkLabel = labelPack.copy;
 	[benchmarkLabel changeText:@"Benchmark Shapes"];
@@ -87,6 +99,7 @@
 	
 	SKUSharedUtilities.navMode = kSKUNavModeOn;
 	[self addNodeToNavNodesSKU:nextSlide];
+	[self addNodeToNavNodesSKU:prevSlide];
 	[self addNodeToNavNodesSKU:benchmark];
 	[self setCurrentSelectedNodeSKU:nextSlide];
 	
@@ -102,6 +115,9 @@
 		scene.scaleMode = self.scaleMode;
 	} else if ([button.name isEqualToString:@"benchmark"]) {
 		scene = [[shapeBenchmark alloc] initWithSize:self.size];
+		scene.scaleMode = self.scaleMode;
+	} else if ([button.name isEqualToString:@"prev"]) {
+		scene = [[_4BezierDemo alloc] initWithSize:self.size];
 		scene.scaleMode = self.scaleMode;
 	}
 

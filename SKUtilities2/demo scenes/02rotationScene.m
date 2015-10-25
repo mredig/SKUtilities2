@@ -9,6 +9,7 @@
 #import "02rotationScene.h"
 #import "SKUtilities2.h"
 #import "03VectorPoint.h"
+#import "01NumbersDemo.h"
 
 @interface _2rotationScene() {
 	
@@ -102,6 +103,22 @@
 	[orientDownNode addChild:downDirectionSprite];
 	
 	[self setupButton];
+}
+
+-(void)setupButton {
+	SKUButtonLabelPropertiesPackage* labelPack = SKUSharedUtilities.userData[@"buttonLabelPackage"];
+	SKUButtonSpriteStatePropertiesPackage* backgroundPack = SKUSharedUtilities.userData[@"buttonBackgroundPackage"];
+	SKUPushButton* nextSlide = [SKUPushButton pushButtonWithBackgroundPropertiesPackage:backgroundPack andTitleLabelPropertiesPackage:labelPack];
+	nextSlide.position = pointMultiplyByPoint(midPointOfRect(self.frame), CGPointMake(1.0, 0.5));
+	nextSlide.zPosition = 1.0;
+	[nextSlide setUpAction:@selector(transferScene:) toPerformOnTarget:self];
+	[self addChild:nextSlide];
+	
+	SKUPushButton* prevSlide = [SKUPushButton pushButtonWithText:@"Previous Scene"];
+	prevSlide.position = pointAdd(nextSlide.position, CGPointMake(0, 100));
+	prevSlide.zPosition = 1.0;
+	[prevSlide setUpAction:@selector(prevScene:) toPerformOnTarget:self];
+	[self addChild:prevSlide];
 	
 #if TARGET_OS_TV
 	
@@ -118,20 +135,7 @@
 	menuNotice.name = @"menuNotice";
 	[self addChild:menuNotice];
 	menuNotice.hidden = HIDDEN;
-#endif
-}
-
--(void)setupButton {
-	SKUButtonLabelPropertiesPackage* labelPack = SKUSharedUtilities.userData[@"buttonLabelPackage"];
-	SKUButtonSpriteStatePropertiesPackage* backgroundPack = SKUSharedUtilities.userData[@"buttonBackgroundPackage"];
-	SKUPushButton* nextSlide = [SKUPushButton pushButtonWithBackgroundPropertiesPackage:backgroundPack andTitleLabelPropertiesPackage:labelPack];
-	nextSlide.position = pointMultiplyByPoint(midPointOfRect(self.frame), CGPointMake(1.0, 0.5));
-	nextSlide.zPosition = 1.0;
-	[nextSlide setUpAction:@selector(transferScene:) toPerformOnTarget:self];
-	[self addChild:nextSlide];
 	
-	
-#if TARGET_OS_TV
 	SKUButtonLabelPropertiesPackage* labelPack2 = labelPack.copy;
 	[labelPack2 changeText:@"Demo Rotation"];
 	SKUPushButton* activateCursor = [SKUPushButton pushButtonWithBackgroundPropertiesPackage:backgroundPack andTitleLabelPropertiesPackage:labelPack2];
@@ -141,6 +145,7 @@
 	[self addChild:activateCursor];
 	
 	[self addNodeToNavNodesSKU:nextSlide];
+	[self addNodeToNavNodesSKU:prevSlide];
 	[self addNodeToNavNodesSKU:activateCursor];
 	[self setCurrentSelectedNodeSKU:nextSlide];
 	
@@ -192,6 +197,16 @@
 	orientDownNode.zRotation = orientToFromDownFace(location, orientDownNode.position);
 }
 
+
+-(void)prevScene:(SKUButton*)button {
+	
+	_1NumbersDemo* scene = [[_1NumbersDemo alloc] initWithSize:self.size];
+	scene.scaleMode = self.scaleMode;
+	
+	SKView* view = (SKView*)self.view;
+	[view presentScene:scene];
+	
+}
 
 -(void)transferScene:(SKUButton*)button {
 	

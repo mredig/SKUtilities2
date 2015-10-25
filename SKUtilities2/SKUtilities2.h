@@ -610,6 +610,7 @@ Vulnerable to lag spikes if used.
 @property (nonatomic) CGPoint position;
 @property (nonatomic) CGFloat scale;
 
++(SKUButtonLabelProperties*)propertiesWithText:(NSString *)text;
 +(SKUButtonLabelProperties*)propertiesWithText:(NSString *)text andColor:(SKColor *)fontColor andSize :(CGFloat)fontSize andFontName:(NSString *)fontName;
 +(SKUButtonLabelProperties*)propertiesWithText:(NSString *)text andColor:(SKColor *)fontColor andSize :(CGFloat)fontSize andFontName:(NSString *)fontName andPositionOffset:(CGPoint)position andScale:(CGFloat)scale;
 
@@ -637,6 +638,8 @@ Vulnerable to lag spikes if used.
 +(SKUButtonLabelPropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonLabelProperties *)defaultState andPressedState:(SKUButtonLabelProperties *)pressedState;
 /** Allows you to explicitly set default state, derives the pressed state from the default by scaling it down to a relative 90% size, and derives the disabled state from default, but with a gray overlay, and derives the hovered state from the default at a skuHoverScale scale. */
 +(SKUButtonLabelPropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonLabelProperties *)defaultState;
+/** Creates and returns a package based on SKU defaults. */
++(SKUButtonLabelPropertiesPackage*)packageWithDefaultPropertiesWithText:(NSString*)text;
 
 /** Allows you to change the text for all states at once. */
 -(void)changeText:(NSString*)text;
@@ -676,6 +679,8 @@ Vulnerable to lag spikes if used.
 +(SKUButtonSpriteStateProperties*)propertiesWithTexture:(SKTexture*)texture andAlpha:(CGFloat)alpha andColor:(SKColor*)color andColorBlendFactor:(CGFloat)colorBlendFactor;
 /** Returns a new object with the following properties. */
 +(SKUButtonSpriteStateProperties*)propertiesWithTexture:(SKTexture*)texture andAlpha:(CGFloat)alpha;
+/** Returns a new object with the included default properties. */
++(SKUButtonSpriteStateProperties*)propertiesWithDefaultsSKU;
 /** Sets the x and y scale together. */
 -(void)setScale:(CGFloat)scale;
 
@@ -700,6 +705,8 @@ Vulnerable to lag spikes if used.
 +(SKUButtonSpriteStatePropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonSpriteStateProperties *)defaultState andPressedState:(SKUButtonSpriteStateProperties *)pressedState;
 /** Allows you to explicitly set default state and derives the pressed state from the default with 0.5 blend factor of a gray color overlay, and the disabled state from default, but with half opacity, and the hovered state from the default with skuHoverScale scale. */
 +(SKUButtonSpriteStatePropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonSpriteStateProperties *)defaultState;
+/** Returns a package based on the included assets. */
++(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultPropertiesSKU;
 
 /** Allows you to change the texture for all states at once. */
 -(void)changeTexture:(SKTexture*)texture;
@@ -857,6 +864,7 @@ typedef enum {
 @property (nonatomic) SKUButtonSpriteStateProperties* titleSpritePropertiesDisabled;
 #pragma mark SKUPushButton inits
 
++(SKUPushButton*)pushButtonWithText:(NSString*)text;
 +(SKUPushButton*)pushButtonWithBackgroundTexture:(SKTexture*)texture;
 +(SKUPushButton*)pushButtonWithImageNamed:(NSString*)name;
 +(SKUPushButton*)pushButtonWithBackgroundTexture:(SKTexture*)backgroundTexture andTitleTexture:(SKTexture*)titleTexture;

@@ -1325,6 +1325,18 @@ static SKUtilities2* sharedUtilities = Nil;
 	return props;
 }
 
++(SKUButtonLabelProperties*)propertiesWithText:(NSString *)text {
+	SKUButtonLabelProperties* props = [[SKUButtonLabelProperties alloc] init];
+	props.text = text;
+	props.fontSize = 28.0f;
+	props.fontColor = [SKColor blackColor];
+	props.fontName = @"Helvetica Neue UltraLight";
+	props.position = CGPointZero;
+	props.scale = 1.0f;
+	return props;
+}
+
+
 @end
 
 @implementation SKUButtonLabelPropertiesPackage
@@ -1374,6 +1386,20 @@ static SKUtilities2* sharedUtilities = Nil;
 	package.propertiesDisabledState.fontColor = [SKColor blendColorSKU:defaultState.fontColor withColor:[SKColor grayColor] alpha:0.5];
 	return package;
 }
+
++(SKUButtonLabelPropertiesPackage*)packageWithDefaultPropertiesWithText:(NSString*)text {
+	
+	SKUButtonLabelPropertiesPackage* package = [[SKUButtonLabelPropertiesPackage alloc] init];
+	package.propertiesDefaultState = [SKUButtonLabelProperties propertiesWithText:text];
+	package.propertiesPressedState = package.propertiesDefaultState.copy;
+	package.propertiesPressedState.scale *= 0.9;
+	package.propertiesHoveredState = package.propertiesDefaultState.copy;
+	package.propertiesHoveredState.scale *= skuHoverScale;
+	package.propertiesDisabledState = package.propertiesDefaultState.copy;
+	package.propertiesDisabledState.fontColor = [SKColor blendColorSKU:package.propertiesDefaultState.fontColor withColor:[SKColor grayColor] alpha:0.5];
+	return package;
+}
+
 
 -(void)changeText:(NSString *)text {
 	_propertiesDefaultState.text = text;
@@ -1461,6 +1487,21 @@ static SKUtilities2* sharedUtilities = Nil;
 	return props;
 }
 
++(SKUButtonSpriteStateProperties*)propertiesWithDefaultsSKU {
+	SKTexture* buttonBG = [SKTexture textureWithImageNamed:@"buttonBG"];
+	SKUButtonSpriteStateProperties* props = [[SKUButtonSpriteStateProperties alloc] init];
+	props.alpha = 1.0f;
+	props.color = [SKColor clearColor];
+	props.colorBlendFactor = 0.0f;
+	props.position = CGPointMake(0, -5.0);
+	props.xScale = 1.0f;
+	props.yScale = 1.0f;
+	props.texture = buttonBG;
+	props.centerRect = CGRectMake(40.0/buttonBG.size.width, 50.0/buttonBG.size.height, 40.0/buttonBG.size.width, 40.0/buttonBG.size.height);
+	return props;
+}
+
+
 -(void)setScale:(CGFloat)scale {
 	_xScale = scale;
 	_yScale = scale;
@@ -1527,6 +1568,20 @@ static SKUtilities2* sharedUtilities = Nil;
 	package.propertiesHoveredState.xScale *= skuHoverScale;
 	package.propertiesHoveredState.yScale *= skuHoverScale;
 	package.propertiesDisabledState = defaultState.copy;
+	package.propertiesDisabledState.alpha *= 0.5;
+	return package;
+}
+
++(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultPropertiesSKU {
+	SKUButtonSpriteStatePropertiesPackage* package = [[SKUButtonSpriteStatePropertiesPackage alloc] init];
+	package.propertiesDefaultState = [SKUButtonSpriteStateProperties propertiesWithDefaultsSKU];
+	package.propertiesPressedState = package.propertiesDefaultState.copy;
+	package.propertiesPressedState.color = [SKColor grayColor];
+	package.propertiesPressedState.colorBlendFactor = 0.5;
+	package.propertiesHoveredState = package.propertiesDefaultState.copy;
+	package.propertiesHoveredState.xScale *= skuHoverScale;
+	package.propertiesHoveredState.yScale *= skuHoverScale;
+	package.propertiesDisabledState = package.propertiesDefaultState.copy;
 	package.propertiesDisabledState.alpha *= 0.5;
 	return package;
 }
@@ -1918,6 +1973,15 @@ static SKUtilities2* sharedUtilities = Nil;
 
 @implementation SKUPushButton
 #pragma mark SKUPushButton inits
+
++(SKUPushButton*)pushButtonWithText:(NSString*)text{
+	SKUPushButton* button = [SKUPushButton node];
+	[button setBaseStatesWithPackage:[SKUButtonSpriteStatePropertiesPackage packageWithDefaultPropertiesSKU]];
+	[button setTitleLabelStatesWithPackage:[SKUButtonLabelPropertiesPackage packageWithDefaultPropertiesWithText:text]];
+//	[button buttonStatesDefault];
+	return button;
+}
+
 +(SKUPushButton*)pushButtonWithBackgroundTexture:(SKTexture*)texture {
 	SKUPushButton* button = [SKUPushButton node];
 	button.baseSpritePropertiesDefault = [SKUButtonSpriteStateProperties propertiesWithTexture:texture andAlpha:1.0];
