@@ -60,7 +60,7 @@
 #if TARGET_OS_TV
 	
 	SKUSharedUtilities.navMode = kSKUNavModeOn;
-//	[self addNodeToNavNodesSKU:nextSlide];
+	[self addNodeToNavNodesSKU:nextSlide];
 	[self addNodeToNavNodesSKU:prevSlide];
 	[self setCurrentSelectedNodeSKU:nextSlide];
 	

@@ -894,7 +894,6 @@ static SKUtilities2* sharedUtilities = Nil;
 		drawSprite = [SKSpriteNode node];
 		drawSprite.name = @"SKU_ShapeNodeDrawSprite";
 		[null addChild:drawSprite];
-//		_boundingSize = CGSizeMake(500, 500);
 		_strokeColor = [SKColor whiteColor];
 		_fillColor = [SKColor clearColor];
 		_lineWidth = 0.0;
@@ -906,6 +905,7 @@ static SKUtilities2* sharedUtilities = Nil;
 		_miterLimit = 10.0;
 		_strokeEnd = 1.0;
 		_strokeStart = 0.0;
+		_antiAlias = YES;
 		
 		_anchorPoint = CGPointMake(0.5, 0.5);
 	}
@@ -956,11 +956,36 @@ static SKUtilities2* sharedUtilities = Nil;
 	
 	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 	
-	CGContextRef context = CGBitmapContextCreate(NULL, boundingSize.width, boundingSize.height, 8, 0, colorSpace, kCGImageAlphaPremultipliedLast); //fixing this warning with a proper CGBitmapInfo enum causes the build to crash - Perhaps I did something wrong?
-//	CGContextRef context = CGBitmapContextCreate(NULL, _boundingSize.width, _boundingSize.height, 8, 0, colorSpace, kCGBitmapAlphaInfoMask);
+#if TARGET_OS_IPHONE
+	CGFloat scaleFactor = [[UIScreen mainScreen] scale];
+	NSString* systemVersion = [[UIDevice currentDevice] systemVersion];
+	if ([systemVersion floatValue] < 8.0) {
+		scaleFactor = 1.0;
+	}
+#else
+	CGFloat scaleFactor = 1.0;
+	if ([[NSScreen mainScreen] respondsToSelector:@selector(backingScaleFactor)]) {
+		NSArray *screens = [NSScreen screens];
+		for (int i = 0; i < [screens count]; i++) {
+			float s = [[screens objectAtIndex:i] backingScaleFactor];
+			if (s > scaleFactor)
+				scaleFactor = s;
+		}
+	}
+#endif
 	
-//	CGContextTranslateCTM(context, enclosureOffset.x, enclosureOffset.y);
+	CGSize imageSize = boundingSize;
+	imageSize.width *= scaleFactor;
+	imageSize.height *= scaleFactor;
 	
+	imageSize.width = ceil(imageSize.width);
+	imageSize.height = ceil(imageSize.height);
+
+	CGContextRef context = CGBitmapContextCreate(NULL, imageSize.width, imageSize.height, 8, 0, colorSpace, kCGImageAlphaPremultipliedLast); //fixing this warning with a proper CGBitmapInfo enum causes the build to crash - Perhaps I did something wrong?
+	
+	CGContextScaleCTM(context, scaleFactor, scaleFactor);
+	CGContextSetAllowsAntialiasing(context, _antiAlias);
+
 	[shapeLayer renderInContext:context];
 	
 	CGImageRef imageRef = CGBitmapContextCreateImage(context);
@@ -1007,6 +1032,11 @@ static SKUtilities2* sharedUtilities = Nil;
 
 -(void)setStrokeStart:(CGFloat)strokeStart {
 	_strokeStart = strokeStart;
+	[self redrawTexture];
+}
+
+-(void)setAntiAlias:(BOOL)antiAlias {
+	_antiAlias = antiAlias;
 	[self redrawTexture];
 }
 

@@ -59,8 +59,6 @@
 	
 	CGPathRelease(outlinePath);
 	CGPathRelease(rectPathRef);
-
-	
 }
 
 -(void)setupButton {

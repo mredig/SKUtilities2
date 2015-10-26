@@ -574,6 +574,7 @@ Vulnerable to lag spikes if used.
  * `even-odd'. Defaults to `non-zero'. */
 @property (nonatomic, assign) NSString* fillRule;
 
+@property (nonatomic, assign) BOOL antiAlias;
 
 @property (nonatomic, assign) NSString* lineCap;
 @property (nonatomic, assign) NSArray* lineDashPattern;
