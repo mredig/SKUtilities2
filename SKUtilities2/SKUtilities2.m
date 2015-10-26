@@ -2915,6 +2915,7 @@ static SKUtilities2* sharedUtilities = Nil;
 #else
 	[self absoluteInputBeganSKU:location withEventDictionary:eventDict];
 #endif
+	[self inputBeganSKU:location withEventDictionary:eventDict];
 }
 
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -2937,6 +2938,7 @@ static SKUtilities2* sharedUtilities = Nil;
 #else
 	[self absoluteInputMovedSKU:location withEventDictionary:eventDict];
 #endif
+	[self inputMovedSKU:location withEventDictionary:eventDict];
 }
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -2959,6 +2961,7 @@ static SKUtilities2* sharedUtilities = Nil;
 #else
 	[self absoluteInputEndedSKU:location withEventDictionary:eventDict];
 #endif
+	[self inputEndedSKU:location withEventDictionary:eventDict];
 }
 
 -(void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -2981,6 +2984,7 @@ static SKUtilities2* sharedUtilities = Nil;
 #else
 	[self absoluteInputEndedSKU:location withEventDictionary:eventDict];
 #endif
+	[self inputEndedSKU:location withEventDictionary:eventDict];
 }
 
 #else
@@ -3001,6 +3005,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	
 	NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
 	[self absoluteInputBeganSKU:location withEventDictionary:eventDict];
+	[self inputBeganSKU:location withEventDictionary:eventDict];
 }
 
 -(void)mouseDragged:(NSEvent *)theEvent {
@@ -3019,6 +3024,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	
 	NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
 	[self absoluteInputMovedSKU:location withEventDictionary:eventDict];
+	[self inputMovedSKU:location withEventDictionary:eventDict];
 }
 
 -(void)mouseUp:(NSEvent *)theEvent {
@@ -3037,7 +3043,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	
 	NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
 	[self absoluteInputEndedSKU:location withEventDictionary:eventDict];
-	
+	[self inputEndedSKU:location withEventDictionary:eventDict];
 }
 
 -(void)mouseExited:(NSEvent *)theEvent {
@@ -3056,6 +3062,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	
 	NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
 	[self absoluteInputEndedSKU:location withEventDictionary:eventDict];
+	[self inputEndedSKU:location withEventDictionary:eventDict];
 }
 
 -(void)rightMouseDown:(NSEvent *)theEvent {
@@ -3072,7 +3079,9 @@ static SKUtilities2* sharedUtilities = Nil;
 						nil];
 	
 	NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-	[self absoluteInputBeganSKU:location withEventDictionary:eventDict];}
+	[self absoluteInputBeganSKU:location withEventDictionary:eventDict];
+	[self inputBeganSKU:location withEventDictionary:eventDict];
+}
 
 -(void)rightMouseDragged:(NSEvent *)theEvent {
 	if ((SKUSharedUtilities.macButtonFlags & kSKUMouseButtonFlagRight) == 0) return;
@@ -3090,6 +3099,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	
 	NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
 	[self absoluteInputMovedSKU:location withEventDictionary:eventDict];
+	[self inputMovedSKU:location withEventDictionary:eventDict];
 }
 
 -(void)rightMouseUp:(NSEvent *)theEvent {
@@ -3108,7 +3118,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	
 	NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
 	[self absoluteInputEndedSKU:location withEventDictionary:eventDict];
-	
+	[self inputEndedSKU:location withEventDictionary:eventDict];
 }
 
 -(void)otherMouseDown:(NSEvent *)theEvent {
@@ -3126,6 +3136,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	
 	NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
 	[self absoluteInputBeganSKU:location withEventDictionary:eventDict];
+	[self inputBeganSKU:location withEventDictionary:eventDict];
 }
 
 -(void)otherMouseDragged:(NSEvent *)theEvent {
@@ -3144,6 +3155,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	
 	NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
 	[self absoluteInputMovedSKU:location withEventDictionary:eventDict];
+	[self inputMovedSKU:location withEventDictionary:eventDict];
 }
 
 -(void)otherMouseUp:(NSEvent *)theEvent {
@@ -3162,7 +3174,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	
 	NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
 	[self absoluteInputEndedSKU:location withEventDictionary:eventDict];
-	
+	[self inputEndedSKU:location withEventDictionary:eventDict];
 }
 
 -(void)mouseMoved:(NSEvent *)theEvent {
@@ -3307,27 +3319,21 @@ static SKUtilities2* sharedUtilities = Nil;
 #endif
 
 -(void)relativeInputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
-	[self inputBeganSKU:location withEventDictionary:eventDict];
 }
 
 -(void)relativeInputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
-	[self inputMovedSKU:location withEventDictionary:eventDict];
 }
 
 -(void)relativeInputEndedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
-	[self inputEndedSKU:location withEventDictionary:eventDict];
 }
 
 -(void)absoluteInputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
-	[self inputBeganSKU:location withEventDictionary:eventDict];
 }
 
 -(void)absoluteInputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
-	[self inputMovedSKU:location withEventDictionary:eventDict];
 }
 
 -(void)absoluteInputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
-	[self inputEndedSKU:location withEventDictionary:eventDict];
 }
 
 -(void)mouseMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {

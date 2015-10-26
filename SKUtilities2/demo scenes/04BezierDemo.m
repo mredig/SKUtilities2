@@ -161,9 +161,7 @@
 	prevSelectedNode = node;
 }
 
--(void)inputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
-#if TARGET_OS_TV
-#else
+-(void)absoluteInputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 	NSArray* nodes = [self nodesAtPoint:location];
 	for (SKNode* node in nodes) {
 		if ([node isEqual:handle1]){
@@ -174,22 +172,21 @@
 			break;
 		}
 	}
-#endif
 }
 
--(void)inputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
-#if TARGET_OS_TV
-	if (lockedNode) {
-		
-		UITouch* touch = eventDict[@"touch"];
-		CGPoint prevTouchLocation = [touch previousLocationInNode:self];
-		lockedNode.position = pointAdd(pointAdd(pointInverse(prevTouchLocation), location), lockedNode.position);
-	}
-#else
+-(void)absoluteInputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 	if (![lockedNode.name isEqualToString:@"tempButton"]) {
 		lockedNode.position = location;
 	}
-#endif
+}
+
+-(void)relativeInputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
+	if (lockedNode) {
+		lockedNode.position = pointAdd(delta, lockedNode.position);
+	}
+}
+
+-(void)inputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 	[self updateBezierCurve];
 
 	xAndTvalueLabel.text = [NSString stringWithFormat:@"xVal: %f tVal:%f", location.x, bezierTValueAtXValue(location.x, 0.0, handle1.position.x, handle2.position.x, self.size.width)];

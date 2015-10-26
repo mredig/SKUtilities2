@@ -122,8 +122,37 @@
 	
 }
 
+-(void)absoluteInputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+	SKULog(0, @"a Began");
+}
+-(void)absoluteInputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+	SKULog(0, @"a Moved");
+}
+-(void)absoluteInputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+	SKULog(0, @"a Ended");
+}
+-(void)relativeInputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+	SKULog(0, @"r Began");
 
+}
+-(void)relativeInputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
+	SKULog(0, @"r Moved");
+
+}
+-(void)relativeInputEndedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
+	SKULog(0, @"r Ended");
+
+}
+-(void)inputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+	SKULog(0, @"f Began");
+
+}
+-(void)inputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+	SKULog(0, @"f Moved");
+
+}
 -(void)inputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+	SKULog(0, @"f Ended");
 
 }
 
