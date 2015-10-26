@@ -596,7 +596,7 @@ Vulnerable to lag spikes if used.
 
 #pragma mark SKU_MultiLineLabelNode
 
-@interface SKU_MultiLineLabelNode : SKSpriteNode
+@interface SKU_MultiLineLabelNode : SKSpriteNode <NSCopying>
 
 @property(retain, nonatomic) SKColor* fontColor;
 @property(copy, nonatomic) NSString* fontName;

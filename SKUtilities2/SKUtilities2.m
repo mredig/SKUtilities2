@@ -1056,8 +1056,23 @@ static SKUtilities2* sharedUtilities = Nil;
 @implementation SKU_MultiLineLabelNode
 
 #pragma mark init and convenience methods
-- (instancetype) init
-{
+
+-(instancetype)copyWithZone:(NSZone *)zone {
+	SKU_MultiLineLabelNode* label = [SKU_MultiLineLabelNode labelNodeWithFontNamed:_fontName];
+	label.fontColor = _fontColor;
+	label.fontSize = _fontSize;
+	label.horizontalAlignmentMode = _horizontalAlignmentMode;
+	label.verticalAlignmentMode = _verticalAlignmentMode;
+	label.paragraphWidth = _paragraphWidth;
+	label.paragraphHeight = _paragraphHeight;
+	label.lineSpacing = _lineSpacing;
+	label.strokeWidth = _strokeWidth;
+	label.strokeColor = _strokeColor;
+	label.text = _text;
+	return label;
+}
+
+- (instancetype) init {
 	self = [super init];
 	
 	if (self) {
@@ -1084,8 +1099,7 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 //init method to support drop-in replacement for SKLabelNode
-- (instancetype)initWithFontNamed:(NSString *)fontName
-{
+- (instancetype)initWithFontNamed:(NSString *)fontName {
 	self = [self init];
 	
 	if (self) {
@@ -1096,8 +1110,7 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 //Convenience method to support drop-in replacement for SKLabelNode
-+ (instancetype)labelNodeWithFontNamed:(NSString *)fontName
-{
++ (instancetype)labelNodeWithFontNamed:(NSString *)fontName {
 	SKU_MultiLineLabelNode* node = [[SKU_MultiLineLabelNode alloc] initWithFontNamed:fontName];
 	
 	return node;
@@ -1107,38 +1120,32 @@ static SKUtilities2* sharedUtilities = Nil;
 //For each of the setters, after we set the appropriate property, we call the
 //retexture method to generate and apply our new texture to the node
 
--(void) setFontColor:(SKColor *)fontColor
-{
+-(void) setFontColor:(SKColor *)fontColor {
 	_fontColor = fontColor;
 	[self retexture];
 }
 
--(void) setFontName:(NSString *)fontName
-{
+-(void) setFontName:(NSString *)fontName {
 	_fontName = fontName;
 	[self retexture];
 }
 
--(void) setFontSize:(CGFloat)fontSize
-{
+-(void) setFontSize:(CGFloat)fontSize {
 	_fontSize = fontSize;
 	[self retexture];
 }
 
--(void) setHorizontalAlignmentMode:(SKLabelHorizontalAlignmentMode)horizontalAlignmentMode
-{
+-(void) setHorizontalAlignmentMode:(SKLabelHorizontalAlignmentMode)horizontalAlignmentMode {
 	_horizontalAlignmentMode = horizontalAlignmentMode;
 	[self retexture];
 }
 
--(void) setText:(NSString *)text
-{
+-(void) setText:(NSString *)text {
 	_text = text;
 	[self retexture];
 }
 
--(void) setVerticalAlignmentMode:(SKLabelVerticalAlignmentMode)verticalAlignmentMode
-{
+-(void) setVerticalAlignmentMode:(SKLabelVerticalAlignmentMode)verticalAlignmentMode {
 	_verticalAlignmentMode = verticalAlignmentMode;
 	[self retexture];
 }
@@ -1182,8 +1189,10 @@ static SKUtilities2* sharedUtilities = Nil;
 
 
 //Generates and applies new textures based on the current property values
--(void) retexture
-{
+-(void) retexture {
+	if (!self.text) {
+		return;
+	}
 	SKUImage *newTextImage = [self imageFromText:self.text];
 	SKTexture *newTexture;
 	
@@ -1202,8 +1211,7 @@ static SKUtilities2* sharedUtilities = Nil;
 
 
 
--(SKUImage*)imageFromText:(NSString *)text
-{
+-(SKUImage*)imageFromText:(NSString *)text {
 	//First we define a paragrahp style, which has the support for doing the line breaks and text alignment that we require
 	NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
 	paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping; //To get multi-line
@@ -1313,8 +1321,7 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 //Performs translation between the SKLabelHorizontalAlignmentMode supported by SKLabelNode and the NSTextAlignment required for string drawing
--(NSTextAlignment) mapSkLabelHorizontalAlignmentToNSTextAlignment:(SKLabelHorizontalAlignmentMode)alignment
-{
+-(NSTextAlignment) mapSkLabelHorizontalAlignmentToNSTextAlignment:(SKLabelHorizontalAlignmentMode)alignment {
 	switch (alignment) {
 		case SKLabelHorizontalAlignmentModeLeft:
 			return NSTextAlignmentLeft;
