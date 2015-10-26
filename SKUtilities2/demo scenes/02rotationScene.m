@@ -206,8 +206,6 @@
 	[self rotations:location];
 }
 
-}
-
 
 -(void)rotations:(CGPoint)location {
 	orientUpNode.zRotation = orientToFromUpFace(location, orientUpNode.position);

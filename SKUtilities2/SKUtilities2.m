@@ -6,6 +6,16 @@
 //  Copyright © 2015 Michael Redig. All rights reserved.
 //
 
+//// You can use this code to test whether an object is being retained
+
+//	if (object) {
+//		CFIndex rc = CFGetRetainCount((__bridge CFTypeRef)object);
+//		NSLog(@"retain count: %li", rc);
+//	} else {
+//		NSLog(@"no object provided");
+//	}
+
+
 #import "SKUtilities2.h"
 
 #pragma mark CONSTANTS
@@ -916,6 +926,29 @@ static SKUtilities2* sharedUtilities = Nil;
 	return self;
 }
 
+-(CGLineCap)CGLineCapFromStringEnum:(NSString*)stringEnum {
+	CGLineCap lineCapEnum;
+	if ([stringEnum isEqualToString:kCALineCapSquare]) {
+		lineCapEnum = kCGLineCapSquare;
+	} else if ([stringEnum isEqualToString:kCALineCapRound]) {
+		lineCapEnum = kCGLineCapRound;
+	} else if ([stringEnum isEqualToString:kCALineCapButt]) {
+		lineCapEnum = kCGLineCapButt;
+	}
+	return lineCapEnum;
+}
+
+-(CGLineJoin)CGLineJoinFromStringEnum:(NSString*)stringEnum {
+	CGLineJoin lineJoinEnum;
+	if ([stringEnum isEqualToString:kCALineJoinBevel]) {
+		lineJoinEnum = kCGLineJoinBevel;
+	} else if ([stringEnum isEqualToString:kCALineJoinMiter]) {
+		lineJoinEnum = kCGLineJoinMiter;
+	} else if ([stringEnum isEqualToString:kCALineJoinRound]) {
+		lineJoinEnum = kCGLineJoinRound;
+	}
+	return lineJoinEnum;
+}
 
 -(void)redrawTexture {
 	
@@ -925,19 +958,18 @@ static SKUtilities2* sharedUtilities = Nil;
 	
 	if (!shapeLayer) {
 		shapeLayer = [CAShapeLayer layer];
+		outlineLayer = [CAShapeLayer layer];
+		[shapeLayer addSublayer:outlineLayer];
 	}
 	
-	shapeLayer.strokeColor = [_strokeColor CGColor];
+	shapeLayer.strokeColor = [[SKColor clearColor] CGColor];
 	shapeLayer.fillColor = [_fillColor CGColor];
-	shapeLayer.lineWidth = _lineWidth;
+	shapeLayer.lineWidth = 0;
 	shapeLayer.fillRule = _fillRule;
-	shapeLayer.lineCap = _lineCap;
-	shapeLayer.lineDashPattern = _lineDashPattern;
-	shapeLayer.lineDashPhase = _lineDashPhase;
-	shapeLayer.lineJoin = _lineJoin;
-	shapeLayer.miterLimit = _miterLimit;
-	shapeLayer.strokeEnd = _strokeEnd;
-	shapeLayer.strokeStart = _strokeStart;
+//	shapeLayer.strokeEnd = _strokeEnd;
+//	shapeLayer.strokeStart = _strokeStart;
+	
+
 
 	
 	CGRect enclosure = CGPathGetPathBoundingBox(_path);
@@ -953,7 +985,34 @@ static SKUtilities2* sharedUtilities = Nil;
 	CGAffineTransform transform = CGAffineTransformMake(1, 0, 0, 1, -enclosureOffset.x, -enclosureOffset.y);
 	CGPathRef newPath = CGPathCreateCopyByTransformingPath(_path, &transform);
 	
+	CGPathRef outlinePath = NULL;
+	if (_lineWidth > 0) {
+		CGLineCap lineCapEnum = [self CGLineCapFromStringEnum:_lineCap];
+		CGLineJoin lineJoinEnum = [self CGLineJoinFromStringEnum:_lineJoin];
+		if (_lineDashPattern.count > 0 && _lineDashPhase > 0) {
+			NSUInteger lengthCount = _lineDashPattern.count;
+			CGFloat lengths[lengthCount];
+			for (uint32_t i = 0; i < _lineDashPattern.count; i++) {
+				lengths[i] = [_lineDashPattern[i] doubleValue];
+			}
+			CGPathRef dashPath = CGPathCreateCopyByDashingPath(newPath, NULL, 0, lengths, lengthCount);
+			outlinePath = CGPathCreateCopyByStrokingPath(dashPath, NULL, _lineWidth, lineCapEnum, lineJoinEnum, _miterLimit);
+			CGPathRelease(dashPath);
+		} else {
+			outlinePath = CGPathCreateCopyByStrokingPath(newPath, NULL, _lineWidth, lineCapEnum, lineJoinEnum, _miterLimit);
+		}
+	}
+	outlineLayer.strokeColor = [[SKColor clearColor] CGColor];
+	outlineLayer.fillColor = [_strokeColor CGColor];
+	outlineLayer.lineWidth = 0;
+	outlineLayer.fillRule = _fillRule;
+	
 	shapeLayer.path = newPath;
+	if (_lineWidth > 0 && outlinePath) {
+		outlineLayer.path = outlinePath;
+	} else {
+		outlineLayer.path = nil;
+	}
 	
 	boundingSize = CGSizeMake(enclosure.size.width + _lineWidth * 2, enclosure.size.height + _lineWidth * 2);
 	
@@ -978,28 +1037,44 @@ static SKUtilities2* sharedUtilities = Nil;
 #endif
 	
 	CGSize imageSize = boundingSize;
+#if TARGET_OS_OSX_SKU
 	imageSize.width *= scaleFactor;
 	imageSize.height *= scaleFactor;
 	
 	imageSize.width = ceil(imageSize.width);
 	imageSize.height = ceil(imageSize.height);
+	
 
 	CGContextRef context = CGBitmapContextCreate(NULL, imageSize.width, imageSize.height, 8, 0, colorSpace, kCGImageAlphaPremultipliedLast); //fixing this warning with a proper CGBitmapInfo enum causes the build to crash - Perhaps I did something wrong?
+//	CGContextRef cont2 = CGb
 	
 	CGContextScaleCTM(context, scaleFactor, scaleFactor);
 	CGContextSetAllowsAntialiasing(context, _antiAlias);
-
+	
 	[shapeLayer renderInContext:context];
 	
 	CGImageRef imageRef = CGBitmapContextCreateImage(context);
 	CGContextRelease(context);
 	CGColorSpaceRelease(colorSpace);
 	CGPathRelease(newPath);
-	
+	if (_lineWidth > 0) {
+		CGPathRelease(outlinePath);
+	}
 	
 	SKTexture* tex = [SKTexture textureWithCGImage:imageRef];
 	
 	CGImageRelease(imageRef);
+#else
+	
+	UIGraphicsBeginImageContextWithOptions(imageSize, NO, scaleFactor);
+
+	[shapeLayer renderInContext:UIGraphicsGetCurrentContext()];
+	SKTexture* tex = [SKTexture textureWithImage:UIGraphicsGetImageFromCurrentImageContext()];
+
+	UIGraphicsEndImageContext();
+
+	
+#endif
 	
 	drawSprite.texture = tex;
 	drawSprite.size = boundingSize;
@@ -1017,9 +1092,13 @@ static SKUtilities2* sharedUtilities = Nil;
 //	NSLog(@"defx: %f defy: %f boundw: %f boundh: %f finalx: %f finaly: %f", defaultPosition.x, defaultPosition.y, boundingSize.width, boundingSize.height, drawSprite.position.x, drawSprite.position.y);
 }
 
+-(void)setLineWidth:(CGFloat)lineWidth {
+	_lineWidth = fmax(0.0, lineWidth);
+	[self redrawTexture];
+}
 
 -(void)setPath:(CGPathRef)path {
-	_path = path;
+	_path = CGPathCreateCopy(path);
 	[self redrawTexture];
 }
 
@@ -1041,6 +1120,11 @@ static SKUtilities2* sharedUtilities = Nil;
 -(void)setAntiAlias:(BOOL)antiAlias {
 	_antiAlias = antiAlias;
 	[self redrawTexture];
+}
+
+-(void)dealloc {
+	CGPathRelease(_path);
+//	SKULog(0, @"shape dealloc");
 }
 
 @end

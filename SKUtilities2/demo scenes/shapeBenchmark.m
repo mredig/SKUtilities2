@@ -88,6 +88,10 @@ float cpu_usage()
 	
 	NSInteger frameStep;
 	CGFloat frameTimeAccumulation;
+	
+	SKEffectNode* shapeEffect;
+	
+	bool animate;
 }
 
 @end
@@ -100,6 +104,10 @@ float cpu_usage()
 	squareBase = 20;
 	[self setupLabels];
 	[self setupButton];
+	
+	shapeEffect = [SKEffectNode node];
+	shapeEffect.shouldRasterize = YES;
+	[self addChild:shapeEffect];
 	
 }
 
@@ -180,6 +188,16 @@ float cpu_usage()
 	clearNodes.name = @"clearNodes";
 	[self addChild:clearNodes];
 	
+	SKUButtonLabelPropertiesPackage* labelPackAnimate = labelPackNext.copy;
+	[labelPackAnimate changeText:@"Animate Nodes"];
+	SKUToggleButton* animateToggle = [SKUToggleButton toggleButtonWithBackgroundPropertiesPackage:backgroundPack andTitleLabelPropertiesPackage:labelPackAnimate];
+	animateToggle.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.5, 0.1)) ;
+	animateToggle.zPosition = 1.0;
+	[animateToggle setUpAction:@selector(animateNodes:) toPerformOnTarget:self];
+	animateToggle.on = NO;
+	animateToggle.name = @"animateToggle";
+	[self addChild:animateToggle];
+	
 #if TARGET_OS_TV
 	
 	SKUSharedUtilities.navMode = kSKUNavModeOn;
@@ -187,6 +205,7 @@ float cpu_usage()
 	[self addNodeToNavNodesSKU:skButton];
 	[self addNodeToNavNodesSKU:nextSlide];
 	[self addNodeToNavNodesSKU:clearNodes];
+	[self addNodeToNavNodesSKU:animateToggle];
 	
 	[self setCurrentSelectedNodeSKU:nextSlide];
 	
@@ -194,6 +213,10 @@ float cpu_usage()
 	
 #endif
 	
+}
+
+-(void)animateNodes:(SKUToggleButton*)button {
+	animate = button.on;
 }
 
 -(void)clearNodes:(SKUButton*)button {
@@ -224,7 +247,7 @@ float cpu_usage()
 			SKU_ShapeNode* shape = [SKU_ShapeNode circleWithRadius:fmin(self.size.width, self.size.height)/(squareBase*2.0) andColor:[SKColor redColor]];
 			shape.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(x/(CGFloat)squareBase, y/(CGFloat)squareBase));
 			shape.position = pointAdd(shape.position, CGPointMake( 0.5 * (1.0/(CGFloat)squareBase) * self.size.width,  0.5 * (1.0/(CGFloat)squareBase) * self.size.height));
-			[self addChild:shape];
+			[shapeEffect addChild:shape];
 			[shapesSet addObject:shape];
 		}
 	}
@@ -243,7 +266,8 @@ float cpu_usage()
 			shape.strokeColor = [SKColor clearColor];
 			shape.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(x/(CGFloat)squareBase, y/(CGFloat)squareBase));
 			shape.position = pointAdd(shape.position, CGPointMake( 0.5 * (1.0/(CGFloat)squareBase) * self.size.width,  0.5 * (1.0/(CGFloat)squareBase) * self.size.height));
-			[self addChild:shape];
+			shape.antialiased = YES;
+			[shapeEffect addChild:shape];
 			[shapesSet addObject:shape];
 		}
 	}
@@ -271,6 +295,14 @@ float cpu_usage()
 		float cpu = cpu_usage();
 		cpuUsageLabel.text = [NSString stringWithFormat:@"CPU: %.3f", cpu];
 		frameStep = 0;
+	}
+	
+	if (animate) {
+		for (SKNode* node in shapesSet) {
+			node.position = pointAdd(node.position, CGPointMake(2, 0));
+			if (node.position.x >= (self.size.width + squareBase)) {
+			}
+		}
 	}
 }
 
