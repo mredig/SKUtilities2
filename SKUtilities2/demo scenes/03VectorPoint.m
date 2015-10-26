@@ -23,7 +23,8 @@
 	CGFloat latValue;
 	CGPoint previousLocation;
 	
-	
+	NSInteger verbosityLevel;
+
 }
 
 @end
@@ -33,7 +34,10 @@
 
 -(void) didMoveToView:(SKView *)view {
 	
-	NSLog(@"\n\n\n\n03VectorPoint: demos vector and point functions");
+	verbosityLevel = 0;
+
+	
+	SKULog( verbosityLevel, @"\n\n\n\n03VectorPoint: demos vector and point functions");
 	
 	
 #pragma mark CGVector HELPERS
@@ -42,42 +46,42 @@
 	
 	CGVector vectorA = vectorFromCGPoint(pointA);
 	
-	NSLog(@"vector from point: %f %f", vectorA.dx, vectorA.dy);
+	SKULog( verbosityLevel, @"vector from point: %f %f", vectorA.dx, vectorA.dy);
 	
 	CGSize sizeA = CGSizeMake(1024, 768);
 	vectorA = vectorFromCGSize(sizeA);
-	NSLog(@"vector from size: %f %f", vectorA.dx, vectorA.dy);
+	SKULog( verbosityLevel, @"vector from size: %f %f", vectorA.dx, vectorA.dy);
 
 	
 	CGVector inverse = vectorInverse(vectorA);
 	
-	NSLog(@"inversed: %f %f", inverse.dx, inverse.dy);
+	SKULog( verbosityLevel, @"inversed: %f %f", inverse.dx, inverse.dy);
 	
 	CGVector normalized = vectorNormalize(inverse);
 	CGPoint distanceTestPoint = CGPointMake(normalized.dx, normalized.dy);
 	CGFloat distanceTest = distanceBetween(CGPointZero, distanceTestPoint);
-	NSLog(@"normalized: %f %f - distance: %f", normalized.dx, normalized.dy, distanceTest);
+	SKULog( verbosityLevel, @"normalized: %f %f - distance: %f", normalized.dx, normalized.dy, distanceTest);
 	
 	CGVector sum = vectorAdd(vectorA, inverse);
-	NSLog(@"summed: %f %f", sum.dx, sum.dy);
+	SKULog( verbosityLevel, @"summed: %f %f", sum.dx, sum.dy);
 	
 	CGVector factor1, factor2;
 	factor1 = CGVectorMake(5.0, 10.0);
 	factor2 = CGVectorMake(2.0, 10.0);
 	
 	CGVector product = vectorMultiplyByVector(factor1, factor2);
-	NSLog(@"multiplied by vector: %f %f", product.dx, product.dy);
+	SKULog( verbosityLevel, @"multiplied by vector: %f %f", product.dx, product.dy);
 
 
 	product = vectorMultiplyByFactor(product, 2.0);
-	NSLog(@"multiplied by factor: %f %f", product.dx, product.dy);
+	SKULog( verbosityLevel, @"multiplied by factor: %f %f", product.dx, product.dy);
 	
 	CGPoint destination, origin;
 	destination = CGPointMake(100, -150);
 	origin = CGPointZero;
 	CGVector directionVect = vectorFacingPoint(destination, origin, NO);
 	CGVector directionVectNorm = vectorFacingPoint(destination, origin, YES);
-	NSLog(@"direction: %f %f normalized: %f %f", directionVect.dx, directionVect.dy, directionVectNorm.dx, directionVectNorm.dy);
+	SKULog( verbosityLevel, @"direction: %f %f normalized: %f %f", directionVect.dx, directionVect.dy, directionVectNorm.dx, directionVectNorm.dy);
 	
 	CGFloat radianValue = -45 * kSKUDegToRadConvFactor;
 	CGFloat degreeValue = 0; //note that a value of 0 gives a vector of 0,1 - facing up
@@ -87,36 +91,36 @@
 	radianVector = vectorFromRadian(radianValue);
 	degreeVector = vectorFromDegree(degreeValue);
 	
-	NSLog(@"radian vector: %f %f degree vector: %f %f", radianVector.dx, radianVector.dy, degreeVector.dx, degreeVector.dy);
+	SKULog( verbosityLevel, @"radian vector: %f %f degree vector: %f %f", radianVector.dx, radianVector.dy, degreeVector.dx, degreeVector.dy);
 
 	
 #pragma mark CGPoint HELPERS
 
 	CGPoint convPoint = pointFromCGVector(radianVector);
-	NSLog(@"point from vector: %f %f", convPoint.x, convPoint.y);
+	SKULog( verbosityLevel, @"point from vector: %f %f", convPoint.x, convPoint.y);
 	
 	CGSize tempSize = CGSizeMake(10, 50);
 	convPoint = pointFromCGSize(tempSize);
-	NSLog(@"point from size: %f %f", convPoint.x, convPoint.y);
+	SKULog( verbosityLevel, @"point from size: %f %f", convPoint.x, convPoint.y);
 	
 	convPoint = pointInverse(convPoint);
-	NSLog(@"inverted point: %f %f", convPoint.x, convPoint.y);
+	SKULog( verbosityLevel, @"inverted point: %f %f", convPoint.x, convPoint.y);
 	
 	pointA = CGPointMake(5.0, 2.5);
 	CGPoint pointB = CGPointMake(10.0, 5.0);
 	CGPoint pointC = pointAdd(pointA, pointB);
-	NSLog(@"point add: %f %f", pointC.x, pointC.y);
+	SKULog( verbosityLevel, @"point add: %f %f", pointC.x, pointC.y);
 
 	pointC = pointAddValue(pointC, 5.0);
-	NSLog(@"point add value: %f %f", pointC.x, pointC.y);
+	SKULog( verbosityLevel, @"point add value: %f %f", pointC.x, pointC.y);
 
 	pointC = pointInterpolationLinearBetweenTwoPoints(CGPointZero, pointC, 0.333);
-	NSLog(@"0.33 linear point interpoltion: %f %f", pointC.x, pointC.y);
+	SKULog( verbosityLevel, @"0.33 linear point interpoltion: %f %f", pointC.x, pointC.y);
 	
-	NSLog(@"string from point: %@", getStringFromPoint(pointC));
+	SKULog( verbosityLevel, @"string from point: %@", getStringFromPoint(pointC));
 	
 	CGPoint stringPoint = getCGPointFromString(getStringFromPoint(pointC));
-	NSLog(@"point from string: %f %f", stringPoint.x, stringPoint.y);
+	SKULog( verbosityLevel, @"point from string: %f %f", stringPoint.x, stringPoint.y);
 	
 	
 	[self setupSpriteDemos];
@@ -198,6 +202,7 @@
 			SKSpriteNode* part = [SKSpriteNode spriteNodeWithColor:[SKColor whiteColor] size:CGSizeMake(10, 10)];
 			part.position = CGPointMake(xStart + x * space, yStart - y * space);
 			part.position = pointAdd(part.position, victim.position);
+			part.name = @"potentialMurderer";
 			[self addChild:part];
 			[setAroundVictim addObject:part];
 		}

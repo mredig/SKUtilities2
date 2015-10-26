@@ -19,6 +19,8 @@
 	SKSpriteNode* orientLeftNode;
 	
 	SKSpriteNode* cursor;
+	
+	NSInteger verbosityLevel;
 }
 
 @end
@@ -27,11 +29,16 @@
 
 -(void) didMoveToView:(SKView *)view {
 	
-	NSLog(@"\n\n\n\n02RotationScene: demos orientation functions");
+	self.name = @"02RotationScene";
+	
+	verbosityLevel = 0;
+	
+	SKULog( verbosityLevel, @"\n\n\n\n02RotationScene: demos orientation functions");
 
 	
 	orientUpNode = [SKSpriteNode spriteNodeWithImageNamed:@"Spaceship"];
 	orientUpNode.position = CGPointMake(self.size.width * 0.25, self.size.height * 0.25);
+	orientUpNode.name = @"orientUpNode";
 	[self addChild:orientUpNode];
 	
 	SKLabelNode* upLabel = [SKLabelNode labelNodeWithText:@"upFace"];
@@ -40,16 +47,19 @@
 	upLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
 	upLabel.zPosition = 1;
 	upLabel.fontColor = [SKColor blackColor];
+	upLabel.name = @"upLabel";
 	[orientUpNode addChild:upLabel];
 	
 	SKSpriteNode* upDirectionSprite = [SKSpriteNode spriteNodeWithColor:[SKColor redColor] size:CGSizeMake(10.0, 200.0)];
 	upDirectionSprite.anchorPoint = CGPointMake(0.5, 0.0);
 	upDirectionSprite.zPosition = 0.5;
+	upDirectionSprite.name = @"upDirectionSprite";
 	[orientUpNode addChild:upDirectionSprite];
 	
 	
 	orientRightNode = [SKSpriteNode spriteNodeWithImageNamed:@"Spaceship"];
 	orientRightNode.position = CGPointMake(self.size.width * 0.75, self.size.height * 0.25);
+	orientRightNode.name = @"orientRightNode";
 	[self addChild:orientRightNode];
 	
 	SKLabelNode* rightLabel = [SKLabelNode labelNodeWithText:@"rightFace"];
@@ -58,16 +68,19 @@
 	rightLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
 	rightLabel.zPosition = 1;
 	rightLabel.fontColor = [SKColor blackColor];
+	rightLabel.name = @"rightLabel";
 	[orientRightNode addChild:rightLabel];
 	
 	SKSpriteNode* rightDirectionSprite = [SKSpriteNode spriteNodeWithColor:[SKColor redColor] size:CGSizeMake(200.0, 10.0)];
 	rightDirectionSprite.anchorPoint = CGPointMake(0.0, 0.5);
 	rightDirectionSprite.zPosition = 0.5;
+	rightDirectionSprite.name = @"rightDirectionSprite";
 	[orientRightNode addChild:rightDirectionSprite];
 	
 	
 	orientLeftNode = [SKSpriteNode spriteNodeWithImageNamed:@"Spaceship"];
 	orientLeftNode.position = CGPointMake(self.size.width * 0.75, self.size.height * 0.75);
+	orientLeftNode.name = @"orientLeftNode";
 	[self addChild:orientLeftNode];
 	
 	SKLabelNode* leftLabel = [SKLabelNode labelNodeWithText:@"leftFace"];
@@ -76,17 +89,20 @@
 	leftLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
 	leftLabel.zPosition = 1;
 	leftLabel.fontColor = [SKColor blackColor];
+	leftLabel.name = @"leftLabel";
 	[orientLeftNode addChild:leftLabel];
 	
 	
 	SKSpriteNode* leftDirectionSprite = [SKSpriteNode spriteNodeWithColor:[SKColor redColor] size:CGSizeMake(200.0, 10.0)];
 	leftDirectionSprite.anchorPoint = CGPointMake(1.0, 0.5);
 	leftDirectionSprite.zPosition = 0.5;
+	leftDirectionSprite.name = @"leftDirectionSprite";
 	[orientLeftNode addChild:leftDirectionSprite];
 	
 	
 	orientDownNode = [SKSpriteNode spriteNodeWithImageNamed:@"Spaceship"];
 	orientDownNode.position = CGPointMake(self.size.width * 0.25, self.size.height * 0.75);
+	orientDownNode.name = @"orientDownNode";
 	[self addChild:orientDownNode];
 	
 	SKLabelNode* downLabel = [SKLabelNode labelNodeWithText:@"downFace"];
@@ -95,11 +111,13 @@
 	downLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
 	downLabel.zPosition = 1;
 	downLabel.fontColor = [SKColor blackColor];
+	downLabel.name = @"downLabel";
 	[orientDownNode addChild:downLabel];
 	
 	SKSpriteNode* downDirectionSprite = [SKSpriteNode spriteNodeWithColor:[SKColor redColor] size:CGSizeMake(10.0, 200.0)];
 	downDirectionSprite.anchorPoint = CGPointMake(0.5, 1.0);
 	downDirectionSprite.zPosition = 0.5;
+	downDirectionSprite.name = @"downDirectionSprite";
 	[orientDownNode addChild:downDirectionSprite];
 	
 	[self setupButton];
@@ -186,6 +204,7 @@
 
 -(void)absoluteInputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 	[self rotations:location];
+}
 
 }
 

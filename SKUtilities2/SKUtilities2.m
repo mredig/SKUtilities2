@@ -499,11 +499,13 @@ double bezierTValueAtXValue (double x, double p0x, double p1x, double p2x, doubl
 #pragma mark LOGGING
 
 void SKULog(const NSInteger verbosityLevel, NSString* format, ...) {
+#ifdef DEBUG
 	if (SKUSharedUtilities.verbosityLevel < verbosityLevel) return;
 	va_list args;
 	va_start(args, format);
 	NSLogv(format, args);
 	va_end(args);
+#endif
 }
 
 
@@ -1738,6 +1740,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	_whichButton = 0;
 	_buttonMethod = 0;
 	_buttonState = kSKUButtonStateDefault;
+	self.name = @"SKUButton";
 
 	SKTexture* tex = [SKTexture textureVectorNoiseWithSmoothness:1.0 size:CGSizeMake(2, 2)];
 	defaultProperties = [SKUButtonSpriteStateProperties propertiesWithTexture:tex andAlpha:1.0];
@@ -1760,6 +1763,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	if (!_baseSprite) {
 		_baseSprite = [SKSpriteNode spriteNodeWithTexture:_baseSpritePropertiesDefault.texture];
 		_baseSprite.zPosition = 0.0;
+		_baseSprite.name = @"SKUButtonBaseSprite";
 		[self addChild:_baseSprite];
 	}
 }
@@ -1773,7 +1777,6 @@ static SKUtilities2* sharedUtilities = Nil;
 -(void)setDownAction:(SEL)selector toPerformOnTarget:(NSObject*)target {
 	NSMethodSignature* sig = [target methodSignatureForSelector:selector];
 	downSelector = [NSInvocation invocationWithMethodSignature:sig];
-	[downSelector retainArguments];
 	[downSelector setSelector:selector];
 	SKUButton* button = self;
 	[downSelector setArgument:&button atIndex:2];
@@ -1784,7 +1787,6 @@ static SKUtilities2* sharedUtilities = Nil;
 -(void)setUpAction:(SEL)selector toPerformOnTarget:(NSObject*)target {
 	NSMethodSignature* sig = [target methodSignatureForSelector:selector];
 	upSelector = [NSInvocation invocationWithMethodSignature:sig];
-	[upSelector retainArguments];
 	[upSelector setSelector:selector];
 	SKUButton* button = self;
 	[upSelector setArgument:&button atIndex:2];
@@ -2218,6 +2220,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	if (!_titleSprite) {
 		_titleSprite = [SKSpriteNode spriteNodeWithTexture:_titleSpritePropertiesDefault.texture];
 		_titleSprite.zPosition = 0.001;
+		_titleSprite.name = @"SKUPushButtonTitleSprite";
 		[self addChild:_titleSprite];
 	}
 	stateTSpriteDefaultInitialized = YES;
@@ -2265,6 +2268,7 @@ static SKUtilities2* sharedUtilities = Nil;
 		_titleLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeCenter;
 		_titleLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
 		_titleLabel.zPosition = 0.002;
+		_titleLabel.name = @"SKUPushButtonTitleLabel";
 		[self addChild:_titleLabel];
 	}
 	stateTLabelDefaultInitialized = YES;
@@ -2529,6 +2533,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	if (!_toggleSprite) {
 		_toggleSprite = [SKSpriteNode spriteNodeWithTexture:_toggleSpritePropertiesOnDefault.texture];
 		_toggleSprite.zPosition = self.titleLabel.zPosition + 0.001;
+		_toggleSprite.name = @"SKUToggleButtonToggleSprite";
 		[self addChild:_toggleSprite];
 	}
 	stateToggleOnDefaultInitialized = YES;
@@ -2573,6 +2578,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	if (!_toggleSprite) {
 		_toggleSprite = [SKSpriteNode spriteNodeWithTexture:_toggleSpritePropertiesOffDefault.texture];
 		_toggleSprite.zPosition = self.titleLabel.zPosition + 0.001;
+		_toggleSprite.name = @"SKUToggleButtonToggleSprite";
 		[self addChild:_toggleSprite];
 	}
 	stateToggleOffDefaultInitialized = YES;
@@ -3348,6 +3354,14 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 -(void)inputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
+}
+
+-(void)dealloc {
+	if ([self isKindOfClass:[SKScene class]]) {
+		SKULog(100, @"scene: %@ dealloced", self.name);
+	} else {
+		SKULog(150, @"node: %@ dealloced", self.name);
+	}
 }
 
 @end

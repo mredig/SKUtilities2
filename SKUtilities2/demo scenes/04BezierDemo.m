@@ -174,10 +174,14 @@
 	}
 }
 
--(void)absoluteInputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
-	if (![lockedNode.name isEqualToString:@"tempButton"]) {
+-(void)absoluteInputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+	if (lockedNode) {
 		lockedNode.position = location;
 	}
+}
+
+-(void)absoluteInputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+	lockedNode = nil;
 }
 
 -(void)relativeInputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {

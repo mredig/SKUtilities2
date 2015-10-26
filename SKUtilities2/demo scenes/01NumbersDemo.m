@@ -21,51 +21,56 @@
 
 -(void)didMoveToView:(SKView *)view {
 	[self setupButtonPackages];
+	
+	NSInteger verbosityLevel = 0;
+	self.name = @"numbersScene";
 
 #if TARGET_OS_OSX_SKU
 	SKUSharedUtilities.macButtonFlags = kSKUMouseButtonFlagLeft | kSKUMouseButtonFlagRight | kSKUMouseButtonFlagOther;
 	self.view.window.acceptsMouseMovedEvents = YES;
+	SKUSharedUtilities.verbosityLevel = 0;
 #endif
-	NSLog(@"01NumbersDemo: demos number interpolation, random numbers, and distance functions");
+	SKULog( verbosityLevel, @"01NumbersDemo: demos number interpolation, random numbers, and distance functions");
 	
 	
 #pragma mark NUMBER INTERPOLATION
 
 	CGFloat floatA = 50.0;
 	CGFloat floatB = 104.0;
-	NSLog(@"interpolate: %f", linearInterpolationBetweenFloatValues(floatA, floatB, 0.25, NO));
-	NSLog(@"reverseInterp: %f", reverseLinearInterpolationBetweenFloatValues(floatA, floatB, 63.5, NO));
+	SKULog( verbosityLevel, @"interpolate: %f", linearInterpolationBetweenFloatValues(floatA, floatB, 0.25, NO));
+	SKULog( verbosityLevel, @"reverseInterp: %f", reverseLinearInterpolationBetweenFloatValues(floatA, floatB, 63.5, NO));
 
 	CGFloat start = 0.0, end = 1.0;
 	while (start < end) {
 		start = rampToValue(end, start, 0.1);
-		NSLog(@"ramping to %f - currently %f", end, start);
+		SKULog( verbosityLevel, @"ramping to %f - currently %f", end, start);
 	}
 	
 #pragma mark RANDOM NUMBERS
 	u_int32_t lowUInt = 100;
 	u_int32_t highUInt = 1000;
-	NSLog(@"random number between %u and %u: %u", lowUInt, highUInt, randomUnsignedIntegerBetweenTwoValues(lowUInt, highUInt));
+	SKULog( verbosityLevel, @"random number between %u and %u: %u", lowUInt, highUInt, randomUnsignedIntegerBetweenTwoValues(lowUInt, highUInt));
 	
-	NSLog(@"random float value: %f", randomFloatBetweenZeroAndHighend(102.8));
+	SKULog( verbosityLevel, @"random float value: %f", randomFloatBetweenZeroAndHighend(102.8));
 
 #pragma mark DISTANCE FUNCTIONS
 	
 	CGPoint pointA = CGPointMake(5.0, 2.5);
 	CGPoint pointB = CGPointMake(10.0, 5.0);
 
-	NSLog(@"distance between: %f", distanceBetween(pointA, pointB));
+	SKULog( verbosityLevel, @"distance between: %f", distanceBetween(pointA, pointB));
 	
 	CGFloat comparison = 5.0;
-	NSLog(@"distance is closer than %f: %i", comparison, distanceBetweenIsWithinXDistance(pointA, pointB, comparison));
+	SKULog( verbosityLevel, @"distance is closer than %f: %i", comparison, distanceBetweenIsWithinXDistance(pointA, pointB, comparison));
 	comparison = 6.0;
-	NSLog(@"distance is closer than %f: %i", comparison, distanceBetweenIsWithinXDistancePreSquared(pointA, pointB, comparison * comparison));
+	SKULog( verbosityLevel, @"distance is closer than %f: %i", comparison, distanceBetweenIsWithinXDistancePreSquared(pointA, pointB, comparison * comparison));
 
 	
 	
 	SKLabelNode* logLabel = [SKLabelNode labelNodeWithText:@"Look in the console in Xcode to see some demo functions"];
 	logLabel.fontColor = [SKColor whiteColor];
 	logLabel.position = midPointOfRect(self.frame);
+	logLabel.name = @"logLabel";
 	[self addChild:logLabel];
 	
 	[self setupButton];
@@ -79,6 +84,7 @@
 	nextSlide.position = pointMultiplyByPoint(midPointOfRect(self.frame), CGPointMake(1.0, 0.5));
 	nextSlide.zPosition = 1.0;
 	[nextSlide setUpAction:@selector(transferScene:) toPerformOnTarget:self];
+	nextSlide.name = @"nextSlide";
 	[self addChild:nextSlide];
 	
 	

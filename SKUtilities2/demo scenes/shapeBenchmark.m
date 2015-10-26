@@ -200,6 +200,7 @@ float cpu_usage()
 	for (SKNode* node in shapesSet) {
 		[node removeFromParent];
 	}
+	[shapesSet removeAllObjects];
 }
 
 -(void)timerStart {
