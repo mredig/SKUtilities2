@@ -69,10 +69,6 @@
 #endif
 }
 
-
--(void)inputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
-}
-
 -(void)inputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 	
 	SKColor* redColor = [SKColor redColor];

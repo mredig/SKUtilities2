@@ -789,6 +789,7 @@ static SKUtilities2* sharedUtilities = Nil;
 @interface SKU_ShapeNode() {
 	
 	CAShapeLayer* shapeLayer;
+	CAShapeLayer* outlineLayer;
 	
 	CGSize boundingSize;
 	
