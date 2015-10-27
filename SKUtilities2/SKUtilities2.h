@@ -577,7 +577,9 @@ Vulnerable to lag spikes if used.
 @property (nonatomic, assign) BOOL antiAlias;
 
 @property (nonatomic, assign) NSString* lineCap;
+/** Causing exceptions (at least on OSX) - keeping it in there cuz I BELIEVE the error is on Apple's side. Careful using this though. */
 @property (nonatomic, assign) NSArray* lineDashPattern;
+/** Causing exceptions (at least on OSX) - keeping it in there cuz I BELIEVE the error is on Apple's side. Careful using this though. */
 @property (nonatomic, assign) CGFloat lineDashPhase;
 @property (nonatomic, assign) NSString* lineJoin;
 @property (nonatomic, assign) CGFloat miterLimit;

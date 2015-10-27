@@ -42,22 +42,20 @@
 	[self addChild:rectangle];
 	
 	
-	SKU_ShapeNode* roundedRect = [SKU_ShapeNode rectangleRoundedWithSize:CGSizeMake(sizes * 2.0, sizes) andCornerRadius:sizes * 0.2 andColor:[SKColor orangeColor]];
-	roundedRect.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.75, 0.25));
-	[self addChild:roundedRect];
 	
 	CGRect rect = CGRectMake(-sizes, -sizes / 2.0, sizes * 2.0, sizes);
 	CGPathRef rectPathRef = CGPathCreateWithRoundedRect(rect, sizes * 0.2, sizes * 0.2, NULL);
-	CGPathRef outlinePath = CGPathCreateCopyByStrokingPath(rectPathRef, NULL, 10.0, kCGLineCapButt, kCGLineJoinMiter, 10.0);;
 	
 	SKU_ShapeNode* amalgShape = [SKU_ShapeNode node];
 	amalgShape.fillColor = [SKColor yellowColor];
-	amalgShape.path = outlinePath;
-	amalgShape.position = roundedRect.position;
+	amalgShape.strokeColor = [SKColor greenColor];
+	amalgShape.lineWidth = 20.0;
+	amalgShape.path = rectPathRef;
+	amalgShape.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.75, 0.25));
 	amalgShape.zPosition = 2.0;
+	amalgShape.name = @"amalg";
 	[self addChild:amalgShape];
 	
-	CGPathRelease(outlinePath);
 	CGPathRelease(rectPathRef);
 }
 
