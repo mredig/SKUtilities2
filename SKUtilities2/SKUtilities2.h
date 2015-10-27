@@ -472,7 +472,7 @@ Vulnerable to lag spikes if used.
  */
 @property (nonatomic) CGFloat deltaMaxTime;
 /**
- Used to determine how many logs print to the console.
+ Used to determine if SKULogs print to the console. A value of 100 or more will automatically print notifications of SKScene deallocation. A value of 150 will print notifications of SKNode deallocation.
  */
 @property (nonatomic) NSInteger verbosityLevel;
 /**
