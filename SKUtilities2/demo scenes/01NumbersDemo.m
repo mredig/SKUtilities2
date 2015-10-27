@@ -108,7 +108,7 @@
 												  andAlpha:1.0f
 												  andColor:nil
 												  andColorBlendFactor:0.0f
-												  andPositionOffset:CGPointMake(0, -5.0)
+												  andPositionOffset:CGPointMake(0, 0)
 												  andXScale:1.0f
 												  andYScale:1.0f
 												  andCenterRect:CGRectMake(40.0/buttonBG.size.width, 50.0/buttonBG.size.height, 40.0/buttonBG.size.width, 40.0/buttonBG.size.height)];

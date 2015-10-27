@@ -1619,7 +1619,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	props.alpha = 1.0f;
 	props.color = [SKColor clearColor];
 	props.colorBlendFactor = 0.0f;
-	props.position = CGPointMake(0, -4.0);
+	props.position = CGPointMake(0, 0.0);
 	props.xScale = 1.0f;
 	props.yScale = 1.0f;
 	props.texture = buttonBG;
@@ -1634,7 +1634,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	props.alpha = 1.0f;
 	props.color = [SKColor clearColor];
 	props.colorBlendFactor = 0.0f;
-	props.position = CGPointMake(0, -2.0);
+	props.position = CGPointMake(0, 0);
 	props.xScale = 1.0f;
 	props.yScale = 1.0f;
 	props.texture = buttonBG;
@@ -1648,7 +1648,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	props.alpha = 1.0f;
 	props.color = [SKColor clearColor];
 	props.colorBlendFactor = 0.0f;
-	props.position = CGPointMake(0, -2.0);
+	props.position = CGPointMake(0, 0);
 	props.xScale = 1.0f;
 	props.yScale = 1.0f;
 	props.texture = buttonBG;
@@ -2559,6 +2559,10 @@ static SKUtilities2* sharedUtilities = Nil;
 	stateToggleOffDisabledInitialized = NO;
 	[self setButtonType:kSKUButtonTypeToggle];
 	[super internalDidInitialize];
+}
+
+-(void)didInitialize {
+	self.on = NO;
 }
 
 -(void)updateCurrentSpriteStateProperties {
