@@ -178,13 +178,13 @@
 	}
 }
 
--(void)absoluteInputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+-(void)absoluteInputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
 	if (lockedNode) {
 		lockedNode.position = location;
 	}
 }
 
--(void)absoluteInputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+-(void)absoluteInputEndedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
 	lockedNode = nil;
 }
 
@@ -194,7 +194,7 @@
 	}
 }
 
--(void)inputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+-(void)inputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
 	[self updateBezierCurve];
 
 	xAndTvalueLabel.text = [NSString stringWithFormat:@"xVal: %f tVal:%f", location.x, bezierTValueAtXValue(location.x, 0.0, handle1.position.x, handle2.position.x, self.size.width)];

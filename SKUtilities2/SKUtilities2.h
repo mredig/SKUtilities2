@@ -989,24 +989,24 @@ typedef enum {
 
 /** Called when relative type input begins (Currently only AppleTV's Siri Remote touches) Remember to call [super relativeInputBeganSKU] when overrding. Harmless to include on other platforms. */
 -(void)relativeInputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
-/** Called when relative type input moves (Currently only AppleTV's Siri Remote touches). Remember to call [super relativeInputMovedSKU] when overrding. Harmless to include on other platforms. */
+/** Called when relative type input moves (Currently only AppleTV's Siri Remote touches). Harmless to include on other platforms. */
 -(void)relativeInputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary*)eventDict;
-/** Called when relative type input ends (Currently only AppleTV's Siri Remote touches). Remember to call [super relativeInputEndedSKU] when overrding. Harmless to include on other platforms. */
+/** Called when relative type input ends (Currently only AppleTV's Siri Remote touches). Harmless to include on other platforms. */
 -(void)relativeInputEndedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary*)eventDict;
-/** Called when absolute type input begins (Currently iOS touches and Mac mouse clicks). Remember to call [super absoluteInputBeganSKU] when overrding. Harmless to include on other platforms. */
+/** Called when absolute type input begins (Currently iOS touches and Mac mouse clicks). Harmless to include on other platforms. */
 -(void)absoluteInputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
-/** Called when absolute type input moves (Currently iOS touches and Mac mouse clicks). Remember to call [super absoluteInputMovedSKU] when overrding. Harmless to include on other platforms. */
--(void)absoluteInputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
-/** Called when absolute type input ends (Currently iOS touches and Mac mouse clicks). Remember to call [super absoluteInputEndedSKU] when overrding. Harmless to include on other platforms. */
--(void)absoluteInputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
+/** Called when absolute type input moves (Currently iOS touches and Mac mouse clicks). Harmless to include on other platforms. */
+-(void)absoluteInputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary*)eventDict;
+/** Called when absolute type input ends (Currently iOS touches and Mac mouse clicks). Harmless to include on other platforms. */
+-(void)absoluteInputEndedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary*)eventDict;
 /** Called only on OSX when the mouse moves around the screen unclicked. Harmless to include on other platforms. */
--(void)mouseMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
+-(void)mouseMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary*)eventDict;
 /** Called when any input location based input begins (Currently iOS touches, Mac mouse clicks, and AppleTV Siri Remote touches). */
 -(void)inputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
 /** Called when any input location based input moves (Currently iOS touches, Mac mouse clicks, and AppleTV Siri Remote touches). */
--(void)inputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
+-(void)inputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary*)eventDict;
 /** Called when any input location based input ends (Currently iOS touches, Mac mouse clicks, and AppleTV Siri Remote touches). */
--(void)inputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
+-(void)inputEndedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary*)eventDict;
 
 @end
 

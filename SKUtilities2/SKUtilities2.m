@@ -921,7 +921,7 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 -(CGLineCap)CGLineCapFromStringEnum:(NSString*)stringEnum {
-	CGLineCap lineCapEnum;
+	CGLineCap lineCapEnum = kCGLineCapSquare;
 	if ([stringEnum isEqualToString:kCALineCapSquare]) {
 		lineCapEnum = kCGLineCapSquare;
 	} else if ([stringEnum isEqualToString:kCALineCapRound]) {
@@ -933,7 +933,7 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 -(CGLineJoin)CGLineJoinFromStringEnum:(NSString*)stringEnum {
-	CGLineJoin lineJoinEnum;
+	CGLineJoin lineJoinEnum = kCGLineJoinMiter;
 	if ([stringEnum isEqualToString:kCALineJoinBevel]) {
 		lineJoinEnum = kCGLineJoinBevel;
 	} else if ([stringEnum isEqualToString:kCALineJoinMiter]) {
@@ -1045,7 +1045,7 @@ static SKUtilities2* sharedUtilities = Nil;
 #endif
 	
 	CGPathRelease(newPath);
-	if (_lineWidth > 0) {
+	if (outlinePath) {
 		CGPathRelease(outlinePath);
 	}
 	
@@ -2052,7 +2052,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	}
 }
 
--(void)inputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+-(void)inputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
 	kSKUButtonStates preState = _buttonState;
 	BOOL inBounds = [self checkIfLocationIsWithinButtonBounds:location];
 	if (inBounds) {
@@ -2066,7 +2066,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	}
 }
 
--(void)inputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+-(void)inputEndedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
 	[self buttonReleased:location];
 }
 
@@ -2931,6 +2931,8 @@ static SKUtilities2* sharedUtilities = Nil;
 -(void)initDictSKU {
 	if (!self.scene.userData) {
 		self.scene.userData = [NSMutableDictionary dictionary];
+	}
+	if (!self.scene.userData[@"sku_hoverArray"]) {
 		NSMutableArray* hoverArray = [NSMutableArray array];
 		[self.scene.userData setObject:hoverArray forKey:@"sku_hoverArray"];
 	}
@@ -3014,12 +3016,14 @@ static SKUtilities2* sharedUtilities = Nil;
 						touch,
 						nil];
 	NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+	CGPoint prevLocation = [touch previousLocationInNode:self];
+	CGPoint delta = pointAdd(pointInverse(prevLocation), location);
 #if TARGET_OS_TV
-	[self siriRemoteinputMovedSKU:location withEventDictionary:eventDict];
+	[self siriRemoteinputMovedSKU:location withDelta:delta withEventDictionary:eventDict];
 #else
-	[self absoluteInputMovedSKU:location withEventDictionary:eventDict];
+	[self absoluteInputMovedSKU:location withDelta:delta withEventDictionary:eventDict];
 #endif
-	[self inputMovedSKU:location withEventDictionary:eventDict];
+	[self inputMovedSKU:location withDelta:delta withEventDictionary:eventDict];
 }
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -3037,12 +3041,14 @@ static SKUtilities2* sharedUtilities = Nil;
 						touch,
 						nil];
 	NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+	CGPoint prevLocation = [touch previousLocationInNode:self];
+	CGPoint delta = pointAdd(pointInverse(prevLocation), location);
 #if TARGET_OS_TV
-	[self siriRemoteinputEndedSKU:location withEventDictionary:eventDict];
+	[self siriRemoteinputEndedSKU:location withDelta:delta withEventDictionary:eventDict];
 #else
-	[self absoluteInputEndedSKU:location withEventDictionary:eventDict];
+	[self absoluteInputEndedSKU:location withDelta:delta withEventDictionary:eventDict];
 #endif
-	[self inputEndedSKU:location withEventDictionary:eventDict];
+	[self inputEndedSKU:location withDelta:delta withEventDictionary:eventDict];
 }
 
 -(void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -3060,12 +3066,14 @@ static SKUtilities2* sharedUtilities = Nil;
 						touch,
 						nil];
 	NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+	CGPoint prevLocation = [touch previousLocationInNode:self];
+	CGPoint delta = pointAdd(pointInverse(prevLocation), location);
 #if TARGET_OS_TV
-	[self siriRemoteinputEndedSKU:location withEventDictionary:eventDict];
+	[self siriRemoteinputEndedSKU:location withDelta:delta withEventDictionary:eventDict];
 #else
-	[self absoluteInputEndedSKU:location withEventDictionary:eventDict];
+	[self absoluteInputEndedSKU:location withDelta:delta withEventDictionary:eventDict];
 #endif
-	[self inputEndedSKU:location withEventDictionary:eventDict];
+	[self inputEndedSKU:location withDelta:delta withEventDictionary:eventDict];
 }
 
 #else
@@ -3085,6 +3093,7 @@ static SKUtilities2* sharedUtilities = Nil;
 						nil];
 	
 	NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+	[self updatePreviousMouseLocation:location];
 	[self absoluteInputBeganSKU:location withEventDictionary:eventDict];
 	[self inputBeganSKU:location withEventDictionary:eventDict];
 }
@@ -3104,8 +3113,10 @@ static SKUtilities2* sharedUtilities = Nil;
 						nil];
 	
 	NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-	[self absoluteInputMovedSKU:location withEventDictionary:eventDict];
-	[self inputMovedSKU:location withEventDictionary:eventDict];
+	CGPoint prevLocation = [self updatePreviousMouseLocation:location];
+	CGPoint delta = pointAdd(pointInverse(prevLocation), location);
+	[self absoluteInputMovedSKU:location withDelta:delta withEventDictionary:eventDict];
+	[self inputMovedSKU:location withDelta:delta withEventDictionary:eventDict];
 }
 
 -(void)mouseUp:(NSEvent *)theEvent {
@@ -3123,8 +3134,10 @@ static SKUtilities2* sharedUtilities = Nil;
 						nil];
 	
 	NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-	[self absoluteInputEndedSKU:location withEventDictionary:eventDict];
-	[self inputEndedSKU:location withEventDictionary:eventDict];
+	CGPoint prevLocation = [self updatePreviousMouseLocation:location];
+	CGPoint delta = pointAdd(pointInverse(prevLocation), location);
+	[self absoluteInputEndedSKU:location withDelta:delta withEventDictionary:eventDict];
+	[self inputEndedSKU:location withDelta:delta withEventDictionary:eventDict];
 }
 
 -(void)mouseExited:(NSEvent *)theEvent {
@@ -3142,8 +3155,10 @@ static SKUtilities2* sharedUtilities = Nil;
 						nil];
 	
 	NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-	[self absoluteInputEndedSKU:location withEventDictionary:eventDict];
-	[self inputEndedSKU:location withEventDictionary:eventDict];
+	CGPoint prevLocation = [self updatePreviousMouseLocation:location];
+	CGPoint delta = pointAdd(pointInverse(prevLocation), location);
+	[self absoluteInputEndedSKU:location withDelta:delta withEventDictionary:eventDict];
+	[self inputEndedSKU:location withDelta:delta withEventDictionary:eventDict];
 }
 
 -(void)rightMouseDown:(NSEvent *)theEvent {
@@ -3158,7 +3173,7 @@ static SKUtilities2* sharedUtilities = Nil;
 						[NSNumber numberWithInteger:buttonNumber],
 						theEvent,
 						nil];
-	
+	[self updatePreviousMouseLocation:location];
 	NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
 	[self absoluteInputBeganSKU:location withEventDictionary:eventDict];
 	[self inputBeganSKU:location withEventDictionary:eventDict];
@@ -3179,8 +3194,10 @@ static SKUtilities2* sharedUtilities = Nil;
 						nil];
 	
 	NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-	[self absoluteInputMovedSKU:location withEventDictionary:eventDict];
-	[self inputMovedSKU:location withEventDictionary:eventDict];
+	CGPoint prevLocation = [self updatePreviousMouseLocation:location];
+	CGPoint delta = pointAdd(pointInverse(prevLocation), location);
+	[self absoluteInputMovedSKU:location withDelta:delta withEventDictionary:eventDict];
+	[self inputMovedSKU:location withDelta:delta withEventDictionary:eventDict];
 }
 
 -(void)rightMouseUp:(NSEvent *)theEvent {
@@ -3198,8 +3215,10 @@ static SKUtilities2* sharedUtilities = Nil;
 						nil];
 	
 	NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-	[self absoluteInputEndedSKU:location withEventDictionary:eventDict];
-	[self inputEndedSKU:location withEventDictionary:eventDict];
+	CGPoint prevLocation = [self updatePreviousMouseLocation:location];
+	CGPoint delta = pointAdd(pointInverse(prevLocation), location);
+	[self absoluteInputEndedSKU:location withDelta:delta withEventDictionary:eventDict];
+	[self inputEndedSKU:location withDelta:delta withEventDictionary:eventDict];
 }
 
 -(void)otherMouseDown:(NSEvent *)theEvent {
@@ -3216,6 +3235,7 @@ static SKUtilities2* sharedUtilities = Nil;
 						nil];
 	
 	NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+	[self updatePreviousMouseLocation:location];
 	[self absoluteInputBeganSKU:location withEventDictionary:eventDict];
 	[self inputBeganSKU:location withEventDictionary:eventDict];
 }
@@ -3235,8 +3255,10 @@ static SKUtilities2* sharedUtilities = Nil;
 						nil];
 	
 	NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-	[self absoluteInputMovedSKU:location withEventDictionary:eventDict];
-	[self inputMovedSKU:location withEventDictionary:eventDict];
+	CGPoint prevLocation = [self updatePreviousMouseLocation:location];
+	CGPoint delta = pointAdd(pointInverse(prevLocation), location);
+	[self absoluteInputMovedSKU:location withDelta:delta withEventDictionary:eventDict];
+	[self inputMovedSKU:location withDelta:delta withEventDictionary:eventDict];
 }
 
 -(void)otherMouseUp:(NSEvent *)theEvent {
@@ -3254,8 +3276,10 @@ static SKUtilities2* sharedUtilities = Nil;
 						nil];
 	
 	NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-	[self absoluteInputEndedSKU:location withEventDictionary:eventDict];
-	[self inputEndedSKU:location withEventDictionary:eventDict];
+	CGPoint prevLocation = [self updatePreviousMouseLocation:location];
+	CGPoint delta = pointAdd(pointInverse(prevLocation), location);
+	[self absoluteInputEndedSKU:location withDelta:delta withEventDictionary:eventDict];
+	[self inputEndedSKU:location withDelta:delta withEventDictionary:eventDict];
 }
 
 -(void)mouseMoved:(NSEvent *)theEvent {
@@ -3272,7 +3296,21 @@ static SKUtilities2* sharedUtilities = Nil;
 						nil];
 	
 	NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-	[self mouseMovedSKU:location withEventDictionary:eventDict];
+	CGPoint prevLocation = [self updatePreviousMouseLocation:location];
+	CGPoint delta = pointAdd(pointInverse(prevLocation), location);
+	[self mouseMovedSKU:location withDelta:delta withEventDictionary:eventDict];
+}
+
+-(CGPoint)updatePreviousMouseLocation:(CGPoint)location {
+	if (!self.userData) {
+		self.userData = [NSMutableDictionary dictionaryWithCapacity:5];
+	}
+	SKU_PositionObject* prevLocation = self.userData[@"previousMouseLocationSKU"];
+	self.userData[@"previousMouseLocationSKU"] = [SKU_PositionObject position:location];
+	if (!prevLocation) {
+		prevLocation = [SKU_PositionObject position:CGPointZero];
+	}
+	return prevLocation.position;
 }
 
 #endif
@@ -3354,7 +3392,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	[self relativeInputBeganSKU:location withEventDictionary:eventDict];
 }
 
--(void)siriRemoteinputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
+-(void)siriRemoteinputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary*)eventDict {
 	if (SKUSharedUtilities.navMode == kSKUNavModeOn) {
 		UITouch* touch = eventDict[@"touch"];
 		if ([SKUSharedUtilities.touchTracker containsObject:touch]) {
@@ -3370,22 +3408,16 @@ static SKUtilities2* sharedUtilities = Nil;
 			}
 		}
 	}
-	UITouch* touch = eventDict[@"touch"];
-	CGPoint prevLocation = [touch previousLocationInNode:self];
-	CGPoint delta = pointAdd(pointInverse(prevLocation), location);
 	[self relativeInputMovedSKU:location withDelta:delta withEventDictionary:eventDict];
 }
 
--(void)siriRemoteinputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
+-(void)siriRemoteinputEndedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary*)eventDict {
 	if (SKUSharedUtilities.navMode == kSKUNavModeOn) {
 		UITouch* touch = eventDict[@"touch"];
 		if (![SKUSharedUtilities.touchTracker containsObject:touch]) {
 			[SKUSharedUtilities.touchTracker removeObject:touch];
 		}
 	}
-	UITouch* touch = eventDict[@"touch"];
-	CGPoint prevLocation = [touch previousLocationInNode:self];
-	CGPoint delta = pointAdd(pointInverse(prevLocation), location);
 	[self relativeInputEndedSKU:location withDelta:delta withEventDictionary:eventDict];
 }
 
@@ -3411,23 +3443,22 @@ static SKUtilities2* sharedUtilities = Nil;
 -(void)absoluteInputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
 }
 
--(void)absoluteInputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
+-(void)absoluteInputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
 }
 
--(void)absoluteInputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
+-(void)absoluteInputEndedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
 }
 
--(void)mouseMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
-	
+-(void)mouseMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
 }
 
 -(void)inputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
 }
 
--(void)inputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
+-(void)inputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
 }
 
--(void)inputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
+-(void)inputEndedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
 }
 
 -(void)dealloc {

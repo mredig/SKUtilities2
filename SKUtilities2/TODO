@@ -1,10 +1,6 @@
 SKU_Buttons needs a slider
 
-shapenode - fix shapenode outlines
-
 skbuttons probably need copy zone
-
-add delta to all movement methods?
 
 might wanna add archiving support?
 might wanna add descriptions to other classes

@@ -42,15 +42,15 @@
 	
 	
 // toggle button
-	SKTexture* toggleOnTex = [SKTexture textureWithImageNamed:@"checkBoxOnSKU"];
+//	SKTexture* toggleOnTex = [SKTexture textureWithImageNamed:@"checkBoxOnSKU"];
 	
-	SKUButtonSpriteStateProperties* toggleOnProps = [SKUButtonSpriteStateProperties propertiesWithTexture:toggleOnTex andAlpha:1.0f];
-	SKUButtonSpriteStatePropertiesPackage* toggleOnPackage = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:toggleOnProps];
+//	SKUButtonSpriteStateProperties* toggleOnProps = [SKUButtonSpriteStateProperties propertiesWithTexture:toggleOnTex andAlpha:1.0f];
+//	SKUButtonSpriteStatePropertiesPackage* toggleOnPackage = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:toggleOnProps];
 	
-	SKTexture* toggleOffTex = [SKTexture textureWithImageNamed:@"checkBoxOffSKU"];
+//	SKTexture* toggleOffTex = [SKTexture textureWithImageNamed:@"checkBoxOffSKU"];
 	
-	SKUButtonSpriteStateProperties* toggleOffProps = [SKUButtonSpriteStateProperties propertiesWithTexture:toggleOffTex andAlpha:1.0f];
-	SKUButtonSpriteStatePropertiesPackage* toggleOffPackage = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:toggleOffProps];
+//	SKUButtonSpriteStateProperties* toggleOffProps = [SKUButtonSpriteStateProperties propertiesWithTexture:toggleOffTex andAlpha:1.0f];
+//	SKUButtonSpriteStatePropertiesPackage* toggleOffPackage = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:toggleOffProps];
 	
 	SKUButtonLabelPropertiesPackage* labelPackToggle = labelPack.copy;
 	[labelPackToggle changeText:@"toggle"];
@@ -83,7 +83,7 @@
 }
 
 
--(void)inputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+-(void)inputEndedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
 	
 }
 

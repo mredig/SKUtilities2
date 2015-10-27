@@ -80,11 +80,11 @@
 	multiLineLabel.position = pointAdd(delta, multiLineLabel.position);
 }
 
--(void)absoluteInputMovedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+-(void)absoluteInputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
 	multiLineLabel.position = location;
 }
 
--(void)inputEndedSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+-(void)inputEndedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
 
 }
 
