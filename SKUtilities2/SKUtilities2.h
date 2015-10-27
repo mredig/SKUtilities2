@@ -768,12 +768,12 @@ typedef enum {
 
 
 typedef enum {
-	kSKUButtonStateUndefined,
-	kSKUButtonStateDefault,
-	kSKUButtonStatePressed,
-	kSKUButtonStatePressedOutOfBounds,
-	kSKUButtonStateHovered,
-	kSKUButtonStateDisabled,
+	kSKUButtonStateUndefined = 1 << 0,
+	kSKUButtonStateDefault = 1 << 1,
+	kSKUButtonStatePressed = 1 << 2,
+	kSKUButtonStatePressedOutOfBounds = 1 << 3,
+	kSKUButtonStateHovered = 1 << 4,
+	kSKUButtonStateDisabled = 1 << 5,
 
 } kSKUButtonStates;
 
@@ -817,6 +817,8 @@ typedef enum {
 @property (nonatomic, readonly) SKSpriteNode* baseSprite;
 /** Used for padding around buttons when using centerRect to scale imagery. */
 @property (nonatomic) CGFloat padding;
+/** Establishes the smallest possible area the button can take up (not accounting for properties with centerRect set that automatically expand). This is the same thing as setting the size property. It only exists to document clarity.  */
+@property (nonatomic) CGSize sizeMinimumBoundary;
 /** Properties to use on the base sprite in default state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* baseSpritePropertiesDefault;
 /** Properties to use on the base sprite in pressed state. */
@@ -912,6 +914,7 @@ typedef enum {
 
 -(void)setTitleSpriteStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
 -(void)setTitleLabelStatesWithPackage:(SKUButtonLabelPropertiesPackage*)package;
+-(void)changeTitleLabelText:(NSString*)text forStates:(kSKUButtonStates)states;
 @end
 
 #pragma mark SKUToggleButton

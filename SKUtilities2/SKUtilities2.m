@@ -1619,7 +1619,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	props.alpha = 1.0f;
 	props.color = [SKColor clearColor];
 	props.colorBlendFactor = 0.0f;
-	props.position = CGPointMake(0, -5.0);
+	props.position = CGPointMake(0, -4.0);
 	props.xScale = 1.0f;
 	props.yScale = 1.0f;
 	props.texture = buttonBG;
@@ -1634,7 +1634,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	props.alpha = 1.0f;
 	props.color = [SKColor clearColor];
 	props.colorBlendFactor = 0.0f;
-	props.position = CGPointMake(0, -5.0);
+	props.position = CGPointMake(0, -2.0);
 	props.xScale = 1.0f;
 	props.yScale = 1.0f;
 	props.texture = buttonBG;
@@ -1648,7 +1648,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	props.alpha = 1.0f;
 	props.color = [SKColor clearColor];
 	props.colorBlendFactor = 0.0f;
-	props.position = CGPointMake(0, -5.0);
+	props.position = CGPointMake(0, -2.0);
 	props.xScale = 1.0f;
 	props.yScale = 1.0f;
 	props.texture = buttonBG;
@@ -1843,7 +1843,6 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 -(void)didInitialize {
-	
 }
 
 #pragma mark SKUButton ACTION SETTERS
@@ -1884,6 +1883,18 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 #pragma mark SKUButton OTHER SETTERS
+
+-(void)setSizeMinimumBoundary:(CGSize)sizeMinimumBoundary {
+	_sizeMinimumBoundary = sizeMinimumBoundary;
+	self.size = sizeMinimumBoundary;
+	[self updateCurrentSpriteStateProperties];
+}
+
+-(void)setSize:(CGSize)size {
+	[super setSize:size];
+	_sizeMinimumBoundary = size;
+	[self updateCurrentSpriteStateProperties];
+}
 
 -(void)setBaseStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package {
 	_baseSpritePropertiesDefault = package.propertiesDefaultState;
@@ -2406,6 +2417,27 @@ static SKUtilities2* sharedUtilities = Nil;
 	[self updateCurrentSpriteStateProperties];
 }
 
+-(void)changeTitleLabelText:(NSString*)text forStates:(kSKUButtonStates)states {
+	BOOL stateDefault = states & kSKUButtonStateDefault,
+		statePressed = states & kSKUButtonStatePressed,
+		stateHovered = states & kSKUButtonStateHovered,
+		stateDisabled = states & kSKUButtonStateDisabled;
+	
+	if (stateDefault && stateTLabelDefaultInitialized) {
+		_labelPropertiesDefault.text = text;
+	}
+	if (statePressed && stateTLabelPressedInitialized) {
+		_labelPropertiesPressed.text = text;
+	}
+	if (stateHovered && stateTLabelHoveredInitialized) {
+		_labelPropertiesHovered.text = text;
+	}
+	if (stateDisabled && stateTLabelDisabledInitialized) {
+		_labelPropertiesDisabled.text = text;
+	}
+	[self updateCurrentSpriteStateProperties];
+}
+
 -(void)buttonStatesDefault {
 	[super buttonStatesDefault];
 	
@@ -2430,7 +2462,6 @@ static SKUtilities2* sharedUtilities = Nil;
 		stateTLabelHoveredInitialized = NO;
 		stateTLabelDisabledInitialized = NO;
 	}
-
 }
 
 -(void)buttonStatesNormalize {
@@ -2531,6 +2562,7 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 -(void)updateCurrentSpriteStateProperties {
+	[super updateCurrentSpriteStateProperties];
 	SKUButtonSpriteStateProperties* propertiesSprite;
 	if (_on) {
 		switch (self.buttonState) {
@@ -2576,7 +2608,6 @@ static SKUtilities2* sharedUtilities = Nil;
 		}
 	}
 	
-	[super updateCurrentSpriteStateProperties]; //might need to get moved in order of operations
 	
 	if (_toggleSprite) {
 		SKTexture* prevTex = _toggleSprite.texture;
@@ -2593,8 +2624,10 @@ static SKUtilities2* sharedUtilities = Nil;
 		_toggleSprite.yScale = propertiesSprite.yScale;
 		
 		CGSize buttonSize = [self getButtonSizeMinusBase];
-		_toggleSprite.position = pointAdd(_toggleSprite.position, CGPointMake((-buttonSize.width), 0.0));
+		_toggleSprite.position = pointAdd(_toggleSprite.position, CGPointMake((-buttonSize.width / 2.0) - _toggleSprite.size.width * 1.25, 0.0));
+		
 	}
+
 }
 
 -(void)setOn:(BOOL)on {

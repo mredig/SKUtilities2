@@ -42,24 +42,11 @@
 	
 	
 // toggle button
-//	SKTexture* toggleOnTex = [SKTexture textureWithImageNamed:@"checkBoxOnSKU"];
-	
-//	SKUButtonSpriteStateProperties* toggleOnProps = [SKUButtonSpriteStateProperties propertiesWithTexture:toggleOnTex andAlpha:1.0f];
-//	SKUButtonSpriteStatePropertiesPackage* toggleOnPackage = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:toggleOnProps];
-	
-//	SKTexture* toggleOffTex = [SKTexture textureWithImageNamed:@"checkBoxOffSKU"];
-	
-//	SKUButtonSpriteStateProperties* toggleOffProps = [SKUButtonSpriteStateProperties propertiesWithTexture:toggleOffTex andAlpha:1.0f];
-//	SKUButtonSpriteStatePropertiesPackage* toggleOffPackage = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:toggleOffProps];
 	
 	SKUButtonLabelPropertiesPackage* labelPackToggle = labelPack.copy;
 	[labelPackToggle changeText:@"toggle"];
 	
 	SKUToggleButton* toggleTest = [SKUToggleButton toggleButtonWithBackgroundPropertiesPackage:backgroundPack andTitleLabelPropertiesPackage:labelPackToggle];
-//	[toggleTest setBaseStatesWithPackage:backgroundPack];
-//	[toggleTest setTitleLabelStatesWithPackage:labelPackToggle];
-//	[toggleTest setToggleSpriteOnStatesWithPackage:toggleOnPackage];
-//	[toggleTest setToggleSpriteOffStatesWithPackage:toggleOffPackage];
 	[toggleTest setUpAction:@selector(toggled:) toPerformOnTarget:self];
 	toggleTest.zPosition = 1.0;
 	toggleTest.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.5, 0.75));
@@ -79,7 +66,7 @@
 }
 
 -(void)toggled:(SKUToggleButton*)button {
-	SKULog(0, @"toggled: %i", button.on);
+//	SKULog(0, @"toggled: %i", button.on);
 }
 
 
@@ -98,6 +85,10 @@
 
 -(void)transferScene:(SKUButton*)button {
 
+//	SKUToggleButton* toggleButton = (SKUToggleButton*)[self childNodeWithName:@"toggleTest"];
+//	[toggleButton changeTitleLabelText:[NSString stringWithFormat:@"%@+", toggleButton.labelPropertiesDefault.text] forStates:(kSKUButtonStateDefault | kSKUButtonStatePressed | kSKUButtonStateHovered | kSKUButtonStateDisabled)]; //use this for a future demo
+
+	
 //	_2rotationScene* scene = [[_2rotationScene alloc] initWithSize:self.size];
 //	scene.scaleMode = self.scaleMode;
 //	

@@ -1,9 +1,5 @@
 SKU_Buttons needs a slider
 
-SKU_ToggleButton might need toggle positioning adjustment
-SKU_PushButton might need label changing ability
-skubutton minimum bounds
-
 skbuttons probably need copy zone
 
 might wanna add archiving support?
