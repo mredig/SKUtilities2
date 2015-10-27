@@ -22,48 +22,48 @@
 -(void)didMoveToView:(SKView *)view {
 	[self setupButtonPackages];
 	
-	NSInteger verbosityLevel = 0;
+	NSInteger verbosityLevelRequired = 0;
 	self.name = @"numbersScene";
 
 #if TARGET_OS_OSX_SKU
 	SKUSharedUtilities.macButtonFlags = kSKUMouseButtonFlagLeft | kSKUMouseButtonFlagRight | kSKUMouseButtonFlagOther;
 	self.view.window.acceptsMouseMovedEvents = YES;
-	SKUSharedUtilities.verbosityLevel = 0;
 #endif
-	SKULog(verbosityLevel, @"01NumbersDemo: demos number interpolation, random numbers, and distance functions");
+//	SKUSharedUtilities.verbosityLevel = 100; // change this value to 100 to see scene deallocation, 150 to see node deallocation.
+	SKULog(verbosityLevelRequired, @"01NumbersDemo: demos number interpolation, random numbers, and distance functions");
 	
 	
 #pragma mark NUMBER INTERPOLATION
 
 	CGFloat floatA = 50.0;
 	CGFloat floatB = 104.0;
-	SKULog(verbosityLevel, @"interpolate: %f", linearInterpolationBetweenFloatValues(floatA, floatB, 0.25, NO));
-	SKULog(verbosityLevel, @"reverseInterp: %f", reverseLinearInterpolationBetweenFloatValues(floatA, floatB, 63.5, NO));
+	SKULog(verbosityLevelRequired, @"interpolate: %f", linearInterpolationBetweenFloatValues(floatA, floatB, 0.25, NO));
+	SKULog(verbosityLevelRequired, @"reverseInterp: %f", reverseLinearInterpolationBetweenFloatValues(floatA, floatB, 63.5, NO));
 
 	CGFloat start = 0.0, end = 1.0;
 	while (start < end) {
 		start = rampToValue(end, start, 0.1);
-		SKULog(verbosityLevel, @"ramping to %f - currently %f", end, start);
+		SKULog(verbosityLevelRequired, @"ramping to %f - currently %f", end, start);
 	}
 	
 #pragma mark RANDOM NUMBERS
 	u_int32_t lowUInt = 100;
 	u_int32_t highUInt = 1000;
-	SKULog(verbosityLevel, @"random number between %u and %u: %u", lowUInt, highUInt, randomUnsignedIntegerBetweenTwoValues(lowUInt, highUInt));
+	SKULog(verbosityLevelRequired, @"random number between %u and %u: %u", lowUInt, highUInt, randomUnsignedIntegerBetweenTwoValues(lowUInt, highUInt));
 	
-	SKULog(verbosityLevel, @"random float value: %f", randomFloatBetweenZeroAndHighend(102.8));
+	SKULog(verbosityLevelRequired, @"random float value: %f", randomFloatBetweenZeroAndHighend(102.8));
 
 #pragma mark DISTANCE FUNCTIONS
 	
 	CGPoint pointA = CGPointMake(5.0, 2.5);
 	CGPoint pointB = CGPointMake(10.0, 5.0);
 
-	SKULog(verbosityLevel, @"distance between: %f", distanceBetween(pointA, pointB));
+	SKULog(verbosityLevelRequired, @"distance between: %f", distanceBetween(pointA, pointB));
 	
 	CGFloat comparison = 5.0;
-	SKULog(verbosityLevel, @"distance is closer than %f: %i", comparison, distanceBetweenIsWithinXDistance(pointA, pointB, comparison));
+	SKULog(verbosityLevelRequired, @"distance is closer than %f: %i", comparison, distanceBetweenIsWithinXDistance(pointA, pointB, comparison));
 	comparison = 6.0;
-	SKULog(verbosityLevel, @"distance is closer than %f: %i", comparison, distanceBetweenIsWithinXDistancePreSquared(pointA, pointB, comparison * comparison));
+	SKULog(verbosityLevelRequired, @"distance is closer than %f: %i", comparison, distanceBetweenIsWithinXDistancePreSquared(pointA, pointB, comparison * comparison));
 
 	
 	
@@ -162,7 +162,7 @@
 	}
 	
 	NSTimeInterval end = CFAbsoluteTimeGetCurrent();
-	NSLog(@"time elapsed: %f", end - start);
+	SKULog(0, @"time elapsed: %f", end - start);
 
 }
 

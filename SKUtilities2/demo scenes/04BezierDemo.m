@@ -32,8 +32,8 @@
 
 -(void) didMoveToView:(SKView *)view {
 	
-	NSLog(@"\n\n\n\n04Bezier demo: demos bezier stuff");
-	
+	SKULog(0,@"\n\n\n\n04Bezier demo: demos bezier stuff");
+	self.name = @"bezier demo scene";
 	
 #pragma mark BEZIER CALCUATIONS
 	[self setupSpriteDemos];
@@ -62,6 +62,7 @@
 	CGFloat sizeW = self.size.width / resolution;
 	for (NSInteger i = 0; i < resolution; i++) {
 		SKSpriteNode* part = [SKSpriteNode spriteNodeWithColor:[SKColor redColor] size:CGSizeMake(sizeW, sizeW)];
+		part.name = @"bezierPoint";
 		[self addChild:part];
 		[bezParts addObject:part];
 	}
@@ -73,6 +74,7 @@
 	xAndTvalueLabel.position = CGPointMake(self.size.width/2, self.size.height * 0.2);
 	xAndTvalueLabel.text = [NSString stringWithFormat:@"xVal: %f tVal:%f", self.size.width/2, bezierTValueAtXValue(self.size.width/2, 0.0, handle1.position.x, handle2.position.x, self.size.height)];
 	xAndTvalueLabel.fontColor = [SKColor whiteColor];
+	xAndTvalueLabel.name = @"xAndTvalueLabel";
 	[self addChild:xAndTvalueLabel];
 	
 #if TARGET_OS_TV
@@ -132,12 +134,14 @@
 	nextSlide.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.66, 0.5));
 	nextSlide.zPosition = 1.0;
 	[nextSlide setUpAction:@selector(transferScene:) toPerformOnTarget:self];
+	nextSlide.name = @"nextSlide";
 	[self addChild:nextSlide];
 	
 	SKUPushButton* prevSlide = [SKUPushButton pushButtonWithText:@"Previous Scene"];
 	prevSlide.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.33, 0.5));
 	prevSlide.zPosition = 1.0;
 	[prevSlide setUpAction:@selector(prevScene:) toPerformOnTarget:self];
+	prevSlide.name = @"prevSlide";
 	[self addChild:prevSlide];
 	
 	

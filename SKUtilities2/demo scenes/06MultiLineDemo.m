@@ -21,8 +21,8 @@
 
 -(void)didMoveToView:(SKView *)view {
 	
-	NSLog(@"\n\n\n\n06MultiLineDemo: demos multiline label stuff");
-	
+	SKULog(0,@"\n\n\n\n06MultiLineDemo: demos multiline label stuff");
+	self.name = @"MultiLine Demo";
 	
 	[self setupSpriteDemos];
 	[self setupButton];
@@ -35,6 +35,7 @@
 	multiLineLabel.paragraphWidth = 200.0;
 	multiLineLabel.text = @"This is text and stuff and this\nis\na\nnewline\netc.";
 	multiLineLabel.position = pointMultiplyByFactor(pointFromCGSize(self.size), 0.25);
+	multiLineLabel.name = @"multilineLabel";
 	[self addChild:multiLineLabel];
 	
 }
@@ -48,12 +49,14 @@
 	nextSlide.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.66, 0.5));
 	nextSlide.zPosition = 1.0;
 	[nextSlide setUpAction:@selector(transferScene:) toPerformOnTarget:self];
+	nextSlide.name = @"nextSlideButton";
 	[self addChild:nextSlide];
 	
 	SKUPushButton* prevSlide = [SKUPushButton pushButtonWithText:@"Previous Scene"];
 	prevSlide.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.33, 0.5));
 	prevSlide.zPosition = 1.0;
 	[prevSlide setUpAction:@selector(prevScene:) toPerformOnTarget:self];
+	prevSlide.name = @"prevSlideButton";
 	[self addChild:prevSlide];
 	
 	

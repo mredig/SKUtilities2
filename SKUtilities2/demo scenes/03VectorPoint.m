@@ -23,7 +23,7 @@
 	CGFloat latValue;
 	CGPoint previousLocation;
 	
-	NSInteger verbosityLevel;
+	NSInteger verbosityLevelRequired;
 
 }
 
@@ -34,11 +34,11 @@
 
 -(void) didMoveToView:(SKView *)view {
 	
-	verbosityLevel = 0;
+	verbosityLevelRequired = 0;
 
 	
-	SKULog( verbosityLevel, @"\n\n\n\n03VectorPoint: demos vector and point functions");
-	
+	SKULog( verbosityLevelRequired, @"\n\n\n\n03VectorPoint: demos vector and point functions");
+	self.name = @"vectors and points and other demo stuff scene";
 	
 #pragma mark CGVector HELPERS
 	
@@ -46,42 +46,42 @@
 	
 	CGVector vectorA = vectorFromCGPoint(pointA);
 	
-	SKULog( verbosityLevel, @"vector from point: %f %f", vectorA.dx, vectorA.dy);
+	SKULog( verbosityLevelRequired, @"vector from point: %f %f", vectorA.dx, vectorA.dy);
 	
 	CGSize sizeA = CGSizeMake(1024, 768);
 	vectorA = vectorFromCGSize(sizeA);
-	SKULog( verbosityLevel, @"vector from size: %f %f", vectorA.dx, vectorA.dy);
+	SKULog( verbosityLevelRequired, @"vector from size: %f %f", vectorA.dx, vectorA.dy);
 
 	
 	CGVector inverse = vectorInverse(vectorA);
 	
-	SKULog( verbosityLevel, @"inversed: %f %f", inverse.dx, inverse.dy);
+	SKULog( verbosityLevelRequired, @"inversed: %f %f", inverse.dx, inverse.dy);
 	
 	CGVector normalized = vectorNormalize(inverse);
 	CGPoint distanceTestPoint = CGPointMake(normalized.dx, normalized.dy);
 	CGFloat distanceTest = distanceBetween(CGPointZero, distanceTestPoint);
-	SKULog( verbosityLevel, @"normalized: %f %f - distance: %f", normalized.dx, normalized.dy, distanceTest);
+	SKULog( verbosityLevelRequired, @"normalized: %f %f - distance: %f", normalized.dx, normalized.dy, distanceTest);
 	
 	CGVector sum = vectorAdd(vectorA, inverse);
-	SKULog( verbosityLevel, @"summed: %f %f", sum.dx, sum.dy);
+	SKULog( verbosityLevelRequired, @"summed: %f %f", sum.dx, sum.dy);
 	
 	CGVector factor1, factor2;
 	factor1 = CGVectorMake(5.0, 10.0);
 	factor2 = CGVectorMake(2.0, 10.0);
 	
 	CGVector product = vectorMultiplyByVector(factor1, factor2);
-	SKULog( verbosityLevel, @"multiplied by vector: %f %f", product.dx, product.dy);
+	SKULog( verbosityLevelRequired, @"multiplied by vector: %f %f", product.dx, product.dy);
 
 
 	product = vectorMultiplyByFactor(product, 2.0);
-	SKULog( verbosityLevel, @"multiplied by factor: %f %f", product.dx, product.dy);
+	SKULog( verbosityLevelRequired, @"multiplied by factor: %f %f", product.dx, product.dy);
 	
 	CGPoint destination, origin;
 	destination = CGPointMake(100, -150);
 	origin = CGPointZero;
 	CGVector directionVect = vectorFacingPoint(destination, origin, NO);
 	CGVector directionVectNorm = vectorFacingPoint(destination, origin, YES);
-	SKULog( verbosityLevel, @"direction: %f %f normalized: %f %f", directionVect.dx, directionVect.dy, directionVectNorm.dx, directionVectNorm.dy);
+	SKULog( verbosityLevelRequired, @"direction: %f %f normalized: %f %f", directionVect.dx, directionVect.dy, directionVectNorm.dx, directionVectNorm.dy);
 	
 	CGFloat radianValue = -45 * kSKUDegToRadConvFactor;
 	CGFloat degreeValue = 0; //note that a value of 0 gives a vector of 0,1 - facing up
@@ -91,36 +91,36 @@
 	radianVector = vectorFromRadian(radianValue);
 	degreeVector = vectorFromDegree(degreeValue);
 	
-	SKULog( verbosityLevel, @"radian vector: %f %f degree vector: %f %f", radianVector.dx, radianVector.dy, degreeVector.dx, degreeVector.dy);
+	SKULog( verbosityLevelRequired, @"radian vector: %f %f degree vector: %f %f", radianVector.dx, radianVector.dy, degreeVector.dx, degreeVector.dy);
 
 	
 #pragma mark CGPoint HELPERS
 
 	CGPoint convPoint = pointFromCGVector(radianVector);
-	SKULog( verbosityLevel, @"point from vector: %f %f", convPoint.x, convPoint.y);
+	SKULog( verbosityLevelRequired, @"point from vector: %f %f", convPoint.x, convPoint.y);
 	
 	CGSize tempSize = CGSizeMake(10, 50);
 	convPoint = pointFromCGSize(tempSize);
-	SKULog( verbosityLevel, @"point from size: %f %f", convPoint.x, convPoint.y);
+	SKULog( verbosityLevelRequired, @"point from size: %f %f", convPoint.x, convPoint.y);
 	
 	convPoint = pointInverse(convPoint);
-	SKULog( verbosityLevel, @"inverted point: %f %f", convPoint.x, convPoint.y);
+	SKULog( verbosityLevelRequired, @"inverted point: %f %f", convPoint.x, convPoint.y);
 	
 	pointA = CGPointMake(5.0, 2.5);
 	CGPoint pointB = CGPointMake(10.0, 5.0);
 	CGPoint pointC = pointAdd(pointA, pointB);
-	SKULog( verbosityLevel, @"point add: %f %f", pointC.x, pointC.y);
+	SKULog( verbosityLevelRequired, @"point add: %f %f", pointC.x, pointC.y);
 
 	pointC = pointAddValue(pointC, 5.0);
-	SKULog( verbosityLevel, @"point add value: %f %f", pointC.x, pointC.y);
+	SKULog( verbosityLevelRequired, @"point add value: %f %f", pointC.x, pointC.y);
 
 	pointC = pointInterpolationLinearBetweenTwoPoints(CGPointZero, pointC, 0.333);
-	SKULog( verbosityLevel, @"0.33 linear point interpoltion: %f %f", pointC.x, pointC.y);
+	SKULog( verbosityLevelRequired, @"0.33 linear point interpoltion: %f %f", pointC.x, pointC.y);
 	
-	SKULog( verbosityLevel, @"string from point: %@", getStringFromPoint(pointC));
+	SKULog( verbosityLevelRequired, @"string from point: %@", getStringFromPoint(pointC));
 	
 	CGPoint stringPoint = getCGPointFromString(getStringFromPoint(pointC));
-	SKULog( verbosityLevel, @"point from string: %f %f", stringPoint.x, stringPoint.y);
+	SKULog( verbosityLevelRequired, @"point from string: %f %f", stringPoint.x, stringPoint.y);
 	
 	
 	[self setupSpriteDemos];
@@ -133,32 +133,38 @@
 	//// movement demos
 	spriteVectorInterval = [SKSpriteNode spriteNodeWithColor:[SKColor greenColor] size:CGSizeMake(200, 40)];
 	spriteVectorInterval.position = CGPointMake(0, self.size.height * 0.85);
+	spriteVectorInterval.name = @"spriteVectorInterval";
 	[self addChild:spriteVectorInterval];
 	
 	SKLabelNode* spriteVectorIntervalLabel = [SKLabelNode labelNodeWithText:@"vector Interval"];
 	spriteVectorIntervalLabel.fontColor = [SKColor blackColor];
 	spriteVectorIntervalLabel.fontSize = 35;
 	spriteVectorIntervalLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
+	spriteVectorIntervalLabel.name = @"spriteVectorIntervalLabel";
 	[spriteVectorInterval addChild:spriteVectorIntervalLabel];
 	
 	spriteVector = [SKSpriteNode spriteNodeWithColor:[SKColor greenColor] size:CGSizeMake(200, 40)];
 	spriteVector.position = CGPointMake(0, self.size.height * 0.75);
+	spriteVector.name = @"spriteVector";
 	[self addChild:spriteVector];
 	
 	SKLabelNode* spriteVectorLabel = [SKLabelNode labelNodeWithText:@"vector"];
 	spriteVectorLabel.fontColor = [SKColor blackColor];
 	spriteVectorLabel.fontSize = 35;
 	spriteVectorLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
+	spriteVectorLabel.name = @"spriteVectorLabel";
 	[spriteVector addChild:spriteVectorLabel];
 	
 	spritePoint = [SKSpriteNode spriteNodeWithColor:[SKColor greenColor] size:CGSizeMake(200, 40)];
 	spritePoint.position = CGPointMake(0, self.size.height * 0.65);
+	spritePoint.name = @"spritePoint";
 	[self addChild:spritePoint];
 	
 	SKLabelNode* spritePointLabel = [SKLabelNode labelNodeWithText:@"point Interval"];
 	spritePointLabel.fontColor = [SKColor blackColor];
 	spritePointLabel.fontSize = 35;
 	spritePointLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
+	spritePointLabel.name = @"spritePointLabel";
 	[spritePoint addChild:spritePointLabel];
 	
 	
@@ -166,10 +172,12 @@
 	victim = [SKSpriteNode spriteNodeWithColor:[SKColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.5] size:CGSizeMake(100, 100)];
 	victim.position = CGPointMake(self.size.width/2, self.size.height * 0.25);
 	victim.zPosition = 10.0;
+	victim.name = @"victim";
 	[self addChild:victim];
 	
 	SKSpriteNode* directionIndicator = [SKSpriteNode spriteNodeWithColor:[SKColor blueColor] size:CGSizeMake(5.0, 60.0)];
 	directionIndicator.anchorPoint = CGPointMake(0.5, 0.0);
+	directionIndicator.name = @"directionIndicator";
 	[victim addChild:directionIndicator];
 	
 	previousLocation = victim.position;
@@ -180,6 +188,7 @@
 	victimLatLabel.zPosition = 1.0;
 	victimLatLabel.fontColor = [SKColor whiteColor];
 	victimLatLabel.position = pointAdd(victim.position, CGPointMake(0, -135));
+	victimLatLabel.name = @"victimLatLabel";
 	[self addChild:victimLatLabel];
 	
 	SKLabelNode* explainLabel = [SKLabelNode labelNodeWithText:@"green indicates that it's behind in the example - drag mouse to change lat"];
@@ -187,6 +196,7 @@
 	explainLabel.fontColor = [SKColor whiteColor];
 	explainLabel.fontSize *= 0.7;
 	explainLabel.position = pointAdd(victimLatLabel.position, CGPointMake(0, -40));
+	explainLabel.name = @"explainLabel";
 	[self addChild:explainLabel];
 
 	

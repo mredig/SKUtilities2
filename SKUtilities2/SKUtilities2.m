@@ -10,9 +10,9 @@
 
 //	if (object) {
 //		CFIndex rc = CFGetRetainCount((__bridge CFTypeRef)object);
-//		NSLog(@"retain count: %li", rc);
+//		SKULog(0,@"retain count: %li", rc);
 //	} else {
-//		NSLog(@"no object provided");
+//		SKULog(0,@"no object provided");
 //	}
 
 
@@ -55,7 +55,7 @@ CGFloat rampToValue (CGFloat idealValue, CGFloat currentValue, CGFloat stepValue
 	if (stepValue < 0) {
 		stepValue = -stepValue;
 	} else if (stepValue == 0) {
-		NSLog(@"uh, you need to assign a step value for a ramp to work!");
+		SKULog(0,@"uh, you need to assign a step value for a ramp to work!");
 	}
 	
 	//apply the step
@@ -252,7 +252,7 @@ CGFloat processIntervals(CGFloat pInterval, CGFloat pMaxInterval) {
 		rInterval = SKUSharedUtilities.deltaFrameTime;
 		if (SKUSharedUtilities.deltaFrameTime == 0) {
 			rInterval = 0.016666666666666666;
-			NSLog(@"Please either set the interval in the point step call, or properly set [SKUSharedUtilities updateCurrentTime] in your update method. Assuming interval of 0.016666666666666666.");
+			SKULog(0,@"Please either set the interval in the point step call, or properly set [SKUSharedUtilities updateCurrentTime] in your update method. Assuming interval of 0.016666666666666666.");
 		}
 	}
 	if (rMaxInterval <= 0) {
@@ -383,14 +383,12 @@ BezierStruct solveQuadraticEquation (double a, double b, double c) {
 	BezierStruct rValue;
 	
 	if (discriminant < 0) {
-		NSLog(@"1");
 		rValue.c = 0;
 		rValue.values[0] = 0;
 		return rValue;
 	} else {
 		double possibleA = (-b + sqrt(discriminant) / (2 * a));
 		double possibleB = (-b - sqrt(discriminant) / (2 * a));
-		NSLog(@"2");
 		
 		rValue.c = 2;
 		rValue.values[0] = possibleA;
@@ -459,7 +457,7 @@ BezierStruct solveCubicEquation (double a, double b, double c, double d) {
 		return rValue;
 
 	} else {
-		NSLog(@"I've made a huge mistake: Cubic equation seemingly impossible.");
+		SKULog(0,@"I've made a huge mistake: Cubic equation seemingly impossible.");
 	}
 	
 	return rValue;
@@ -966,7 +964,7 @@ static SKUtilities2* sharedUtilities = Nil;
 
 	
 	CGRect enclosure = CGPathGetPathBoundingBox(_path);
-//	NSLog(@"bounding: %f %f %f %f", enclosure.origin.x, enclosure.origin.y, enclosure.size.width, enclosure.size.height);
+//	SKULog(0,@"bounding: %f %f %f %f", enclosure.origin.x, enclosure.origin.y, enclosure.size.width, enclosure.size.height);
 	CGPoint enclosureOffset;
 	
 	if (![_strokeColor isEqual:[SKColor clearColor]]) {
@@ -1303,9 +1301,9 @@ static SKUtilities2* sharedUtilities = Nil;
 	if (!font) {
 		font = [SKUFont fontWithName:@"Helvetica" size:self.fontSize];
 		if (!setupMode) {
-			NSLog(@"The font you specified was unavailable. Defaulted to Helvetica.");
-			//		NSLog(@"The font you specified was unavailable. Defaulted to Helvetica. Here is a list of available fonts: %@", [DSMultiLineLabelFont familyNames]); //only available for debugging on iOS
-			//		NSLog(@"Here is a list of variations to %@: %@", _fontName, [DSMultiLineLabelFont familyNames]);
+			SKULog(0,@"The font you specified was unavailable. Defaulted to Helvetica.");
+//			SKULog(0,@"The font you specified was unavailable. Defaulted to Helvetica. Here is a list of available fonts: %@", [DSMultiLineLabelFont familyNames]); //only available for debugging on iOS
+//			SKULog(0,@"Here is a list of variations to %@: %@", _fontName, [DSMultiLineLabelFont familyNames]);
 		}
 		
 	}
@@ -1359,7 +1357,7 @@ static SKUtilities2* sharedUtilities = Nil;
 		return Nil;
 	}
 	
-	//	NSLog(@"textRect = %f %f %f %f", textRect.origin.x, textRect.origin.y, textRect.size.width, textRect.size.height);
+	//	SKULog(0,@"textRect = %f %f %f %f", textRect.origin.x, textRect.origin.y, textRect.size.width, textRect.size.height);
 	
 	//The size of the bounding rect is going to be the size of our new node, so set the size here.
 	SKSpriteNode *selfNode = (SKSpriteNode*) self;
@@ -3298,7 +3296,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	if (node.parent) {
 		[navNodes addObject:node];
 	} else {
-		NSLog(@"error: can't add node named '%@' to navNodes when it doesn't have a parent.", node.name);
+		SKULog(0,@"error: can't add node named '%@' to navNodes when it doesn't have a parent.", node.name);
 	}
 	
 	if (!self.userData[@"sku_navNodes"]) {
@@ -3363,9 +3361,9 @@ static SKUtilities2* sharedUtilities = Nil;
 			SKNode* prevSelection = SKUSharedUtilities.navFocus.userData[@"sku_currentSelectedNode"];
 			NSSet* nodeSet = SKUSharedUtilities.navFocus.userData[@"sku_navNodes"];
 			if (!prevSelection) {
-				NSLog(@"Error: no currently selected node - did you set the initial node selection (setCurrentSelectedNodeSKU:(SKNode*)) and set the navFocus on the singleton ([SKUSharedUtilities setNavFocus:(SKNode*)]?");
+				SKULog(0,@"Error: no currently selected node - did you set the initial node selection (setCurrentSelectedNodeSKU:(SKNode*)) and set the navFocus on the singleton ([SKUSharedUtilities setNavFocus:(SKNode*)]?");
 			} else if (!nodeSet) {
-				NSLog(@"Error: no navNodes to navigate through - did you add nodes to the nav nodes (addNodeToNavNodesSKU:(SKNode*)) and set the navFocus on the singleton ([SKUSharedUtilities setNavFocus:(SKNode*)]?");
+				SKULog(0,@"Error: no navNodes to navigate through - did you add nodes to the nav nodes (addNodeToNavNodesSKU:(SKNode*)) and set the navFocus on the singleton ([SKUSharedUtilities setNavFocus:(SKNode*)]?");
 			} else {
 				SKNode* currentSelectionNode = [SKUSharedUtilities handleSubNodeMovement:location withCurrentSelection:prevSelection inSet:nodeSet inScene:self.scene];
 				[self skuInternalUpdateCurrentSelectedNode:currentSelectionNode];

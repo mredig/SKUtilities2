@@ -107,7 +107,10 @@ float cpu_usage()
 	
 	shapeEffect = [SKEffectNode node];
 	shapeEffect.shouldRasterize = YES;
+	shapeEffect.name = @"shapeEffect";
 	[self addChild:shapeEffect];
+	
+	self.name = @"shape benchmark scene";
 	
 }
 
@@ -133,6 +136,7 @@ float cpu_usage()
 	renderTimeLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeLeft;
 	renderTimeLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
 	renderTimeLabel.text = @"RenderTime:";
+	renderTimeLabel.name = @"renderTimeLabel";
 	[labelBackdrop addChild:renderTimeLabel];
 	
 	cpuUsageLabel = [SKLabelNode labelNodeWithFontNamed:@"Helvetica Neue Light"];
@@ -142,6 +146,7 @@ float cpu_usage()
 	cpuUsageLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeLeft;
 	cpuUsageLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
 	cpuUsageLabel.text = @"CPU: ";
+	cpuUsageLabel.name = @"cpuUsageLabel";
 	[labelBackdrop addChild:cpuUsageLabel];
 }
 
@@ -159,6 +164,7 @@ float cpu_usage()
 	skuButton.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.25, 0.5));
 	[skuButton setUpAction:@selector(skuButtonUp:) toPerformOnTarget:self];
 	skuButton.zPosition = 1.0;
+	skuButton.name = @"skuButton";
 	[self addChild:skuButton];
 	
 	SKUButtonLabelPropertiesPackage* labelPack2 = labelPack.copy;
@@ -168,6 +174,7 @@ float cpu_usage()
 	skButton.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.75, 0.5));
 	[skButton setUpAction:@selector(skButtonUp:) toPerformOnTarget:self];
 	skButton.zPosition = 1.0;
+	skButton.name = @"skButton";
 	[self addChild:skButton];
 	
 	SKUButtonLabelPropertiesPackage* labelPackNext = SKUSharedUtilities.userData[@"buttonLabelPackage"];
@@ -233,7 +240,7 @@ float cpu_usage()
 -(void)timerStop {
 	NSTimeInterval endtime = CFAbsoluteTimeGetCurrent();
 	NSTimeInterval total = endtime - startTime;
-	NSLog(@"generation time: %f", total);
+	SKULog(0,@"generation time: %f", total);
 	renderTimeLabel.text = [NSString stringWithFormat:@"RenderTime: %.5f", total];
 
 }

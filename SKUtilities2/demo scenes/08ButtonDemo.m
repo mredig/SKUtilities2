@@ -15,8 +15,9 @@
 
 -(void)didMoveToView:(SKView *)view {
 	self.backgroundColor = [SKColor colorWithWhite:0.7 alpha:1.0];
-	NSLog(@"08ButtonDemo: demos different button types");
-
+	SKULog(0,@"08ButtonDemo: demos different button types");
+	self.name = @"ButtonDemoScene";
+	
 	[self setupButton];
 }
 
@@ -24,10 +25,20 @@
 	SKUButtonLabelPropertiesPackage* labelPack = SKUSharedUtilities.userData[@"buttonLabelPackage"];
 	SKUButtonSpriteStatePropertiesPackage* backgroundPack = SKUSharedUtilities.userData[@"buttonBackgroundPackage"];
 	SKUPushButton* nextSlide = [SKUPushButton pushButtonWithBackgroundPropertiesPackage:backgroundPack andTitleLabelPropertiesPackage:labelPack];
-	nextSlide.position = pointMultiplyByPoint(midPointOfRect(self.frame), CGPointMake(1.0, 0.5));
+	nextSlide.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.66, 0.25));
 	nextSlide.zPosition = 1.0;
 	[nextSlide setUpAction:@selector(transferScene:) toPerformOnTarget:self];
+	nextSlide.name = @"nextSlideButton";
 	[self addChild:nextSlide];
+	
+	SKUButtonLabelPropertiesPackage* labelPackPrev = labelPack.copy;
+	[labelPackPrev changeText:@"Previous Scene"];
+	SKUPushButton* prevSlide = [SKUPushButton pushButtonWithBackgroundPropertiesPackage:backgroundPack andTitleLabelPropertiesPackage:labelPackPrev];
+	prevSlide.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.33, 0.25));
+	prevSlide.zPosition = 1.0;
+	[prevSlide setUpAction:@selector(prevScene:) toPerformOnTarget:self];
+	prevSlide.name = @"prevSlideButton";
+	[self addChild:prevSlide];
 	
 	
 // toggle button
@@ -52,11 +63,13 @@
 	[toggleTest setUpAction:@selector(toggled:) toPerformOnTarget:self];
 	toggleTest.zPosition = 1.0;
 	toggleTest.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.5, 0.75));
+	toggleTest.name = @"toggleTest";
 	[self addChild:toggleTest];
 	
 #if TARGET_OS_TV
 	
 	[self addNodeToNavNodesSKU:nextSlide];
+	[self addNodeToNavNodesSKU:prevSlide];
 	[self addNodeToNavNodesSKU:toggleTest];
 	[self setCurrentSelectedNodeSKU:nextSlide];
 	
@@ -74,11 +87,17 @@
 	
 }
 
-
+-(void)prevScene:(SKUButton*)button {
+	_7ColorBlending* scene = [_7ColorBlending sceneWithSize:self.size];
+	scene.scaleMode = self.scaleMode;
+	
+	SKView* view = (SKView*)self.view;
+	[view presentScene:scene];
+}
 
 
 -(void)transferScene:(SKUButton*)button {
-	
+
 //	_2rotationScene* scene = [[_2rotationScene alloc] initWithSize:self.size];
 //	scene.scaleMode = self.scaleMode;
 //	

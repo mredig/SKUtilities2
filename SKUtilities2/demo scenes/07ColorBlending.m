@@ -25,8 +25,8 @@
 
 -(void)didMoveToView:(SKView *)view {
 	
-	NSLog(@"\n\n\n\n07ColorBlending: demos color blending");
-	
+	SKULog(0,@"\n\n\n\n07ColorBlending: demos color blending");
+	self.name = @"ColorBlendScene";
 	self.backgroundColor = [SKColor blueColor];
 	
 	[self setupSpriteDemos];
@@ -48,12 +48,14 @@
 	nextSlide.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.66, 0.5));
 	nextSlide.zPosition = 1.0;
 	[nextSlide setUpAction:@selector(transferScene:) toPerformOnTarget:self];
+	nextSlide.name = @"nextSlideButton";
 	[self addChild:nextSlide];
 	
 	SKUPushButton* prevSlide = [SKUPushButton pushButtonWithText:@"Previous Scene"];
 	prevSlide.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.33, 0.5));
 	prevSlide.zPosition = 1.0;
 	[prevSlide setUpAction:@selector(prevScene:) toPerformOnTarget:self];
+	prevSlide.name = @"prevSlide";
 	[self addChild:prevSlide];
 	
 	

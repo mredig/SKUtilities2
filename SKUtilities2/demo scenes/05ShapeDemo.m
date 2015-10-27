@@ -17,8 +17,8 @@
 
 -(void) didMoveToView:(SKView *)view {
 	
-	NSLog(@"\n\n\n\n05ShapeDemo demo: demos shape stuff");
-	
+	SKULog(0,@"\n\n\n\n05ShapeDemo demo: demos shape stuff");
+	self.name = @"shape demo scene";
 	
 	[self setupSpriteDemos];
 	[self setupButton];
@@ -30,15 +30,18 @@
 	
 	SKU_ShapeNode* circle = [SKU_ShapeNode circleWithRadius:sizes andColor:[SKColor whiteColor]];
 	circle.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.25, 0.75));
+	circle.name = @"circle";
 	[self addChild:circle];
 	
 	SKU_ShapeNode* square = [SKU_ShapeNode squareWithWidth:sizes * 2.0 andColor:[SKColor redColor]];
 	square.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.75, 0.75));
+	square.name = @"square";
 	[self addChild:square];
 	
 	
 	SKU_ShapeNode* rectangle = [SKU_ShapeNode rectangleWithSize:CGSizeMake(sizes * 2.0, sizes) andColor:[SKColor blueColor]];
 	rectangle.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.25, 0.25));
+	rectangle.name = @"rectangle";
 	[self addChild:rectangle];
 	
 	
@@ -46,15 +49,15 @@
 	CGRect rect = CGRectMake(-sizes, -sizes / 2.0, sizes * 2.0, sizes);
 	CGPathRef rectPathRef = CGPathCreateWithRoundedRect(rect, sizes * 0.2, sizes * 0.2, NULL);
 	
-	SKU_ShapeNode* amalgShape = [SKU_ShapeNode node];
-	amalgShape.fillColor = [SKColor yellowColor];
-	amalgShape.strokeColor = [SKColor greenColor];
-	amalgShape.lineWidth = 20.0;
-	amalgShape.path = rectPathRef;
-	amalgShape.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.75, 0.25));
-	amalgShape.zPosition = 2.0;
-	amalgShape.name = @"amalg";
-	[self addChild:amalgShape];
+	SKU_ShapeNode* roundedRectangleShape = [SKU_ShapeNode node];
+	roundedRectangleShape.fillColor = [SKColor yellowColor];
+	roundedRectangleShape.strokeColor = [SKColor greenColor];
+	roundedRectangleShape.lineWidth = 20.0;
+	roundedRectangleShape.path = rectPathRef;
+	roundedRectangleShape.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.75, 0.25));
+	roundedRectangleShape.zPosition = 2.0;
+	roundedRectangleShape.name = @"roundedRectangleShape";
+	[self addChild:roundedRectangleShape];
 	
 	CGPathRelease(rectPathRef);
 }

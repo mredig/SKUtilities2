@@ -20,7 +20,7 @@
 	
 	SKSpriteNode* cursor;
 	
-	NSInteger verbosityLevel;
+	NSInteger verbosityLevelRequired;
 }
 
 @end
@@ -31,9 +31,9 @@
 	
 	self.name = @"02RotationScene";
 	
-	verbosityLevel = 0;
+	verbosityLevelRequired = 0;
 	
-	SKULog( verbosityLevel, @"\n\n\n\n02RotationScene: demos orientation functions");
+	SKULog( verbosityLevelRequired, @"\n\n\n\n02RotationScene: demos orientation functions");
 
 	
 	orientUpNode = [SKSpriteNode spriteNodeWithImageNamed:@"Spaceship"];
