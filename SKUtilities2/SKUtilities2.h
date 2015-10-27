@@ -581,8 +581,6 @@ Vulnerable to lag spikes if used.
 @property (nonatomic, assign) CGFloat lineDashPhase;
 @property (nonatomic, assign) NSString* lineJoin;
 @property (nonatomic, assign) CGFloat miterLimit;
-@property (nonatomic, assign) CGFloat strokeEnd;
-@property (nonatomic, assign) CGFloat strokeStart;
 @property (nonatomic, assign) CGPoint anchorPoint;
 
 +(SKU_ShapeNode*)circleWithRadius:(CGFloat)radius andColor:(SKColor*)color;

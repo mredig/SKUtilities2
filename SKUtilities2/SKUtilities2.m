@@ -829,8 +829,6 @@ static SKUtilities2* sharedUtilities = Nil;
 	shape.lineDashPhase = _lineDashPhase;
 	shape.lineJoin = _lineJoin;
 	shape.miterLimit = _miterLimit;
-	shape.strokeEnd = _strokeEnd;
-	shape.strokeStart = _strokeStart;
 	shape.anchorPoint = _anchorPoint;
 	shape.path = _path;
 	return shape;
@@ -916,8 +914,6 @@ static SKUtilities2* sharedUtilities = Nil;
 		_lineDashPhase = 0;
 		_lineJoin = kCALineJoinMiter;
 		_miterLimit = 10.0;
-		_strokeEnd = 1.0;
-		_strokeStart = 0.0;
 		_antiAlias = YES;
 		
 		_anchorPoint = CGPointMake(0.5, 0.5);
@@ -966,9 +962,6 @@ static SKUtilities2* sharedUtilities = Nil;
 	shapeLayer.fillColor = [_fillColor CGColor];
 	shapeLayer.lineWidth = 0;
 	shapeLayer.fillRule = _fillRule;
-//	shapeLayer.strokeEnd = _strokeEnd;
-//	shapeLayer.strokeStart = _strokeStart;
-	
 
 
 	
@@ -1016,8 +1009,6 @@ static SKUtilities2* sharedUtilities = Nil;
 	
 	boundingSize = CGSizeMake(enclosure.size.width + _lineWidth * 2, enclosure.size.height + _lineWidth * 2);
 	
-	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-	
 #if TARGET_OS_IPHONE
 	CGFloat scaleFactor = [[UIScreen mainScreen] scale];
 	NSString* systemVersion = [[UIDevice currentDevice] systemVersion];
@@ -1037,44 +1028,28 @@ static SKUtilities2* sharedUtilities = Nil;
 #endif
 	
 	CGSize imageSize = boundingSize;
-#if TARGET_OS_OSX_SKU
-	imageSize.width *= scaleFactor;
-	imageSize.height *= scaleFactor;
-	
 	imageSize.width = ceil(imageSize.width);
 	imageSize.height = ceil(imageSize.height);
-	
+#if TARGET_OS_OSX_SKU
+	NSImage *image = [[NSImage alloc] initWithSize:imageSize];
+	[image lockFocus];
+	CGContextRef newContext = [NSGraphicsContext currentContext].CGContext;
+	CGContextSetAllowsAntialiasing(newContext, _antiAlias);
+	[shapeLayer renderInContext:newContext];
+	[image unlockFocus];
 
-	CGContextRef context = CGBitmapContextCreate(NULL, imageSize.width, imageSize.height, 8, 0, colorSpace, kCGImageAlphaPremultipliedLast); //fixing this warning with a proper CGBitmapInfo enum causes the build to crash - Perhaps I did something wrong?
-//	CGContextRef cont2 = CGb
+	SKTexture* tex = [SKTexture textureWithImage:image];
+#else
+	UIGraphicsBeginImageContextWithOptions(imageSize, NO, scaleFactor);
+	[shapeLayer renderInContext:UIGraphicsGetCurrentContext()];
+	SKTexture* tex = [SKTexture textureWithImage:UIGraphicsGetImageFromCurrentImageContext()];
+	UIGraphicsEndImageContext();
+#endif
 	
-	CGContextScaleCTM(context, scaleFactor, scaleFactor);
-	CGContextSetAllowsAntialiasing(context, _antiAlias);
-	
-	[shapeLayer renderInContext:context];
-	
-	CGImageRef imageRef = CGBitmapContextCreateImage(context);
-	CGContextRelease(context);
-	CGColorSpaceRelease(colorSpace);
 	CGPathRelease(newPath);
 	if (_lineWidth > 0) {
 		CGPathRelease(outlinePath);
 	}
-	
-	SKTexture* tex = [SKTexture textureWithCGImage:imageRef];
-	
-	CGImageRelease(imageRef);
-#else
-	
-	UIGraphicsBeginImageContextWithOptions(imageSize, NO, scaleFactor);
-
-	[shapeLayer renderInContext:UIGraphicsGetCurrentContext()];
-	SKTexture* tex = [SKTexture textureWithImage:UIGraphicsGetImageFromCurrentImageContext()];
-
-	UIGraphicsEndImageContext();
-
-	
-#endif
 	
 	drawSprite.texture = tex;
 	drawSprite.size = boundingSize;
@@ -1085,20 +1060,13 @@ static SKUtilities2* sharedUtilities = Nil;
 	
 }
 
--(void)setAnchorPoint:(CGPoint)anchorPoint {
-	_anchorPoint = anchorPoint;
-//	drawSprite.position = defaultPosition;
-	null.position = CGPointMake(boundingSize.width * (0.5 - anchorPoint.x), boundingSize.height * (0.5 - anchorPoint.y));
-//	NSLog(@"defx: %f defy: %f boundw: %f boundh: %f finalx: %f finaly: %f", defaultPosition.x, defaultPosition.y, boundingSize.width, boundingSize.height, drawSprite.position.x, drawSprite.position.y);
-}
-
--(void)setLineWidth:(CGFloat)lineWidth {
-	_lineWidth = fmax(0.0, lineWidth);
+-(void)setPath:(CGPathRef)path {
+	_path = CGPathCreateCopy(path);
 	[self redrawTexture];
 }
 
--(void)setPath:(CGPathRef)path {
-	_path = CGPathCreateCopy(path);
+-(void)setStrokeColor:(SKColor *)strokeColor {
+	_strokeColor = strokeColor;
 	[self redrawTexture];
 }
 
@@ -1107,13 +1075,13 @@ static SKUtilities2* sharedUtilities = Nil;
 	[self redrawTexture];
 }
 
--(void)setStrokeEnd:(CGFloat)strokeEnd {
-	_strokeEnd = strokeEnd;
+-(void)setLineWidth:(CGFloat)lineWidth {
+	_lineWidth = fmax(0.0, lineWidth);
 	[self redrawTexture];
 }
 
--(void)setStrokeStart:(CGFloat)strokeStart {
-	_strokeStart = strokeStart;
+-(void)setFillRule:(NSString *)fillRule {
+	_fillRule = fillRule;
 	[self redrawTexture];
 }
 
@@ -1122,9 +1090,33 @@ static SKUtilities2* sharedUtilities = Nil;
 	[self redrawTexture];
 }
 
+-(void)setLineCap:(NSString *)lineCap {
+	_lineCap = lineCap;
+	[self redrawTexture];
+}
+
+-(void)setLineDashPattern:(NSArray *)lineDashPattern {
+	_lineDashPattern = lineDashPattern;
+	[self redrawTexture];
+}
+
+-(void)setLineJoin:(NSString *)lineJoin {
+	_lineJoin = lineJoin;
+	[self redrawTexture];
+}
+
+-(void)setMiterLimit:(CGFloat)miterLimit {
+	_miterLimit = miterLimit;
+	[self redrawTexture];
+}
+
+-(void)setAnchorPoint:(CGPoint)anchorPoint {
+	_anchorPoint = anchorPoint;
+	null.position = CGPointMake(boundingSize.width * (0.5 - anchorPoint.x), boundingSize.height * (0.5 - anchorPoint.y));
+}
+
 -(void)dealloc {
 	CGPathRelease(_path);
-//	SKULog(0, @"shape dealloc");
 }
 
 @end
