@@ -425,8 +425,10 @@ CGPoint bezierPoint (CGFloat t, CGPoint point0, CGPoint point1, CGPoint point2, 
 double bezierTValueAtXValue (double x, double p0x, double p1x, double p2x, double p3x);
 
 #pragma mark LOGGING
-
-void SKULog(NSInteger verbosityLevel, NSString *format, ...);
+/**
+ Prints text to the console using NSLog, but only prints if verbosityLevelRequired is lower than SKUSharedUtilities.verbosityLevel. Also only prints in compiler debug mode.
+ */
+void SKULog(NSInteger verbosityLevelRequired, NSString *format, ...);
 
 
 #pragma mark SKUTILITES SINGLETON
