@@ -53,6 +53,23 @@
 	toggleTest.name = @"toggleTest";
 	[self addChild:toggleTest];
 	
+// slider button
+	
+	SKUButtonSpriteStatePropertiesPackage* knobPackage = [SKUButtonSpriteStatePropertiesPackage packageWithDefaultSliderKnobPropertiesSKU];
+	SKUButtonSpriteStatePropertiesPackage* sliderPackage = [SKUButtonSpriteStatePropertiesPackage packageWithDefaultSliderSliderSlidePropertiesSKU];
+	
+	SKUSliderButton* slider = [SKUSliderButton node];
+	[slider setSlideSpriteStatesWithPackage:sliderPackage];
+	[slider setKnobSpriteStatesWithPackage:knobPackage];
+	slider.position = pointAdd(nextSlide.position, CGPointMake(0, -70));
+	slider.minimumValue = -300.0;
+	slider.maximumValue = 300.0;
+	slider.value = -150;
+//	slider.delegate = self;
+	slider.name = @"slider";
+	slider.sliderWidth = 70;
+	[self addChild:slider];
+	
 #if TARGET_OS_TV
 	
 	[self addNodeToNavNodesSKU:nextSlide];

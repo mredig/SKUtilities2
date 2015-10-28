@@ -785,14 +785,15 @@ typedef enum {
 
 } kSKUButtonStates;
 
-
-
+@class SKUSliderButton;
 @class SKUButton;
 
 @protocol SKUButtonDelegate   //define delegate protocol
 @optional
 -(void)doButtonDown:(SKUButton*)button;
 -(void)doButtonUp:(SKUButton*)button inBounds:(BOOL)inBounds;
+-(void)valueChanged:(SKUSliderButton*)button;
+@required
 @end //end protocol
 
 /** SKUButton: Intended as a cross platform, unified way to design buttons for menus and input, instead of designing a completely different interface for Mac, iOS, and tvOS. Still needs a bit more effort when used on tvOS, but shouldn't be too hard. 
@@ -970,13 +971,6 @@ typedef enum {
 
 #pragma mark SKUSliderButton
 
-@class SKUSliderButton;
-
-@protocol SKUSliderButtonDelegate   //define delegate protocol
-@optional
--(void)valueChanged:(SKUSliderButton*)button;
-@end //end protocol
-
 @interface SKUSliderButton : SKUButton
 /** Read only access to knob sprite. */
 @property (nonatomic, strong, readonly) SKSpriteNode* knobSprite;
@@ -1027,11 +1021,15 @@ typedef enum {
 @property (nonatomic) BOOL continuous;
 /** Defaults to 200.0. */
 @property (nonatomic) CGFloat sliderWidth;
+/** If button is set to send notifications, this is the name of the notification when the value changes. */
+@property (nonatomic) NSString* notificationNameChanged;
 
 -(void)setKnobSpriteStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
 -(void)setSlideSpriteStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
 -(void)setMaxValueSpriteStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
 -(void)setMinValueSpriteStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
+/** If button is set to call actions, set method and target to call on method when value changed. Sets flag on self.buttonMethods to run actions. */
+-(void)setChangedAction:(SEL)selector toPerformOnTarget:(NSObject*)target;
 
 @end
 

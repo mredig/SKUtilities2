@@ -2103,7 +2103,10 @@ static SKUtilities2* sharedUtilities = Nil;
 		}
 		
 		if (delegateMethod) {
-			[_delegate doButtonDown:self];
+			NSObject* del = (NSObject*)_delegate;
+			if ([del respondsToSelector:@selector(doButtonDown:)]) {
+				[_delegate doButtonDown:self];
+			}
 		}
 		
 		if (actionMethod) {
@@ -2150,10 +2153,13 @@ static SKUtilities2* sharedUtilities = Nil;
 		}
 		
 		if (delegateMethod) {
-			[_delegate doButtonUp:self inBounds:locationIsInBounds];
+			NSObject* del = (NSObject*)_delegate;
+			if ([del respondsToSelector:@selector(doButtonUp:inBounds:)]) {
+				[_delegate doButtonUp:self inBounds:locationIsInBounds];
+			}
 		}
 		
-		if (actionMethod && locationIsInBounds) {
+		if ((actionMethod && locationIsInBounds) || [self isKindOfClass:[SKUSliderButton class]] ) {
 			[upSelector invoke];
 		}
 	}
@@ -2904,6 +2910,8 @@ static SKUtilities2* sharedUtilities = Nil;
 	
 	BOOL stateMinValueDefaultInitialized;
 	BOOL stateMinValueDisabledInitialized;
+	
+	NSInvocation* changedSelector;
 }
 
 @end
@@ -3088,21 +3096,41 @@ static SKUtilities2* sharedUtilities = Nil;
 	_knobSprite.position = CGPointMake(location.x + _sliderWidth * 0.5, _knobSprite.position.y);
 	[self deriveValueFromKnobPosition];
 	[super absoluteInputBeganSKU:location withEventDictionary:eventDict];
-	id<SKUSliderButtonDelegate> newDel = (id<SKUSliderButtonDelegate>)self.delegate;
-	if (_previousValue != _value) {
-		[newDel valueChanged:self];
-	}
+	[self sendChanged];
 }
 
 -(void)absoluteInputEndedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
 	_knobSprite.position = CGPointMake(location.x + _sliderWidth * 0.5, _knobSprite.position.y);
 	[self deriveValueFromKnobPosition];
 	[super absoluteInputEndedSKU:location withDelta:delta withEventDictionary:eventDict];
-	id<SKUSliderButtonDelegate> newDel = (id<SKUSliderButtonDelegate>)self.delegate;
-	if (_previousValue != _value) {
-		[newDel valueChanged:self];
+	[self sendChanged];
+}
+
+-(void)sendChanged {
+	if (self.isEnabled) {
+		if (_previousValue != _value && _continuous) {
+			BOOL notificationMethod = kSKUButtonMethodPostNotification & self.buttonMethod;
+			BOOL delegateMethod = kSKUButtonMethodDelegate & self.buttonMethod;
+			BOOL actionMethod = kSKUButtonMethodRunActions & self.buttonMethod;
+			
+			if (notificationMethod) {
+				[[NSNotificationCenter defaultCenter] postNotificationName:_notificationNameChanged object:self];
+			}
+			
+			if (delegateMethod) {
+				NSObject* del = (NSObject*)self.delegate;
+				if ([del respondsToSelector:@selector(valueChanged:)]) {
+					[self.delegate valueChanged:self];
+				}
+			}
+			
+			if (actionMethod) {
+				[changedSelector invoke];
+			}
+		}
 	}
 }
+
 
 #pragma mark SKUSliderButton setters (slide)
 
@@ -3293,9 +3321,23 @@ static SKUtilities2* sharedUtilities = Nil;
 
 #pragma mark SKUSliderButton setters (other)
 
+-(void)setNotificationNameChanged:(NSString *)notificationNameChanged {
+	_notificationNameChanged = notificationNameChanged;
+	self.buttonMethod = self.buttonMethod | kSKUButtonMethodPostNotification;
+}
+
+-(void)setChangedAction:(SEL)selector toPerformOnTarget:(NSObject *)target {
+	NSMethodSignature* sig = [target methodSignatureForSelector:selector];
+	changedSelector = [NSInvocation invocationWithMethodSignature:sig];
+	[changedSelector setSelector:selector];
+	SKUButton* button = self;
+	[changedSelector setArgument:&button atIndex:2];
+	[changedSelector setTarget:target];
+	self.buttonMethod = self.buttonMethod | kSKUButtonMethodRunActions;
+}
 
 -(void)setSliderWidth:(CGFloat)sliderWidth {
-	_sliderWidth = sliderWidth;
+	_sliderWidth = fmax(sliderWidth, 25.0);
 	[self updateCurrentSpriteStateProperties];
 }
 
@@ -3305,6 +3347,15 @@ static SKUtilities2* sharedUtilities = Nil;
 	[self updateCurrentSpriteStateProperties];
 }
 
+-(void)setMinimumValue:(CGFloat)minimumValue {
+	_minimumValue = minimumValue;
+	[self updateKnobPosition];
+}
+
+-(void)setMaximumValue:(CGFloat)maximumValue {
+	_maximumValue = maximumValue;
+	[self updateKnobPosition];
+}
 
 #pragma mark SKUSliderButton defaults
 
