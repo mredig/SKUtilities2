@@ -10,6 +10,15 @@
 #import "SKUtilities2.h"
 #import "07ColorBlending.h"
 
+@interface _8ButtonDemo() {
+ 
+	SKUSliderButton* slider;
+	SKUToggleButton* toggleTest;
+}
+
+@end
+
+
 @implementation _8ButtonDemo
 
 
@@ -46,7 +55,7 @@
 	SKUButtonLabelPropertiesPackage* labelPackToggle = labelPack.copy;
 	[labelPackToggle changeText:@"toggle"];
 	
-	SKUToggleButton* toggleTest = [SKUToggleButton toggleButtonWithBackgroundPropertiesPackage:backgroundPack andTitleLabelPropertiesPackage:labelPackToggle];
+	toggleTest = [SKUToggleButton toggleButtonWithBackgroundPropertiesPackage:backgroundPack andTitleLabelPropertiesPackage:labelPackToggle];
 	[toggleTest setUpAction:@selector(toggled:) toPerformOnTarget:self];
 	toggleTest.zPosition = 1.0;
 	toggleTest.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.5, 0.75));
@@ -58,21 +67,25 @@
 	SKUButtonSpriteStatePropertiesPackage* knobPackage = [SKUButtonSpriteStatePropertiesPackage packageWithDefaultSliderKnobPropertiesSKU];
 	SKUButtonSpriteStatePropertiesPackage* sliderPackage = [SKUButtonSpriteStatePropertiesPackage packageWithDefaultSliderSliderSlidePropertiesSKU];
 	
-	SKUSliderButton* slider = [SKUSliderButton node];
+	slider = [SKUSliderButton node];
 	[slider setSlideSpriteStatesWithPackage:sliderPackage];
 	[slider setKnobSpriteStatesWithPackage:knobPackage];
 	slider.position = pointAdd(nextSlide.position, CGPointMake(0, -70));
-	slider.minimumValue = -300.0;
-	slider.maximumValue = 300.0;
+	slider.minimumValue = -10;
+	slider.maximumValue = 100;
 	slider.value = -150;
 //	slider.delegate = self;
+	[slider setChangedAction:@selector(sliderChanged:) toPerformOnTarget:self];
+	slider.continuous = YES;
 	slider.name = @"slider";
 	slider.sliderWidth = 300;
 	[self addChild:slider];
+
 	
 #if TARGET_OS_TV
 	
 	[self addNodeToNavNodesSKU:nextSlide];
+	[self addNodeToNavNodesSKU:slider];
 	[self addNodeToNavNodesSKU:prevSlide];
 	[self addNodeToNavNodesSKU:toggleTest];
 	[self setCurrentSelectedNodeSKU:nextSlide];
@@ -82,10 +95,28 @@
 #endif
 }
 
+
+-(void)valueChanged:(SKUSliderButton *)button {
+	SKULog(0, @"delegate: %f", button.value);
+}
+
+-(void)sliderChanged:(SKUSliderButton*)button {
+	SKULog(0, @"value: %f", button.value);
+}
+
 -(void)toggled:(SKUToggleButton*)button {
 //	SKULog(0, @"toggled: %i", button.on);
 }
 
+
+-(void)inputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
+	if (toggleTest.on) {
+		slider.value += delta.y;
+	} else {
+		slider.sliderWidth += delta.y;
+	}
+
+}
 
 -(void)inputEndedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
 	

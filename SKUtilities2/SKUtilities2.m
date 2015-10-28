@@ -2157,7 +2157,7 @@ static SKUtilities2* sharedUtilities = Nil;
 			}
 		}
 		
-		if ((actionMethod && locationIsInBounds) || [self isKindOfClass:[SKUSliderButton class]] ) {
+		if (actionMethod && locationIsInBounds) {
 			[upSelector invoke];
 		}
 	}
@@ -2910,6 +2910,8 @@ static SKUtilities2* sharedUtilities = Nil;
 	BOOL stateMinValueDisabledInitialized;
 	
 	NSInvocation* changedSelector;
+	
+	CGFloat actualSlideWidth;
 }
 
 @end
@@ -2953,7 +2955,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	_maximumValue = 100.0;
 	_minimumValue = 0.0f;
 	_continuous = NO;
-	_sliderWidth = 200.0f;
+	self.sliderWidth = 200.0f;
 	
 	self.name = @"SKUSliderButton";
 	
@@ -3073,17 +3075,26 @@ static SKUtilities2* sharedUtilities = Nil;
 	[self updateKnobPosition];
 }
 
+-(CGFloat)getActualWidthFromTexture:(SKTexture*)texture withCenterRect:(CGRect)rect {
+	CGFloat tWidth = texture.size.width;
+	CGFloat sectionANorm = rect.origin.x;
+	CGFloat sectionABNorm = rect.size.width + sectionANorm;
+	CGFloat sectionAPoints = sectionANorm * tWidth;
+	CGFloat sectionCPoints = tWidth - (tWidth * sectionABNorm);
+	CGFloat rWidth = _sliderWidth - (sectionAPoints + sectionCPoints);
+	return rWidth;
+}
+
 
 -(void)updateKnobPosition {
-
 	CGFloat extremesDifference = _maximumValue - _minimumValue;
 	CGFloat normalValue = (_value - _minimumValue) / extremesDifference;
-	CGFloat xPos = linearInterpolationBetweenFloatValues(-_sliderWidth * 0.5, _sliderWidth * 0.5, normalValue, YES);
+	CGFloat xPos = linearInterpolationBetweenFloatValues(-actualSlideWidth * 0.5, actualSlideWidth * 0.5, normalValue, YES);
 	_knobSprite.position = CGPointMake(xPos, _knobSprite.position.y);
 }
 
 -(void)deriveValueFromKnobPosition {
-	CGFloat sliderPos = _knobSprite.position.x / _sliderWidth;
+	CGFloat sliderPos = (_knobSprite.position.x + actualSlideWidth * 0.5) / actualSlideWidth;
 	CGFloat extremesDifference = _maximumValue - _minimumValue;
 	CGFloat value = (sliderPos * extremesDifference) + _minimumValue;
 	_previousValue = _value;
@@ -3091,22 +3102,22 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 -(void)absoluteInputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
-	_knobSprite.position = CGPointMake(location.x + _sliderWidth * 0.5, _knobSprite.position.y);
+	_knobSprite.position = CGPointMake(clipFloatWithinRange(location.x, -actualSlideWidth * 0.5f, actualSlideWidth * 0.5f), _knobSprite.position.y);
 	[self deriveValueFromKnobPosition];
-	[super absoluteInputBeganSKU:location withEventDictionary:eventDict];
-	[self sendChanged];
+	[super absoluteInputMovedSKU:location withDelta:delta withEventDictionary:eventDict];
+	[self sendChanged:NO];
 }
 
 -(void)absoluteInputEndedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
-	_knobSprite.position = CGPointMake(location.x + _sliderWidth * 0.5, _knobSprite.position.y);
+	_knobSprite.position = CGPointMake(clipFloatWithinRange(location.x, -actualSlideWidth * 0.5f, actualSlideWidth * 0.5f), _knobSprite.position.y);
 	[self deriveValueFromKnobPosition];
 	[super absoluteInputEndedSKU:location withDelta:delta withEventDictionary:eventDict];
-	[self sendChanged];
+	[self sendChanged:YES];
 }
 
--(void)sendChanged {
+-(void)sendChanged:(BOOL)forced {
 	if (self.isEnabled) {
-		if (_previousValue != _value && _continuous) {
+		if ((_previousValue != _value && _continuous) || forced) {
 			BOOL notificationMethod = kSKUButtonMethodPostNotification & self.buttonMethod;
 			BOOL delegateMethod = kSKUButtonMethodDelegate & self.buttonMethod;
 			BOOL actionMethod = kSKUButtonMethodRunActions & self.buttonMethod;
@@ -3335,6 +3346,7 @@ static SKUtilities2* sharedUtilities = Nil;
 
 -(void)setSliderWidth:(CGFloat)sliderWidth {
 	_sliderWidth = fmax(sliderWidth, 25.0);
+	actualSlideWidth = [self getActualWidthFromTexture:_slideSprite.texture withCenterRect:_slideSprite.centerRect];
 	[self updateCurrentSpriteStateProperties];
 }
 

@@ -8,8 +8,9 @@ skbuttons probably need copy zone
 might wanna add archiving support?
 might wanna add descriptions to other classes
 
+better doc
 
-maybe refactor input movement stuff with localeven (inspired here: http://stackoverflow.com/questions/1628366/global-mouse-moved-events-in-cocoa?rq=1 )
+maybe refactor input movement stuff with localevents (inspired here: http://stackoverflow.com/questions/1628366/global-mouse-moved-events-in-cocoa?rq=1 )
 
 cgpath length (research: http://www.mlsite.net/blog/?p=1312
 https://developer.apple.com/library/mac/documentation/GraphicsImaging/Reference/CGPath/index.html#//apple_ref/doc/c_ref/CGPathElementType

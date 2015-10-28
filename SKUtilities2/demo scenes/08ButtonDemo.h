@@ -7,7 +7,9 @@
 //
 
 #import <SpriteKit/SpriteKit.h>
+#import "SKUtilities2.h"
 
-@interface _8ButtonDemo : SKScene
+
+@interface _8ButtonDemo : SKScene <SKUButtonDelegate>
 
 @end
