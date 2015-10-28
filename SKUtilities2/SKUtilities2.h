@@ -1,11 +1,14 @@
-//
-//  SKUtilities2.h
-//  SKUtilities2
-//
-//  Created by Michael Redig on 9/26/15.
-//  Copyright © 2015 Michael Redig. All rights reserved.
-//
-
+/*!
+ @header SKUtilities2
+ 
+ @brief SpriteKit Utilities 2
+ 
+ This is a collection of functions, classes, and categories to greatly simplify and speed up development with SpriteKit.
+ 
+ @author	Michael Redig
+ @copyright	2015 Michael Redig - (See license file)
+ @version	2.0b
+ */
 
 // run this as a script in a build phase to automatically increment build numbers
 
@@ -45,7 +48,7 @@
 
 
 #pragma mark NUMBER INTERPOLATION
-/**
+/*!
  Returns a CGFloat interpolated linearly between two values. Clipped determines whether it can go beyond the bounds of the values.
 @param valueA
  CGFloat low end value
@@ -58,7 +61,7 @@
 */
 CGFloat linearInterpolationBetweenFloatValues (CGFloat valueA, CGFloat valueB, CGFloat pointBetween, bool clipped);
 
-/**
+/*!
  Returns a CGFloat of the value of pointBetween interpolated linearly between two values. Clipped determines whether it can go beyond the bounds of the values. If that didn't make sense, it's a reversal of what linearInterpolationBetweenFloatValues does - it will return the value of "pointBetween" from linearInterpolationBetweenFloatValues.
 @param valueA
  CGFloat low end range value
@@ -72,7 +75,7 @@ CGFloat linearInterpolationBetweenFloatValues (CGFloat valueA, CGFloat valueB, C
 
 CGFloat reverseLinearInterpolationBetweenFloatValues (CGFloat valueA, CGFloat valueB, CGFloat valueBetween, bool clipped);
 
-/**
+/*!
  Returns a CGFloat modifying currentValue that iteratively changes over time to become closer to idealValue in iterations of stepValue
  @param idealValue
  CGFloat value that you are approaching
@@ -83,7 +86,7 @@ CGFloat reverseLinearInterpolationBetweenFloatValues (CGFloat valueA, CGFloat va
  */
 CGFloat rampToValue (CGFloat idealValue, CGFloat currentValue, CGFloat stepValue);
 
-/**
+/*!
  Returns a CGFloat clipped within the range provided.
  @param value
  CGFloat value that is evaluated
@@ -94,7 +97,7 @@ CGFloat rampToValue (CGFloat idealValue, CGFloat currentValue, CGFloat stepValue
  */
 CGFloat clipFloatWithinRange (CGFloat value, CGFloat minimum, CGFloat maximum);
 
-/**
+/*!
  Returns an NSInteger clipped within the range provided.
  @param value
  NSInteger value that is evaluated
@@ -108,7 +111,7 @@ NSInteger clipIntegerWithinRange (NSInteger value, NSInteger minimum, NSInteger 
 
 #pragma mark RANDOM NUMBERS
 
-/**
+/*!
  Returns a u_int_32_t value randomized between two other values.
  @param lowend
  u_int32_t low end range value
@@ -117,7 +120,7 @@ NSInteger clipIntegerWithinRange (NSInteger value, NSInteger minimum, NSInteger 
  */
 u_int32_t randomUnsignedIntegerBetweenTwoValues (u_int32_t lowend, u_int32_t highend);
 
-/**
+/*!
  Returns a CGFloat value randomized between zero and a higher value.
  @param highend
  CGFloat max range value
@@ -126,7 +129,7 @@ CGFloat randomFloatBetweenZeroAndHighend (CGFloat highend);
 
 #pragma mark DISTANCE FUNCTIONS
 
-/**
+/*!
  Returns a CGFloat value measuring the distance between two CGPoint values.
  @param pointA
  CGPoint start or end point
@@ -136,7 +139,7 @@ CGFloat randomFloatBetweenZeroAndHighend (CGFloat highend);
 CGFloat distanceBetween (CGPoint pointA, CGPoint pointB);
 
 
-/**
+/*!
  Returns a bool value determining if the distance between two points is less than a predetermined maximum value.
  @param pointA
  CGPoint start or end point
@@ -148,7 +151,7 @@ CGFloat distanceBetween (CGPoint pointA, CGPoint pointB);
 bool distanceBetweenIsWithinXDistance (CGPoint pointA, CGPoint pointB, CGFloat xDistance);
 
 
-/**
+/*!
  Returns a bool value determining if the distance between two points is less than a predetermined maximum value. This is a small optimization over the previous function as it saves the step of squaring the x value.
  @param pointA
  CGPoint start or end point
@@ -163,7 +166,7 @@ bool distanceBetweenIsWithinXDistancePreSquared (CGPoint pointA, CGPoint pointB,
 #pragma mark ORIENTATION
 
 
-/**
+/*!
  Returns a float value in radians to rotate a node at position *from* to face *facing*, when the node is facing right at 0 rotation.
  @param facing
  CGPoint a point in the direction that the node should be facing.
@@ -171,7 +174,7 @@ bool distanceBetweenIsWithinXDistancePreSquared (CGPoint pointA, CGPoint pointB,
  CGPoint point that the node is located at
  */
 CGFloat orientToFromRightFace (CGPoint facing, CGPoint from);
-/**
+/*!
  Returns a float value in radians to rotate a node at position *from* to face *facing*, when the node is facing up at 0 rotation.
  @param facing
  CGPoint a point in the direction that the node should be facing.
@@ -179,7 +182,7 @@ CGFloat orientToFromRightFace (CGPoint facing, CGPoint from);
  CGPoint point that the node is located at
  */
 CGFloat orientToFromUpFace (CGPoint facing, CGPoint from);
-/**
+/*!
  Returns a float value in radians to rotate a node at position *from* to face *facing*, when the node is facing left at 0 rotation.
  @param facing
  CGPoint a point in the direction that the node should be facing.
@@ -187,7 +190,7 @@ CGFloat orientToFromUpFace (CGPoint facing, CGPoint from);
  CGPoint point that the node is located at
  */
 CGFloat orientToFromLeftFace (CGPoint facing, CGPoint from);
-/**
+/*!
  Returns a float value in radians to rotate a node at position *from* to face *facing*, when the node is facing down at 0 rotation.
  @param facing
  CGPoint a point in the direction that the node should be facing.
@@ -199,31 +202,31 @@ CGFloat orientToFromDownFace (CGPoint facing, CGPoint from);
 
 #pragma mark CGVector HELPERS
 
-/**
+/*!
  Returns a CGVector struct converted from a CGPoint struct.
  @param point
  CGPoint point struct to be converted
  */
 CGVector vectorFromCGPoint (CGPoint point);
-/**
+/*!
  Returns a CGVector struct converted from a CGSize struct.
  @param size
  CGSize size struct to be converted
  */
 CGVector vectorFromCGSize (CGSize size);
-/**
+/*!
  Returns a CGVector struct with negated values.
  @param vector
  CGVector vector struct to be inverted
  */
 CGVector vectorInverse (CGVector vector);
-/**
+/*!
  Returns a CGVector normalized to have a distance of 1.0.
  @param vector
  CGVector vector struct to be normalized
  */
 CGVector vectorNormalize (CGVector vector);
-/**
+/*!
  Returns a CGVector that is the sum of two other CGVectors
  @param vectorA
  CGVector vector struct to be added.
@@ -231,7 +234,7 @@ CGVector vectorNormalize (CGVector vector);
  CGVector vector struct to be added.
  */
 CGVector vectorAdd (CGVector vectorA, CGVector vectorB);
-/**
+/*!
  Returns a CGVector that is the product of two other CGVectors (dx * dx, dy * dy)
  @param vectorA
  CGVector vector struct to be factored.
@@ -239,7 +242,7 @@ CGVector vectorAdd (CGVector vectorA, CGVector vectorB);
  CGVector vector struct to be factored.
  */
 CGVector vectorMultiplyByVector (CGVector vectorA, CGVector vectorB);
-/**
+/*!
  Returns a CGVector that is the product of multiplying both values by the same factor.
  @param vectorA
  CGVector vector struct to be multiplied.
@@ -247,7 +250,7 @@ CGVector vectorMultiplyByVector (CGVector vectorA, CGVector vectorB);
  CGFloat value to multiply both dx and dy by.
  */
 CGVector vectorMultiplyByFactor (CGVector vector, CGFloat factor);
-/**
+/*!
  Returns a CGVector that would face the destination point from the origin point
  @param destination
  CGPoint struct
@@ -257,13 +260,13 @@ CGVector vectorMultiplyByFactor (CGVector vector, CGFloat factor);
  bool value determining whether to normalize the result or not
  */
 CGVector vectorFacingPoint (CGPoint destination, CGPoint origin, bool normalize);
-/**
+/*!
  Returns a normal CGVector converted from a radian value
  @param radianAngle
  CGFloat radian value
  */
 CGVector vectorFromRadian (CGFloat radianAngle);
-/**
+/*!
  Returns a normal CGVector converted from a degree value
  @param degreeAngle
  CGFloat degree value
@@ -272,26 +275,26 @@ CGVector vectorFromDegree (CGFloat degreeAngle);
 
 #pragma mark CGPoint HELPERS
 
-/**
+/*!
  Returns a CGPoint struct converted from a CGVector
  @param vector
  CGVector vector
  */
 CGPoint pointFromCGVector (CGVector vector);
-/**
+/*!
  Returns a CGPoint struct converted from a CGSize
  @param size
  CGSize size
  */
 CGPoint pointFromCGSize (CGSize size);
-/**
+/*!
  Returns a CGPoint struct with negated values.
  @param point
  CGPoint point struct to be inverted
  */
 CGPoint pointInverse (CGPoint point);
 
-/**
+/*!
  Returns a CGPoint struct as a sum from both CGPoint input parameters.
  @param pointA
  CGPoint point A
@@ -300,7 +303,7 @@ CGPoint pointInverse (CGPoint point);
  */
 CGPoint pointAdd (CGPoint pointA, CGPoint pointB);
 
-/**
+/*!
  Returns a CGPoint struct with value added to both dimensions
  @param point
  CGPoint point
@@ -309,7 +312,7 @@ CGPoint pointAdd (CGPoint pointA, CGPoint pointB);
  */
 CGPoint pointAddValue (CGPoint point, CGFloat value);
 
-/**
+/*!
  Returns a CGPoint that is the product of two other CGPoints (Ax * Bx, Ay * By)
  @param pointB
  CGPoint point struct to be factored.
@@ -318,7 +321,7 @@ CGPoint pointAddValue (CGPoint point, CGFloat value);
  */
 CGPoint pointMultiplyByPoint (CGPoint pointA, CGPoint pointB);
 
-/**
+/*!
  Returns a CGPoint that is the product of multiplying both values by the same factor.
  @param point
  CGPoint point struct to be factored.
@@ -327,7 +330,7 @@ CGPoint pointMultiplyByPoint (CGPoint pointA, CGPoint pointB);
  */
 CGPoint pointMultiplyByFactor (CGPoint point, CGFloat factor);
 
-/**
+/*!
  Returns a CGPoint struct that is the result of movement based on the factors provided
  @param origin
  CGPoint where the point is in the current frame, prior to moving to the next frame
@@ -343,7 +346,7 @@ CGPoint pointMultiplyByFactor (CGPoint point, CGFloat factor);
  CGFlaot value to conveniently modify speed based on buffs or debuffs
  */
 CGPoint pointStepVectorFromPointWithInterval (CGPoint origin, CGVector normalVector, CFTimeInterval interval, CFTimeInterval maxInterval, CGFloat speed, CGFloat speedModifiers);
-/**
+/*!
  Returns a CGPoint struct that is the result of movement based on the factors provided
  @param origin
  CGPoint where the point is in the current frame, prior to moving to the next frame
@@ -353,7 +356,7 @@ CGPoint pointStepVectorFromPointWithInterval (CGPoint origin, CGVector normalVec
  CGFloat value: The distance to move in the direction of the vector.
  */
 CGPoint pointStepVectorFromPoint (CGPoint origin, CGVector normalVector, CGFloat distance);
-/**
+/*!
  Returns a CGPoint struct that is the result of movement based on the factors provided
  @param origin
  CGPoint where the point is in the current frame, prior to moving to the next frame
@@ -369,7 +372,7 @@ CGPoint pointStepVectorFromPoint (CGPoint origin, CGVector normalVector, CGFloat
  CGFlaot value to conveniently modify speed based on buffs or debuffs
  */
 CGPoint pointStepTowardsPointWithInterval (CGPoint origin, CGPoint destination, CFTimeInterval interval, CFTimeInterval maxInterval, CGFloat speed, CGFloat speedModifiers);
-/**
+/*!
  Returns a CGPoint struct positioned at a varying value between two points, based on the input of "factorBetween"
  @param pointA
  CGPoint start or end point
@@ -379,19 +382,19 @@ CGPoint pointStepTowardsPointWithInterval (CGPoint origin, CGPoint destination, 
  CGFloat value at which to interpolate to between the points. For example, a value of 0.5 would be halfway between the two points, a value of 0.25 would only be a quarter of the way between them.
  */
 CGPoint pointInterpolationLinearBetweenTwoPoints (CGPoint pointA, CGPoint pointB, CGFloat factorBetween);
-/**
+/*!
  Returns a CGPoint struct positioned at the midpoint of a CGRect, including the offset of the origin of the CGRect.
  @param rect
  CGRect rect struct that you need the midpoint of.
  */
 CGPoint midPointOfRect (CGRect rect);
-/**
+/*!
  Returns a CGPoint struct positioned at the midpoint of a CGSize struct.
  @param size
  CGSize size struct that you need the midpoint of.
  */
 CGPoint midPointOfSize (CGSize size);
-/**
+/*!
  Returns a bool determining whether origin is behind victim, based on victim's facing direction.
  @param origin
  CGPoint the point in contention
@@ -406,13 +409,13 @@ bool pointIsBehindVictim (CGPoint origin, CGPoint victim, CGVector normalVictimF
 
 
 #pragma mark COORDINATE FORMAT CONVERSIONS
-/**
+/*!
  Returns a CGPoint struct converted from a properly formatted string.
  @param string
  NSString formatted like { ##,## } where ## are numbers.
  */
 CGPoint getCGPointFromString (NSString* string);
-/**
+/*!
  Returns a properly formatted NSString to later be converted back to a CGPoint. This is useful for saving to plist files.
  @param location
  CGPoint struct
@@ -425,7 +428,7 @@ CGPoint bezierPoint (CGFloat t, CGPoint point0, CGPoint point1, CGPoint point2, 
 double bezierTValueAtXValue (double x, double p0x, double p1x, double p2x, double p3x);
 
 #pragma mark LOGGING
-/**
+/*!
  Prints text to the console using NSLog, but only prints if verbosityLevelRequired is lower than SKUSharedUtilities.verbosityLevel. Also only prints in compiler debug mode.
  */
 void SKULog(NSInteger verbosityLevelRequired, NSString *format, ...);
@@ -454,33 +457,33 @@ typedef enum {
 #endif
 
 @interface SKUtilities2 : NSObject
-/**
+/*!
  Current time passed in from scene update method, but must be set up properly. This allows you to get the currentTime into other objects or methods without directly calling them from the update method.
  */
 @property (nonatomic, readonly) CFTimeInterval currentTime;
-/**
+/*!
  Amount of time passed since last frame. This value is capped by deltaMaxTime.
  */
 @property (nonatomic, readonly) CFTimeInterval deltaFrameTime;
-/**
+/*!
  Amount of time passed since last frame. This value is NOT capped by deltaMaxTime.
 Vulnerable to lag spikes if used.
  */
 @property (nonatomic, readonly) CFTimeInterval deltaFrameTimeUncapped;
-/**
+/*!
  Defaults to 1.0f.
  */
 @property (nonatomic) CGFloat deltaMaxTime;
-/**
+/*!
  Used to determine if SKULogs print to the console. A value of 100 or more will automatically print notifications of SKScene deallocation. A value of 150 will print notifications of SKNode deallocation.
  */
 @property (nonatomic) NSInteger verbosityLevel;
-/**
+/*!
  This mutable dictionary is similar in concept to the item of the same name on all SKNodes that Apple does, but on the singleton allows you to store objects for access game wide, not just on one node. It remains uninitialized until you initialize it.
  */
 @property (nonatomic, strong) NSMutableDictionary* userData;
 #if TARGET_OS_OSX_SKU
-/**
+/*!
  Flags to determine what sort of mouse button is passed onto nodes. By default, it only passes left mouse button events, but adding other kSKUMouseButtonFlags flags allows to respond to other mouse buttons.
  */
 @property (nonatomic) kSKUMouseButtonFlags macButtonFlags;
@@ -501,11 +504,11 @@ Vulnerable to lag spikes if used.
 #endif
 
 
-/**
+/*!
  Singleton object. Currently only has timing info on it. May be expanded in future.
  */
 +(SKUtilities2*) sharedUtilities;
-/**
+/*!
  Call this method in your scene's update method to share the time with other objects throughout the game.
  */
 -(void)updateCurrentTime:(CFTimeInterval)timeUpdate;
@@ -517,7 +520,7 @@ Vulnerable to lag spikes if used.
 
 #pragma mark SKU_PositionObject
 
-/**
+/*!
  For easy passing of struct data through mediums that only accept objects, like NSArrays or performSelectors that only accept passing of objects.
  */
 @interface SKU_PositionObject : NSObject  <NSCopying>
@@ -546,42 +549,42 @@ Vulnerable to lag spikes if used.
 
 #pragma mark SKU_ShapeNode
 
-/**
- Apple's shape generator for SpriteKit causes performance issues. It appears that shapes are rerendered each frame, despite a lack of change in appearance. This method uses CAShapeLayer to render a shape, which is slightly more costly than the rendering of the SKShapeNode, but once it's rendered, is cached as a bitmap and renders very quickly in SpriteKit thereafter. TLDR: SpriteKit's shape node fast redner, slow draw. SKUShapeNode is slow render, fast draw.
+/*!
+ Apple's shape generator for SpriteKit causes performance issues. Shapes are rerendered each frame, despite a lack of change in appearance. You can cheat by parenting it to an SKEffectNode and setting it to rasterize. However, any changes cause it to rerender with high cpu usage. It also has low quality anti aliasing. Instead, you can use this class. SKU_ShapeNode uses CAShapeLayer to render a shape, which is slightly more costly than the rendering of the SKShapeNode, but once it's rendered, is cached as a bitmap and renders very quickly in SpriteKit thereafter. TLDR: SpriteKit's shape node fast redner, slow draw. SKUShapeNode is slow render, fast draw.
  */
 @interface SKU_ShapeNode : SKNode <NSCopying>
 
-/**
+/*!
  The CGPath to be drawn (in the Node's coordinate space) (will only redraw the image if the path is non-nil, so it's best to set the path as the last property and save some CPU cycles)
  */
 @property (nonatomic) CGPathRef path;
 
-/**
+/*!
  The color to draw the path with. (for no stroke use [SKColor clearColor]). Defaults to [SKColor whiteColor].
  */
 @property (nonatomic, retain) SKColor *strokeColor;
 
-/**
+/*!
  The color to fill the path with. Defaults to [SKColor clearColor] (no fill).
  */
 @property (nonatomic, retain) SKColor *fillColor;
 
-/**
+/*!
  The width used to stroke the path. Widths larger than 2.0 may result in artifacts. Defaults to 1.0.
  */
 @property (nonatomic) CGFloat lineWidth;
 
 
-/** The fill rule used when filling the path. Options are `non-zero' and
+/*! The fill rule used when filling the path. Options are `non-zero' and
  * `even-odd'. Defaults to `non-zero'. */
 @property (nonatomic, assign) NSString* fillRule;
 
 @property (nonatomic, assign) BOOL antiAlias;
 
 @property (nonatomic, assign) NSString* lineCap;
-/** Causing exceptions (at least on OSX) - keeping it in there cuz I BELIEVE the error is on Apple's side. Careful using this though. */
+/*! Causing exceptions (at least on OSX) - keeping it in there cuz I BELIEVE the error is on Apple's side. Careful using this though. */
 @property (nonatomic, assign) NSArray* lineDashPattern;
-/** Causing exceptions (at least on OSX) - keeping it in there cuz I BELIEVE the error is on Apple's side. Careful using this though. */
+/*! Causing exceptions (at least on OSX) - keeping it in there cuz I BELIEVE the error is on Apple's side. Careful using this though. */
 @property (nonatomic, assign) CGFloat lineDashPhase;
 @property (nonatomic, assign) NSString* lineJoin;
 @property (nonatomic, assign) CGFloat miterLimit;
@@ -619,7 +622,7 @@ Vulnerable to lag spikes if used.
 @end
 
 #pragma mark SKUButtonLabelProperties
-/** Stores a single state for labels in buttons. The properties set on this object gets passed to the button's label for the appropriate state.
+/*! Stores a single state for labels in buttons. The properties set on this object gets passed to the button's label for the appropriate state.
  @param text text value
  @param fontColor fontColor object
  @param fontSize fontSize value
@@ -641,7 +644,7 @@ Vulnerable to lag spikes if used.
 +(SKUButtonLabelProperties*)propertiesWithText:(NSString *)text andColor:(SKColor *)fontColor andSize :(CGFloat)fontSize andFontName:(NSString *)fontName andPositionOffset:(CGPoint)position andScale:(CGFloat)scale;
 
 @end
-/** Stores all states for a label in buttons. The properties collected on this object get passed to the button's states.
+/*! Stores all states for a label in buttons. The properties collected on this object get passed to the button's states.
  @param propertiesDefaultState propertiesDefaultState object
  @param propertiesPressedState propertiesPressedState object
  @param propertiesHoveredState propertiesHoveredState object
@@ -657,24 +660,24 @@ Vulnerable to lag spikes if used.
 @property (nonatomic) SKUButtonLabelProperties* propertiesHoveredState;
 @property (nonatomic) SKUButtonLabelProperties* propertiesDisabledState;
 
-/** Allows you to explicitly set all states. */
+/*! Allows you to explicitly set all states. */
 +(SKUButtonLabelPropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonLabelProperties *)defaultState andPressedState:(SKUButtonLabelProperties *)pressedState andHoveredState:(SKUButtonLabelProperties *)hoveredState andDisabledState:(SKUButtonLabelProperties *)disabledState;
-/** Allows you to explicitly set default and pressed states, derives the disabled state from default, but with a gray overlay, and derives the hovered state from the default at a skuHoverScale scale. */
+/*! Allows you to explicitly set default and pressed states, derives the disabled state from default, but with a gray overlay, and derives the hovered state from the default at a skuHoverScale scale. */
 +(SKUButtonLabelPropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonLabelProperties*)defaultState andPressedState:(SKUButtonLabelProperties*)pressedState andDisabledState:(SKUButtonLabelProperties*)disabledState;
-/** Allows you to explicitly set default and pressed states and derives the disabled state from default, but with a gray overlay, and derives the hovered state from the default at a skuHoverScale scale. */
+/*! Allows you to explicitly set default and pressed states and derives the disabled state from default, but with a gray overlay, and derives the hovered state from the default at a skuHoverScale scale. */
 +(SKUButtonLabelPropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonLabelProperties *)defaultState andPressedState:(SKUButtonLabelProperties *)pressedState;
-/** Allows you to explicitly set default state, derives the pressed state from the default by scaling it down to a relative 90% size, and derives the disabled state from default, but with a gray overlay, and derives the hovered state from the default at a skuHoverScale scale. */
+/*! Allows you to explicitly set default state, derives the pressed state from the default by scaling it down to a relative 90% size, and derives the disabled state from default, but with a gray overlay, and derives the hovered state from the default at a skuHoverScale scale. */
 +(SKUButtonLabelPropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonLabelProperties *)defaultState;
-/** Creates and returns a package based on SKU defaults. */
+/*! Creates and returns a package based on SKU defaults. */
 +(SKUButtonLabelPropertiesPackage*)packageWithDefaultPropertiesWithText:(NSString*)text;
 
-/** Allows you to change the text for all states at once. */
+/*! Allows you to change the text for all states at once. */
 -(void)changeText:(NSString*)text;
 
 @end
 
 #pragma mark SKUButtonSpriteStateProperties
-/** Stores a single state for sprites in buttons. The properties set on this object gets passed to the button's sprite for the appropriate state. 
+/*! Stores a single state for sprites in buttons. The properties set on this object gets passed to the button's sprite for the appropriate state. 
  @param alpha alpha value
  @param color color object
  @param colorBlendFactor colorBlendFactor value
@@ -696,31 +699,31 @@ Vulnerable to lag spikes if used.
 @property (nonatomic) CGFloat yScale;
 @property (nonatomic, strong) SKTexture* texture;
 
-/** Returns a new object with the following properties. */
+/*! Returns a new object with the following properties. */
 +(SKUButtonSpriteStateProperties*)propertiesWithTexture:(SKTexture*)texture andAlpha:(CGFloat)alpha andColor:(SKColor *)color andColorBlendFactor:(CGFloat)colorBlendFactor andPositionOffset:(CGPoint)position andXScale:(CGFloat)xScale andYScale:(CGFloat)yScale andCenterRect:(CGRect)centerRect;
-/** Returns a new object with the following properties. */
+/*! Returns a new object with the following properties. */
 +(SKUButtonSpriteStateProperties*)propertiesWithTexture:(SKTexture*)texture andAlpha:(CGFloat)alpha andColor:(SKColor*)color andColorBlendFactor:(CGFloat)colorBlendFactor andPositionOffset:(CGPoint)position andXScale:(CGFloat)xScale andYScale:(CGFloat)yScale;
-/** Returns a new object with the following properties. */
+/*! Returns a new object with the following properties. */
 +(SKUButtonSpriteStateProperties*)propertiesWithTexture:(SKTexture*)texture andAlpha:(CGFloat)alpha andColor:(SKColor*)color andColorBlendFactor:(CGFloat)colorBlendFactor andPositionOffset:(CGPoint)position;
-/** Returns a new object with the following properties. */
+/*! Returns a new object with the following properties. */
 +(SKUButtonSpriteStateProperties*)propertiesWithTexture:(SKTexture*)texture andAlpha:(CGFloat)alpha andColor:(SKColor*)color andColorBlendFactor:(CGFloat)colorBlendFactor;
-/** Returns a new object with the following properties. */
+/*! Returns a new object with the following properties. */
 +(SKUButtonSpriteStateProperties*)propertiesWithTexture:(SKTexture*)texture andAlpha:(CGFloat)alpha;
-/** Returns a new object with the included default properties. */
+/*! Returns a new object with the included default properties. */
 +(SKUButtonSpriteStateProperties*)propertiesWithDefaultsSKU;
-/** Returns a new object with the included default toggle on properties. */
+/*! Returns a new object with the included default toggle on properties. */
 +(SKUButtonSpriteStateProperties*)propertiesWithDefaultsToggleOnSKU;
-/** Returns a new object with the included default toggle off properties. */
+/*! Returns a new object with the included default toggle off properties. */
 +(SKUButtonSpriteStateProperties*)propertiesWithDefaultsToggleOffSKU;
-/** Returns a new object with the included default knob properties. */
+/*! Returns a new object with the included default knob properties. */
 +(SKUButtonSpriteStateProperties*)propertiesWithDefaultsSliderKnobSKU:(BOOL)pressed;
-/** Returns a new object with the included default slider slide properties. */
+/*! Returns a new object with the included default slider slide properties. */
 +(SKUButtonSpriteStateProperties*)propertiesWithDefaultsSliderSlideSKU;
-/** Sets the x and y scale together. */
+/*! Sets the x and y scale together. */
 -(void)setScale:(CGFloat)scale;
 
 @end
-/** Stores all states for a sprite in buttons. The properties collected on this object get passed to the button's states.
+/*! Stores all states for a sprite in buttons. The properties collected on this object get passed to the button's states.
  @param propertiesDefaultState propertiesDefaultState object
  @param propertiesPressedState propertiesPressedState object
  @param propertiesHoveredState propertiesHoveredState object
@@ -733,26 +736,26 @@ Vulnerable to lag spikes if used.
 @property (nonatomic) SKUButtonSpriteStateProperties* propertiesPressedState;
 @property (nonatomic) SKUButtonSpriteStateProperties* propertiesHoveredState;
 @property (nonatomic) SKUButtonSpriteStateProperties* propertiesDisabledState;
-/** Allows you to explicitly set all states. */
+/*! Allows you to explicitly set all states. */
 +(SKUButtonSpriteStatePropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonSpriteStateProperties*)defaultState andPressedState:(SKUButtonSpriteStateProperties*)pressedState andHoveredState:(SKUButtonSpriteStateProperties*)hoveredState andDisabledState:(SKUButtonSpriteStateProperties*)disabledState;
-/** Allows you to explicitly set default and pressed states and derives the disabled state from default, but with half opacity, and the hovered state from the default with skuHoverScale scale. */
+/*! Allows you to explicitly set default and pressed states and derives the disabled state from default, but with half opacity, and the hovered state from the default with skuHoverScale scale. */
 +(SKUButtonSpriteStatePropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonSpriteStateProperties*)defaultState andPressedState:(SKUButtonSpriteStateProperties*)pressedState andDisabledState:(SKUButtonSpriteStateProperties*)disabledState;
-/** Allows you to explicitly set default and pressed states and derives the disabled state from default, but with half opacity, and the hovered state from the default with skuHoverScale scale. */
+/*! Allows you to explicitly set default and pressed states and derives the disabled state from default, but with half opacity, and the hovered state from the default with skuHoverScale scale. */
 +(SKUButtonSpriteStatePropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonSpriteStateProperties *)defaultState andPressedState:(SKUButtonSpriteStateProperties *)pressedState;
-/** Allows you to explicitly set default state and derives the pressed state from the default with 0.5 blend factor of a gray color overlay, and the disabled state from default, but with half opacity, and the hovered state from the default with skuHoverScale scale. */
+/*! Allows you to explicitly set default state and derives the pressed state from the default with 0.5 blend factor of a gray color overlay, and the disabled state from default, but with half opacity, and the hovered state from the default with skuHoverScale scale. */
 +(SKUButtonSpriteStatePropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonSpriteStateProperties *)defaultState;
-/** Returns a package based on the included assets. */
+/*! Returns a package based on the included assets. */
 +(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultPropertiesSKU;
-/** Returns a package based on the included assets. */
+/*! Returns a package based on the included assets. */
 +(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultToggleOnPropertiesSKU;
-/** Returns a package based on the included assets. */
+/*! Returns a package based on the included assets. */
 +(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultToggleOffPropertiesSKU;
-/** Returns a package based on the included assets. */
+/*! Returns a package based on the included assets. */
 +(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultSliderKnobPropertiesSKU;
-/** Returns a package based on the included assets. */
+/*! Returns a package based on the included assets. */
 +(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultSliderSliderSlidePropertiesSKU;
 
-/** Allows you to change the texture for all states at once. */
+/*! Allows you to change the texture for all states at once. */
 -(void)changeTexture:(SKTexture*)texture;
 
 @end
@@ -760,11 +763,11 @@ Vulnerable to lag spikes if used.
 #pragma mark SKUButton
 
 typedef enum {
-/** Sends out an NSNotification with a name determined by either the notificationNameDown or notificationNameUp property. Only sends button release notifications if the release remained within the button bounds. */
+/*! Sends out an NSNotification with a name determined by either the notificationNameDown or notificationNameUp property. Only sends button release notifications if the release remained within the button bounds. */
 	kSKUButtonMethodPostNotification = 1,
-/** Calls doButtonDown or doButtonUp on the delegate, set with the delegate property. This is the only way to detech button releases that aren't within the bounds of the button. */
+/*! Calls doButtonDown or doButtonUp on the delegate, set with the delegate property. This is the only way to detech button releases that aren't within the bounds of the button. */
 	kSKUButtonMethodDelegate = 1 << 1,
-/** Calls selectors set with methods setDownAction and setUpAction. Only sends button release calls if the release remained within the button bounds. */
+/*! Calls selectors set with methods setDownAction and setUpAction. Only sends button release calls if the release remained within the button bounds. */
 	kSKUButtonMethodRunActions = 1 << 2,
 } kSKUButtonMethods;
 
@@ -796,7 +799,7 @@ typedef enum {
 @required
 @end //end protocol
 
-/** SKUButton: Intended as a cross platform, unified way to design buttons for menus and input, instead of designing a completely different interface for Mac, iOS, and tvOS. Still needs a bit more effort when used on tvOS, but shouldn't be too hard. 
+/*! SKUButton: Intended as a cross platform, unified way to design buttons for menus and input, instead of designing a completely different interface for Mac, iOS, and tvOS. Still needs a bit more effort when used on tvOS, but shouldn't be too hard. 
  
  Note: anchorPoint (and potentially other) SKSpriteNode properties have no effect - it is only subclassed as a sprite to help with Xcode's scene creation tool. (Note to self: fall back to SKNode if that idea doesn't pan out)
  
@@ -805,40 +808,40 @@ typedef enum {
 @interface SKUButton : SKSpriteNode
 
 
-/** Identifies button type. */
+/*! Identifies button type. */
 @property (nonatomic, readonly) kSKUButtonTypes buttonType;
-/** Used for enumeration of button ids */
+/*! Used for enumeration of button ids */
 @property (nonatomic) NSInteger whichButton;
-/** Current state of the button */
+/*! Current state of the button */
 @property (nonatomic, readonly) kSKUButtonStates buttonState;
-/** Returns whether the button is currently being hovered. */
+/*! Returns whether the button is currently being hovered. */
 @property (nonatomic, readonly) BOOL isHovered;
-/** Used for enumeration of button ids */
+/*! Used for enumeration of button ids */
 @property (nonatomic) uint8_t buttonMethod;
-/** If button is set to call delegate, this is the delegate used. */
+/*! If button is set to call delegate, this is the delegate used. */
 @property (nonatomic, weak) id <SKUButtonDelegate> delegate;
-/** Readonly: tells you if button is enabled or not */
+/*! Readonly: tells you if button is enabled or not */
 @property (nonatomic, readonly) BOOL isEnabled;
-/** If button is set to send notifications, this is the name of the notification. */
+/*! If button is set to send notifications, this is the name of the notification. */
 @property (nonatomic) NSString* notificationNameDown;
-/** If button is set to send notifications, this is the name of the notification. */
+/*! If button is set to send notifications, this is the name of the notification. */
 @property (nonatomic) NSString* notificationNameUp;
-/** Readonly: access to the base sprite. */
+/*! Readonly: access to the base sprite. */
 @property (nonatomic, readonly) SKSpriteNode* baseSprite;
-/** Used for padding around buttons when using centerRect to scale imagery. */
+/*! Used for padding around buttons when using centerRect to scale imagery. */
 @property (nonatomic) CGFloat padding;
-/** Establishes the smallest possible area the button can take up (not accounting for properties with centerRect set that automatically expand). This is the same thing as setting the size property. It only exists to document clarity.  */
+/*! Establishes the smallest possible area the button can take up (not accounting for properties with centerRect set that automatically expand). This is the same thing as setting the size property. It only exists to document clarity.  */
 @property (nonatomic) CGSize sizeMinimumBoundary;
-/** Properties to use on the base sprite in default state. */
+/*! Properties to use on the base sprite in default state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* baseSpritePropertiesDefault;
-/** Properties to use on the base sprite in pressed state. */
+/*! Properties to use on the base sprite in pressed state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* baseSpritePropertiesPressed;
-/** Properties to use on the base sprite in hovered state. */
+/*! Properties to use on the base sprite in hovered state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* baseSpritePropertiesHovered;
-/** Properties to use on the base sprite in disabled state. */
+/*! Properties to use on the base sprite in disabled state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* baseSpritePropertiesDisabled;
 
-/** Sets all states based off of the default state. 
+/*! Sets all states based off of the default state. 
  @warning
  baseSpritePropertiesDefault, baseSpritePropertiesPressed, baseSpritePropertiesHovered, and baseSpritePropertiesDisabled all point to the same pointer as a result. If you edit one, they will all change. If you don't want them all to update, do
  @code
@@ -848,36 +851,36 @@ typedef enum {
  @endcode
  */
 -(void)buttonStatesNormalize;
-/** Sets all states based off of the default state using the settings determined in 
+/*! Sets all states based off of the default state using the settings determined in 
  [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:(SKUButtonSpriteStateProperties *)defaultState]
   */
 -(void)buttonStatesDefault;
 
-/** Creates and returns a button with a base sprite of the image named. */
+/*! Creates and returns a button with a base sprite of the image named. */
 +(SKUButton*)buttonWithImageNamed:(NSString*)name;
-/** Creates and returns a button with a base sprite of the texture. */
+/*! Creates and returns a button with a base sprite of the texture. */
 +(SKUButton*)buttonWithTexture:(SKTexture*)texture;
-/** Creates and returns a button with a base sprite package. */
+/*! Creates and returns a button with a base sprite package. */
 +(SKUButton*)buttonWithPropertiesPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
 
-/** This SHOULD be called after either raw init or initWithCoder. Meant to be overridden with post initialization purposes. */
+/*! This SHOULD be called after either raw init or initWithCoder. Meant to be overridden with post initialization purposes. */
 -(void)didInitialize;
 
-/** If button is set to call actions, set method and target to call on method when pressed down. Sets flag on self.buttonMethods to run actions. */
+/*! If button is set to call actions, set method and target to call on method when pressed down. Sets flag on self.buttonMethods to run actions. */
 -(void)setDownAction:(SEL)selector toPerformOnTarget:(NSObject*)target;
-/** If button is set to call actions, set method and target to call on method when released. Sets flag on self.buttonMethods to run actions. */
+/*! If button is set to call actions, set method and target to call on method when released. Sets flag on self.buttonMethods to run actions. */
 -(void)setUpAction:(SEL)selector toPerformOnTarget:(NSObject*)target;
 
-/** Sets all base sprite states in one command. */
+/*! Sets all base sprite states in one command. */
 -(void)setBaseStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
-/** Calls the actions for button down press. Location is in local space. */
+/*! Calls the actions for button down press. Location is in local space. */
 -(void)buttonPressed:(CGPoint)location;
-/** Calls the actions for button release. Location is in local space. */
+/*! Calls the actions for button release. Location is in local space. */
 -(void)buttonReleased:(CGPoint)location;
 
-/** Call to explicitly enable button (meant to reverse the state of being disabled). Be sure to call super method if you override. */
+/*! Call to explicitly enable button (meant to reverse the state of being disabled). Be sure to call super method if you override. */
 -(void)enableButton;
-/** Call to explicitly disable button (meant to reverse the state of being enabled). Be sure to call super method if you override. Also, be sure the button is parented in the scene before using if you using kSKUButtonDisableTypeDim. */
+/*! Call to explicitly disable button (meant to reverse the state of being enabled). Be sure to call super method if you override. Also, be sure the button is parented in the scene before using if you using kSKUButtonDisableTypeDim. */
 -(void)disableButton;
 
 
@@ -887,28 +890,28 @@ typedef enum {
 
 @interface SKUPushButton : SKUButton
 
-/** Read only access to title label. */
+/*! Read only access to title label. */
 @property (nonatomic, strong, readonly) SKLabelNode* titleLabel;
-/** Set this to setup the title label. */
+/*! Set this to setup the title label. */
 @property (nonatomic) SKUButtonLabelProperties* labelPropertiesDefault;
-/** Set this to setup the title label properties when the button is pressed. */
+/*! Set this to setup the title label properties when the button is pressed. */
 @property (nonatomic) SKUButtonLabelProperties* labelPropertiesPressed;
-/** Set this to setup the title label properties when the button is hovered. */
+/*! Set this to setup the title label properties when the button is hovered. */
 @property (nonatomic) SKUButtonLabelProperties* labelPropertiesHovered;
-/** Set this to setup the title label properties when the button is disabled. */
+/*! Set this to setup the title label properties when the button is disabled. */
 @property (nonatomic) SKUButtonLabelProperties* labelPropertiesDisabled;
 
 
 
-/** Read only access to title sprite. */
+/*! Read only access to title sprite. */
 @property (nonatomic, strong, readonly) SKSpriteNode* titleSprite;
-/** Properties to use on the title sprite in default state. */
+/*! Properties to use on the title sprite in default state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* titleSpritePropertiesDefault;
-/** Properties to use on the title sprite in pressed state. */
+/*! Properties to use on the title sprite in pressed state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* titleSpritePropertiesPressed;
-/** Properties to use on the title sprite in hovered state. */
+/*! Properties to use on the title sprite in hovered state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* titleSpritePropertiesHovered;
-/** Properties to use on the title sprite in disabled state. */
+/*! Properties to use on the title sprite in disabled state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* titleSpritePropertiesDisabled;
 #pragma mark SKUPushButton inits
 
@@ -930,27 +933,27 @@ typedef enum {
 #pragma mark SKUToggleButton
 
 @interface SKUToggleButton : SKUPushButton
-/** Read only access to toggle sprite. */
+/*! Read only access to toggle sprite. */
 @property (nonatomic, strong, readonly) SKSpriteNode* toggleSprite;
-/** Properties to use on the toggle sprite in default on state. */
+/*! Properties to use on the toggle sprite in default on state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* toggleSpritePropertiesOnDefault;
-/** Properties to use on the toggle sprite in pressed on state. */
+/*! Properties to use on the toggle sprite in pressed on state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* toggleSpritePropertiesOnPressed;
-/** Properties to use on the toggle sprite in hovered on state. */
+/*! Properties to use on the toggle sprite in hovered on state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* toggleSpritePropertiesOnHovered;
-/** Properties to use on the toggle sprite in disabled on state. */
+/*! Properties to use on the toggle sprite in disabled on state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* toggleSpritePropertiesOnDisabled;
 
-/** Properties to use on the toggle sprite in default off state. */
+/*! Properties to use on the toggle sprite in default off state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* toggleSpritePropertiesOffDefault;
-/** Properties to use on the toggle sprite in pressed off state. */
+/*! Properties to use on the toggle sprite in pressed off state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* toggleSpritePropertiesOffPressed;
-/** Properties to use on the toggle sprite in hovered off state. */
+/*! Properties to use on the toggle sprite in hovered off state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* toggleSpritePropertiesOffHovered;
-/** Properties to use on the toggle sprite in disabled off state. */
+/*! Properties to use on the toggle sprite in disabled off state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* toggleSpritePropertiesOffDisabled;
 
-/** Boolean determining whether the button is in an on state or not. */
+/*! Boolean determining whether the button is in an on state or not. */
 @property (nonatomic) BOOL on;
 
 
@@ -963,7 +966,7 @@ typedef enum {
 +(SKUToggleButton*)toggleButtonWithBackgroundPropertiesPackage:(SKUButtonSpriteStatePropertiesPackage*)backgroundPackage andTitleLabelPropertiesPackage:(SKUButtonLabelPropertiesPackage*)foregroundPackage andToggleOnPackage:(SKUButtonSpriteStatePropertiesPackage*)toggleSpriteOnPropertiesPackage andToggleOffPackage:(SKUButtonSpriteStatePropertiesPackage*)toggleSpriteOffPropertiesPackage;
 
 
-/** Toggles button on/off state. */
+/*! Toggles button on/off state. */
 -(void)toggleOnOff;
 -(void)setToggleSpriteOnStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
 -(void)setToggleSpriteOffStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
@@ -972,63 +975,63 @@ typedef enum {
 #pragma mark SKUSliderButton
 
 @interface SKUSliderButton : SKUButton
-/** Read only access to knob sprite. */
+/*! Read only access to knob sprite. */
 @property (nonatomic, strong, readonly) SKSpriteNode* knobSprite;
-/** Read only access to slide sprite. */
+/*! Read only access to slide sprite. */
 @property (nonatomic, strong, readonly) SKSpriteNode* slideSprite;
-/** Read only access to maximumValueImage sprite. */
+/*! Read only access to maximumValueImage sprite. */
 @property (nonatomic, strong, readonly) SKSpriteNode* maximumValueImage;
-/** Read only access to minimumValueImage sprite. */
+/*! Read only access to minimumValueImage sprite. */
 @property (nonatomic, strong, readonly) SKSpriteNode* minimumValueImage;
 
-/** Properties to use on the knob sprite in default state. */
+/*! Properties to use on the knob sprite in default state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* knobSpritePropertiesDefault;
-/** Properties to use on the knob sprite in pressed state. */
+/*! Properties to use on the knob sprite in pressed state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* knobSpritePropertiesPressed;
-/** Properties to use on the knob sprite in hovered state. */
+/*! Properties to use on the knob sprite in hovered state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* knobSpritePropertiesHovered;
-/** Properties to use on the knob sprite in disabled state. */
+/*! Properties to use on the knob sprite in disabled state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* knobSpritePropertiesDisabled;
 
-/** Properties to use on the slide sprite in default state. */
+/*! Properties to use on the slide sprite in default state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* slideSpritePropertiesDefault;
-/** Properties to use on the slide sprite in pressed state. */
+/*! Properties to use on the slide sprite in pressed state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* slideSpritePropertiesPressed;
-/** Properties to use on the slide sprite in hovered state. */
+/*! Properties to use on the slide sprite in hovered state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* slideSpritePropertiesHovered;
-/** Properties to use on the slide sprite in disabled state. */
+/*! Properties to use on the slide sprite in disabled state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* slideSpritePropertiesDisabled;
 
-/** Properties to use on the maximumValueImage sprite in default state. */
+/*! Properties to use on the maximumValueImage sprite in default state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* maximumValueImagePropertiesDefault;
-/** Properties to use on the maximumValueImage sprite in disabled state. */
+/*! Properties to use on the maximumValueImage sprite in disabled state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* maximumValueImagePropertiesDisabled;
 
-/** Properties to use on the minimumValueImage sprite in default state. */
+/*! Properties to use on the minimumValueImage sprite in default state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* minimumValueImagePropertiesDefault;
-/** Properties to use on the minimumValueImage sprite in disabled state. */
+/*! Properties to use on the minimumValueImage sprite in disabled state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* minimumValueImagePropertiesDisabled;
 
-/** Defaults to 50.0. */
+/*! Defaults to 50.0. */
 @property (nonatomic) CGFloat value;
-/** Stores the previous value. */
+/*! Stores the previous value. */
 @property (nonatomic, readonly) CGFloat previousValue;
-/** Defaults to 0.0. */
+/*! Defaults to 0.0. */
 @property (nonatomic) CGFloat minimumValue;
-/** Defaults to 100.0. */
+/*! Defaults to 100.0. */
 @property (nonatomic) CGFloat maximumValue;
-/** Defaults to NO. */
+/*! Defaults to NO. */
 @property (nonatomic) BOOL continuous;
-/** Defaults to 200.0. */
+/*! Defaults to 200.0. */
 @property (nonatomic) CGFloat sliderWidth;
-/** If button is set to send notifications, this is the name of the notification when the value changes. */
+/*! If button is set to send notifications, this is the name of the notification when the value changes. */
 @property (nonatomic) NSString* notificationNameChanged;
 
 -(void)setKnobSpriteStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
 -(void)setSlideSpriteStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
 -(void)setMaxValueSpriteStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
 -(void)setMinValueSpriteStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
-/** If button is set to call actions, set method and target to call on method when value changed. Sets flag on self.buttonMethods to run actions. */
+/*! If button is set to call actions, set method and target to call on method when value changed. Sets flag on self.buttonMethods to run actions. */
 -(void)setChangedAction:(SEL)selector toPerformOnTarget:(NSObject*)target;
 
 @end
@@ -1048,39 +1051,39 @@ typedef enum {
 
 #if TARGET_OS_TV
 
-/** Call this method to set the currently highlighted node within the navNodes set. */
+/*! Call this method to set the currently highlighted node within the navNodes set. */
 -(void)setCurrentSelectedNodeSKU:(SKNode*)node;
-/** Call this method to add a node to the list of navigation nodes paired with this node. */
+/*! Call this method to add a node to the list of navigation nodes paired with this node. */
 -(void)addNodeToNavNodesSKU:(SKNode*)node;
-/** Call this method to remove a node from the list of navigation nodes paired with this node. */
+/*! Call this method to remove a node from the list of navigation nodes paired with this node. */
 -(void)removeNodeFromNavNodesSKU:(SKNode*)node;
-/** Override this method to update visuals. */
+/*! Override this method to update visuals. */
 -(void)currentSelectedNodeUpdatedSKU:(SKNode *)node;
-/** Override this method to perform logic with non SKUButton nodes when pressed. */
+/*! Override this method to perform logic with non SKUButton nodes when pressed. */
 -(void)nodePressedDownSKU:(SKNode*)node;
-/** Override this method to perform logic with non SKUButton nodes when released. */
+/*! Override this method to perform logic with non SKUButton nodes when released. */
 -(void)nodePressedUpSKU:(SKNode*)node;
 #endif
 
-/** Called when relative type input begins (Currently only AppleTV's Siri Remote touches) Remember to call [super relativeInputBeganSKU] when overrding. Harmless to include on other platforms. */
+/*! Called when relative type input begins (Currently only AppleTV's Siri Remote touches) Remember to call [super relativeInputBeganSKU] when overrding. Harmless to include on other platforms. */
 -(void)relativeInputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
-/** Called when relative type input moves (Currently only AppleTV's Siri Remote touches). Harmless to include on other platforms. */
+/*! Called when relative type input moves (Currently only AppleTV's Siri Remote touches). Harmless to include on other platforms. */
 -(void)relativeInputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary*)eventDict;
-/** Called when relative type input ends (Currently only AppleTV's Siri Remote touches). Harmless to include on other platforms. */
+/*! Called when relative type input ends (Currently only AppleTV's Siri Remote touches). Harmless to include on other platforms. */
 -(void)relativeInputEndedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary*)eventDict;
-/** Called when absolute type input begins (Currently iOS touches and Mac mouse clicks). Harmless to include on other platforms. */
+/*! Called when absolute type input begins (Currently iOS touches and Mac mouse clicks). Harmless to include on other platforms. */
 -(void)absoluteInputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
-/** Called when absolute type input moves (Currently iOS touches and Mac mouse clicks). Harmless to include on other platforms. */
+/*! Called when absolute type input moves (Currently iOS touches and Mac mouse clicks). Harmless to include on other platforms. */
 -(void)absoluteInputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary*)eventDict;
-/** Called when absolute type input ends (Currently iOS touches and Mac mouse clicks). Harmless to include on other platforms. */
+/*! Called when absolute type input ends (Currently iOS touches and Mac mouse clicks). Harmless to include on other platforms. */
 -(void)absoluteInputEndedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary*)eventDict;
-/** Called only on OSX when the mouse moves around the screen unclicked. Harmless to include on other platforms. */
+/*! Called only on OSX when the mouse moves around the screen unclicked. Harmless to include on other platforms. */
 -(void)mouseMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary*)eventDict;
-/** Called when any input location based input begins (Currently iOS touches, Mac mouse clicks, and AppleTV Siri Remote touches). */
+/*! Called when any input location based input begins (Currently iOS touches, Mac mouse clicks, and AppleTV Siri Remote touches). */
 -(void)inputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
-/** Called when any input location based input moves (Currently iOS touches, Mac mouse clicks, and AppleTV Siri Remote touches). */
+/*! Called when any input location based input moves (Currently iOS touches, Mac mouse clicks, and AppleTV Siri Remote touches). */
 -(void)inputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary*)eventDict;
-/** Called when any input location based input ends (Currently iOS touches, Mac mouse clicks, and AppleTV Siri Remote touches). */
+/*! Called when any input location based input ends (Currently iOS touches, Mac mouse clicks, and AppleTV Siri Remote touches). */
 -(void)inputEndedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary*)eventDict;
 
 @end
@@ -1088,7 +1091,7 @@ typedef enum {
 #pragma mark SKColor Modifications
 
 @interface SKColor (Mixing)
-/** Blends two colors together. May run into issues if using convenience methods (grayColor, whiteColor, etc). */
+/*! Blends two colors together. May run into issues if using convenience methods (grayColor, whiteColor, etc). */
 +(SKColor*)blendColorSKU:(SKColor*)color1 withColor:(SKColor*)color2 alpha:(CGFloat)alpha2;
 
 @end
