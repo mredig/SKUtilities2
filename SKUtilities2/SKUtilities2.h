@@ -788,7 +788,7 @@ typedef enum {
 @class SKUSliderButton;
 @class SKUButton;
 
-@protocol SKUButtonDelegate   //define delegate protocol
+@protocol SKUButtonDelegate <NSObject>	//define delegate protocol
 @optional
 -(void)doButtonDown:(SKUButton*)button;
 -(void)doButtonUp:(SKUButton*)button inBounds:(BOOL)inBounds;

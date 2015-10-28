@@ -67,7 +67,7 @@
 	slider.value = -150;
 //	slider.delegate = self;
 	slider.name = @"slider";
-	slider.sliderWidth = 70;
+	slider.sliderWidth = 300;
 	[self addChild:slider];
 	
 #if TARGET_OS_TV

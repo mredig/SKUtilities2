@@ -2103,8 +2103,7 @@ static SKUtilities2* sharedUtilities = Nil;
 		}
 		
 		if (delegateMethod) {
-			NSObject* del = (NSObject*)_delegate;
-			if ([del respondsToSelector:@selector(doButtonDown:)]) {
+			if ([_delegate respondsToSelector:@selector(doButtonDown:)]) {
 				[_delegate doButtonDown:self];
 			}
 		}
@@ -2153,8 +2152,7 @@ static SKUtilities2* sharedUtilities = Nil;
 		}
 		
 		if (delegateMethod) {
-			NSObject* del = (NSObject*)_delegate;
-			if ([del respondsToSelector:@selector(doButtonUp:inBounds:)]) {
+			if ([_delegate respondsToSelector:@selector(doButtonUp:inBounds:)]) {
 				[_delegate doButtonUp:self inBounds:locationIsInBounds];
 			}
 		}
@@ -3118,8 +3116,7 @@ static SKUtilities2* sharedUtilities = Nil;
 			}
 			
 			if (delegateMethod) {
-				NSObject* del = (NSObject*)self.delegate;
-				if ([del respondsToSelector:@selector(valueChanged:)]) {
+				if ([self.delegate respondsToSelector:@selector(valueChanged:)]) {
 					[self.delegate valueChanged:self];
 				}
 			}
