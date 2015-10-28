@@ -12,6 +12,9 @@
 #import "shapeBenchmark.h"
 
 @interface _1NumbersDemo() {
+	
+	SKUToggleButton* toggle;
+	
 }
 
 @end
@@ -87,6 +90,28 @@
 	nextSlide.name = @"nextSlide";
 	[self addChild:nextSlide];
 	
+	SKUButtonLabelPropertiesPackage* toggleLabel = labelPack.copy;
+	[toggleLabel changeText:@"value"];
+	toggle = [SKUToggleButton toggleButtonWithBackgroundPropertiesPackage:backgroundPack andTitleLabelPropertiesPackage:toggleLabel];
+	toggle.position = pointAdd(nextSlide.position, CGPointMake(0, 70));
+	toggle.name = @"toggle";
+	[self addChild:toggle];
+	
+	
+	SKUButtonSpriteStatePropertiesPackage* knobPackage = [SKUButtonSpriteStatePropertiesPackage packageWithDefaultSliderKnobPropertiesSKU];
+	SKUButtonSpriteStatePropertiesPackage* sliderPackage = [SKUButtonSpriteStatePropertiesPackage packageWithDefaultSliderSliderSlidePropertiesSKU];
+	
+	SKUSliderButton* slider = [SKUSliderButton node];
+	[slider setSlideSpriteStatesWithPackage:sliderPackage];
+	[slider setKnobSpriteStatesWithPackage:knobPackage];
+	slider.position = pointAdd(nextSlide.position, CGPointMake(0, -70));
+	slider.minimumValue = -300.0;
+	slider.maximumValue = 300.0;
+	slider.value = -150;
+	slider.delegate = self;
+	slider.name = @"slider";
+	slider.sliderWidth = 70;
+	[self addChild:slider];
 	
 #if TARGET_OS_TV
 
@@ -96,6 +121,17 @@
 	[SKUSharedUtilities setNavFocus:self];
 	
 #endif
+}
+-(void)doButtonDown:(SKUButton *)button {
+	
+}
+
+-(void)doButtonUp:(SKUButton *)button inBounds:(BOOL)inBounds {
+	
+}
+
+-(void)valueChanged:(SKUSliderButton *)button {
+	SKULog(0, @"value: %f", button.value);
 }
 
 -(void)setupButtonPackages {
@@ -128,6 +164,24 @@
 	
 }
 
+-(void)absoluteInputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
+	SKUSliderButton* slider = (SKUSliderButton*)[self childNodeWithName:@"slider"];
+	if (delta.y > 0) {
+		if (toggle.on) {
+			slider.value += 3.0;
+		} else {
+			slider.sliderWidth += 3.0;
+		}
+	} else {
+		if (toggle.on) {
+			slider.value -= 3.0;
+		} else {
+			slider.sliderWidth -= 3.0;
+		}
+	}
+
+	
+}
 
 -(void)mouseMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
 	// you can do mouse location things here - this is OSX only

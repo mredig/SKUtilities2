@@ -1629,7 +1629,7 @@ static SKUtilities2* sharedUtilities = Nil;
 
 
 +(SKUButtonSpriteStateProperties*)propertiesWithDefaultsToggleOnSKU {
-	SKTexture* buttonBG = [SKTexture textureWithImageNamed:@"checkBoxOnSKU"];
+	SKTexture* tex = [SKTexture textureWithImageNamed:@"checkBoxOnSKU"];
 	SKUButtonSpriteStateProperties* props = [[SKUButtonSpriteStateProperties alloc] init];
 	props.alpha = 1.0f;
 	props.color = [SKColor clearColor];
@@ -1637,13 +1637,13 @@ static SKUtilities2* sharedUtilities = Nil;
 	props.position = CGPointMake(0, 0);
 	props.xScale = 1.0f;
 	props.yScale = 1.0f;
-	props.texture = buttonBG;
+	props.texture = tex;
 	props.centerRect = CGRectMake(0, 0, 1.0, 1.0);
 	return props;
 }
 
 +(SKUButtonSpriteStateProperties*)propertiesWithDefaultsToggleOffSKU {
-	SKTexture* buttonBG = [SKTexture textureWithImageNamed:@"checkBoxOffSKU"];
+	SKTexture* tex = [SKTexture textureWithImageNamed:@"checkBoxOffSKU"];
 	SKUButtonSpriteStateProperties* props = [[SKUButtonSpriteStateProperties alloc] init];
 	props.alpha = 1.0f;
 	props.color = [SKColor clearColor];
@@ -1651,10 +1651,45 @@ static SKUtilities2* sharedUtilities = Nil;
 	props.position = CGPointMake(0, 0);
 	props.xScale = 1.0f;
 	props.yScale = 1.0f;
-	props.texture = buttonBG;
+	props.texture = tex;
 	props.centerRect = CGRectMake(0, 0, 1.0, 1.0);
 	return props;
 }
+
++(SKUButtonSpriteStateProperties*)propertiesWithDefaultsSliderKnobSKU:(BOOL)pressed {
+	NSString* name;
+	if (pressed) {
+		name = @"knobSKU";
+	} else {
+		name = @"knobPressedSKU";
+	}
+	SKTexture* tex = [SKTexture textureWithImageNamed:name];
+	SKUButtonSpriteStateProperties* props = [[SKUButtonSpriteStateProperties alloc] init];
+	props.alpha = 1.0f;
+	props.color = [SKColor clearColor];
+	props.colorBlendFactor = 0.0f;
+	props.position = CGPointMake(0, 0);
+	props.xScale = 1.0f;
+	props.yScale = 1.0f;
+	props.texture = tex;
+	props.centerRect = CGRectMake(0, 0, 1.0, 1.0);
+	return props;
+}
+
++(SKUButtonSpriteStateProperties*)propertiesWithDefaultsSliderSlideSKU {
+	SKTexture* tex = [SKTexture textureWithImageNamed:@"slideSKU"];
+	SKUButtonSpriteStateProperties* props = [[SKUButtonSpriteStateProperties alloc] init];
+	props.alpha = 1.0f;
+	props.color = [SKColor clearColor];
+	props.colorBlendFactor = 0.0f;
+	props.position = CGPointMake(0, 0);
+	props.xScale = 1.0f;
+	props.yScale = 1.0f;
+	props.texture = tex;
+	props.centerRect = CGRectMake(15.0/tex.size.width, 0, 40.0/tex.size.width, 1.0);
+	return props;
+}
+
 
 
 -(void)setScale:(CGFloat)scale {
@@ -1747,6 +1782,19 @@ static SKUtilities2* sharedUtilities = Nil;
 
 +(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultToggleOffPropertiesSKU {
 	return [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:[SKUButtonSpriteStateProperties propertiesWithDefaultsToggleOffSKU]];
+}
+
++(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultSliderKnobPropertiesSKU {
+	SKUButtonSpriteStatePropertiesPackage* package = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:[SKUButtonSpriteStateProperties propertiesWithDefaultsSliderKnobSKU:NO]];
+	package.propertiesPressedState = [SKUButtonSpriteStateProperties propertiesWithDefaultsSliderKnobSKU:YES];
+	return package;
+}
+
++(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultSliderSliderSlidePropertiesSKU {
+	SKUButtonSpriteStatePropertiesPackage* package = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:[SKUButtonSpriteStateProperties propertiesWithDefaultsSliderSlideSKU]];
+	package.propertiesPressedState = package.propertiesDefaultState.copy;
+	package.propertiesHoveredState = package.propertiesDefaultState.copy;
+	return package;
 }
 
 -(void)changeTexture:(SKTexture *)texture {
@@ -2014,6 +2062,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	_buttonState = kSKUButtonStateDefault;
 	[self updateCurrentSpriteStateProperties];
 #if TARGET_OS_TV
+	self.userInteractionEnabled = NO;
 #else
 	self.userInteractionEnabled = YES;
 #endif
@@ -2036,7 +2085,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	[self setBaseStatesWithPackage:package];
 }
 
--(void)inputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
+-(void)absoluteInputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 	[self buttonPressed:location];
 }
 
@@ -2063,7 +2112,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	}
 }
 
--(void)inputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
+-(void)absoluteInputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
 	kSKUButtonStates preState = _buttonState;
 	BOOL inBounds = [self checkIfLocationIsWithinButtonBounds:location];
 	if (inBounds) {
@@ -2077,7 +2126,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	}
 }
 
--(void)inputEndedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
+-(void)absoluteInputEndedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
 	[self buttonReleased:location];
 }
 
@@ -2238,6 +2287,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	stateTLabelHoveredInitialized = NO;
 	stateTLabelDisabledInitialized = NO;
 	[self setButtonType:kSKUButtonTypePush];
+	self.name = @"SKUPushButton";
 	[super internalDidInitialize];
 }
 
@@ -2558,6 +2608,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	stateToggleOffHoveredInitialized = NO;
 	stateToggleOffDisabledInitialized = NO;
 	[self setButtonType:kSKUButtonTypeToggle];
+	self.name = @"SKUToggleButton";
 	[super internalDidInitialize];
 }
 
@@ -2830,6 +2881,516 @@ static SKUtilities2* sharedUtilities = Nil;
 		[self addChild:_toggleSprite];
 	}
 	return thisSize;
+}
+
+@end
+
+#pragma mark SKUSliderButton
+
+@interface SKUSliderButton() {
+	
+	BOOL stateKnobDefaultInitialized;
+	BOOL stateKnobPressedInitialized;
+	BOOL stateKnobDisabledInitialized;
+	BOOL stateKnobHoveredInitialized;
+	
+	BOOL stateSlideDefaultInitialized;
+	BOOL stateSlidePressedInitialized;
+	BOOL stateSlideDisabledInitialized;
+	BOOL stateSlideHoveredInitialized;
+	
+	BOOL stateMaxValueDefaultInitialized;
+	BOOL stateMaxValueDisabledInitialized;
+	
+	BOOL stateMinValueDefaultInitialized;
+	BOOL stateMinValueDisabledInitialized;
+}
+
+@end
+
+
+@implementation SKUSliderButton
+
+#pragma mark SKUSliderButton inits
+
++(SKUSliderButton*)sliderButtonWithSliderPackage:(SKUButtonSpriteStatePropertiesPackage*)sliderPackage andKnobPackage:(SKUButtonSpriteStatePropertiesPackage*)knobPackage {
+	SKUSliderButton* button = [SKUSliderButton node];
+	[button setSlideSpriteStatesWithPackage:sliderPackage];
+	[button setKnobSpriteStatesWithPackage:knobPackage];
+	return button;
+}
+
++(SKUSliderButton*)sliderButtonWithKnobPackage:(SKUButtonSpriteStatePropertiesPackage*)knobPackage {
+	
+	return nil;
+}
+
+-(void)internalDidInitialize {
+	
+	stateKnobDefaultInitialized = NO;
+	stateKnobPressedInitialized = NO;
+	stateKnobDisabledInitialized = NO;
+	stateKnobHoveredInitialized = NO;
+	
+	stateSlideDefaultInitialized = NO;
+	stateSlidePressedInitialized = NO;
+	stateSlideDisabledInitialized = NO;
+	stateSlideHoveredInitialized = NO;
+	
+	stateMaxValueDefaultInitialized = NO;
+	stateMaxValueDisabledInitialized = NO;
+	
+	stateMinValueDefaultInitialized = NO;
+	stateMinValueDisabledInitialized = NO;
+	
+	_value = 50.0;
+	_maximumValue = 100.0;
+	_minimumValue = 0.0f;
+	_continuous = NO;
+	_sliderWidth = 200.0f;
+	
+	self.name = @"SKUSliderButton";
+	
+	[self setButtonType:kSKUButtonTypeSlider];
+	[super internalDidInitialize];
+}
+
+#pragma mark SKUSliderButton updates
+
+
+-(void)updateCurrentSpriteStateProperties {
+	[super updateCurrentSpriteStateProperties];
+	SKUButtonSpriteStateProperties* knobProperties;
+	SKUButtonSpriteStateProperties* slideProperties;
+	SKUButtonSpriteStateProperties* maxProperties;
+	SKUButtonSpriteStateProperties* minProperties;
+	switch (self.buttonState) {
+		case kSKUButtonStateDefault:
+			knobProperties = _knobSpritePropertiesDefault;
+			maxProperties = _maximumValueImagePropertiesDefault;
+			minProperties = _minimumValueImagePropertiesDefault;
+			slideProperties = _slideSpritePropertiesDefault;
+			break;
+		case kSKUButtonStatePressed:
+			knobProperties = _knobSpritePropertiesPressed;
+			maxProperties = _maximumValueImagePropertiesDefault;
+			minProperties = _minimumValueImagePropertiesDefault;
+			slideProperties = _slideSpritePropertiesPressed;
+			break;
+		case kSKUButtonStateHovered:
+			knobProperties = _knobSpritePropertiesHovered;
+			maxProperties = _maximumValueImagePropertiesDefault;
+			minProperties = _minimumValueImagePropertiesDefault;
+			slideProperties = _slideSpritePropertiesHovered;
+			break;
+		case kSKUButtonStateDisabled:
+			knobProperties = _knobSpritePropertiesDisabled;
+			maxProperties = _maximumValueImagePropertiesDisabled;
+			minProperties = _minimumValueImagePropertiesDisabled;
+			slideProperties = _slideSpritePropertiesDisabled;
+			break;
+		case kSKUButtonStatePressedOutOfBounds:
+			knobProperties = _knobSpritePropertiesPressed;
+			maxProperties = _maximumValueImagePropertiesDefault;
+			minProperties = _minimumValueImagePropertiesDefault;
+			slideProperties = _slideSpritePropertiesPressed;
+			break;
+			
+		default:
+			knobProperties = _knobSpritePropertiesDefault;
+			maxProperties = _maximumValueImagePropertiesDefault;
+			minProperties = _minimumValueImagePropertiesDefault;
+			slideProperties = _slideSpritePropertiesDefault;
+			break;
+	}
+	
+	if (_knobSprite) {
+		SKTexture* prevTex = _knobSprite.texture;
+		_knobSprite.texture = knobProperties.texture;
+		if (![prevTex isEqual:_knobSprite.texture]) {
+			_knobSprite.size = knobProperties.texture.size;
+		}
+		_knobSprite.position = CGPointZero;
+		_knobSprite.color = knobProperties.color;
+		_knobSprite.colorBlendFactor = knobProperties.colorBlendFactor;
+		_knobSprite.alpha = knobProperties.alpha;
+		_knobSprite.centerRect = knobProperties.centerRect;
+		_knobSprite.xScale = knobProperties.xScale;
+		_knobSprite.yScale = knobProperties.yScale;
+	}
+	
+	if (_maximumValueImage) {
+		SKTexture* prevTex = _maximumValueImage.texture;
+		_maximumValueImage.texture = maxProperties.texture;
+		if (![prevTex isEqual:_maximumValueImage.texture]) {
+			_maximumValueImage.size = maxProperties.texture.size;
+		}
+		_maximumValueImage.position = maxProperties.position;
+		_maximumValueImage.color = maxProperties.color;
+		_maximumValueImage.colorBlendFactor = maxProperties.colorBlendFactor;
+		_maximumValueImage.alpha = maxProperties.alpha;
+		_maximumValueImage.centerRect = maxProperties.centerRect;
+		_maximumValueImage.xScale = maxProperties.xScale;
+		_maximumValueImage.yScale = maxProperties.yScale;
+	}
+	
+	if (_minimumValueImage) {
+		SKTexture* prevTex = _minimumValueImage.texture;
+		_minimumValueImage.texture = minProperties.texture;
+		if (![prevTex isEqual:_minimumValueImage.texture]) {
+			_minimumValueImage.size = minProperties.texture.size;
+		}
+		_minimumValueImage.position = minProperties.position;
+		_minimumValueImage.color = minProperties.color;
+		_minimumValueImage.colorBlendFactor = minProperties.colorBlendFactor;
+		_minimumValueImage.alpha = minProperties.alpha;
+		_minimumValueImage.centerRect = minProperties.centerRect;
+		_minimumValueImage.xScale = minProperties.xScale;
+		_minimumValueImage.yScale = minProperties.yScale;
+	}
+	
+	if(_slideSprite) {
+		SKTexture* prevTex = _slideSprite.texture;
+		_slideSprite.texture = slideProperties.texture;
+		if (![prevTex isEqual:_slideSprite.texture]) {
+			_slideSprite.size = slideProperties.texture.size;
+		}
+		_slideSprite.position = slideProperties.position;
+		_slideSprite.color = slideProperties.color;
+		_slideSprite.colorBlendFactor = slideProperties.colorBlendFactor;
+		_slideSprite.alpha = slideProperties.alpha;
+		_slideSprite.centerRect = slideProperties.centerRect;
+		_slideSprite.yScale = slideProperties.yScale;
+		_slideSprite.xScale = _sliderWidth / _slideSprite.texture.size.width;
+//		SKULog(0, @"xScale = %f", _slideSprite.xScale);
+	}
+	[self updateKnobPosition];
+}
+
+
+-(void)updateKnobPosition {
+
+	CGFloat extremesDifference = _maximumValue - _minimumValue;
+	CGFloat normalValue = (_value - _minimumValue) / extremesDifference;
+	CGFloat xPos = linearInterpolationBetweenFloatValues(-_sliderWidth * 0.5, _sliderWidth * 0.5, normalValue, YES);
+	_knobSprite.position = CGPointMake(xPos, _knobSprite.position.y);
+}
+
+-(void)deriveValueFromKnobPosition {
+	CGFloat sliderPos = _knobSprite.position.x / _sliderWidth;
+	CGFloat extremesDifference = _maximumValue - _minimumValue;
+	CGFloat value = (sliderPos * extremesDifference) + _minimumValue;
+	_previousValue = _value;
+	_value = clipFloatWithinRange(value, _minimumValue, _maximumValue);
+}
+
+-(void)absoluteInputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
+	_knobSprite.position = CGPointMake(location.x + _sliderWidth * 0.5, _knobSprite.position.y);
+	[self deriveValueFromKnobPosition];
+	[super absoluteInputBeganSKU:location withEventDictionary:eventDict];
+	id<SKUSliderButtonDelegate> newDel = (id<SKUSliderButtonDelegate>)self.delegate;
+	if (_previousValue != _value) {
+		[newDel valueChanged:self];
+	}
+}
+
+-(void)absoluteInputEndedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
+	_knobSprite.position = CGPointMake(location.x + _sliderWidth * 0.5, _knobSprite.position.y);
+	[self deriveValueFromKnobPosition];
+	[super absoluteInputEndedSKU:location withDelta:delta withEventDictionary:eventDict];
+	id<SKUSliderButtonDelegate> newDel = (id<SKUSliderButtonDelegate>)self.delegate;
+	if (_previousValue != _value) {
+		[newDel valueChanged:self];
+	}
+}
+
+#pragma mark SKUSliderButton setters (slide)
+
+-(void)setSlideSpritePropertiesDefault:(SKUButtonSpriteStateProperties *)slideSpritePropertiesDefault {
+	_slideSpritePropertiesDefault = slideSpritePropertiesDefault;
+	if (!_slideSprite) {
+		_slideSprite = [SKSpriteNode spriteNodeWithTexture:_slideSpritePropertiesDefault.texture];
+		_slideSprite.zPosition = 0.001;
+		_slideSprite.name = @"SKUSliderButtonSlideSprite";
+		[self addChild:_slideSprite];
+	}
+	stateSlideDefaultInitialized = YES;
+	
+	if (!stateSlidePressedInitialized) {
+		_slideSpritePropertiesPressed = _slideSpritePropertiesDefault.copy;
+		stateSlidePressedInitialized = YES;
+	}
+	
+	if (!stateSlideHoveredInitialized) {
+		_slideSpritePropertiesHovered = _slideSpritePropertiesDefault.copy;
+		stateSlideHoveredInitialized = YES;
+	}
+	
+	if (!stateSlideDisabledInitialized) {
+		_slideSpritePropertiesDisabled = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_slideSpritePropertiesDefault].propertiesDisabledState;
+		stateSlideDisabledInitialized = YES;
+	}
+}
+
+-(void)setSlideSpritePropertiesPressed:(SKUButtonSpriteStateProperties *)slideSpritePropertiesPressed {
+	_slideSpritePropertiesPressed = slideSpritePropertiesPressed;
+	stateSlidePressedInitialized = YES;
+	[self updateCurrentSpriteStateProperties];
+}
+
+-(void)setSlideSpritePropertiesHovered:(SKUButtonSpriteStateProperties *)slideSpritePropertiesHovered {
+	_slideSpritePropertiesHovered = slideSpritePropertiesHovered;
+	stateSlideHoveredInitialized = YES;
+	[self updateCurrentSpriteStateProperties];
+}
+
+-(void)setSlideSpritePropertiesDisabled:(SKUButtonSpriteStateProperties *)slideSpritePropertiesDisabled {
+	_slideSpritePropertiesDisabled = slideSpritePropertiesDisabled;
+	stateSlideDisabledInitialized = YES;
+	[self updateCurrentSpriteStateProperties];
+}
+
+
+-(void)setSlideSpriteStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package {
+	_slideSpritePropertiesPressed = package.propertiesPressedState;
+	stateSlidePressedInitialized = YES;
+	_slideSpritePropertiesHovered = package.propertiesHoveredState;
+	stateSlideHoveredInitialized = YES;
+	_slideSpritePropertiesDisabled = package.propertiesDisabledState;
+	stateSlideDisabledInitialized = YES;
+	self.slideSpritePropertiesDefault = package.propertiesDefaultState;
+	stateSlideDefaultInitialized = YES;
+}
+
+#pragma mark SKUSliderButton setters (knob)
+
+
+-(void)setKnobSpritePropertiesDefault:(SKUButtonSpriteStateProperties *)knobSpritePropertiesDefault {
+	_knobSpritePropertiesDefault = knobSpritePropertiesDefault;
+	if (!_knobSprite) {
+		_knobSprite = [SKSpriteNode spriteNodeWithTexture:_knobSpritePropertiesDefault.texture];
+		_knobSprite.zPosition = 0.002;
+		_knobSprite.name = @"SKUSliderButtonKnobSprite";
+		[self addChild:_knobSprite];
+	}
+	stateKnobDefaultInitialized = YES;
+	
+	if (!stateKnobPressedInitialized) {
+		_knobSpritePropertiesPressed = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_knobSpritePropertiesDefault].propertiesDefaultState;
+		stateKnobPressedInitialized = YES;
+	}
+	
+	if (!stateKnobHoveredInitialized) {
+		_knobSpritePropertiesHovered = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_knobSpritePropertiesDefault].propertiesHoveredState;
+		stateKnobHoveredInitialized = YES;
+	}
+	
+	if (!stateKnobDisabledInitialized) {
+		_knobSpritePropertiesDisabled = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_knobSpritePropertiesDefault].propertiesDisabledState;
+		stateKnobDisabledInitialized = YES;
+	}
+	
+	[self updateCurrentSpriteStateProperties];
+}
+
+-(void)setKnobSpritePropertiesPressed:(SKUButtonSpriteStateProperties *)knobSpritePropertiesPressed {
+	_knobSpritePropertiesPressed = knobSpritePropertiesPressed;
+	stateKnobPressedInitialized = YES;
+	[self updateCurrentSpriteStateProperties];
+}
+
+-(void)setKnobSpritePropertiesHovered:(SKUButtonSpriteStateProperties *)knobSpritePropertiesHovered {
+	_knobSpritePropertiesHovered = knobSpritePropertiesHovered;
+	stateKnobHoveredInitialized = YES;
+	[self updateCurrentSpriteStateProperties];
+}
+
+-(void)setKnobSpritePropertiesDisabled:(SKUButtonSpriteStateProperties *)knobSpritePropertiesDisabled {
+	_knobSpritePropertiesDisabled = knobSpritePropertiesDisabled;
+	stateKnobDisabledInitialized = YES;
+	[self updateCurrentSpriteStateProperties];
+}
+
+-(void)setKnobSpriteStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package {
+	_knobSpritePropertiesPressed = package.propertiesPressedState;
+	stateKnobPressedInitialized = YES;
+	_knobSpritePropertiesHovered = package.propertiesHoveredState;
+	stateKnobHoveredInitialized = YES;
+	_knobSpritePropertiesDisabled = package.propertiesDisabledState;
+	stateKnobDisabledInitialized = YES;
+	self.knobSpritePropertiesDefault = package.propertiesDefaultState;
+	stateKnobDefaultInitialized = YES;
+}
+
+
+#pragma mark SKUSliderButton setters (max and min)
+
+
+-(void)setMaximumValueImagePropertiesDefault:(SKUButtonSpriteStateProperties *)maximumValueImagePropertiesDefault {
+	_maximumValueImagePropertiesDefault = maximumValueImagePropertiesDefault;
+	if (!_maximumValueImage) {
+		_maximumValueImage = [SKSpriteNode spriteNodeWithTexture:_maximumValueImagePropertiesDefault.texture];
+		_maximumValueImage.zPosition = 0.001;
+		_maximumValueImage.name = @"SKUSliderButtonMaxValueImage";
+		[self addChild:_maximumValueImage];
+	}
+	stateMaxValueDefaultInitialized = YES;
+	
+	if (!stateMaxValueDisabledInitialized) {
+		_maximumValueImagePropertiesDisabled = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_maximumValueImagePropertiesDefault].propertiesDisabledState;
+		stateMaxValueDisabledInitialized = YES;
+	}
+	
+	[self updateCurrentSpriteStateProperties];
+}
+
+-(void)setMaximumValueImagePropertiesDisabled:(SKUButtonSpriteStateProperties *)maximumValueImagePropertiesDisabled {
+	_maximumValueImagePropertiesDisabled = maximumValueImagePropertiesDisabled;
+	stateMaxValueDisabledInitialized = YES;
+	[self updateCurrentSpriteStateProperties];
+}
+
+-(void)setMinimumValueImagePropertiesDefault:(SKUButtonSpriteStateProperties *)minimumValueImagePropertiesDefault {
+	_minimumValueImagePropertiesDefault = minimumValueImagePropertiesDefault;
+	if (!_minimumValueImage) {
+		_minimumValueImage = [SKSpriteNode spriteNodeWithTexture:_minimumValueImagePropertiesDefault.texture];
+		_minimumValueImage.zPosition = 0.001;
+		_minimumValueImage.name = @"SKUSliderButtonMinValueImage";
+		[self addChild:_maximumValueImage];
+	}
+	stateMinValueDefaultInitialized = YES;
+	
+	if (!stateMinValueDisabledInitialized) {
+		_minimumValueImagePropertiesDisabled = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_minimumValueImagePropertiesDefault].propertiesDisabledState;
+		stateMinValueDisabledInitialized = YES;
+	}
+	[self updateCurrentSpriteStateProperties];
+}
+
+-(void)setMinimumValueImagePropertiesDisabled:(SKUButtonSpriteStateProperties *)minimumValueImagePropertiesDisabled {
+	_minimumValueImagePropertiesDisabled = minimumValueImagePropertiesDisabled;
+	stateMinValueDisabledInitialized = YES;
+	[self updateCurrentSpriteStateProperties];
+}
+
+
+-(void)setMaxValueSpriteStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package {
+	_maximumValueImagePropertiesDisabled = package.propertiesDisabledState;
+	stateMaxValueDisabledInitialized = YES;
+	self.maximumValueImagePropertiesDefault = package.propertiesDefaultState;
+	stateMaxValueDefaultInitialized = YES;
+	[self updateCurrentSpriteStateProperties];
+}
+
+
+-(void)setMinValueSpriteStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package {
+	_minimumValueImagePropertiesDisabled = package.propertiesDisabledState;
+	stateMinValueDisabledInitialized = YES;
+	self.minimumValueImagePropertiesDefault = package.propertiesDefaultState;
+	stateMinValueDefaultInitialized = YES;
+	[self updateCurrentSpriteStateProperties];
+}
+
+#pragma mark SKUSliderButton setters (other)
+
+
+-(void)setSliderWidth:(CGFloat)sliderWidth {
+	_sliderWidth = sliderWidth;
+	[self updateCurrentSpriteStateProperties];
+}
+
+-(void)setValue:(CGFloat)value {
+	_previousValue = _value;
+	_value = clipFloatWithinRange(value, _minimumValue, _maximumValue);
+	[self updateCurrentSpriteStateProperties];
+}
+
+
+#pragma mark SKUSliderButton defaults
+
+-(void)buttonStatesDefault {
+	[super buttonStatesDefault];
+	
+	if (_knobSpritePropertiesDefault.texture) {
+		SKUButtonSpriteStatePropertiesPackage* package = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_knobSpritePropertiesDefault];
+		[self setKnobSpriteStatesWithPackage:package];
+	} else {
+		stateKnobDefaultInitialized = NO;
+		stateKnobPressedInitialized = NO;
+		stateKnobDisabledInitialized = NO;
+		stateKnobHoveredInitialized = NO;
+	}
+	
+	if (_slideSpritePropertiesDefault.texture) {
+		SKUButtonSpriteStatePropertiesPackage* package = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_slideSpritePropertiesDefault];
+		package.propertiesHoveredState = package.propertiesDefaultState.copy;
+		package.propertiesPressedState = package.propertiesDefaultState.copy;
+		[self setSlideSpriteStatesWithPackage:package];
+	} else {
+		stateSlideDefaultInitialized = NO;
+		stateSlidePressedInitialized = NO;
+		stateSlideHoveredInitialized = NO;
+		stateSlideDisabledInitialized = NO;
+	}
+	
+	if (_maximumValueImagePropertiesDefault.texture) {
+		SKUButtonSpriteStatePropertiesPackage* package = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_maximumValueImagePropertiesDefault];
+		[self setMaxValueSpriteStatesWithPackage:package];
+	} else {
+		stateMaxValueDefaultInitialized = NO;
+		stateMaxValueDisabledInitialized = NO;
+	}
+	
+	if (_minimumValueImagePropertiesDefault.texture) {
+		SKUButtonSpriteStatePropertiesPackage* package = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_minimumValueImagePropertiesDefault];
+		[self setMinValueSpriteStatesWithPackage:package];
+	} else {
+		stateMinValueDefaultInitialized = NO;
+		stateMinValueDisabledInitialized = NO;
+	}
+	//might have to do the base sprite here too... just a reminder
+}
+
+-(void)buttonStatesNormalize {
+	
+	[super buttonStatesNormalize];
+	
+	if (_knobSpritePropertiesDefault.texture) {
+		SKUButtonSpriteStatePropertiesPackage* package = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_knobSpritePropertiesDefault andPressedState:_knobSpritePropertiesDefault andHoveredState:_knobSpritePropertiesDefault andDisabledState:_knobSpritePropertiesDefault];
+		[self setKnobSpriteStatesWithPackage:package];
+	} else {
+		stateKnobDefaultInitialized = NO;
+		stateKnobPressedInitialized = NO;
+		stateKnobDisabledInitialized = NO;
+		stateKnobHoveredInitialized = NO;
+	}
+
+	if (_slideSpritePropertiesDefault.texture) {
+		SKUButtonSpriteStatePropertiesPackage* package = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_slideSpritePropertiesDefault andPressedState:_slideSpritePropertiesDefault andHoveredState:_slideSpritePropertiesDefault andDisabledState:_slideSpritePropertiesDefault];
+		[self setSlideSpriteStatesWithPackage:package];
+	} else {
+		stateSlideDefaultInitialized = NO;
+		stateSlidePressedInitialized = NO;
+		stateSlideHoveredInitialized = NO;
+		stateSlideDisabledInitialized = NO;
+	}
+	
+	if (_maximumValueImagePropertiesDefault.texture) {
+		SKUButtonSpriteStatePropertiesPackage* package = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_maximumValueImagePropertiesDefault andPressedState:_maximumValueImagePropertiesDefault andHoveredState:_maximumValueImagePropertiesDefault andDisabledState:_maximumValueImagePropertiesDefault];
+		[self setMaxValueSpriteStatesWithPackage:package];
+	} else {
+		stateMaxValueDefaultInitialized = NO;
+		stateMaxValueDisabledInitialized = NO;
+	}
+
+	if (_minimumValueImagePropertiesDefault.texture) {
+		SKUButtonSpriteStatePropertiesPackage* package = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_minimumValueImagePropertiesDefault andPressedState:_minimumValueImagePropertiesDefault andHoveredState:_minimumValueImagePropertiesDefault andDisabledState:_minimumValueImagePropertiesDefault];
+		[self setMinValueSpriteStatesWithPackage:package];
+	} else {
+		stateMinValueDefaultInitialized = NO;
+		stateMinValueDisabledInitialized = NO;
+	}
+	//might have to do the base sprite here too... just a reminder
 }
 
 @end

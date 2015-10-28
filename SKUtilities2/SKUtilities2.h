@@ -712,6 +712,10 @@ Vulnerable to lag spikes if used.
 +(SKUButtonSpriteStateProperties*)propertiesWithDefaultsToggleOnSKU;
 /** Returns a new object with the included default toggle off properties. */
 +(SKUButtonSpriteStateProperties*)propertiesWithDefaultsToggleOffSKU;
+/** Returns a new object with the included default knob properties. */
++(SKUButtonSpriteStateProperties*)propertiesWithDefaultsSliderKnobSKU:(BOOL)pressed;
+/** Returns a new object with the included default slider slide properties. */
++(SKUButtonSpriteStateProperties*)propertiesWithDefaultsSliderSlideSKU;
 /** Sets the x and y scale together. */
 -(void)setScale:(CGFloat)scale;
 
@@ -743,6 +747,10 @@ Vulnerable to lag spikes if used.
 +(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultToggleOnPropertiesSKU;
 /** Returns a package based on the included assets. */
 +(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultToggleOffPropertiesSKU;
+/** Returns a package based on the included assets. */
++(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultSliderKnobPropertiesSKU;
+/** Returns a package based on the included assets. */
++(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultSliderSliderSlidePropertiesSKU;
 
 /** Allows you to change the texture for all states at once. */
 -(void)changeTexture:(SKTexture*)texture;
@@ -782,6 +790,7 @@ typedef enum {
 @class SKUButton;
 
 @protocol SKUButtonDelegate   //define delegate protocol
+@optional
 -(void)doButtonDown:(SKUButton*)button;
 -(void)doButtonUp:(SKUButton*)button inBounds:(BOOL)inBounds;
 @end //end protocol
@@ -957,7 +966,72 @@ typedef enum {
 -(void)toggleOnOff;
 -(void)setToggleSpriteOnStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
 -(void)setToggleSpriteOffStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
+@end
 
+#pragma mark SKUSliderButton
+
+@class SKUSliderButton;
+
+@protocol SKUSliderButtonDelegate   //define delegate protocol
+@optional
+-(void)valueChanged:(SKUSliderButton*)button;
+@end //end protocol
+
+@interface SKUSliderButton : SKUButton
+/** Read only access to knob sprite. */
+@property (nonatomic, strong, readonly) SKSpriteNode* knobSprite;
+/** Read only access to slide sprite. */
+@property (nonatomic, strong, readonly) SKSpriteNode* slideSprite;
+/** Read only access to maximumValueImage sprite. */
+@property (nonatomic, strong, readonly) SKSpriteNode* maximumValueImage;
+/** Read only access to minimumValueImage sprite. */
+@property (nonatomic, strong, readonly) SKSpriteNode* minimumValueImage;
+
+/** Properties to use on the knob sprite in default state. */
+@property (nonatomic) SKUButtonSpriteStateProperties* knobSpritePropertiesDefault;
+/** Properties to use on the knob sprite in pressed state. */
+@property (nonatomic) SKUButtonSpriteStateProperties* knobSpritePropertiesPressed;
+/** Properties to use on the knob sprite in hovered state. */
+@property (nonatomic) SKUButtonSpriteStateProperties* knobSpritePropertiesHovered;
+/** Properties to use on the knob sprite in disabled state. */
+@property (nonatomic) SKUButtonSpriteStateProperties* knobSpritePropertiesDisabled;
+
+/** Properties to use on the slide sprite in default state. */
+@property (nonatomic) SKUButtonSpriteStateProperties* slideSpritePropertiesDefault;
+/** Properties to use on the slide sprite in pressed state. */
+@property (nonatomic) SKUButtonSpriteStateProperties* slideSpritePropertiesPressed;
+/** Properties to use on the slide sprite in hovered state. */
+@property (nonatomic) SKUButtonSpriteStateProperties* slideSpritePropertiesHovered;
+/** Properties to use on the slide sprite in disabled state. */
+@property (nonatomic) SKUButtonSpriteStateProperties* slideSpritePropertiesDisabled;
+
+/** Properties to use on the maximumValueImage sprite in default state. */
+@property (nonatomic) SKUButtonSpriteStateProperties* maximumValueImagePropertiesDefault;
+/** Properties to use on the maximumValueImage sprite in disabled state. */
+@property (nonatomic) SKUButtonSpriteStateProperties* maximumValueImagePropertiesDisabled;
+
+/** Properties to use on the minimumValueImage sprite in default state. */
+@property (nonatomic) SKUButtonSpriteStateProperties* minimumValueImagePropertiesDefault;
+/** Properties to use on the minimumValueImage sprite in disabled state. */
+@property (nonatomic) SKUButtonSpriteStateProperties* minimumValueImagePropertiesDisabled;
+
+/** Defaults to 50.0. */
+@property (nonatomic) CGFloat value;
+/** Stores the previous value. */
+@property (nonatomic, readonly) CGFloat previousValue;
+/** Defaults to 0.0. */
+@property (nonatomic) CGFloat minimumValue;
+/** Defaults to 100.0. */
+@property (nonatomic) CGFloat maximumValue;
+/** Defaults to NO. */
+@property (nonatomic) BOOL continuous;
+/** Defaults to 200.0. */
+@property (nonatomic) CGFloat sliderWidth;
+
+-(void)setKnobSpriteStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
+-(void)setSlideSpriteStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
+-(void)setMaxValueSpriteStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
+-(void)setMinValueSpriteStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
 
 @end
 
