@@ -23,18 +23,60 @@
 #import <SpriteKit/SpriteKit.h>
 
 #pragma mark CONSTANTS
-
+/*!
+ Constant approximate value good for scaling assets.
+ */
 #define kSKUPadToPhoneScale ((CGFloat) 0.41666)
+/*!
+ Constant approximate value good for scaling assets.
+ */
 #define kSKUPhoneFromPadScale ((CGFloat) 0.41666)
+/*!
+ Constant approximate value good for scaling assets.
+ */
 #define kSKUPhoneToPadScale ((CGFloat) 2.40003840061441) //likely very low usage as it would be upscaling
+/*!
+ Constant approximate value good for scaling assets.
+ */
 #define kSKUPadFromPhoneScale ((CGFloat) 2.40003840061441)
 
+/*!
+ Constant value to convert from degrees to radians.
+ */
 #define kSKUDegToRadConvFactor 0.017453292519943295 // pi/180
+/*!
+ Constant value to convert from radians to degrees.
+ */
 #define kSKURadToDegConvFactor 57.29577951308232 // 180/pi
 
-#define VISIBLE 0 //for node.hidden properties, this is more intuitive than YES/NO
-#define HIDDEN 1 //for node.hidden properties, this is more intuitive than YES/NO
+/*!
+ @discussion BOOLEAN determining visibility
+ 
+ For node.hidden properties, this is more intuitive than YES/NO
+ <pre>
+ @textblock
+ node.hidden = VISIBLE; //this is visible
+ node.hidden = HIDDEN; //this is hidden
+ @/textblock
+ </pre>
+ */
+#define VISIBLE 0
+/*!
+ @discussion 
+ BOOLEAN determining visibility
+ For node.hidden properties, this is more intuitive than YES/NO
+ <pre>
+ @textblock
+ node.hidden = VISIBLE; //this is visible
+ node.hidden = HIDDEN; //this is hidden
+ @/textblock
+ </pre>
+ */
+#define HIDDEN 1 
 
+/*!
+ Allows simplification between platforms, using similar classes.
+ */
 #if TARGET_OS_IPHONE
 #define SKUImage UIImage
 #define SKUFont UIFont
@@ -43,7 +85,9 @@
 #define SKUFont NSFont
 #define TARGET_OS_OSX_SKU 1
 #endif
-
+/*!
+ Simplifies access to the singleton.
+ */
 #define SKUSharedUtilities [SKUtilities2 sharedUtilities] 
 
 
@@ -110,13 +154,11 @@ NSInteger clipIntegerWithinRange (NSInteger value, NSInteger minimum, NSInteger 
 
 
 #pragma mark RANDOM NUMBERS
-
 /*!
  Returns a u_int_32_t value randomized between two other values.
- @param lowend
- u_int32_t low end range value
- @param highend
- u_int32_t high end range value
+ @param lowend  u_int32_t low end range value
+ @param highend u_int32_t high end range value
+ @return random u_int32_t value
  */
 u_int32_t randomUnsignedIntegerBetweenTwoValues (u_int32_t lowend, u_int32_t highend);
 
@@ -135,6 +177,8 @@ CGFloat randomFloatBetweenZeroAndHighend (CGFloat highend);
  CGPoint start or end point
  @param pointB
  CGPoint start or end point
+ @seealso distanceBetweenIsWithinXDistance
+ @seealso distanceBetweenIsWithinXDistancePreSquared
  */
 CGFloat distanceBetween (CGPoint pointA, CGPoint pointB);
 
@@ -160,7 +204,7 @@ bool distanceBetweenIsWithinXDistance (CGPoint pointA, CGPoint pointB, CGFloat x
  @param xDistancePresquared
  CGFloat max distance between points, squared (x * x)
  */
-bool distanceBetweenIsWithinXDistancePreSquared (CGPoint pointA, CGPoint pointB, CGFloat xDistanceSquared);
+bool distanceBetweenIsWithinXDistancePreSquared (CGPoint pointA, CGPoint pointB, CGFloat xDistancePresquared);
 
 
 #pragma mark ORIENTATION
@@ -244,7 +288,7 @@ CGVector vectorAdd (CGVector vectorA, CGVector vectorB);
 CGVector vectorMultiplyByVector (CGVector vectorA, CGVector vectorB);
 /*!
  Returns a CGVector that is the product of multiplying both values by the same factor.
- @param vectorA
+ @param vector
  CGVector vector struct to be multiplied.
  @param factor
  CGFloat value to multiply both dx and dy by.
@@ -314,9 +358,9 @@ CGPoint pointAddValue (CGPoint point, CGFloat value);
 
 /*!
  Returns a CGPoint that is the product of two other CGPoints (Ax * Bx, Ay * By)
- @param pointB
+ @param pointA
  CGPoint point struct to be factored.
- @param vectorB
+ @param pointB
  CGPoint point struct to be factored.
  */
 CGPoint pointMultiplyByPoint (CGPoint pointA, CGPoint pointB);
@@ -423,8 +467,27 @@ CGPoint getCGPointFromString (NSString* string);
 NSString* getStringFromPoint (CGPoint location);
 
 #pragma mark BEZIER CALCUATIONS
+/*!
+ Returns a point on a bezier curve. Provide it with the anchor points (point0 and point3) and the handle points (point1 and point2) and the value at which to evaluate between 0.0 and 1.0 (0 being point0 and 1.0 being point3).
+ @param t      Interpolation between points.
+ @param point0 Anchor point 1.
+ @param point1 Handle point 1.
+ @param point2 Handle point 2.
+ @param point3 Anchor point 2.
+ @return CGPoint value.
+ */
 CGPoint bezierPoint (CGFloat t, CGPoint point0, CGPoint point1, CGPoint point2, CGPoint point3);
 
+/*!
+ Since bezier paths are distributed more densely in some areas, while more sparse in others, sometimes you need to be able to get the point at a certain x value instead of a t value. Provide this function with the x values of the curve and what x value you need the y value for.
+ @param x   x value that you need to get the y value from
+ @param p0x x value from point 0
+ @param p1x x value from point 1
+ @param p2x x value from point 2
+ @param p3x x value from point 3
+ @return t value for given x value - you can then get the y value from the previous function
+ @seealso bezierPoint bezierPoint @/link
+ */
 double bezierTValueAtXValue (double x, double p0x, double p1x, double p2x, double p3x);
 
 #pragma mark LOGGING
@@ -437,7 +500,14 @@ void SKULog(NSInteger verbosityLevelRequired, NSString *format, ...);
 #pragma mark SKUTILITES SINGLETON
 
 #if TARGET_OS_TV
-
+/*!
+ Nav mode enumerator for AppleTV.
+ @constant kSKUNavModeOn Nav mode on.
+ @constant kSKUNavModeOff Nav mode off.
+ @constant kSKUNavModePressed Nav mode paused while a press is in progress. (Don't set this manually).
+ @attributelist Platforms:
+ AppleTV
+ */
 typedef enum {
 	kSKUNavModeOn = 1,
 	kSKUNavModeOff,
@@ -447,7 +517,14 @@ typedef enum {
 #endif
 
 #if TARGET_OS_OSX_SKU
-
+/*!
+ Mouse button type enumerator/flags for Mac.
+ @constant kSKUMouseButtonFlagLeft Flag for when left mouse is used.
+ @constant kSKUMouseButtonFlagRight Flag for when right mouse is used.
+ @constant kSKUMouseButtonFlagOther Flag for when other mouse is used (mouse buttons 3 and greater).
+ @attributelist Platforms:
+ OSX
+ */
 typedef enum {
 	kSKUMouseButtonFlagLeft = 1 << 0,
 	kSKUMouseButtonFlagRight = 1 << 1,
@@ -455,7 +532,9 @@ typedef enum {
 } kSKUMouseButtonFlags;
 
 #endif
-
+/*!
+ This is a singleton class that carries a lot of information allowing for access anywhere within your app. It'll track the current time, intervals between frames, handle logging, store objects, and manage navigation and other built in utilties with this library.
+ */
 @interface SKUtilities2 : NSObject
 /*!
  Current time passed in from scene update method, but must be set up properly. This allows you to get the currentTime into other objects or methods without directly calling them from the update method.
@@ -485,13 +564,17 @@ Vulnerable to lag spikes if used.
 #if TARGET_OS_OSX_SKU
 /*!
  Flags to determine what sort of mouse button is passed onto nodes. By default, it only passes left mouse button events, but adding other kSKUMouseButtonFlags flags allows to respond to other mouse buttons.
+ @seealso kSKUMouseButtonFlags
  */
 @property (nonatomic) kSKUMouseButtonFlags macButtonFlags;
 #endif
 
 #if TARGET_OS_TV
 
-
+/*!
+ Allows you to set the current kSKUNavModes type.
+ @seealso kSKUNavModes
+ */
 @property (nonatomic) kSKUNavModes navMode;
 @property (nonatomic, readonly) SKNode* navFocus;
 @property (nonatomic, strong) NSMutableSet* touchTracker;
@@ -623,20 +706,31 @@ Vulnerable to lag spikes if used.
 
 #pragma mark SKUButtonLabelProperties
 /*! Stores a single state for labels in buttons. The properties set on this object gets passed to the button's label for the appropriate state.
- @param text text value
- @param fontColor fontColor object
- @param fontSize fontSize value
- @param fontName fontName value
- @param position position value
- @param scale scale value
  */
 @interface SKUButtonLabelProperties : NSObject <NSCopying>
-
+/*!
+ text string
+ */
 @property (nonatomic) NSString* text;
+/*!
+ fontColor object
+ */
 @property (atomic, strong) SKColor* fontColor;
+/*!
+ fontSize value
+ */
 @property (nonatomic) CGFloat fontSize;
+/*!
+ fontName string
+ */
 @property (nonatomic) NSString* fontName;
+/*!
+ CGPoint of positional data
+ */
 @property (nonatomic) CGPoint position;
+/*!
+ scale value
+ */
 @property (nonatomic) CGFloat scale;
 
 +(SKUButtonLabelProperties*)propertiesWithText:(NSString *)text;
@@ -801,7 +895,7 @@ typedef enum {
 
 /*! SKUButton: Intended as a cross platform, unified way to design buttons for menus and input, instead of designing a completely different interface for Mac, iOS, and tvOS. Still needs a bit more effort when used on tvOS, but shouldn't be too hard. 
  
- Note: anchorPoint (and potentially other) SKSpriteNode properties have no effect - it is only subclassed as a sprite to help with Xcode's scene creation tool. (Note to self: fall back to SKNode if that idea doesn't pan out)
+ Note: anchorPoint (and potentially other) SKSpriteNode properties have no effect - it is only subclassed as a sprite to help with Xcode's scene creation tool and determine a minimum boundary.
  
  Also Note: when using action or notification button methods, the release of a button will only trigger the button release methods when the release is in the bounds of the button. However, using the delegate method, you will see the delegate called in both situations as well as a boolean passed that will tell you if the release is in bounds or not.
  */
@@ -826,13 +920,22 @@ typedef enum {
 @property (nonatomic) NSString* notificationNameDown;
 /*! If button is set to send notifications, this is the name of the notification. */
 @property (nonatomic) NSString* notificationNameUp;
-/*! Readonly: access to the base sprite. */
+/*!
+ @discussion
+ Readonly access to the base sprite.
+ While you can edit properties on the sprite itself, it is discouraged unless you really know what you're doing.
+ 
+ */
 @property (nonatomic, readonly) SKSpriteNode* baseSprite;
 /*! Used for padding around buttons when using centerRect to scale imagery. */
 @property (nonatomic) CGFloat padding;
 /*! Establishes the smallest possible area the button can take up (not accounting for properties with centerRect set that automatically expand). This is the same thing as setting the size property. It only exists to document clarity.  */
 @property (nonatomic) CGSize sizeMinimumBoundary;
-/*! Properties to use on the base sprite in default state. */
+/*!
+ @discussion
+ Properties to use on the base sprite in default state.
+ 
+ */
 @property (nonatomic) SKUButtonSpriteStateProperties* baseSpritePropertiesDefault;
 /*! Properties to use on the base sprite in pressed state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* baseSpritePropertiesPressed;
@@ -843,16 +946,23 @@ typedef enum {
 
 /*! Sets all states based off of the default state. 
  @warning
- baseSpritePropertiesDefault, baseSpritePropertiesPressed, baseSpritePropertiesHovered, and baseSpritePropertiesDisabled all point to the same pointer as a result. If you edit one, they will all change. If you don't want them all to update, do
- @code
+ baseSpritePropertiesDefault, baseSpritePropertiesPressed, baseSpritePropertiesHovered, and baseSpritePropertiesDisabled all point to the same pointer as a result. If you edit one, they will all change. If you don't want them all to change with an edit, do
+ 
+ <pre>
+ @textblock
  SKUButton* button; // assuming this is properly set up
  [button buttonStatesNormalize];
  button.baseSpritePropertiesPressed = button.baseSpritePropertiesPressed.copy;
- @endcode
+ @/textblock
+ </pre>
  */
 -(void)buttonStatesNormalize;
 /*! Sets all states based off of the default state using the settings determined in 
- [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:(SKUButtonSpriteStateProperties *)defaultState]
+ <pre>
+ @textblock
+ [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:(SKUButtonSpriteStateProperties *)defaultState] 
+ @/textblock
+ </pre>
   */
 -(void)buttonStatesDefault;
 
