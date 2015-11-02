@@ -4,6 +4,8 @@
  @brief SpriteKit Utilities 2
  
  This is a collection of functions, classes, and categories to greatly simplify and speed up development with SpriteKit.
+ Available for download at <a href="https://github.com/mredig/SKUtilities2">GitHub</a>
+ Documentation available at <a href="http://mredig.github.io/SKUtilities2/">GitHub Pages</a> 
  
  @author	Michael Redig
  @copyright	2015 Michael Redig - (See license file)
