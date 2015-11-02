@@ -23,6 +23,11 @@ bN=$(printf "%d" $bN)
  
  */
 
+
+/**
+ Header formatting for documentation can be referenced here https://developer.apple.com/library/mac/documentation/DeveloperTools/Conceptual/HeaderDoc/tags/tags.html#//apple_ref/doc/uid/TP40001215-CH346-SW16 and here http://www.raywenderlich.com/66395/documenting-in-xcode-with-headerdoc-tutorial
+ */
+
 #import <Foundation/Foundation.h>
 #import <QuartzCore/QuartzCore.h>
 #import <SpriteKit/SpriteKit.h>
