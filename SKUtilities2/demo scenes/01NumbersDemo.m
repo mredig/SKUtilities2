@@ -9,7 +9,7 @@
 #import "01NumbersDemo.h"
 #import "SKUtilities2.h"
 #import "02rotationScene.h"
-#import "shapeBenchmark.h"
+#import "08ButtonDemo.h"
 
 @interface _1NumbersDemo() {
 	
@@ -77,6 +77,18 @@
 	[self addChild:logLabel];
 	
 	[self setupButton];
+	
+//	[self transferTemp];
+	
+}
+
+-(void)transferTemp{
+	
+	_8ButtonDemo* scene = [[_8ButtonDemo alloc] initWithSize:self.size];
+	scene.scaleMode = self.scaleMode;
+	
+	SKView* view = (SKView*)self.view;
+	[view presentScene:scene];
 	
 }
 

@@ -669,7 +669,7 @@ static SKUtilities2* sharedUtilities = Nil;
 -(void)gestureTapDown {
 	if (_navMode == kSKUNavModeOn) {
 		_navMode = kSKUNavModePressed;
-		SKNode* currentSelectedNode = SKUSharedUtilities.navFocus.userData[@"sku_currentSelectedNode"];
+		SKNode* currentSelectedNode = SKUSharedUtilities.navFocus.userData[@"sku_currentFocusedNode"];
 		if ([currentSelectedNode isKindOfClass:[SKUButton class]]) {
 			[(SKUButton*)currentSelectedNode buttonPressed:CGPointZero];
 		} else {
@@ -680,11 +680,22 @@ static SKUtilities2* sharedUtilities = Nil;
 
 -(void)gestureTapUp {
 	if (_navMode == kSKUNavModeOn || _navMode == kSKUNavModePressed) {
-		_navMode = kSKUNavModeOn;
-		SKNode* currentSelectedNode = SKUSharedUtilities.navFocus.userData[@"sku_currentSelectedNode"];
+		SKNode* currentSelectedNode = SKUSharedUtilities.navFocus.userData[@"sku_currentFocusedNode"];
 		if ([currentSelectedNode isKindOfClass:[SKUButton class]]) {
-			[(SKUButton*)currentSelectedNode buttonReleased:CGPointZero];
+			SKUButton* button = (SKUButton*)currentSelectedNode;
+			switch (button.buttonType) {
+				case kSKUButtonTypeSlider:
+					//sliders set nav mode themselves
+					[button buttonReleased:CGPointZero];
+					break;
+					
+				default:
+					_navMode = kSKUNavModeOn;
+					[button buttonReleased:CGPointZero];
+					break;
+			}
 		} else {
+			_navMode = kSKUNavModeOn;
 			[SKUSharedUtilities.navFocus nodePressedUpSKU:currentSelectedNode];
 		}
 	}
@@ -2909,6 +2920,11 @@ static SKUtilities2* sharedUtilities = Nil;
 	BOOL stateMinValueDefaultInitialized;
 	BOOL stateMinValueDisabledInitialized;
 	
+#if TARGET_OS_TV
+	BOOL focusStartPress;
+	BOOL focusSlideMode;
+#endif
+	
 	NSInvocation* changedSelector;
 	
 	CGFloat actualSlideWidth;
@@ -3452,6 +3468,33 @@ static SKUtilities2* sharedUtilities = Nil;
 	}
 	//might have to do the base sprite here too... just a reminder
 }
+
+#pragma mark SKUSliderButton tvOS Stuff
+
+#if TARGET_OS_TV
+-(void)buttonPressed:(CGPoint)location {
+	if (self.isEnabled) {
+		if (!focusSlideMode) {
+			[super buttonPressed:location];
+			[SKUSharedUtilities setNavMode:kSKUNavModePressed];
+			focusStartPress = YES;
+			focusSlideMode = YES;
+		}
+	}
+}
+
+-(void)buttonReleased:(CGPoint)location {
+	if (self.isEnabled) {
+		if (focusStartPress) {
+			focusStartPress = NO;
+		} else {
+			focusSlideMode = NO;
+			[SKUSharedUtilities setNavMode:kSKUNavModeOn];
+			[super buttonReleased:location];
+		}
+	}
+}
+#endif
 
 @end
 
@@ -4012,7 +4055,7 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 -(void)skuInternalUpdateCurrentSelectedNode:(SKNode*)node {
-	if (!node || [self.userData[@"sku_currentSelectedNode"] isEqual:node]) {
+	if (!node || [self.userData[@"sku_currentFocusedNode"] isEqual:node]) {
 		return;
 	}
 	
@@ -4020,7 +4063,7 @@ static SKUtilities2* sharedUtilities = Nil;
 		self.userData = [NSMutableDictionary dictionary];
 	}
 	
-	self.userData[@"sku_currentSelectedNode"] = node;
+	self.userData[@"sku_currentFocusedNode"] = node;
 	NSSet* navNodes = self.userData[@"sku_navNodes"];
 	for (SKNode* tNode in navNodes) {
 		if ([tNode isKindOfClass:[SKUButton class]]) {
@@ -4054,7 +4097,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	if (SKUSharedUtilities.navMode == kSKUNavModeOn) {
 		UITouch* touch = eventDict[@"touch"];
 		if ([SKUSharedUtilities.touchTracker containsObject:touch]) {
-			SKNode* prevSelection = SKUSharedUtilities.navFocus.userData[@"sku_currentSelectedNode"];
+			SKNode* prevSelection = SKUSharedUtilities.navFocus.userData[@"sku_currentFocusedNode"];
 			NSSet* nodeSet = SKUSharedUtilities.navFocus.userData[@"sku_navNodes"];
 			if (!prevSelection) {
 				SKULog(0,@"Error: no currently selected node - did you set the initial node selection (setCurrentSelectedNodeSKU:(SKNode*)) and set the navFocus on the singleton ([SKUSharedUtilities setNavFocus:(SKNode*)]?");
@@ -4064,6 +4107,14 @@ static SKUtilities2* sharedUtilities = Nil;
 				SKNode* currentSelectionNode = [SKUSharedUtilities handleSubNodeMovement:location withCurrentSelection:prevSelection inSet:nodeSet inScene:self.scene];
 				[self skuInternalUpdateCurrentSelectedNode:currentSelectionNode];
 			}
+		}
+	} else if (SKUSharedUtilities.navMode == kSKUNavModePressed) {
+		SKNode* currentFocus = SKUSharedUtilities.navFocus.userData[@"sku_currentFocusedNode"];
+		if ([currentFocus isKindOfClass:[SKUSliderButton class]]) {
+			SKUSliderButton* slider = (SKUSliderButton*)currentFocus;
+			CGFloat stepsize = ((slider.maximumValue - slider.minimumValue) / (slider.sliderWidth * 2.0f)) * delta.x;
+			slider.value += stepsize;
+			[slider sendChanged:NO];
 		}
 	}
 	[self relativeInputMovedSKU:location withDelta:delta withEventDictionary:eventDict];

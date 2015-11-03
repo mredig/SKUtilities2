@@ -76,7 +76,9 @@
 	slider.value = -150;
 //	slider.delegate = self;
 	[slider setChangedAction:@selector(sliderChanged:) toPerformOnTarget:self];
-	slider.continuous = YES;
+	[slider setUpAction:@selector(released:) toPerformOnTarget:self];
+	[slider setDownAction:@selector(pressed:) toPerformOnTarget:self];
+//	slider.continuous = YES;
 	slider.name = @"slider";
 	slider.sliderWidth = 300;
 	[self addChild:slider];
@@ -95,6 +97,13 @@
 #endif
 }
 
+-(void)pressed:(SKUButton*)button {
+	SKULog(0, @"pressed");
+}
+
+-(void)released:(SKUSliderButton*)button {
+	SKULog(0, @"released: %f", button.value);
+}
 
 -(void)valueChanged:(SKUSliderButton *)button {
 	SKULog(0, @"delegate: %f", button.value);
@@ -110,11 +119,6 @@
 
 
 -(void)inputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
-	if (toggleTest.on) {
-		slider.value += delta.y;
-	} else {
-		slider.sliderWidth += delta.y;
-	}
 
 }
 
