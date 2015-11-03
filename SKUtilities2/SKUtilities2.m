@@ -2971,6 +2971,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	_maximumValue = 100.0;
 	_minimumValue = 0.0f;
 	_continuous = NO;
+	_stepSize = 0.0f;
 	self.sliderWidth = 200.0f;
 	
 	self.name = @"SKUSliderButton";
@@ -4112,7 +4113,12 @@ static SKUtilities2* sharedUtilities = Nil;
 		SKNode* currentFocus = SKUSharedUtilities.navFocus.userData[@"sku_currentFocusedNode"];
 		if ([currentFocus isKindOfClass:[SKUSliderButton class]]) {
 			SKUSliderButton* slider = (SKUSliderButton*)currentFocus;
-			CGFloat stepsize = ((slider.maximumValue - slider.minimumValue) / (slider.sliderWidth * 2.0f)) * delta.x;
+			CGFloat stepsize;
+			if (slider.stepSize > 0.0) {
+				stepsize = slider.stepSize * delta.x;
+			} else {
+				stepsize = ((slider.maximumValue - slider.minimumValue) / (slider.sliderWidth * 2.0f)) * delta.x;
+			}
 			slider.value += stepsize;
 			[slider sendChanged:NO];
 		}

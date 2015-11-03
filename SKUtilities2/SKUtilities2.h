@@ -1680,6 +1680,12 @@ typedef enum {
 @property (nonatomic) CGFloat sliderWidth;
 /*! If button is set to send notifications, this is the name of the notification when the value changes. */
 @property (nonatomic) NSString* notificationNameChanged;
+/*!
+ Step value to increment (modified by speed of movement) or decrement the value by when sliding with a Siri Remote. This is not required as a value is generated on the fly, but is available for customization. Ignores if the value is 0. Default value is 0. Harmless to use on other platforms, but has no effect.
+ @attributelist Platforms:
+ tvOS
+ */
+@property (nonatomic) CGFloat stepSize;
 
 -(void)setKnobSpriteStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
 -(void)setSlideSpriteStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package;

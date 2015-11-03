@@ -78,7 +78,7 @@
 	[slider setChangedAction:@selector(sliderChanged:) toPerformOnTarget:self];
 	[slider setUpAction:@selector(released:) toPerformOnTarget:self];
 	[slider setDownAction:@selector(pressed:) toPerformOnTarget:self];
-//	slider.continuous = YES;
+	slider.continuous = YES;
 	slider.name = @"slider";
 	slider.sliderWidth = 300;
 	[self addChild:slider];
