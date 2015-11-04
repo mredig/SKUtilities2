@@ -1634,7 +1634,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	props.xScale = 1.0f;
 	props.yScale = 1.0f;
 	props.texture = buttonBG;
-	props.centerRect = CGRectMake(40.0/buttonBG.size.width, 50.0/buttonBG.size.height, 40.0/buttonBG.size.width, 40.0/buttonBG.size.height);
+	props.centerRect = CGRectMake(40.0/buttonBG.size.width, 60.0/buttonBG.size.height, 40.0/buttonBG.size.width, 40.0/buttonBG.size.height);
 	return props;
 }
 
@@ -1780,6 +1780,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	package.propertiesPressedState.color = [SKColor grayColor];
 	package.propertiesPressedState.colorBlendFactor = 0.5;
 	package.propertiesHoveredState = package.propertiesDefaultState.copy;
+	package.propertiesHoveredState.texture = [SKTexture textureWithImageNamed:@"buttonHoverBG_SKU"];
 	package.propertiesHoveredState.xScale *= skuHoverScale;
 	package.propertiesHoveredState.yScale *= skuHoverScale;
 	package.propertiesDisabledState = package.propertiesDefaultState.copy;
@@ -2029,6 +2030,8 @@ static SKUtilities2* sharedUtilities = Nil;
 	
 	SKTexture* prevTex = _baseSprite.texture;
 	_baseSprite.texture = properties.texture;
+	_baseSprite.xScale = 1.0;
+	_baseSprite.yScale = 1.0;
 	if (![prevTex isEqual:_baseSprite.texture]) {
 		_baseSprite.size = properties.texture.size;
 	}

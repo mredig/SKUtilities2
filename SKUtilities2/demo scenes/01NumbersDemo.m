@@ -27,6 +27,7 @@
 	
 	NSInteger verbosityLevelRequired = 0;
 	self.name = @"numbersScene";
+	self.backgroundColor = [SKColor whiteColor];
 
 #if TARGET_OS_OSX_SKU
 	SKUSharedUtilities.macButtonFlags = kSKUMouseButtonFlagLeft | kSKUMouseButtonFlagRight | kSKUMouseButtonFlagOther;
@@ -115,20 +116,8 @@
 
 -(void)setupButtonPackages {
 	SKUSharedUtilities.userData = [NSMutableDictionary dictionary];
-	
-	SKTexture* buttonBG = [SKTexture textureWithImageNamed:@"buttonBG_SKU"];
 
-	SKUButtonSpriteStateProperties* backgroundProps = [SKUButtonSpriteStateProperties
-												  propertiesWithTexture:buttonBG
-												  andAlpha:1.0f
-												  andColor:nil
-												  andColorBlendFactor:0.0f
-												  andPositionOffset:CGPointMake(0, 0)
-												  andXScale:1.0f
-												  andYScale:1.0f
-												  andCenterRect:CGRectMake(40.0/buttonBG.size.width, 50.0/buttonBG.size.height, 40.0/buttonBG.size.width, 40.0/buttonBG.size.height)];
-	
-	SKUButtonSpriteStatePropertiesPackage* backgroundPackage = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:backgroundProps];
+	SKUButtonSpriteStatePropertiesPackage* backgroundPackage = [SKUButtonSpriteStatePropertiesPackage packageWithDefaultPropertiesSKU];
 	
 	SKUButtonLabelProperties* labelProps = [SKUButtonLabelProperties
 											propertiesWithText:@"Next Scene"
