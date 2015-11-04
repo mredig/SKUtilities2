@@ -111,7 +111,8 @@ float cpu_usage()
 	[self addChild:shapeEffect];
 	
 	self.name = @"shape benchmark scene";
-	
+	self.backgroundColor = [SKColor grayColor];
+
 }
 
 -(void)skuButtonUp:(SKUButton*)button {

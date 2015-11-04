@@ -39,7 +39,8 @@
 	
 	SKULog( verbosityLevelRequired, @"\n\n\n\n03VectorPoint: demos vector and point functions");
 	self.name = @"vectors and points and other demo stuff scene";
-	
+	self.backgroundColor = [SKColor grayColor];
+
 #pragma mark CGVector HELPERS
 	
 	CGPoint pointA = CGPointMake(150.5, 215.8);

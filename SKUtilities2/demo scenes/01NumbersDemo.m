@@ -27,7 +27,7 @@
 	
 	NSInteger verbosityLevelRequired = 0;
 	self.name = @"numbersScene";
-	self.backgroundColor = [SKColor whiteColor];
+	self.backgroundColor = [SKColor grayColor];
 
 #if TARGET_OS_OSX_SKU
 	SKUSharedUtilities.macButtonFlags = kSKUMouseButtonFlagLeft | kSKUMouseButtonFlagRight | kSKUMouseButtonFlagOther;

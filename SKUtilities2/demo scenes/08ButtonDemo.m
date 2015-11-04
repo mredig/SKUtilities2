@@ -26,7 +26,8 @@
 	self.backgroundColor = [SKColor colorWithWhite:0.7 alpha:1.0];
 	SKULog(0,@"08ButtonDemo: demos different button types");
 	self.name = @"ButtonDemoScene";
-	
+	self.backgroundColor = [SKColor grayColor];
+
 	[self setupButton];
 }
 

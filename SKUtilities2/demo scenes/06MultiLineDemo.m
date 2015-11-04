@@ -23,7 +23,8 @@
 	
 	SKULog(0,@"\n\n\n\n06MultiLineDemo: demos multiline label stuff");
 	self.name = @"MultiLine Demo";
-	
+	self.backgroundColor = [SKColor grayColor];
+
 	[self setupSpriteDemos];
 	[self setupButton];
 	

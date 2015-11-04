@@ -30,7 +30,8 @@
 -(void) didMoveToView:(SKView *)view {
 	
 	self.name = @"02RotationScene";
-	
+	self.backgroundColor = [SKColor grayColor];
+
 	verbosityLevelRequired = 0;
 	
 	SKULog( verbosityLevelRequired, @"\n\n\n\n02RotationScene: demos orientation functions");

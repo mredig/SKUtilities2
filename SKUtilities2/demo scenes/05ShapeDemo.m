@@ -19,7 +19,8 @@
 	
 	SKULog(0,@"\n\n\n\n05ShapeDemo demo: demos shape stuff");
 	self.name = @"shape demo scene";
-	
+	self.backgroundColor = [SKColor grayColor];
+
 	[self setupSpriteDemos];
 	[self setupButton];
 }

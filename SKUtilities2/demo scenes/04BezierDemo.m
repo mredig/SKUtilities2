@@ -34,7 +34,8 @@
 	
 	SKULog(0,@"\n\n\n\n04Bezier demo: demos bezier stuff");
 	self.name = @"bezier demo scene";
-	
+	self.backgroundColor = [SKColor grayColor];
+
 #pragma mark BEZIER CALCUATIONS
 	[self setupSpriteDemos];
 	[self setupButton];
