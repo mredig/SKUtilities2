@@ -90,9 +90,36 @@
 	[self addChild:slider];
 
 	
+// custom art
+	
+	SKUButtonSpriteStateProperties* customBGDefault = [SKUButtonSpriteStateProperties propertiesWithTexture:[SKTexture textureWithImageNamed:@"demoNormal"] andAlpha:1.0];
+	customBGDefault.centerRect = CGRectMake(40.0f / customBGDefault.texture.size.width, 65.0f / customBGDefault.texture.size.height, 40.0f / customBGDefault.texture.size.width, 30.0f / customBGDefault.texture.size.height);
+	SKUButtonSpriteStateProperties* customBGHover = customBGDefault.copy;
+	customBGHover.texture = [SKTexture textureWithImageNamed:@"demoHover"];
+	SKUButtonSpriteStateProperties* customBGPush = customBGDefault.copy;
+	customBGPush.texture = [SKTexture textureWithImageNamed:@"demoPush"];
+	SKUButtonSpriteStateProperties* customBGDisabled = customBGDefault.copy;
+	customBGDisabled.texture = [SKTexture textureWithImageNamed:@"demoDisabled"];
+	
+	SKUButtonSpriteStatePropertiesPackage* customBackgroundPackage = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:customBGDefault andPressedState:customBGPush andHoveredState:customBGHover andDisabledState:customBGDisabled];
+	
+	SKUButtonLabelPropertiesPackage* customButtonLabelPack = [SKUButtonLabelPropertiesPackage packageWithDefaultPropertiesWithText:@"Custom Button"];
+	[customButtonLabelPack.propertiesHoveredState setScale:1.0];//comment and uncomment these to see how they affect the scaling of the background, even though the background is NOT set to scale.
+	[customButtonLabelPack.propertiesPressedState setScale:1.0];
+	
+	
+	SKUPushButton* customImageButtonExample = [SKUPushButton pushButtonWithBackgroundPropertiesPackage:customBackgroundPackage andTitleLabelPropertiesPackage:customButtonLabelPack];
+	customImageButtonExample.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.25, 0.75));
+	customImageButtonExample.name = @"customButtonExample";
+	[customImageButtonExample setDownAction:@selector(pressed:) toPerformOnTarget:self];
+	[customImageButtonExample setUpAction:@selector(released:) toPerformOnTarget:self];
+	[self addChild:customImageButtonExample];
+	
+	
 #if TARGET_OS_TV
 	
 	[self addNodeToNavNodesSKU:nextSlide];
+	[self addNodeToNavNodesSKU:customImageButtonExample];
 	[self addNodeToNavNodesSKU:slider];
 	[self addNodeToNavNodesSKU:prevSlide];
 	[self addNodeToNavNodesSKU:toggleTest];
@@ -104,11 +131,11 @@
 }
 
 -(void)pressed:(SKUButton*)button {
-	SKULog(0, @"pressed");
+	SKULog(0, @"pressed: %@", button.name);
 }
 
--(void)released:(SKUSliderButton*)button {
-	SKULog(0, @"released: %f", button.value);
+-(void)released:(SKUButton*)button {
+	SKULog(0, @"released: %@", button.name);
 }
 
 -(void)valueChanged:(SKUSliderButton *)button {
