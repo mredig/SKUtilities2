@@ -67,6 +67,9 @@
 	SKUButtonSpriteStatePropertiesPackage* knobPackage = [SKUButtonSpriteStatePropertiesPackage packageWithDefaultSliderKnobPropertiesSKU];
 	SKUButtonSpriteStatePropertiesPackage* sliderPackage = [SKUButtonSpriteStatePropertiesPackage packageWithDefaultSliderSliderSlidePropertiesSKU];
 	
+	SKUButtonSpriteStatePropertiesPackage* maxPackage = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:[SKUButtonSpriteStateProperties propertiesWithTexture:[SKTexture textureWithImageNamed:@"plusSKU"] andAlpha:1.0f]];
+	SKUButtonSpriteStatePropertiesPackage* minPackage = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:[SKUButtonSpriteStateProperties propertiesWithTexture:[SKTexture textureWithImageNamed:@"minusSKU"] andAlpha:1.0f]];
+	
 	slider = [SKUSliderButton node];
 	[slider setSlideSpriteStatesWithPackage:sliderPackage];
 	[slider setKnobSpriteStatesWithPackage:knobPackage];
@@ -81,6 +84,8 @@
 	slider.continuous = YES;
 	slider.name = @"slider";
 	slider.sliderWidth = 300;
+	[slider setMaxValueSpriteStatesWithPackage:maxPackage];
+	[slider setMinValueSpriteStatesWithPackage:minPackage];
 	[self addChild:slider];
 
 	
@@ -119,6 +124,9 @@
 
 
 -(void)inputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
+	if (toggleTest.on) {
+		slider.sliderWidth += delta.y;
+	}
 
 }
 

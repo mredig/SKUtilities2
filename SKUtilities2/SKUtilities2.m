@@ -2048,7 +2048,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	}
 }
 
--(CGSize)getButtonSizeMinusBase {
+-(CGSize)getButtonSizeMinusBase { //// note to remember to update subclasses if any changes are made - they don't call super
 	SKNode* baseParent;
 	if (_baseSprite.parent) {
 		baseParent = _baseSprite.parent;
@@ -3057,6 +3057,9 @@ static SKUtilities2* sharedUtilities = Nil;
 		_maximumValueImage.centerRect = maxProperties.centerRect;
 		_maximumValueImage.xScale = maxProperties.xScale;
 		_maximumValueImage.yScale = maxProperties.yScale;
+		
+		CGSize buttonSize = [self getButtonSizeMinusBase];
+		_maximumValueImage.position = pointAdd(_maximumValueImage.position, CGPointMake(buttonSize.width * 0.5 + _maximumValueImage.texture.size.width * 0.5, 0));
 	}
 	
 	if (_minimumValueImage) {
@@ -3072,6 +3075,9 @@ static SKUtilities2* sharedUtilities = Nil;
 		_minimumValueImage.centerRect = minProperties.centerRect;
 		_minimumValueImage.xScale = minProperties.xScale;
 		_minimumValueImage.yScale = minProperties.yScale;
+
+		CGSize buttonSize = [self getButtonSizeMinusBase];
+		_minimumValueImage.position = pointAdd(_minimumValueImage.position, CGPointMake(-buttonSize.width * 0.5 - _minimumValueImage.texture.size.width * 0.5, 0));
 	}
 	
 	if(_slideSprite) {
@@ -3090,6 +3096,38 @@ static SKUtilities2* sharedUtilities = Nil;
 //		SKULog(0, @"xScale = %f", _slideSprite.xScale);
 	}
 	[self updateKnobPosition];
+}
+
+-(CGSize)getButtonSizeMinusBase {
+	
+	SKNode* baseParent, *minParent, *maxParent;
+	if (self.baseSprite.parent) {
+		baseParent = self.baseSprite.parent;
+		[self.baseSprite removeFromParent];
+	}
+	if (_minimumValueImage.parent) {
+		minParent = _minimumValueImage.parent;
+		[_minimumValueImage removeFromParent];
+	}
+	if (_maximumValueImage.parent) {
+		maxParent = _maximumValueImage.parent;
+		[_maximumValueImage removeFromParent];
+	}
+	
+	
+	CGSize thisSize = [self calculateAccumulatedFrame].size;
+	if (baseParent) {
+		[self addChild:self.baseSprite];
+	}
+	
+	if (minParent) {
+		[minParent addChild:_minimumValueImage];
+	}
+	if (maxParent) {
+		[maxParent addChild:_maximumValueImage];
+	}
+	return thisSize;
+	
 }
 
 -(CGFloat)getActualWidthFromTexture:(SKTexture*)texture withCenterRect:(CGRect)rect {
@@ -3309,7 +3347,7 @@ static SKUtilities2* sharedUtilities = Nil;
 		_minimumValueImage = [SKSpriteNode spriteNodeWithTexture:_minimumValueImagePropertiesDefault.texture];
 		_minimumValueImage.zPosition = 0.001;
 		_minimumValueImage.name = @"SKUSliderButtonMinValueImage";
-		[self addChild:_maximumValueImage];
+		[self addChild:_minimumValueImage];
 	}
 	stateMinValueDefaultInitialized = YES;
 	
