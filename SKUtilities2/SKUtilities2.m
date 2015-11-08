@@ -818,8 +818,6 @@ static SKUtilities2* sharedUtilities = Nil;
 	CGPoint defaultPosition;
 	
 	SKNode* null;
-	
-	
 }
 
 @end
@@ -1024,16 +1022,6 @@ static SKUtilities2* sharedUtilities = Nil;
 	if ([systemVersion floatValue] < 8.0) {
 		scaleFactor = 1.0;
 	}
-#else
-	CGFloat scaleFactor = 1.0;
-	if ([[NSScreen mainScreen] respondsToSelector:@selector(backingScaleFactor)]) {
-		NSArray *screens = [NSScreen screens];
-		for (int i = 0; i < [screens count]; i++) {
-			float s = [[screens objectAtIndex:i] backingScaleFactor];
-			if (s > scaleFactor)
-				scaleFactor = s;
-		}
-	}
 #endif
 	
 	CGSize imageSize = boundingSize;
@@ -1067,6 +1055,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	drawSprite.position = defaultPosition;
 	[self setAnchorPoint:_anchorPoint];
 	
+	_texture = tex;
 }
 
 -(void)setPath:(CGPathRef)path {

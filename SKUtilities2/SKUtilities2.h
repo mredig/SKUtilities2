@@ -971,6 +971,10 @@ Vulnerable to lag spikes if used.
  Anchor point of the sprite.
  */
 @property (nonatomic, assign) CGPoint anchorPoint;
+/*!
+ Readonly access to the rendered texture. MIGHT not be properly retina-ized.
+ */
+@property(nonatomic, readonly) SKTexture* texture;
 
 /*! @methodgroup Initialization */
 
