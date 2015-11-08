@@ -778,7 +778,7 @@ Vulnerable to lag spikes if used.
  @attributelist Platforms:
  tvOS
  */
--(SKNode*)handleSubNodeMovement:(CGPoint)location withCurrentSelection:(SKNode*)currentSelectedNode inSet:(NSSet*)navNodeSet inScene:(SKScene*)scene;
+-(SKNode*)handleSubNodeMovement:(CGPoint)location withCurrentFocus:(SKNode*)currentFocusedNode inSet:(NSSet*)navNodeSet inScene:(SKScene*)scene;
 
 
 /*!

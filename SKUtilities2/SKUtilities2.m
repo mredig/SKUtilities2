@@ -580,7 +580,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	_navFocus = navFocus;
 }
 
--(SKNode*)handleSubNodeMovement:(CGPoint)location withCurrentSelection:(SKNode *)currentSelectedNode inSet:(NSSet *)navNodeSet inScene:(SKScene*)scene {
+-(SKNode*)handleSubNodeMovement:(CGPoint)location withCurrentFocus:(SKNode *)currentFocusedNode inSet:(NSSet *)navNodeSet inScene:(SKScene*)scene {
 	
 	SKNode* rNode;
 	
@@ -594,20 +594,20 @@ static SKUtilities2* sharedUtilities = Nil;
 		
 		if (absX > absY) { // horizontal movement
 			if (diff.x > 0) {
-				rNode = [self selectDirection:UISwipeGestureRecognizerDirectionRight withNodes:navNodeSet fromCurrentNode:currentSelectedNode inScene:scene];
+				rNode = [self selectDirection:UISwipeGestureRecognizerDirectionRight withNodes:navNodeSet fromCurrentNode:currentFocusedNode inScene:scene];
 			} else {
-				rNode = [self selectDirection:UISwipeGestureRecognizerDirectionLeft withNodes:navNodeSet fromCurrentNode:currentSelectedNode inScene:scene];
+				rNode = [self selectDirection:UISwipeGestureRecognizerDirectionLeft withNodes:navNodeSet fromCurrentNode:currentFocusedNode inScene:scene];
 			}
 		} else { // vertical movement
 			if (diff.y > 0) {
-				rNode = [self selectDirection:UISwipeGestureRecognizerDirectionUp withNodes:navNodeSet fromCurrentNode:currentSelectedNode inScene:scene];
+				rNode = [self selectDirection:UISwipeGestureRecognizerDirectionUp withNodes:navNodeSet fromCurrentNode:currentFocusedNode inScene:scene];
 			} else {
-				rNode = [self selectDirection:UISwipeGestureRecognizerDirectionDown withNodes:navNodeSet fromCurrentNode:currentSelectedNode inScene:scene];
+				rNode = [self selectDirection:UISwipeGestureRecognizerDirectionDown withNodes:navNodeSet fromCurrentNode:currentFocusedNode inScene:scene];
 			}
 		}
 		selectLocation = location;
 	} else {
-		rNode = currentSelectedNode;
+		rNode = currentFocusedNode;
 	}
 	
 	return rNode;
@@ -620,32 +620,32 @@ static SKUtilities2* sharedUtilities = Nil;
 		return nil;
 	}
 	
-	CGPoint selectionWorldSpace = [pCurrentNode.parent convertPoint:pCurrentNode.position toNode:scene];
+	CGPoint focusedWorldSpace = [pCurrentNode.parent convertPoint:pCurrentNode.position toNode:scene];
 	
 	NSMutableSet* directionCandidates = [NSMutableSet set];
 	
-	for (SKNode* selectionCandidate in pNavNodes) {
-		CGPoint newNodeWorldSpace = [selectionCandidate.parent convertPoint:selectionCandidate.position toNode:scene];
+	for (SKNode* focusCandidate in pNavNodes) {
+		CGPoint newNodeWorldSpace = [focusCandidate.parent convertPoint:focusCandidate.position toNode:scene];
 		
 		switch (direction) {
 			case UISwipeGestureRecognizerDirectionUp:
-				if (newNodeWorldSpace.y > selectionWorldSpace.y) {
-					[directionCandidates addObject:selectionCandidate];
+				if (newNodeWorldSpace.y > focusedWorldSpace.y) {
+					[directionCandidates addObject:focusCandidate];
 				}
 				break;
 			case UISwipeGestureRecognizerDirectionDown:
-				if (newNodeWorldSpace.y < selectionWorldSpace.y) {
-					[directionCandidates addObject:selectionCandidate];
+				if (newNodeWorldSpace.y < focusedWorldSpace.y) {
+					[directionCandidates addObject:focusCandidate];
 				}
 				break;
 			case UISwipeGestureRecognizerDirectionLeft:
-				if (newNodeWorldSpace.x < selectionWorldSpace.x) {
-					[directionCandidates addObject:selectionCandidate];
+				if (newNodeWorldSpace.x < focusedWorldSpace.x) {
+					[directionCandidates addObject:focusCandidate];
 				}
 				break;
 			case UISwipeGestureRecognizerDirectionRight:
-				if (newNodeWorldSpace.x > selectionWorldSpace.x) {
-					[directionCandidates addObject:selectionCandidate];
+				if (newNodeWorldSpace.x > focusedWorldSpace.x) {
+					[directionCandidates addObject:focusCandidate];
 				}
 				break;
 			default:
@@ -657,7 +657,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	CGFloat lowestDistance = MAXFLOAT;
 	for (SKNode* directionCand in directionCandidates) {
 		CGPoint newNodeWorldSpace = [directionCand.parent convertPoint:directionCand.position toNode:scene];
-		CGFloat distance = distanceBetween(selectionWorldSpace, newNodeWorldSpace);
+		CGFloat distance = distanceBetween(focusedWorldSpace, newNodeWorldSpace);
 		if (distance < lowestDistance) {
 			newNode = directionCand;
 			lowestDistance = distance;
@@ -669,20 +669,20 @@ static SKUtilities2* sharedUtilities = Nil;
 -(void)gestureTapDown {
 	if (_navMode == kSKUNavModeOn) {
 		_navMode = kSKUNavModePressed;
-		SKNode* currentSelectedNode = SKUSharedUtilities.navFocus.userData[@"sku_currentFocusedNode"];
-		if ([currentSelectedNode isKindOfClass:[SKUButton class]]) {
-			[(SKUButton*)currentSelectedNode buttonPressed:CGPointZero];
+		SKNode* currentFocusedNode = SKUSharedUtilities.navFocus.userData[@"sku_currentFocusedNode"];
+		if ([currentFocusedNode isKindOfClass:[SKUButton class]]) {
+			[(SKUButton*)currentFocusedNode buttonPressed:CGPointZero];
 		} else {
-			[SKUSharedUtilities.navFocus nodePressedDownSKU:currentSelectedNode];
+			[SKUSharedUtilities.navFocus nodePressedDownSKU:currentFocusedNode];
 		}
 	}
 }
 
 -(void)gestureTapUp {
 	if (_navMode == kSKUNavModeOn || _navMode == kSKUNavModePressed) {
-		SKNode* currentSelectedNode = SKUSharedUtilities.navFocus.userData[@"sku_currentFocusedNode"];
-		if ([currentSelectedNode isKindOfClass:[SKUButton class]]) {
-			SKUButton* button = (SKUButton*)currentSelectedNode;
+		SKNode* currentFocusedNode = SKUSharedUtilities.navFocus.userData[@"sku_currentFocusedNode"];
+		if ([currentFocusedNode isKindOfClass:[SKUButton class]]) {
+			SKUButton* button = (SKUButton*)currentFocusedNode;
 			switch (button.buttonType) {
 				case kSKUButtonTypeSlider:
 					//sliders set nav mode themselves
@@ -696,7 +696,7 @@ static SKUtilities2* sharedUtilities = Nil;
 			}
 		} else {
 			_navMode = kSKUNavModeOn;
-			[SKUSharedUtilities.navFocus nodePressedUpSKU:currentSelectedNode];
+			[SKUSharedUtilities.navFocus nodePressedUpSKU:currentFocusedNode];
 		}
 	}
 }
@@ -4098,15 +4098,15 @@ static SKUtilities2* sharedUtilities = Nil;
 	if (SKUSharedUtilities.navMode == kSKUNavModeOn) {
 		UITouch* touch = eventDict[@"touch"];
 		if ([SKUSharedUtilities.touchTracker containsObject:touch]) {
-			SKNode* prevSelection = SKUSharedUtilities.navFocus.userData[@"sku_currentFocusedNode"];
+			SKNode* prevFocus = SKUSharedUtilities.navFocus.userData[@"sku_currentFocusedNode"];
 			NSSet* nodeSet = SKUSharedUtilities.navFocus.userData[@"sku_navNodes"];
-			if (!prevSelection) {
-				SKULog(0,@"Error: no currently selected node - did you set the initial node selection (setCurrentFocusedNodeSKU:(SKNode*)) and set the navFocus on the singleton ([SKUSharedUtilities setNavFocus:(SKNode*)]?");
+			if (!prevFocus) {
+				SKULog(0,@"Error: no currently focused node - did you set the initial node focus (setCurrentFocusedNodeSKU:(SKNode*)) and set the navFocus on the singleton ([SKUSharedUtilities setNavFocus:(SKNode*)]?");
 			} else if (!nodeSet) {
 				SKULog(0,@"Error: no navNodes to navigate through - did you add nodes to the nav nodes (addNodeToNavNodesSKU:(SKNode*)) and set the navFocus on the singleton ([SKUSharedUtilities setNavFocus:(SKNode*)]?");
 			} else {
-				SKNode* currentSelectionNode = [SKUSharedUtilities handleSubNodeMovement:location withCurrentSelection:prevSelection inSet:nodeSet inScene:self.scene];
-				[self skuInternalUpdateCurrentFocusedNode:currentSelectionNode];
+				SKNode* currentFocusNode = [SKUSharedUtilities handleSubNodeMovement:location withCurrentFocus:prevFocus inSet:nodeSet inScene:self.scene];
+				[self skuInternalUpdateCurrentFocusedNode:currentFocusNode];
 			}
 		}
 	} else if (SKUSharedUtilities.navMode == kSKUNavModePressed) {

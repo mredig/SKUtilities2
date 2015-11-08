@@ -17,7 +17,7 @@
 	
 	SKSpriteNode* handle1, *handle2;
 	
-	SKNode* prevSelectedNode;
+	SKNode* prevFcousedNode;
 	
 	
 	SKLabelNode* xAndTvalueLabel;
@@ -162,8 +162,8 @@
 	if ([node.name containsString:@"handle"]) {
 		[node setScale:3.0f];
 	}
-	[prevSelectedNode setScale:1.0f];
-	prevSelectedNode = node;
+	[prevFcousedNode setScale:1.0f];
+	prevFcousedNode = node;
 }
 
 -(void)absoluteInputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
