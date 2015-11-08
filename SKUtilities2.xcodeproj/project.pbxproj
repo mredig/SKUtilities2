@@ -106,6 +106,8 @@
 		33BA01BB1BDB34360012F8B3 /* SKUtilities2.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = SKUtilities2.xcassets; sourceTree = "<group>"; };
 		33E0A6041BDD72DB00FB0414 /* 08ButtonDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = 08ButtonDemo.h; path = "demo scenes/08ButtonDemo.h"; sourceTree = "<group>"; };
 		33E0A6051BDD72DB00FB0414 /* 08ButtonDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = 08ButtonDemo.m; path = "demo scenes/08ButtonDemo.m"; sourceTree = "<group>"; };
+		33E1DF0E1BEF12D8000E1894 /* LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE.txt; sourceTree = SOURCE_ROOT; };
+		33E1DF0F1BEF12D8000E1894 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,6 +160,8 @@
 		335C92BB1BB71D7000DC1BD2 /* SKUtilities2 */ = {
 			isa = PBXGroup;
 			children = (
+				33E1DF0E1BEF12D8000E1894 /* LICENSE.txt */,
+				33E1DF0F1BEF12D8000E1894 /* README.md */,
 				33B260761BD4923B0004CB3A /* TODO */,
 				335C92D31BB71EEA00DC1BD2 /* SKUtilities2.h */,
 				335C92D41BB71EEA00DC1BD2 /* SKUtilities2.m */,
