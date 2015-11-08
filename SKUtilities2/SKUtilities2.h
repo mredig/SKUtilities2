@@ -845,14 +845,14 @@ Vulnerable to lag spikes if used.
 
 #pragma mark NEW CLASSES
 
-#pragma mark SKU_PositionObject
+#pragma mark SKUPositionObject
 
 /*!
  For easy passing of struct data through mediums that only accept objects, like NSArrays or performSelectors that only accept passing of objects.
  */
-@interface SKU_PositionObject : NSObject  <NSCopying>
+@interface SKUPositionObject : NSObject  <NSCopying>
 
-/*! @group SKU_PositionObject Properties */
+/*! @group SKUPositionObject Properties */
 
 /*!
  CGPoint representation of data.
@@ -871,7 +871,7 @@ Vulnerable to lag spikes if used.
  */
 @property (nonatomic) CGVector vector;
 
-/*! @group SKU_PositionObject Methods */
+/*! @group SKUPositionObject Methods */
 
 -(id)initWithPosition:(CGPoint)position;
 -(id)initWithVector:(CGVector)vector;
@@ -881,29 +881,29 @@ Vulnerable to lag spikes if used.
 /*! @methodgroup Initialization */
 
 /*!
- Creates and returns an SKU_PositionObject from a CGPoint parameter. This becomes the origin in the bundled CGRect.
+ Creates and returns an SKUPositionObject from a CGPoint parameter. This becomes the origin in the bundled CGRect.
  @param location CGPoint value
- @return SKU_PositionObject with input position data
+ @return SKUPositionObject with input position data
  */
-+(SKU_PositionObject*)position:(CGPoint)location;
++(SKUPositionObject*)position:(CGPoint)location;
 /*!
- Creates and returns an SKU_PositionObject from a CGVector parameter. This becomes the origin in the bundled CGRect.
+ Creates and returns an SKUPositionObject from a CGVector parameter. This becomes the origin in the bundled CGRect.
  @param vector CGVector value
- @return SKU_PositionObject with input vector data
+ @return SKUPositionObject with input vector data
  */
-+(SKU_PositionObject*)vector:(CGVector)vector;
++(SKUPositionObject*)vector:(CGVector)vector;
 /*!
- Creates and returns an SKU_PositionObject from a CGSize parameter. This becomes the size in the bundled CGRect.
+ Creates and returns an SKUPositionObject from a CGSize parameter. This becomes the size in the bundled CGRect.
  @param size CGSize value
- @return SKU_PositionObject with input size data
+ @return SKUPositionObject with input size data
  */
-+(SKU_PositionObject*)size:(CGSize)size;
++(SKUPositionObject*)size:(CGSize)size;
 /*!
- Creates and returns an SKU_PositionObject from a CGRect parameter. This sets the position property from the origin and the size property from the size.
+ Creates and returns an SKUPositionObject from a CGRect parameter. This sets the position property from the origin and the size property from the size.
  @param rect CGRect value
- @return SKU_PositionObject with input rect data
+ @return SKUPositionObject with input rect data
  */
-+(SKU_PositionObject*)rect:(CGRect)rect;
++(SKUPositionObject*)rect:(CGRect)rect;
 
 /*! @methodgroup Conversion and retrieval */
 
@@ -914,14 +914,14 @@ Vulnerable to lag spikes if used.
 @end
 
 
-#pragma mark SKU_ShapeNode
+#pragma mark SKUShapeNode
 
 /*!
- Apple's shape generator for SpriteKit causes performance issues. Shapes are rerendered each frame, despite a lack of change in appearance. You can cheat by parenting it to an SKEffectNode and setting it to rasterize. However, any changes cause it to rerender with high cpu usage. It also has low quality anti aliasing. Instead, you can use this class. SKU_ShapeNode uses CAShapeLayer to render a shape, which is slightly more costly than the rendering of the SKShapeNode, but once it's rendered, is cached as a bitmap and renders very quickly in SpriteKit thereafter. TLDR: SpriteKit's shape node fast redner, slow draw. SKUShapeNode is slow render, fast draw.
+ Apple's shape generator for SpriteKit causes performance issues. Shapes are rerendered each frame, despite a lack of change in appearance. You can cheat by parenting it to an SKEffectNode and setting it to rasterize. However, any changes cause it to rerender with high cpu usage. It also has low quality anti aliasing. Instead, you can use this class. SKUShapeNode uses CAShapeLayer to render a shape, which is slightly more costly than the rendering of the SKShapeNode, but once it's rendered, is cached as a bitmap and renders very quickly in SpriteKit thereafter. TLDR: SpriteKit's shape node fast redner, slow draw. SKUShapeNode is slow render, fast draw.
  */
-@interface SKU_ShapeNode : SKNode <NSCopying>
+@interface SKUShapeNode : SKNode <NSCopying>
 
-/*! @group SKU_ShapeNode Properties */
+/*! @group SKUShapeNode Properties */
 
 /*!
  The CGPath to be drawn (in the Node's coordinate space) (will only redraw the image if the path is non-nil, so it's best to set the path as the last property and save some CPU cycles)
@@ -982,49 +982,49 @@ Vulnerable to lag spikes if used.
  Convenience method that creates and returns a new shape object in the shape of a circle.
  @param radius radius of circle.
  @param color  Color of circle.
- @return SKU_ShapeNode
+ @return SKUShapeNode
  */
-+(SKU_ShapeNode*)circleWithRadius:(CGFloat)radius andColor:(SKColor*)color;
++(SKUShapeNode*)circleWithRadius:(CGFloat)radius andColor:(SKColor*)color;
 /*!
  Convenience method that creates and returns a new shape object in the shape of a sqaure.
  @param width Value that determines size of square.
  @param color Color of square
- @return SKU_ShapeNode
+ @return SKUShapeNode
  */
-+(SKU_ShapeNode*)squareWithWidth:(CGFloat)width andColor:(SKColor*)color;
++(SKUShapeNode*)squareWithWidth:(CGFloat)width andColor:(SKColor*)color;
 /*!
  Convenience method that creates and returns a new shape object in the shape of a rectanlge.
  @param size  CGSize value to make a rectange of.
  @param color Color of rectangle.
- @return SKU_ShapeNode
+ @return SKUShapeNode
  */
-+(SKU_ShapeNode*)rectangleWithSize:(CGSize)size andColor:(SKColor*)color;
++(SKUShapeNode*)rectangleWithSize:(CGSize)size andColor:(SKColor*)color;
 /*!
  Convenience method that creates and returns a new shape object in the shape of a rounded rectangle.
  @param size   CGSize value to make a rectangle of.
  @param radius Radius value for corners
  @param color  Color of shape
- @return SKU_ShapeNode
+ @return SKUShapeNode
  */
-+(SKU_ShapeNode*)rectangleRoundedWithSize:(CGSize)size andCornerRadius:(CGFloat)radius andColor:(SKColor*)color;
++(SKUShapeNode*)rectangleRoundedWithSize:(CGSize)size andCornerRadius:(CGFloat)radius andColor:(SKColor*)color;
 /*!
  Convenience method that creates and returns a new shape object in the shape of the provided path.
  @param path  CGPathRef path to make a shape out of. A copy is made, so you are responsible for releasing this reference.
  @param color Color to make shape.
- @return SKU_ShapeNode
+ @return SKUShapeNode
  */
-+(SKU_ShapeNode*)shapeWithPath:(CGPathRef)path andColor:(SKColor*)color;
++(SKUShapeNode*)shapeWithPath:(CGPathRef)path andColor:(SKColor*)color;
 
 
 @end
 
-#pragma mark SKU_MultiLineLabelNode
+#pragma mark SKUMultiLineLabelNode
 /*!
  Provides an SKLabelNode-like interface for multiline labels.
  */
-@interface SKU_MultiLineLabelNode : SKSpriteNode <NSCopying>
+@interface SKUMultiLineLabelNode : SKSpriteNode <NSCopying>
 
-/*! @group SKU_MultiLineLabelNode Properties */
+/*! @group SKUMultiLineLabelNode Properties */
 
 /*!
  Color to make text.
@@ -1071,12 +1071,12 @@ Vulnerable to lag spikes if used.
  */
 @property(retain, nonatomic) SKColor* strokeColor;
 
-/*! @group SKU_MultiLineLabelNode Methods */
+/*! @group SKUMultiLineLabelNode Methods */
 
 /*!
  Convenience method to create and return a new object with specific font name.
  @param fontName Name of the font.
- @return SKU_MultiLineLabelNode object
+ @return SKUMultiLineLabelNode object
  */
 + (instancetype)labelNodeWithFontNamed:(NSString *)fontName;
 - (instancetype)initWithFontNamed:(NSString *)fontName;

@@ -153,25 +153,14 @@ float cpu_usage()
 
 -(void)setupButton {
 	
-	SKTexture* tex = [SKTexture textureWithImageNamed:@"Spaceship_small"];
-	
-	SKUButtonLabelProperties* labelProps = [SKUButtonLabelProperties propertiesWithText:@"SKUShapeNode" andColor:[SKColor whiteColor] andSize:50 andFontName:@"Helvetica Neue"];
-	SKUButtonLabelPropertiesPackage* labelPack = [SKUButtonLabelPropertiesPackage packageWithPropertiesForDefaultState:labelProps];
-	
-	SKUButtonSpriteStateProperties* spriteProps = [SKUButtonSpriteStateProperties propertiesWithTexture:tex andAlpha:1.0];
-	SKUButtonSpriteStatePropertiesPackage* spritePack = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:spriteProps];
-	
-	SKUPushButton* skuButton = [SKUPushButton pushButtonWithBackgroundPropertiesPackage:spritePack andTitleLabelPropertiesPackage:labelPack];
+	SKUPushButton* skuButton = [SKUPushButton pushButtonWithTitle:@"SKUShapeNode"];
 	skuButton.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.25, 0.5));
 	[skuButton setUpAction:@selector(skuButtonUp:) toPerformOnTarget:self];
 	skuButton.zPosition = 1.0;
 	skuButton.name = @"skuButton";
 	[self addChild:skuButton];
 	
-	SKUButtonLabelPropertiesPackage* labelPack2 = labelPack.copy;
-	[labelPack2 changeText:@"SKShapeNode"];
-	
-	SKUPushButton* skButton = [SKUPushButton pushButtonWithBackgroundPropertiesPackage:spritePack andTitleLabelPropertiesPackage:labelPack2];
+	SKUPushButton* skButton = [SKUPushButton pushButtonWithTitle:@"SKShapeNode"];
 	skButton.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.75, 0.5));
 	[skButton setUpAction:@selector(skButtonUp:) toPerformOnTarget:self];
 	skButton.zPosition = 1.0;
@@ -252,7 +241,7 @@ float cpu_usage()
 	
 	for (int y = 0; y < squareBase; y ++) {
 		for (int x = 0; x < squareBase; x++) {
-			SKU_ShapeNode* shape = [SKU_ShapeNode circleWithRadius:fmin(self.size.width, self.size.height)/(squareBase*2.0) andColor:[SKColor redColor]];
+			SKUShapeNode* shape = [SKUShapeNode circleWithRadius:fmin(self.size.width, self.size.height)/(squareBase*2.0) andColor:[SKColor redColor]];
 			shape.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(x/(CGFloat)squareBase, y/(CGFloat)squareBase));
 			shape.position = pointAdd(shape.position, CGPointMake( 0.5 * (1.0/(CGFloat)squareBase) * self.size.width,  0.5 * (1.0/(CGFloat)squareBase) * self.size.height));
 			[shapeEffect addChild:shape];

@@ -70,11 +70,11 @@ New classes are:
 
 * **SKUtilities2**
 	* Singleton augmenting much functionality throughout this library. Wow.
-* **SKU_MultiLineLabelNode**
+* **SKUMultiLineLabelNode**
 	* SKLabelNode-like interface allowing for multiline labels. Sourced from Chris Allwein of Downright Simple(c). Many thanks to him for open sourcing this code!
-* **SKU_PositionObject**
+* **SKUPositionObject**
 	* Allows for storing and passing some struct data as objects (useful for NSArray, NSDictionary, NSNotifications, etc)
-* **SKU_ShapeNode**
+* **SKUShapeNode**
 	* Renders shapes into textures instead of rerendering the shape every frame
 * **SKUPushButton**
 	* Cross platform push button

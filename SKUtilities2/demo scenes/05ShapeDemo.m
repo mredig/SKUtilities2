@@ -29,18 +29,18 @@
 	
 	CGFloat sizes = 100.0;
 	
-	SKU_ShapeNode* circle = [SKU_ShapeNode circleWithRadius:sizes andColor:[SKColor whiteColor]];
+	SKUShapeNode* circle = [SKUShapeNode circleWithRadius:sizes andColor:[SKColor whiteColor]];
 	circle.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.25, 0.75));
 	circle.name = @"circle";
 	[self addChild:circle];
 	
-	SKU_ShapeNode* square = [SKU_ShapeNode squareWithWidth:sizes * 2.0 andColor:[SKColor redColor]];
+	SKUShapeNode* square = [SKUShapeNode squareWithWidth:sizes * 2.0 andColor:[SKColor redColor]];
 	square.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.75, 0.75));
 	square.name = @"square";
 	[self addChild:square];
 	
 	
-	SKU_ShapeNode* rectangle = [SKU_ShapeNode rectangleWithSize:CGSizeMake(sizes * 2.0, sizes) andColor:[SKColor blueColor]];
+	SKUShapeNode* rectangle = [SKUShapeNode rectangleWithSize:CGSizeMake(sizes * 2.0, sizes) andColor:[SKColor blueColor]];
 	rectangle.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.25, 0.25));
 	rectangle.name = @"rectangle";
 	[self addChild:rectangle];
@@ -50,7 +50,7 @@
 	CGRect rect = CGRectMake(-sizes, -sizes / 2.0, sizes * 2.0, sizes);
 	CGPathRef rectPathRef = CGPathCreateWithRoundedRect(rect, sizes * 0.2, sizes * 0.2, NULL);
 	
-	SKU_ShapeNode* roundedRectangleShape = [SKU_ShapeNode node];
+	SKUShapeNode* roundedRectangleShape = [SKUShapeNode node];
 	roundedRectangleShape.fillColor = [SKColor yellowColor];
 	roundedRectangleShape.strokeColor = [SKColor greenColor];
 	roundedRectangleShape.lineWidth = 20.0;

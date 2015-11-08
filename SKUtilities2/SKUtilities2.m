@@ -705,12 +705,12 @@ static SKUtilities2* sharedUtilities = Nil;
 
 @end
 
-#pragma mark SKU_PositionObject
+#pragma mark SKUPositionObject
 
-@implementation SKU_PositionObject
+@implementation SKUPositionObject
 
 -(id)copyWithZone:(NSZone *)zone {
-	return [SKU_PositionObject rect:_rect];
+	return [SKUPositionObject rect:_rect];
 }
 
 -(id)init {
@@ -749,20 +749,20 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 
-+(SKU_PositionObject*)position:(CGPoint)location {
-	return [[SKU_PositionObject alloc]initWithPosition:location];
++(SKUPositionObject*)position:(CGPoint)location {
+	return [[SKUPositionObject alloc]initWithPosition:location];
 }
 
-+(SKU_PositionObject*)vector:(CGVector)vector {
-	return [[SKU_PositionObject alloc]initWithVector:vector];
++(SKUPositionObject*)vector:(CGVector)vector {
+	return [[SKUPositionObject alloc]initWithVector:vector];
 }
 
-+(SKU_PositionObject*)size:(CGSize)size {
-	return [[SKU_PositionObject alloc]initWithSize:size];
++(SKUPositionObject*)size:(CGSize)size {
+	return [[SKUPositionObject alloc]initWithSize:size];
 }
 
-+(SKU_PositionObject*)rect:(CGRect)rect {
-	return [[SKU_PositionObject alloc]initWithRect:rect];
++(SKUPositionObject*)rect:(CGRect)rect {
+	return [[SKUPositionObject alloc]initWithRect:rect];
 }
 
 
@@ -805,9 +805,9 @@ static SKUtilities2* sharedUtilities = Nil;
 
 @end
 
-#pragma mark SKU_ShapeNode
+#pragma mark SKUShapeNode
 
-@interface SKU_ShapeNode() {
+@interface SKUShapeNode() {
 	
 	CAShapeLayer* shapeLayer;
 	CAShapeLayer* outlineLayer;
@@ -823,10 +823,10 @@ static SKUtilities2* sharedUtilities = Nil;
 @end
 
 
-@implementation SKU_ShapeNode
+@implementation SKUShapeNode
 
 -(id)copyWithZone:(NSZone *)zone {
-	SKU_ShapeNode* shape = [SKU_ShapeNode node];
+	SKUShapeNode* shape = [SKUShapeNode node];
 	shape.strokeColor = _strokeColor.copy;
 	shape.fillColor = _fillColor.copy;
 	shape.lineWidth = _lineWidth;
@@ -841,11 +841,11 @@ static SKUtilities2* sharedUtilities = Nil;
 	return shape;
 }
 
-+(SKU_ShapeNode*)circleWithRadius:(CGFloat)radius andColor:(SKColor*)color{
++(SKUShapeNode*)circleWithRadius:(CGFloat)radius andColor:(SKColor*)color{
 	CGRect rect = CGRectMake(-radius, -radius, radius*2.0, radius*2.0);
 	CGPathRef circle = CGPathCreateWithEllipseInRect(rect, NULL);
 	
-	SKU_ShapeNode* shapeNode = [SKU_ShapeNode node];
+	SKUShapeNode* shapeNode = [SKUShapeNode node];
 	shapeNode.fillColor = color;
 	shapeNode.path = circle;
 	
@@ -854,11 +854,11 @@ static SKUtilities2* sharedUtilities = Nil;
 	return shapeNode;
 }
 
-+(SKU_ShapeNode*)squareWithWidth:(CGFloat)width andColor:(SKColor*)color{
++(SKUShapeNode*)squareWithWidth:(CGFloat)width andColor:(SKColor*)color{
 	CGRect rect = CGRectMake(-width / 2.0, -width / 2.0, width, width);
 	CGPathRef square = CGPathCreateWithRect(rect, NULL);
 	
-	SKU_ShapeNode* shapeNode = [SKU_ShapeNode node];
+	SKUShapeNode* shapeNode = [SKUShapeNode node];
 	shapeNode.fillColor = color;
 	shapeNode.path = square;
 	
@@ -867,11 +867,11 @@ static SKUtilities2* sharedUtilities = Nil;
 	return shapeNode;
 }
 
-+(SKU_ShapeNode*)rectangleWithSize:(CGSize)size andColor:(SKColor*)color{
++(SKUShapeNode*)rectangleWithSize:(CGSize)size andColor:(SKColor*)color{
 	CGRect rect = CGRectMake(-size.width / 2.0, -size.height / 2.0, size.width, size.height);
 	CGPathRef rectPath = CGPathCreateWithRect(rect, NULL);
 	
-	SKU_ShapeNode* shapeNode = [SKU_ShapeNode node];
+	SKUShapeNode* shapeNode = [SKUShapeNode node];
 	shapeNode.fillColor = color;
 	shapeNode.path = rectPath;
 	
@@ -880,11 +880,11 @@ static SKUtilities2* sharedUtilities = Nil;
 	return shapeNode;
 }
 
-+(SKU_ShapeNode*)rectangleRoundedWithSize:(CGSize)size andCornerRadius:(CGFloat)radius andColor:(SKColor*)color{
++(SKUShapeNode*)rectangleRoundedWithSize:(CGSize)size andCornerRadius:(CGFloat)radius andColor:(SKColor*)color{
 	CGRect rect = CGRectMake(-size.width / 2.0, -size.height / 2.0, size.width, size.height);
 	CGPathRef rectPath = CGPathCreateWithRoundedRect(rect, radius, radius, NULL);
 	
-	SKU_ShapeNode* shapeNode = [SKU_ShapeNode node];
+	SKUShapeNode* shapeNode = [SKUShapeNode node];
 	shapeNode.fillColor = color;
 	shapeNode.path = rectPath;
 	
@@ -893,8 +893,8 @@ static SKUtilities2* sharedUtilities = Nil;
 	return shapeNode;
 }
 
-+(SKU_ShapeNode*)shapeWithPath:(CGPathRef)path andColor:(SKColor *)color {
-	SKU_ShapeNode* shapeNode = [SKU_ShapeNode node];
++(SKUShapeNode*)shapeWithPath:(CGPathRef)path andColor:(SKColor *)color {
+	SKUShapeNode* shapeNode = [SKUShapeNode node];
 	shapeNode.fillColor = color;
 	shapeNode.path = path;
 	return shapeNode;
@@ -903,14 +903,14 @@ static SKUtilities2* sharedUtilities = Nil;
 	
 	if (self = [super init]) {
 		
-		self.name = @"SKU_ShapeNode";
+		self.name = @"SKUShapeNode";
 		
 		null = [SKNode node];
-		null.name = @"SKU_ShapeNodeNULL";
+		null.name = @"SKUShapeNodeNULL";
 		[self addChild:null];
 		
 		drawSprite = [SKSpriteNode node];
-		drawSprite.name = @"SKU_ShapeNodeDrawSprite";
+		drawSprite.name = @"SKUShapeNodeDrawSprite";
 		[null addChild:drawSprite];
 		_strokeColor = [SKColor whiteColor];
 		_fillColor = [SKColor clearColor];
@@ -1120,9 +1120,9 @@ static SKUtilities2* sharedUtilities = Nil;
 @end
 
 
-#pragma mark SKU_MultiLineLabelNode
+#pragma mark SKUMultiLineLabelNode
 
-@interface SKU_MultiLineLabelNode () {
+@interface SKUMultiLineLabelNode () {
 	
 	bool setupMode;
 	
@@ -1130,12 +1130,12 @@ static SKUtilities2* sharedUtilities = Nil;
 
 @end
 
-@implementation SKU_MultiLineLabelNode
+@implementation SKUMultiLineLabelNode
 
 #pragma mark init and convenience methods
 
 -(instancetype)copyWithZone:(NSZone *)zone {
-	SKU_MultiLineLabelNode* label = [SKU_MultiLineLabelNode labelNodeWithFontNamed:_fontName];
+	SKUMultiLineLabelNode* label = [SKUMultiLineLabelNode labelNodeWithFontNamed:_fontName];
 	label.fontColor = _fontColor;
 	label.fontSize = _fontSize;
 	label.horizontalAlignmentMode = _horizontalAlignmentMode;
@@ -1188,7 +1188,7 @@ static SKUtilities2* sharedUtilities = Nil;
 
 //Convenience method to support drop-in replacement for SKLabelNode
 + (instancetype)labelNodeWithFontNamed:(NSString *)fontName {
-	SKU_MultiLineLabelNode* node = [[SKU_MultiLineLabelNode alloc] initWithFontNamed:fontName];
+	SKUMultiLineLabelNode* node = [[SKUMultiLineLabelNode alloc] initWithFontNamed:fontName];
 	
 	return node;
 }
@@ -3996,10 +3996,10 @@ static SKUtilities2* sharedUtilities = Nil;
 	if (!self.userData) {
 		self.userData = [NSMutableDictionary dictionaryWithCapacity:5];
 	}
-	SKU_PositionObject* prevLocation = self.userData[@"previousMouseLocationSKU"];
-	self.userData[@"previousMouseLocationSKU"] = [SKU_PositionObject position:location];
+	SKUPositionObject* prevLocation = self.userData[@"previousMouseLocationSKU"];
+	self.userData[@"previousMouseLocationSKU"] = [SKUPositionObject position:location];
 	if (!prevLocation) {
-		prevLocation = [SKU_PositionObject position:CGPointZero];
+		prevLocation = [SKUPositionObject position:CGPointZero];
 	}
 	return prevLocation.position;
 }

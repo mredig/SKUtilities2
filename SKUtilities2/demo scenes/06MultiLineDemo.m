@@ -12,7 +12,7 @@
 #import "05ShapeDemo.h"
 
 @interface _6MultiLineDemo() {
-	SKU_MultiLineLabelNode* multiLineLabel;
+	SKUMultiLineLabelNode* multiLineLabel;
 }
 
 @end
@@ -32,7 +32,7 @@
 
 -(void)setupSpriteDemos {
 	
-	multiLineLabel = [SKU_MultiLineLabelNode labelNodeWithFontNamed:@"Helvetica Neue"];
+	multiLineLabel = [SKUMultiLineLabelNode labelNodeWithFontNamed:@"Helvetica Neue"];
 	multiLineLabel.paragraphWidth = 200.0;
 	multiLineLabel.text = @"This is text and stuff and this\nis\na\nnewline\netc.";
 	multiLineLabel.position = pointMultiplyByFactor(pointFromCGSize(self.size), 0.25);

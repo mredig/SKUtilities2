@@ -25,7 +25,7 @@
 -(void)didMoveToView:(SKView *)view {
 	[self setupButtonPackages];
 	
-	NSInteger verbosityLevelRequired = 0;
+	NSInteger verbosityLevelRequired = 0; // increase this value to require a higher verbosity level on SKUSharedUtilities to print log statements
 	self.name = @"numbersScene";
 	self.backgroundColor = [SKColor grayColor];
 
