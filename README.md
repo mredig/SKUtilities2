@@ -99,12 +99,6 @@ See the demo files for examples and [documentation](http://mredig.github.io/SKUt
 
 **Xcode 7+**
 
-Target requirements:
-**iOS 9+**
-and/or 
-**Mac OS X 10.11+** 
-and/or
-**tvOS 9+**
+Target requirements: **iOS 9+** and/or **Mac OS X 10.11+** and/or **tvOS 9+**
 
 Honestly, I'm not 100% sure and I don't care enough to look them up just for this. I'm not your mom.
-SpriteKit project
