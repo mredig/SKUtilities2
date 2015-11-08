@@ -39,6 +39,7 @@
 	nextSlide.zPosition = 1.0;
 	[nextSlide setUpAction:@selector(transferScene:) toPerformOnTarget:self];
 	nextSlide.name = @"nextSlideButton";
+	[nextSlide disableButton];
 	[self addChild:nextSlide];
 	
 	SKUButtonLabelPropertiesPackage* labelPackPrev = labelPack.copy;
@@ -54,12 +55,12 @@
 // toggle button
 	
 	SKUButtonLabelPropertiesPackage* labelPackToggle = labelPack.copy;
-	[labelPackToggle changeText:@"toggle"];
+	[labelPackToggle changeText:@"Adjust Slider Size"];
 	
 	toggleTest = [SKUToggleButton toggleButtonWithBackgroundPropertiesPackage:backgroundPack andTitleLabelPropertiesPackage:labelPackToggle];
 	[toggleTest setUpAction:@selector(toggled:) toPerformOnTarget:self];
 	toggleTest.zPosition = 1.0;
-	toggleTest.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.5, 0.75));
+	toggleTest.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.66, 0.75));
 	toggleTest.name = @"toggleTest";
 	[self addChild:toggleTest];
 	
@@ -74,7 +75,7 @@
 	slider = [SKUSliderButton node];
 	[slider setSlideSpriteStatesWithPackage:sliderPackage];
 	[slider setKnobSpriteStatesWithPackage:knobPackage];
-	slider.position = pointAdd(nextSlide.position, CGPointMake(0, -70));
+	slider.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.66, 0.5));
 	slider.minimumValue = -10;
 	slider.maximumValue = 100;
 	slider.value = -150;
@@ -109,25 +110,59 @@
 	
 	
 	SKUPushButton* customImageButtonExample = [SKUPushButton pushButtonWithBackgroundPropertiesPackage:customBackgroundPackage andTitleLabelPropertiesPackage:customButtonLabelPack];
-	customImageButtonExample.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.25, 0.75));
+	customImageButtonExample.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.5, 0.9));
 	customImageButtonExample.name = @"customButtonExample";
 	[customImageButtonExample setDownAction:@selector(pressed:) toPerformOnTarget:self];
 	[customImageButtonExample setUpAction:@selector(released:) toPerformOnTarget:self];
 	[self addChild:customImageButtonExample];
 	
 	
+// delegate button
+	
+	SKUPushButton* delegateButton = [SKUPushButton pushButtonWithTitle:@"Delegate Button"];
+	delegateButton.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.33, 0.5));
+	delegateButton.name = @"delegateButton";
+	delegateButton.delegate = self;
+	[self addChild:delegateButton];
+	
+// notification button
+	
+	SKUPushButton* notificationButton = [SKUPushButton pushButtonWithTitle:@"Notification Button"];
+	notificationButton.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.33, 0.75));
+	notificationButton.name = @"notificationButton";
+	notificationButton.notificationNameDown = @"notifyDown";
+	notificationButton.notificationNameUp = @"notifyUp";
+	[self addChild:notificationButton];
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notifyDown:) name:@"notifyDown" object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notifyUp:) name:@"notifyUp" object:nil];
+	
+	
+	
 #if TARGET_OS_TV
 	
 	[self addNodeToNavNodesSKU:nextSlide];
 	[self addNodeToNavNodesSKU:customImageButtonExample];
+	[self addNodeToNavNodesSKU:notificationButton];
 	[self addNodeToNavNodesSKU:slider];
 	[self addNodeToNavNodesSKU:prevSlide];
 	[self addNodeToNavNodesSKU:toggleTest];
-	[self setCurrentFocusedNodeSKU:nextSlide];
+	[self addNodeToNavNodesSKU:delegateButton];
+	[self setCurrentFocusedNodeSKU:toggleTest];
 	
 	[SKUSharedUtilities setNavFocus:self];
 	
 #endif
+}
+
+-(void)notifyDown:(NSNotification*)notification {
+	SKUButton* button = notification.object;
+	SKULog(0, @"%@ pressed", button.name);
+}
+
+-(void)notifyUp:(NSNotification*)notification {
+	SKUButton* button = notification.object;
+	SKULog(0, @"%@ released", button.name);
 }
 
 -(void)pressed:(SKUButton*)button {
@@ -148,6 +183,14 @@
 
 -(void)toggled:(SKUToggleButton*)button {
 //	SKULog(0, @"toggled: %i", button.on);
+}
+
+-(void)doButtonDown:(SKUButton *)button {
+	SKULog(0, @"%@ pressed", button.name);
+}
+
+-(void)doButtonUp:(SKUButton *)button inBounds:(BOOL)inBounds {
+	SKULog(0, @"%@ released inbounds: %i", button.name, inBounds);
 }
 
 
