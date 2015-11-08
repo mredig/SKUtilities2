@@ -2589,11 +2589,8 @@ static SKUtilities2* sharedUtilities = Nil;
 	stateToggleOffDisabledInitialized = NO;
 	[self setButtonType:kSKUButtonTypeToggle];
 	self.name = @"SKUToggleButton";
-	[super internalDidInitialize];
-}
-
--(void)didInitialize {
 	self.on = NO;
+	[super internalDidInitialize];
 }
 
 -(void)updateCurrentSpriteStateProperties {

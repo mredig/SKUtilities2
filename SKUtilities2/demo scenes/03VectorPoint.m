@@ -263,7 +263,7 @@
 	[nextSlide setUpAction:@selector(transferScene:) toPerformOnTarget:self];
 	[self addChild:nextSlide];
 	
-	SKUPushButton* prevSlide = [SKUPushButton pushButtonWithText:@"Previous Scene"];
+	SKUPushButton* prevSlide = [SKUPushButton pushButtonWithTitle:@"Previous Scene"];
 	prevSlide.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.33, 0.5));
 	prevSlide.zPosition = 1.0;
 	[prevSlide setUpAction:@selector(prevScene:) toPerformOnTarget:self];
