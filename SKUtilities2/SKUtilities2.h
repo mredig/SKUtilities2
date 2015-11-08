@@ -33,6 +33,8 @@ bN=$(printf "%d" $bN)
 #import <SpriteKit/SpriteKit.h>
 
 #pragma mark CONSTANTS
+/*! @group Common Constants */
+
 /*!
  Constant approximate value (0.41666) good for scaling assets.
  */
@@ -101,8 +103,9 @@ bN=$(printf "%d" $bN)
  */
 #define SKUSharedUtilities [SKUtilities2 sharedUtilities] 
 
-
 #pragma mark NUMBER INTERPOLATION
+/*! @functiongroup Number Interpolation */
+
 /*!
  Returns a CGFloat interpolated linearly between two values. Clipped determines whether it can go beyond the bounds of the values.
 @param valueA
@@ -176,6 +179,8 @@ NSInteger clipIntegerWithinRange (NSInteger value, NSInteger minimum, NSInteger 
 
 
 #pragma mark RANDOM NUMBERS
+/*! @functiongroup Random Numbers */
+
 /*!
  Returns a u_int_32_t value randomized between two other values.
  @param lowend  u_int32_t low end range value
@@ -194,6 +199,7 @@ u_int32_t randomUnsignedIntegerBetweenTwoValues (u_int32_t lowend, u_int32_t hig
 CGFloat randomFloatBetweenZeroAndHighend (CGFloat highend);
 
 #pragma mark DISTANCE FUNCTIONS
+/*! @functiongroup Distance Functions */
 
 /*!
  Returns a CGFloat value measuring the distance between two CGPoint values.
@@ -205,7 +211,6 @@ CGFloat randomFloatBetweenZeroAndHighend (CGFloat highend);
  @seealso distanceBetweenIsWithinXDistancePreSquared
  */
 CGFloat distanceBetween (CGPoint pointA, CGPoint pointB);
-
 
 /*!
  Returns a bool value determining if the distance between two points is less than a predetermined maximum value.
@@ -219,7 +224,6 @@ CGFloat distanceBetween (CGPoint pointA, CGPoint pointB);
  @seealso distanceBetween
  */
 bool distanceBetweenIsWithinXDistance (CGPoint pointA, CGPoint pointB, CGFloat xDistance);
-
 
 /*!
  Returns a bool value determining if the distance between two points is less than a predetermined maximum value. This is a small optimization over the previous function as it saves the step of squaring the x value.
@@ -236,7 +240,7 @@ bool distanceBetweenIsWithinXDistancePreSquared (CGPoint pointA, CGPoint pointB,
 
 
 #pragma mark ORIENTATION
-
+/*! @functiongroup Orientation */
 
 /*!
  Returns a float value in radians to rotate a node at position *from* to face *facing*, when the node is facing right at 0 rotation.
@@ -285,6 +289,7 @@ CGFloat orientToFromDownFace (CGPoint facing, CGPoint from);
 
 
 #pragma mark CGVector HELPERS
+/*! @functiongroup CGVector Helpers */
 
 /*!
  Returns a CGVector struct converted from a CGPoint struct.
@@ -383,6 +388,7 @@ CGVector vectorFromRadian (CGFloat radianAngle);
 CGVector vectorFromDegree (CGFloat degreeAngle);
 
 #pragma mark CGPoint HELPERS
+/*! @functiongroup CGPoint Helpers */
 
 /*!
  Returns a CGPoint struct converted from a CGVector
@@ -564,6 +570,8 @@ bool pointIsBehindVictim (CGPoint origin, CGPoint victim, CGVector normalVictimF
 
 
 #pragma mark COORDINATE FORMAT CONVERSIONS
+/*! @functiongroup Coordinate Format Conversions */
+
 /*!
  Returns a CGPoint struct converted from a properly formatted string.
  @param string
@@ -580,6 +588,8 @@ CGPoint getCGPointFromString (NSString* string);
 NSString* getStringFromPoint (CGPoint location);
 
 #pragma mark BEZIER CALCUATIONS
+/*! @functiongroup Bezier Calculations */
+
 /*!
  Returns a point on a bezier curve. Provide it with the anchor points (point0 and point3) and the handle points (point1 and point2) and the value at which to evaluate between 0.0 and 1.0 (0 being point0 and 1.0 being point3).
  @param t      Interpolation between points.
@@ -605,8 +615,11 @@ CGPoint bezierPoint (CGFloat t, CGPoint point0, CGPoint point1, CGPoint point2, 
 double bezierTValueAtXValue (double x, double p0x, double p1x, double p2x, double p3x);
 
 #pragma mark LOGGING
+/*! @functiongroup Logging */
+
 /*!
  Prints text to the console using NSLog, but only prints if verbosityLevelRequired is lower than SKUSharedUtilities.verbosityLevel. Also only prints in compiler debug mode.
+ @seealso SKUtilities2 SKUtilities2 verbosityLevel
  */
 void SKULog(NSInteger verbosityLevelRequired, NSString *format, ...);
 
@@ -652,6 +665,8 @@ typedef enum {
  This is a singleton class that carries a lot of information allowing for access anywhere within your app. It'll track the current time, intervals between frames, handle logging, store objects, and manage navigation and other built in utilties with this library.
  */
 @interface SKUtilities2 : NSObject
+/*! @group Time */
+
 /*!
  Current time passed in from scene update method, but must be set up properly. This allows you to get the currentTime into other objects or methods without directly calling them from the update method.
  */
@@ -669,14 +684,24 @@ Vulnerable to lag spikes if used.
  Defaults to 1.0f.
  */
 @property (nonatomic) CGFloat deltaMaxTime;
+
+/*! @group Logging */
+
 /*!
  Used to determine if SKULogs print to the console. A value of 100 or more will automatically print notifications of SKScene deallocation. A value of 150 will print notifications of SKNode deallocation.
+ @seealso SKULog
  */
 @property (nonatomic) NSInteger verbosityLevel;
+
+/*! @group Object Storage and Retrieval */
+
 /*!
  This mutable dictionary is similar in concept to the item of the same name on all SKNodes that Apple does, but on the singleton allows you to store objects for access game wide, not just on one node. It remains uninitialized until you initialize it.
  */
 @property (nonatomic, strong) NSMutableDictionary* userData;
+
+/*! @group Navigational */
+
 #if TARGET_OS_OSX_SKU
 /*!
  Flags to determine what sort of mouse button is passed onto nodes. By default, it only passes left mouse button events, but adding other kSKUMouseButtonFlags flags allows to respond to other mouse buttons.
@@ -730,17 +755,21 @@ Vulnerable to lag spikes if used.
  */
 @property (nonatomic, readonly) SKNode* navFocus;
 /*!
- Used internally to track current touches. Best not to touch.
- @attributelist Platforms:
- tvOS
- */
-@property (nonatomic, strong) NSMutableSet* touchTracker;
-/*!
  Change this value to change how sensitive the Siri remote is to movement. The concept is that from one navigation movement to another, this is the distance your touch must travel before signalling another navigational focus change. Higher values are less sensitive.
  @attributelist Platforms:
  tvOS
  */
 @property (nonatomic) CGFloat navThresholdDistance;
+
+/*! @group Internal - best not to touch */
+
+/*!
+ Used internally to track current touches. Best not to touch.
+ @attributelist Platforms:
+ tvOS
+ */
+@property (nonatomic, strong) NSMutableSet* touchTracker;
+/*! @methodgroup Internal - best not to touch */
 
 /*!
  Used internally. Best not to touch.
@@ -750,6 +779,23 @@ Vulnerable to lag spikes if used.
  tvOS
  */
 -(SKNode*)handleSubNodeMovement:(CGPoint)location withCurrentSelection:(SKNode*)currentSelectedNode inSet:(NSSet*)navNodeSet inScene:(SKScene*)scene;
+
+
+/*!
+ Used internally to communicate logic for button presses.
+ @attributelist Platforms:
+ tvOS
+ */
+-(void)gestureTapDown;
+/*!
+ Used internally to communicate logic for button presses.
+ @attributelist Platforms:
+ tvOS
+ */
+-(void)gestureTapUp;
+
+/*! @methodgroup Navigational */
+
 /*!
  Call this method to update the current navFocus node. Typically used on scenes when initially presented.
  @param navFocus SKNode to set as the navFocus.
@@ -763,20 +809,10 @@ Vulnerable to lag spikes if used.
  tvOS
  */
 -(void)setNavFocus:(SKNode *)navFocus;
-/*!
- Used internally to communicate logic for button presses.
- @attributelist Platforms:
- tvOS
- */
--(void)gestureTapDown;
-/*!
- Used internally to communicate logic for button presses.
- @attributelist Platforms:
- tvOS
- */
--(void)gestureTapUp;
+
 #endif
 
+/*! @methodgroup Singleton */
 
 /*!
  Singleton object. Called via
@@ -789,6 +825,9 @@ Vulnerable to lag spikes if used.
  Allows for storing objects in the userData NSMutableDictionary, carrying time information, managing tvOS navigation logic, and more.
  */
 +(SKUtilities2*) sharedUtilities;
+
+/*! @methodgroup Time */
+
 /*!
  Call this method in your scene's update method to share the time with other objects throughout the game.
   <pre>
@@ -813,6 +852,8 @@ Vulnerable to lag spikes if used.
  */
 @interface SKU_PositionObject : NSObject  <NSCopying>
 
+/*! @group SKU_PositionObject Properties */
+
 /*!
  CGPoint representation of data.
  */
@@ -830,12 +871,15 @@ Vulnerable to lag spikes if used.
  */
 @property (nonatomic) CGVector vector;
 
-
+/*! @group SKU_PositionObject Methods */
 
 -(id)initWithPosition:(CGPoint)position;
 -(id)initWithVector:(CGVector)vector;
 -(id)initWithSize:(CGSize)size;
 -(id)initWithRect:(CGRect)rect;
+
+/*! @methodgroup Initialization */
+
 /*!
  Creates and returns an SKU_PositionObject from a CGPoint parameter. This becomes the origin in the bundled CGRect.
  @param location CGPoint value
@@ -861,6 +905,8 @@ Vulnerable to lag spikes if used.
  */
 +(SKU_PositionObject*)rect:(CGRect)rect;
 
+/*! @methodgroup Conversion and retrieval */
+
 -(CGSize)getSizeFromPosition;
 -(CGPoint)getPositionFromSize;
 -(CGVector)getVectorFromSize;
@@ -874,6 +920,8 @@ Vulnerable to lag spikes if used.
  Apple's shape generator for SpriteKit causes performance issues. Shapes are rerendered each frame, despite a lack of change in appearance. You can cheat by parenting it to an SKEffectNode and setting it to rasterize. However, any changes cause it to rerender with high cpu usage. It also has low quality anti aliasing. Instead, you can use this class. SKU_ShapeNode uses CAShapeLayer to render a shape, which is slightly more costly than the rendering of the SKShapeNode, but once it's rendered, is cached as a bitmap and renders very quickly in SpriteKit thereafter. TLDR: SpriteKit's shape node fast redner, slow draw. SKUShapeNode is slow render, fast draw.
  */
 @interface SKU_ShapeNode : SKNode <NSCopying>
+
+/*! @group SKU_ShapeNode Properties */
 
 /*!
  The CGPath to be drawn (in the Node's coordinate space) (will only redraw the image if the path is non-nil, so it's best to set the path as the last property and save some CPU cycles)
@@ -924,6 +972,7 @@ Vulnerable to lag spikes if used.
  */
 @property (nonatomic, assign) CGPoint anchorPoint;
 
+/*! @methodgroup Initialization */
 
 /*!
  Convenience method that creates and returns a new shape object in the shape of a circle.
@@ -971,6 +1020,8 @@ Vulnerable to lag spikes if used.
  */
 @interface SKU_MultiLineLabelNode : SKSpriteNode <NSCopying>
 
+/*! @group SKU_MultiLineLabelNode Properties */
+
 /*!
  Color to make text.
  */
@@ -1016,6 +1067,8 @@ Vulnerable to lag spikes if used.
  */
 @property(retain, nonatomic) SKColor* strokeColor;
 
+/*! @group SKU_MultiLineLabelNode Methods */
+
 /*!
  Convenience method to create and return a new object with specific font name.
  @param fontName Name of the font.
@@ -1032,6 +1085,9 @@ Vulnerable to lag spikes if used.
  Stores a single state for labels in buttons. The properties set on this object gets passed to the button's label for the appropriate state.
  */
 @interface SKUButtonLabelProperties : NSObject <NSCopying>
+
+/*! @group SKUButtonLabelProperties Properties */
+
 /*!
  text string
  */
@@ -1056,6 +1112,8 @@ Vulnerable to lag spikes if used.
  scale value
  */
 @property (nonatomic) CGFloat scale;
+
+/*! @group SKUButtonLabelProperties Methods */
 
 /*!
  Creates and returns an object with default properties for everything but the text.
@@ -1090,6 +1148,8 @@ Vulnerable to lag spikes if used.
  */
 @interface SKUButtonLabelPropertiesPackage : NSObject <NSCopying>
 
+/*! @group SKUButtonLabelPropertiesPackage Properties */
+
 #define skuHoverScale ((CGFloat) 1.3)
 /*!
  Label properties for default state.
@@ -1119,6 +1179,8 @@ Vulnerable to lag spikes if used.
 /*! Creates and returns a package based on SKU defaults. */
 +(SKUButtonLabelPropertiesPackage*)packageWithDefaultPropertiesWithText:(NSString*)text;
 
+/*! @group SKUButtonLabelPropertiesPackage Methods */
+
 /*! Allows you to change the text for all states at once. */
 -(void)changeText:(NSString*)text;
 
@@ -1129,6 +1191,8 @@ Vulnerable to lag spikes if used.
  Stores a single state for sprites in buttons. The properties set on this object gets passed to the button's sprite for the appropriate state.
  */
 @interface SKUButtonSpriteStateProperties : NSObject <NSCopying>
+
+/*! @group SKUButtonSpriteStateProperties Properties */
 
 /*!
  Alpha value stored for a given state.
@@ -1164,6 +1228,8 @@ Vulnerable to lag spikes if used.
  */
 @property (nonatomic, strong) SKTexture* texture;
 
+/*! @group SKUButtonSpriteStateProperties Methods */
+
 /*! Returns a new object with the following properties. */
 +(SKUButtonSpriteStateProperties*)propertiesWithTexture:(SKTexture*)texture andAlpha:(CGFloat)alpha andColor:(SKColor *)color andColorBlendFactor:(CGFloat)colorBlendFactor andPositionOffset:(CGPoint)position andXScale:(CGFloat)xScale andYScale:(CGFloat)yScale andCenterRect:(CGRect)centerRect;
 /*! Returns a new object with the following properties. */
@@ -1193,6 +1259,8 @@ Vulnerable to lag spikes if used.
  */
 @interface SKUButtonSpriteStatePropertiesPackage : NSObject <NSCopying>
 
+/*! @group SKUButtonSpriteStatePropertiesPackage Properties */
+
 /*!
  Sprite properties for default state.
  */
@@ -1209,6 +1277,9 @@ Vulnerable to lag spikes if used.
  Sprite properties for disabled state.
  */
 @property (nonatomic) SKUButtonSpriteStateProperties* propertiesDisabledState;
+
+/*! @group SKUButtonSpriteStatePropertiesPackage Methods */
+
 /*! Allows you to explicitly set all states. */
 +(SKUButtonSpriteStatePropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonSpriteStateProperties*)defaultState andPressedState:(SKUButtonSpriteStateProperties*)pressedState andHoveredState:(SKUButtonSpriteStateProperties*)hoveredState andDisabledState:(SKUButtonSpriteStateProperties*)disabledState;
 /*! Allows you to explicitly set default and pressed states and derives the disabled state from default, but with half opacity, and the hovered state from the default with skuHoverScale scale. */
@@ -1234,6 +1305,8 @@ Vulnerable to lag spikes if used.
 @end
 
 #pragma mark SKUButton
+
+/*! @group SKUButton Enums */
 
 /*!
  Enumerator/flags for determining how buttons send signals.
@@ -1288,6 +1361,9 @@ typedef enum {
  Delegate protocol for SKUButton. Only used if flagged for sending delegate signals.
  */
 @protocol SKUButtonDelegate <NSObject>	//define delegate protocol
+
+/*! @group SKUButtonDelegate Methods */
+
 @optional
 /*!
  Optional: Called on the delegate when a button is pressed.
@@ -1320,6 +1396,7 @@ typedef enum {
  */
 @interface SKUButton : SKSpriteNode
 
+/*! @group Button state */
 
 /*! 
  Identifies button type.
@@ -1340,17 +1417,24 @@ typedef enum {
  @seealso kSKUButtonMethods
  */
 @property (nonatomic) uint8_t buttonMethod;
-/*! 
- If button is set to call delegate, this is the delegate used. 
+/*! Readonly: tells you if button is enabled or not */
+@property (nonatomic, readonly) BOOL isEnabled;
+
+/*! @group Button actions */
+
+/*!
+ If button is set to call delegate, this is the delegate used.
  @seealso SKUButtonDelegate
  */
 @property (nonatomic, weak) id <SKUButtonDelegate> delegate;
-/*! Readonly: tells you if button is enabled or not */
-@property (nonatomic, readonly) BOOL isEnabled;
+
 /*! If button is set to send notifications, this is the name of the notification. Can set the name here as well. */
 @property (nonatomic) NSString* notificationNameDown;
 /*! If button is set to send notifications, this is the name of the notification. Can set the name here as well. */
 @property (nonatomic) NSString* notificationNameUp;
+
+/*! @group Button Looks */
+
 /*!
  Readonly access to the base sprite.
  While you can edit properties on the sprite itself, it is discouraged unless you really know what you're doing.
@@ -1370,6 +1454,20 @@ typedef enum {
 @property (nonatomic) SKUButtonSpriteStateProperties* baseSpritePropertiesHovered;
 /*! Properties to use on the base sprite in disabled state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* baseSpritePropertiesDisabled;
+
+/*! @methodgroup Initialization */
+
+/*! Creates and returns a button with a base sprite of the image named. */
++(SKUButton*)buttonWithImageNamed:(NSString*)name;
+/*! Creates and returns a button with a base sprite of the texture. */
++(SKUButton*)buttonWithTexture:(SKTexture*)texture;
+/*! Creates and returns a button with a base sprite package. */
++(SKUButton*)buttonWithPropertiesPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
+
+/*! This SHOULD be called after either raw init or initWithCoder. Meant to be overridden with post initialization purposes in custom subclasses. */
+-(void)didInitialize;
+
+/*! @methodgroup Button state */
 
 /*! Sets all states based off of the default state. 
  @warning
@@ -1394,16 +1492,12 @@ typedef enum {
  Behaves similarly in subclasses, but also applies to the additional state packages included on those.
   */
 -(void)buttonStatesDefault;
+/*! Call to explicitly enable button (meant to reverse the state of being disabled). Be sure to call super method if you override. */
+-(void)enableButton;
+/*! Call to explicitly disable button (meant to reverse the state of being enabled). Be sure to call super method if you override. */
+-(void)disableButton;
 
-/*! Creates and returns a button with a base sprite of the image named. */
-+(SKUButton*)buttonWithImageNamed:(NSString*)name;
-/*! Creates and returns a button with a base sprite of the texture. */
-+(SKUButton*)buttonWithTexture:(SKTexture*)texture;
-/*! Creates and returns a button with a base sprite package. */
-+(SKUButton*)buttonWithPropertiesPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
-
-/*! This SHOULD be called after either raw init or initWithCoder. Meant to be overridden with post initialization purposes. */
--(void)didInitialize;
+/*! @methodgroup Button actions */
 
 /*! If button is set to call actions, set method and target to call on method when pressed down. Sets flag on self.buttonMethods to run actions. */
 -(void)setDownAction:(SEL)selector toPerformOnTarget:(NSObject*)target;
@@ -1417,10 +1511,7 @@ typedef enum {
 /*! Calls the actions for button release. Location is in local space. */
 -(void)buttonReleased:(CGPoint)location;
 
-/*! Call to explicitly enable button (meant to reverse the state of being disabled). Be sure to call super method if you override. */
--(void)enableButton;
-/*! Call to explicitly disable button (meant to reverse the state of being enabled). Be sure to call super method if you override. */
--(void)disableButton;
+
 
 
 @end
@@ -1433,6 +1524,8 @@ typedef enum {
  @seealso SKUSliderButton
  */
 @interface SKUPushButton : SKUButton
+
+/*! @group SKUPushButton Properties */
 
 /*! Read only access to title label. */
 @property (nonatomic, strong, readonly) SKLabelNode* titleLabel;
@@ -1458,6 +1551,8 @@ typedef enum {
 /*! Properties to use on the title sprite in disabled state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* titleSpritePropertiesDisabled;
 #pragma mark SKUPushButton inits
+
+/*! @group SKUPushButton Methods */
 
 /*!
  Creates and returns an SKUPushButton with default settings plus the text provided.
@@ -1514,6 +1609,9 @@ typedef enum {
  @seealso SKUSliderButton
  */
 @interface SKUToggleButton : SKUPushButton
+
+/*! @group SKUToggleButton Properties */
+
 /*! Read only access to toggle sprite. */
 @property (nonatomic, strong, readonly) SKSpriteNode* toggleSprite;
 /*! Properties to use on the toggle sprite in default on state. */
@@ -1536,6 +1634,8 @@ typedef enum {
 
 /*! Boolean determining whether the button is in an on state or not. */
 @property (nonatomic) BOOL on;
+
+/*! @group SKUToggleButton Methods */
 
 /*!
  Creates and returns an SKUToggleButton with packages provided.
@@ -1593,6 +1693,9 @@ typedef enum {
  @seealso SKUToggleButton
  */
 @interface SKUSliderButton : SKUButton
+
+/*! @group Slider Looks */
+
 /*! Read only access to knob sprite. */
 @property (nonatomic, strong, readonly) SKSpriteNode* knobSprite;
 /*! Read only access to slide sprite. */
@@ -1630,6 +1733,8 @@ typedef enum {
 /*! Properties to use on the minimumValueImage sprite in disabled state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* minimumValueImagePropertiesDisabled;
 
+/*! @group Slider Values and Functional Settings */
+
 /*! Defaults to 50.0. */
 @property (nonatomic) CGFloat value;
 /*! Stores the previous value. */
@@ -1651,10 +1756,15 @@ typedef enum {
  */
 @property (nonatomic) CGFloat stepSize;
 
+/*! @methodgroup Slider Looks */
+
 -(void)setKnobSpriteStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
 -(void)setSlideSpriteStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
 -(void)setMaxValueSpriteStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
 -(void)setMinValueSpriteStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package;
+
+/*! @methodgroup Slider Actions */
+
 /*! If button is set to call actions, set method and target to call on method when value changed. Sets flag on self.buttonMethods to run actions. */
 -(void)setChangedAction:(SEL)selector toPerformOnTarget:(NSObject*)target;
 
@@ -1679,21 +1789,33 @@ typedef enum {
 
 #if TARGET_OS_TV
 
-/*! Call this method to set the currently highlighted node within the navNodes set. */
--(void)setCurrentSelectedNodeSKU:(SKNode*)node;
+/*! @methodgroup Navigational */
+
 /*! Call this method to add a node to the list of navigation nodes paired with this node. */
 -(void)addNodeToNavNodesSKU:(SKNode*)node;
 /*! Call this method to remove a node from the list of navigation nodes paired with this node. */
 -(void)removeNodeFromNavNodesSKU:(SKNode*)node;
+
+/*! Call this method to set the currently highlighted node within the navNodes set. */
+-(void)setCurrentSelectedNodeSKU:(SKNode*)node;
 /*! Override this method to update visuals. It is called automatically when the focus changes. */
 -(void)currentSelectedNodeUpdatedSKU:(SKNode *)node;
-/*! Override this method to perform logic with non SKUButton nodes when pressed. */
+
+/*! @methodgroup Input */
+
+/*! Override this method to perform logic with non SKUButton nodes when pressed. 
+  @attributelist Platforms:
+ tvOS
+ */
 -(void)nodePressedDownSKU:(SKNode*)node;
-/*! Override this method to perform logic with non SKUButton nodes when released. */
+/*! Override this method to perform logic with non SKUButton nodes when released. 
+  @attributelist Platforms:
+ tvOS
+ */
 -(void)nodePressedUpSKU:(SKNode*)node;
 #endif
 
-/*! Called when relative type input begins (Currently only AppleTV's Siri Remote touches) Remember to call [super relativeInputBeganSKU] when overrding. Harmless to include on other platforms. */
+/*! Called when relative type input begins (Currently only AppleTV's Siri Remote touches). Harmless to include on other platforms. */
 -(void)relativeInputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
 /*! Called when relative type input moves (Currently only AppleTV's Siri Remote touches). Harmless to include on other platforms. */
 -(void)relativeInputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary*)eventDict;
@@ -1721,6 +1843,8 @@ typedef enum {
  Simple interface for mixing colors.
  */
 @interface SKColor (Mixing)
+/*! @group SKColor Category Methods */
+
 /*! Blends two colors together. May run into issues if using convenience methods (grayColor, whiteColor, etc). */
 +(SKColor*)blendColorSKU:(SKColor*)color1 withColor:(SKColor*)color2 alpha:(CGFloat)alpha2;
 
