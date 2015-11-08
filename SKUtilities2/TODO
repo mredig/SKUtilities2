@@ -1,14 +1,10 @@
-SKU_Buttons needs a slider
 
-togglebutton with title
-pushbutton with title
+might wanna add archiving support? -not now
+might wanna add descriptions to other classes -figure that it'd mostly be beneficial for me in designing the classes in the first place - if there's a demand for it though, I can do it.
 
-skbuttons probably need copy zone
 
-might wanna add archiving support?
-might wanna add descriptions to other classes
 
-better doc
+potential future ideas
 
 maybe refactor input movement stuff with localevents (inspired here: http://stackoverflow.com/questions/1628366/global-mouse-moved-events-in-cocoa?rq=1 )
 

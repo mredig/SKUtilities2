@@ -2671,7 +2671,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	_toggleSpritePropertiesOnDefault = toggleSpritePropertiesOnDefault;
 	if (!_toggleSprite) {
 		_toggleSprite = [SKSpriteNode spriteNodeWithTexture:_toggleSpritePropertiesOnDefault.texture];
-		_toggleSprite.zPosition = self.titleLabel.zPosition + 0.001;
+		_toggleSprite.zPosition = 0.003;
 		_toggleSprite.name = @"SKUToggleButtonToggleSprite";
 		[self addChild:_toggleSprite];
 	}
@@ -2716,7 +2716,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	_toggleSpritePropertiesOffDefault = toggleSpritePropertiesOffDefault;
 	if (!_toggleSprite) {
 		_toggleSprite = [SKSpriteNode spriteNodeWithTexture:_toggleSpritePropertiesOffDefault.texture];
-		_toggleSprite.zPosition = self.titleLabel.zPosition + 0.001;
+		_toggleSprite.zPosition = 0.003;
 		_toggleSprite.name = @"SKUToggleButtonToggleSprite";
 		[self addChild:_toggleSprite];
 	}
