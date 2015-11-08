@@ -4,7 +4,7 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>SKUtilities2.xcscheme</key>
+		<key>SKUtilities2OSXDemo.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
@@ -33,6 +33,16 @@
 			<true/>
 		</dict>
 		<key>335C931B1BBB8ADC00DC1BD2</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>33E1DEDE1BEEC16F000E1894</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>33E1DEEB1BEEC196000E1894</key>
 		<dict>
 			<key>primary</key>
 			<true/>

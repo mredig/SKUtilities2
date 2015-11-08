@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "335C931B1BBB8ADC00DC1BD2"
-               BuildableName = "SKUtilitiestvOSdemo.app"
-               BlueprintName = "SKUtilitiestvOSdemo"
+               BuildableName = "SKUtilities2tvOSdemo.app"
+               BlueprintName = "SKUtilities2tvOSdemo"
                ReferencedContainer = "container:SKUtilities2.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -33,8 +33,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "335C931B1BBB8ADC00DC1BD2"
-            BuildableName = "SKUtilitiestvOSdemo.app"
-            BlueprintName = "SKUtilitiestvOSdemo"
+            BuildableName = "SKUtilities2tvOSdemo.app"
+            BlueprintName = "SKUtilities2tvOSdemo"
             ReferencedContainer = "container:SKUtilities2.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -56,8 +56,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "335C931B1BBB8ADC00DC1BD2"
-            BuildableName = "SKUtilitiestvOSdemo.app"
-            BlueprintName = "SKUtilitiestvOSdemo"
+            BuildableName = "SKUtilities2tvOSdemo.app"
+            BlueprintName = "SKUtilities2tvOSdemo"
             ReferencedContainer = "container:SKUtilities2.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -75,8 +75,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "335C931B1BBB8ADC00DC1BD2"
-            BuildableName = "SKUtilitiestvOSdemo.app"
-            BlueprintName = "SKUtilitiestvOSdemo"
+            BuildableName = "SKUtilities2tvOSdemo.app"
+            BlueprintName = "SKUtilities2tvOSdemo"
             ReferencedContainer = "container:SKUtilities2.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

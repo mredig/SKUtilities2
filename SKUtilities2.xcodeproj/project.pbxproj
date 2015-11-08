@@ -63,7 +63,7 @@
 		3320465F1BC2FE2F008C9FCF /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = SKUtilities2/tvOS/main.m; sourceTree = SOURCE_ROOT; };
 		332046611BC32ED3008C9FCF /* 07ColorBlending.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = 07ColorBlending.h; path = "demo scenes/07ColorBlending.h"; sourceTree = "<group>"; };
 		332046621BC32ED3008C9FCF /* 07ColorBlending.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = 07ColorBlending.m; path = "demo scenes/07ColorBlending.m"; sourceTree = "<group>"; };
-		335C92B91BB71D7000DC1BD2 /* SKUtilities2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SKUtilities2.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		335C92B91BB71D7000DC1BD2 /* SKUtilities2OSXDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SKUtilities2OSXDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		335C92BC1BB71D7000DC1BD2 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = OSX/AppDelegate.h; sourceTree = "<group>"; };
 		335C92BD1BB71D7000DC1BD2 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = AppDelegate.m; path = OSX/AppDelegate.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		335C92C01BB71D7000DC1BD2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = main.m; path = OSX/main.m; sourceTree = "<group>"; };
@@ -84,7 +84,7 @@
 		335C92E41BBB4F7700DC1BD2 /* 05ShapeDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = 05ShapeDemo.m; path = "demo scenes/05ShapeDemo.m"; sourceTree = "<group>"; };
 		335C92E91BBB7C5C00DC1BD2 /* 06MultiLineDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = 06MultiLineDemo.h; path = "demo scenes/06MultiLineDemo.h"; sourceTree = "<group>"; };
 		335C92EA1BBB7C5C00DC1BD2 /* 06MultiLineDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = 06MultiLineDemo.m; path = "demo scenes/06MultiLineDemo.m"; sourceTree = "<group>"; };
-		335C92F01BBB7F0C00DC1BD2 /* SKUtilitiesiOSDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SKUtilitiesiOSDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		335C92F01BBB7F0C00DC1BD2 /* SKUtilities2iOSDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SKUtilities2iOSDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		335C92F31BBB7F0C00DC1BD2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = main.m; path = ../SKUtilities2/iOS/main.m; sourceTree = "<group>"; };
 		335C92F51BBB7F0C00DC1BD2 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ../SKUtilities2/iOS/AppDelegate.h; sourceTree = "<group>"; };
 		335C92F61BBB7F0C00DC1BD2 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = ../SKUtilities2/iOS/AppDelegate.m; sourceTree = "<group>"; };
@@ -93,7 +93,7 @@
 		335C93011BBB7F0C00DC1BD2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		335C93061BBB7F0C00DC1BD2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		335C93081BBB7F0C00DC1BD2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../SKUtilities2/iOS/Info.plist; sourceTree = "<group>"; };
-		335C931C1BBB8ADC00DC1BD2 /* SKUtilitiestvOSdemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SKUtilitiestvOSdemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		335C931C1BBB8ADC00DC1BD2 /* SKUtilities2tvOSdemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SKUtilities2tvOSdemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		335C93211BBB8ADC00DC1BD2 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = SKUtilities2/tvOS/AppDelegate.h; sourceTree = SOURCE_ROOT; };
 		335C93221BBB8ADC00DC1BD2 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = SKUtilities2/tvOS/AppDelegate.m; sourceTree = SOURCE_ROOT; };
 		335C93291BBB8ADC00DC1BD2 /* GameViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GameViewController.h; path = SKUtilities2/tvOS/GameViewController.h; sourceTree = SOURCE_ROOT; };
@@ -148,9 +148,9 @@
 		335C92BA1BB71D7000DC1BD2 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				335C92B91BB71D7000DC1BD2 /* SKUtilities2.app */,
-				335C92F01BBB7F0C00DC1BD2 /* SKUtilitiesiOSDemo.app */,
-				335C931C1BBB8ADC00DC1BD2 /* SKUtilitiestvOSdemo.app */,
+				335C92B91BB71D7000DC1BD2 /* SKUtilities2OSXDemo.app */,
+				335C92F01BBB7F0C00DC1BD2 /* SKUtilities2iOSDemo.app */,
+				335C931C1BBB8ADC00DC1BD2 /* SKUtilities2tvOSdemo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -265,9 +265,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		335C92B81BB71D7000DC1BD2 /* SKUtilities2 */ = {
+		335C92B81BB71D7000DC1BD2 /* SKUtilities2OSXDemo */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 335C92CF1BB71D7000DC1BD2 /* Build configuration list for PBXNativeTarget "SKUtilities2" */;
+			buildConfigurationList = 335C92CF1BB71D7000DC1BD2 /* Build configuration list for PBXNativeTarget "SKUtilities2OSXDemo" */;
 			buildPhases = (
 				335C92B51BB71D7000DC1BD2 /* Sources */,
 				335C92B61BB71D7000DC1BD2 /* Frameworks */,
@@ -277,14 +277,14 @@
 			);
 			dependencies = (
 			);
-			name = SKUtilities2;
+			name = SKUtilities2OSXDemo;
 			productName = SKUtilities2;
-			productReference = 335C92B91BB71D7000DC1BD2 /* SKUtilities2.app */;
+			productReference = 335C92B91BB71D7000DC1BD2 /* SKUtilities2OSXDemo.app */;
 			productType = "com.apple.product-type.application";
 		};
-		335C92EF1BBB7F0C00DC1BD2 /* SKUtilitiesiOSDemo */ = {
+		335C92EF1BBB7F0C00DC1BD2 /* SKUtilities2iOSDemo */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 335C93091BBB7F0C00DC1BD2 /* Build configuration list for PBXNativeTarget "SKUtilitiesiOSDemo" */;
+			buildConfigurationList = 335C93091BBB7F0C00DC1BD2 /* Build configuration list for PBXNativeTarget "SKUtilities2iOSDemo" */;
 			buildPhases = (
 				335C92EC1BBB7F0C00DC1BD2 /* Sources */,
 				335C92ED1BBB7F0C00DC1BD2 /* Frameworks */,
@@ -294,14 +294,14 @@
 			);
 			dependencies = (
 			);
-			name = SKUtilitiesiOSDemo;
+			name = SKUtilities2iOSDemo;
 			productName = SKUtilitiesiOSDemo;
-			productReference = 335C92F01BBB7F0C00DC1BD2 /* SKUtilitiesiOSDemo.app */;
+			productReference = 335C92F01BBB7F0C00DC1BD2 /* SKUtilities2iOSDemo.app */;
 			productType = "com.apple.product-type.application";
 		};
-		335C931B1BBB8ADC00DC1BD2 /* SKUtilitiestvOSdemo */ = {
+		335C931B1BBB8ADC00DC1BD2 /* SKUtilities2tvOSdemo */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 335C93341BBB8ADD00DC1BD2 /* Build configuration list for PBXNativeTarget "SKUtilitiestvOSdemo" */;
+			buildConfigurationList = 335C93341BBB8ADD00DC1BD2 /* Build configuration list for PBXNativeTarget "SKUtilities2tvOSdemo" */;
 			buildPhases = (
 				335C93181BBB8ADC00DC1BD2 /* Sources */,
 				335C93191BBB8ADC00DC1BD2 /* Frameworks */,
@@ -311,9 +311,9 @@
 			);
 			dependencies = (
 			);
-			name = SKUtilitiestvOSdemo;
+			name = SKUtilities2tvOSdemo;
 			productName = SKUtilitiestvOSdemo;
-			productReference = 335C931C1BBB8ADC00DC1BD2 /* SKUtilitiestvOSdemo.app */;
+			productReference = 335C931C1BBB8ADC00DC1BD2 /* SKUtilities2tvOSdemo.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -351,9 +351,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				335C92B81BB71D7000DC1BD2 /* SKUtilities2 */,
-				335C92EF1BBB7F0C00DC1BD2 /* SKUtilitiesiOSDemo */,
-				335C931B1BBB8ADC00DC1BD2 /* SKUtilitiestvOSdemo */,
+				335C92B81BB71D7000DC1BD2 /* SKUtilities2OSXDemo */,
+				335C92EF1BBB7F0C00DC1BD2 /* SKUtilities2iOSDemo */,
+				335C931B1BBB8ADC00DC1BD2 /* SKUtilities2tvOSdemo */,
 			);
 		};
 /* End PBXProject section */
@@ -678,7 +678,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		335C92CF1BB71D7000DC1BD2 /* Build configuration list for PBXNativeTarget "SKUtilities2" */ = {
+		335C92CF1BB71D7000DC1BD2 /* Build configuration list for PBXNativeTarget "SKUtilities2OSXDemo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				335C92D01BB71D7000DC1BD2 /* Debug */,
@@ -687,7 +687,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		335C93091BBB7F0C00DC1BD2 /* Build configuration list for PBXNativeTarget "SKUtilitiesiOSDemo" */ = {
+		335C93091BBB7F0C00DC1BD2 /* Build configuration list for PBXNativeTarget "SKUtilities2iOSDemo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				335C930A1BBB7F0C00DC1BD2 /* Debug */,
@@ -696,7 +696,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		335C93341BBB8ADD00DC1BD2 /* Build configuration list for PBXNativeTarget "SKUtilitiestvOSdemo" */ = {
+		335C93341BBB8ADD00DC1BD2 /* Build configuration list for PBXNativeTarget "SKUtilities2tvOSdemo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				335C93351BBB8ADD00DC1BD2 /* Debug */,
