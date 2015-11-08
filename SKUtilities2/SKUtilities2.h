@@ -1461,46 +1461,10 @@ typedef enum {
 
 /*!
  Creates and returns an SKUPushButton with default settings plus the text provided.
- @param text Text value of the label on the button.
+ @param title Text value of the label on the button.
  @return new SKUPushButton object
  */
-+(SKUPushButton*)pushButtonWithText:(NSString*)text;
-///*!
-// Creates and returns an SKUPushButton with default settings plus the texture provided.
-// @param texture Texture object to set the background.
-// @return new SKUPushButton object
-// */
-//+(SKUPushButton*)pushButtonWithBackgroundTexture:(SKTexture*)texture;
-///*!
-// Creates and returns an SKUPushButton with default settings plus loading the image from the name provided.
-// @param name Name of the image to load.
-// @return new SKUPushButton object
-// */
-//+(SKUPushButton*)pushButtonWithImageNamed:(NSString*)name;
-///*!
-// Creates and returns an SKUPushButton with default settings plus sets button sprites based on textures provided.
-// @param backgroundTexture SKTexture object to use for background
-// @param titleTexture      SKTexture object to use for foreground
-// @return new SKUPushButton object
-// */
-//+(SKUPushButton*)pushButtonWithBackgroundTexture:(SKTexture*)backgroundTexture andTitleTexture:(SKTexture*)titleTexture;
-///*!
-// Creates and returns an SKUPushButton with default settings plus sets background texture with foreground text provided.
-// @param texture SKTexture object to set on background sprite
-// @param text    Text for button title label
-// @return new SKUPushButton object
-// */
-//+(SKUPushButton*)pushButtonWithBackgroundTexture:(SKTexture*)texture andTitleLabelText:(NSString*)text;
-///*!
-// Creates and returns an SKUPushButton with settings provided.
-// @param texture   SKTexture object to use for background
-// @param text      Text for button title label
-// @param fontColor Color for button title label
-// @param fontSize  Font size for button title label
-// @param fontName  Font name for button title label
-// @return new SKUPushButton object
-// */
-//+(SKUPushButton*)pushButtonWithBackgroundTexture:(SKTexture*)texture andTitleLabelText:(NSString*)text andTitleLabelColor:(SKColor*)fontColor andTitleLabelSize:(CGFloat)fontSize andTitleLabelFont:(NSString*)fontName;
++(SKUPushButton*)pushButtonWithTitle:(NSString*)title;
 /*!
  Creates and returns an SKUPushButton with packages provided.
  @param backgroundPackage SKUButtonSpriteStatePropertiesPackage object providing varied background sprite states.

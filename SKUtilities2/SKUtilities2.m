@@ -2227,48 +2227,10 @@ static SKUtilities2* sharedUtilities = Nil;
 @implementation SKUPushButton
 #pragma mark SKUPushButton inits
 
-+(SKUPushButton*)pushButtonWithText:(NSString*)text{
++(SKUPushButton*)pushButtonWithTitle:(NSString*)title{
 	SKUPushButton* button = [SKUPushButton node];
 	[button setBaseStatesWithPackage:[SKUButtonSpriteStatePropertiesPackage packageWithDefaultPropertiesSKU]];
-	[button setTitleLabelStatesWithPackage:[SKUButtonLabelPropertiesPackage packageWithDefaultPropertiesWithText:text]];
-	return button;
-}
-
-+(SKUPushButton*)pushButtonWithBackgroundTexture:(SKTexture*)texture {
-	SKUPushButton* button = [SKUPushButton node];
-	button.baseSpritePropertiesDefault = [SKUButtonSpriteStateProperties propertiesWithTexture:texture andAlpha:1.0];
-	[button buttonStatesDefault];
-	return button;
-}
-
-+(SKUPushButton*)pushButtonWithImageNamed:(NSString*)name {
-	SKUPushButton* button = [SKUPushButton node];
-	button.baseSpritePropertiesDefault = [SKUButtonSpriteStateProperties propertiesWithTexture:[SKTexture textureWithImageNamed:name] andAlpha:1.0];
-	[button buttonStatesDefault];
-	return button;
-}
-
-+(SKUPushButton*)pushButtonWithBackgroundTexture:(SKTexture*)backgroundTexture andTitleTexture:(SKTexture*)titleTexture {
-	SKUPushButton* button = [SKUPushButton node];
-	button.baseSpritePropertiesDefault = [SKUButtonSpriteStateProperties propertiesWithTexture:backgroundTexture andAlpha:1.0];
-	button.titleSpritePropertiesDefault = [SKUButtonSpriteStateProperties propertiesWithTexture:titleTexture andAlpha:1.0];
-	[button buttonStatesDefault];
-	return button;
-}
-
-+(SKUPushButton*)pushButtonWithBackgroundTexture:(SKTexture*)texture andTitleLabelText:(NSString*)text {
-	SKUPushButton* button = [SKUPushButton node];
-	button.baseSpritePropertiesDefault = [SKUButtonSpriteStateProperties propertiesWithTexture:texture andAlpha:1.0];
-	button.labelPropertiesDefault = [SKUButtonLabelProperties propertiesWithText:text andColor:[SKColor whiteColor] andSize:35.0 andFontName:@"Helvetica Neue"];
-	[button buttonStatesDefault];
-	return button;
-}
-
-+(SKUPushButton*)pushButtonWithBackgroundTexture:(SKTexture*)texture andTitleLabelText:(NSString*)text andTitleLabelColor:(SKColor*)fontColor andTitleLabelSize:(CGFloat)fontSize andTitleLabelFont:(NSString*)fontName {
-	SKUPushButton* button = [SKUPushButton node];
-	button.baseSpritePropertiesDefault = [SKUButtonSpriteStateProperties propertiesWithTexture:texture andAlpha:1.0];
-	button.labelPropertiesDefault = [SKUButtonLabelProperties propertiesWithText:text andColor:fontColor andSize:fontSize andFontName:fontName];
-	[button buttonStatesDefault];
+	[button setTitleLabelStatesWithPackage:[SKUButtonLabelPropertiesPackage packageWithDefaultPropertiesWithText:title]];
 	return button;
 }
 
