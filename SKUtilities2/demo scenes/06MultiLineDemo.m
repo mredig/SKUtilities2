@@ -66,7 +66,7 @@
 	SKUSharedUtilities.navMode = kSKUNavModeOn;
 	[self addNodeToNavNodesSKU:nextSlide];
 	[self addNodeToNavNodesSKU:prevSlide];
-	[self setCurrentSelectedNodeSKU:nextSlide];
+	[self setCurrentFocusedNodeSKU:nextSlide];
 	
 	[SKUSharedUtilities setNavFocus:self];
 	

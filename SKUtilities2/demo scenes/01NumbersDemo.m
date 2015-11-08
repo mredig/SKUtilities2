@@ -107,7 +107,7 @@
 #if TARGET_OS_TV
 
 	[self addNodeToNavNodesSKU:nextSlide];
-	[self setCurrentSelectedNodeSKU:nextSlide];
+	[self setCurrentFocusedNodeSKU:nextSlide];
 	
 	[SKUSharedUtilities setNavFocus:self];
 	

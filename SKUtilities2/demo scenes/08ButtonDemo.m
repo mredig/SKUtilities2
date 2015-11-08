@@ -123,7 +123,7 @@
 	[self addNodeToNavNodesSKU:slider];
 	[self addNodeToNavNodesSKU:prevSlide];
 	[self addNodeToNavNodesSKU:toggleTest];
-	[self setCurrentSelectedNodeSKU:nextSlide];
+	[self setCurrentFocusedNodeSKU:nextSlide];
 	
 	[SKUSharedUtilities setNavFocus:self];
 	

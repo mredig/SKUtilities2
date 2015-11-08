@@ -166,7 +166,7 @@
 	[self addNodeToNavNodesSKU:nextSlide];
 	[self addNodeToNavNodesSKU:prevSlide];
 	[self addNodeToNavNodesSKU:activateCursor];
-	[self setCurrentSelectedNodeSKU:nextSlide];
+	[self setCurrentFocusedNodeSKU:nextSlide];
 	
 	[SKUSharedUtilities setNavFocus:self];
 	

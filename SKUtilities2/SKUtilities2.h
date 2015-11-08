@@ -742,7 +742,7 @@ Vulnerable to lag spikes if used.
  Note that only SKUButton nodes (and subclasses) are set to automatically distinguish focus states when focused or removed from focus. For your own nodes, you can use whatever current navFocus is set when it calls
   <pre>
  @textblock
- -(void)currentSelectedNodeUpdatedSKU:(SKNode *)node {
+ -(void)currentFocusedNodeUpdatedSKU:(SKNode *)node {
 	//do logic here to update visuals
  }
  @/textblock
@@ -1796,10 +1796,10 @@ typedef enum {
 /*! Call this method to remove a node from the list of navigation nodes paired with this node. */
 -(void)removeNodeFromNavNodesSKU:(SKNode*)node;
 
-/*! Call this method to set the currently highlighted node within the navNodes set. */
--(void)setCurrentSelectedNodeSKU:(SKNode*)node;
+/*! Call this method to set the currently focused node within the navNodes set. */
+-(void)setCurrentFocusedNodeSKU:(SKNode*)node;
 /*! Override this method to update visuals. It is called automatically when the focus changes. */
--(void)currentSelectedNodeUpdatedSKU:(SKNode *)node;
+-(void)currentFocusedNodeUpdatedSKU:(SKNode *)node;
 
 /*! @methodgroup Input */
 

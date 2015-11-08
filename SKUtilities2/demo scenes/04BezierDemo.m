@@ -86,7 +86,7 @@
 	SKUSharedUtilities.navMode = kSKUNavModeOn;
 	[SKUSharedUtilities setNavFocus:self];
 
-	[self setCurrentSelectedNodeSKU:handle1];
+	[self setCurrentFocusedNodeSKU:handle1];
 #endif
 }
 
@@ -151,14 +151,14 @@
 	SKUSharedUtilities.navMode = kSKUNavModeOn;
 	[self addNodeToNavNodesSKU:nextSlide];
 	[self addNodeToNavNodesSKU:prevSlide];
-	[self setCurrentSelectedNodeSKU:nextSlide];
+	[self setCurrentFocusedNodeSKU:nextSlide];
 	
 	[SKUSharedUtilities setNavFocus:self];
 	
 #endif
 }
 
--(void)currentSelectedNodeUpdatedSKU:(SKNode *)node {
+-(void)currentFocusedNodeUpdatedSKU:(SKNode *)node {
 	if ([node.name containsString:@"handle"]) {
 		[node setScale:3.0f];
 	}

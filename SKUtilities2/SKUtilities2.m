@@ -4051,11 +4051,11 @@ static SKUtilities2* sharedUtilities = Nil;
 	}
 }
 
--(void)setCurrentSelectedNodeSKU:(SKNode*)node {
-	[self skuInternalUpdateCurrentSelectedNode:node];
+-(void)setCurrentFocusedNodeSKU:(SKNode*)node {
+	[self skuInternalUpdateCurrentFocusedNode:node];
 }
 
--(void)skuInternalUpdateCurrentSelectedNode:(SKNode*)node {
+-(void)skuInternalUpdateCurrentFocusedNode:(SKNode*)node {
 	if (!node || [self.userData[@"sku_currentFocusedNode"] isEqual:node]) {
 		return;
 	}
@@ -4075,10 +4075,10 @@ static SKUtilities2* sharedUtilities = Nil;
 	if ([node isKindOfClass:[SKUButton class]]) {
 		[(SKUButton*)node hoverButton];
 	}
-	[self currentSelectedNodeUpdatedSKU:node];
+	[self currentFocusedNodeUpdatedSKU:node];
 }
 
--(void)currentSelectedNodeUpdatedSKU:(SKNode *)node {
+-(void)currentFocusedNodeUpdatedSKU:(SKNode *)node {
 	//override this method to update visuals
 }
 
@@ -4101,12 +4101,12 @@ static SKUtilities2* sharedUtilities = Nil;
 			SKNode* prevSelection = SKUSharedUtilities.navFocus.userData[@"sku_currentFocusedNode"];
 			NSSet* nodeSet = SKUSharedUtilities.navFocus.userData[@"sku_navNodes"];
 			if (!prevSelection) {
-				SKULog(0,@"Error: no currently selected node - did you set the initial node selection (setCurrentSelectedNodeSKU:(SKNode*)) and set the navFocus on the singleton ([SKUSharedUtilities setNavFocus:(SKNode*)]?");
+				SKULog(0,@"Error: no currently selected node - did you set the initial node selection (setCurrentFocusedNodeSKU:(SKNode*)) and set the navFocus on the singleton ([SKUSharedUtilities setNavFocus:(SKNode*)]?");
 			} else if (!nodeSet) {
 				SKULog(0,@"Error: no navNodes to navigate through - did you add nodes to the nav nodes (addNodeToNavNodesSKU:(SKNode*)) and set the navFocus on the singleton ([SKUSharedUtilities setNavFocus:(SKNode*)]?");
 			} else {
 				SKNode* currentSelectionNode = [SKUSharedUtilities handleSubNodeMovement:location withCurrentSelection:prevSelection inSet:nodeSet inScene:self.scene];
-				[self skuInternalUpdateCurrentSelectedNode:currentSelectionNode];
+				[self skuInternalUpdateCurrentFocusedNode:currentSelectionNode];
 			}
 		}
 	} else if (SKUSharedUtilities.navMode == kSKUNavModePressed) {
