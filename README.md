@@ -1,12 +1,12 @@
 # SKUtilities 2
 
 * [Overview](#overview)
+* [Features](#features)
 * [Documentation](#documentation)
 * [Getting Started](#getting-started)
-* [Objective C](#objective-c)
-* [Swift](#swift)
-* [Swift Notes](#swift-notes)
-* [Features](#features)
+	* [Objective C](#objective-c)
+	* [Swift](#swift)
+		* [Swift Notes](#swift-notes)
 * [Requirements](#requirements)
 
 ## Overview
@@ -15,12 +15,43 @@ Intended to be an easy resource for SpriteKit projects to get quick access to co
 
 I have learned a lot since I first started my original utilities package, and decided it'd be better to start anew than to try to fix things from the previous version. I intend to make a video series as a primer for intended usage, but the actual code is open source and available here.
 
+## Features
+
+New classes are:
+
+* **SKUtilities2**
+	* Singleton augmenting much functionality throughout this library. Wow.
+* **SKUMultiLineLabelNode**
+	* SKLabelNode-like interface allowing for multiline labels. Sourced from Chris Allwein of Downright Simple(c). Many thanks to him for open sourcing this code!
+* **SKUPositionObject**
+	* Allows for storing and passing some struct data as objects (useful for NSArray, NSDictionary, NSNotifications, etc)
+* **SKUShapeNode**
+	* Renders shapes into textures instead of rerendering the shape every frame
+* **SKUPushButton**
+	* Cross platform push button
+* **SKUToggleButton**
+	* Cross platform toggle button
+* **SKUSliderButton**
+	* Cross platform slider
+
+With support classes for some of them.
+
+Categories to expand upon default functionality on these classes:
+
+* SKColor(Mixing)
+* SKNode(ConsolidatedInput)
+* SKView(AdditionalMouseSupport)
+
+And built in support to handle tvOS menu navigation!
+
+See the demo files for examples and [documentation](http://mredig.github.io/SKUtilities2_Doc/) for more detail. Videos coming soon!
 
 ### Documentation
 
 Documentation is available [here](http://mredig.github.io/SKUtilities2_Doc/). See [Swift Notes](#swift-notes) for documentation catch.
 
 See [license](https://raw.githubusercontent.com/mredig/SKUtilities2/master/LICENSE.txt) for rights.
+
 
 ### Getting Started
 #### Objective C
@@ -169,37 +200,6 @@ This library was built in Objective C. While it should work in Swift just fine, 
 * \#define macros don't work. To overcome the issue caused by this, you need to add some code to the swift project. Follow this [link](#swift) and use the section referring to the global scope.
 * And finally, the catchall. There may be other issues I didn't experience or foresee. So other than everything, it should work right!
 
-
-## Features
-
-New classes are:
-
-* **SKUtilities2**
-	* Singleton augmenting much functionality throughout this library. Wow.
-* **SKUMultiLineLabelNode**
-	* SKLabelNode-like interface allowing for multiline labels. Sourced from Chris Allwein of Downright Simple(c). Many thanks to him for open sourcing this code!
-* **SKUPositionObject**
-	* Allows for storing and passing some struct data as objects (useful for NSArray, NSDictionary, NSNotifications, etc)
-* **SKUShapeNode**
-	* Renders shapes into textures instead of rerendering the shape every frame
-* **SKUPushButton**
-	* Cross platform push button
-* **SKUToggleButton**
-	* Cross platform toggle button
-* **SKUSliderButton**
-	* Cross platform slider
-
-With support classes for some of them.
-
-Categories to expand upon default functionality on these classes:
-
-* SKColor(Mixing)
-* SKNode(ConsolidatedInput)
-* SKView(AdditionalMouseSupport)
-
-And built in support to handle tvOS menu navigation!
-
-See the demo files for examples and [documentation](http://mredig.github.io/SKUtilities2_Doc/) for more detail. Videos coming soon!
 
 ### Requirements:
 
