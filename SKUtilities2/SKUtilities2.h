@@ -1886,6 +1886,7 @@ typedef enum {
  */
 +(SKUSliderButton*)sliderButtonWithKnobPackage:(SKUButtonSpriteStatePropertiesPackage*)knobPackage;
 /*!
+ @brief sliderButtonWithDefaults
  Creates and returns an SKUSliderButton with default settings.
  @return new SKUSliderButton object
  */
