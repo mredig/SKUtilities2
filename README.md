@@ -18,7 +18,7 @@ I have learned a lot since I first started my original utilities package, and de
 
 ### Documentation
 
-Documentation is available [here](http://mredig.github.io/SKUtilities2_Doc/).
+Documentation is available [here](http://mredig.github.io/SKUtilities2_Doc/). See [Swift Notes](#swift-notes) for documentation catch.
 
 See [license](https://raw.githubusercontent.com/mredig/SKUtilities2/master/LICENSE.txt) for rights.
 
@@ -155,6 +155,7 @@ This library was built in Objective C. While it should work in Swift just fine, 
 		SKUSharedUtilities.macButtonFlags.rawValue = kSKUMouseButtonFlagLeft.rawValue | kSKUMouseButtonFlagRight.rawValue;
 
 * Some class methods don't import correctly and need to have [manual override](https://developer.apple.com/library/prerelease/ios/documentation/Swift/Conceptual/BuildingCocoaApps/MixandMatch.html#//apple_ref/doc/uid/TP40014216-CH10-ID122). I did my best to catch these, but I can't promise I caught them all. If you find any that I missed, please submit a pull request or open an issue detailing how to fix it.
+	* Compatibilty with Swift caused some inconsistencies in the documentation for these methods. They appear to repeat the name twice in documentation, but don't in reality. I added a brief tag in the documentation to these offenders to help make the actual method call more readable.
 	* Additionally, most initializers get automatically renamed when they contain the word "with". Example:
 
 

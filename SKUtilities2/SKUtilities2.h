@@ -1055,6 +1055,7 @@ Vulnerable to lag spikes if used.
 
 /*!
  Convenience method that creates and returns a new shape object in the shape of a circle.
+ @brief circleWithRadius:andColor:
  @param radius radius of circle.
  @param color  Color of circle.
  @return SKUShapeNode
@@ -1062,6 +1063,7 @@ Vulnerable to lag spikes if used.
 +(SKUShapeNode*)circleWithRadius:(CGFloat)radius andColor:(SKColor*)color NS_SWIFT_NAME(init(circleWithRadius:andColor:));
 /*!
  Convenience method that creates and returns a new shape object in the shape of a sqaure.
+ @brief squareWithWidth:andColor:
  @param width Value that determines size of square.
  @param color Color of square
  @return SKUShapeNode
@@ -1069,6 +1071,7 @@ Vulnerable to lag spikes if used.
 +(SKUShapeNode*)squareWithWidth:(CGFloat)width andColor:(SKColor*)color NS_SWIFT_NAME(init(squareWithWidth:andColor:));
 /*!
  Convenience method that creates and returns a new shape object in the shape of a rectanlge.
+ @brief rectangleWithSize:andColor:
  @param size  CGSize value to make a rectange of.
  @param color Color of rectangle.
  @return SKUShapeNode
@@ -1076,6 +1079,7 @@ Vulnerable to lag spikes if used.
 +(SKUShapeNode*)rectangleWithSize:(CGSize)size andColor:(SKColor*)color NS_SWIFT_NAME(init(rectangleWithSize:andColor:));
 /*!
  Convenience method that creates and returns a new shape object in the shape of a rounded rectangle.
+ @brief rectangleRoundedWithSize:andCornerRadius:andColor:
  @param size   CGSize value to make a rectangle of.
  @param radius Radius value for corners
  @param color  Color of shape
@@ -1084,6 +1088,7 @@ Vulnerable to lag spikes if used.
 +(SKUShapeNode*)rectangleRoundedWithSize:(CGSize)size andCornerRadius:(CGFloat)radius andColor:(SKColor*)color NS_SWIFT_NAME(init(rectangleRoundedWithSize:andCornerRadius:andColor:));
 /*!
  Convenience method that creates and returns a new shape object in the shape of the provided path.
+ @brief shapeWithPath:andColor:
  @param path  CGPathRef path to make a shape out of. A copy is made, so you are responsible for releasing this reference.
  @param color Color to make shape.
  @return SKUShapeNode
@@ -1319,15 +1324,23 @@ Vulnerable to lag spikes if used.
 +(SKUButtonSpriteStateProperties*)propertiesWithTexture:(SKTexture*)texture andAlpha:(CGFloat)alpha andColor:(SKColor*)color andColorBlendFactor:(CGFloat)colorBlendFactor;
 /*! Returns a new object with the following properties. */
 +(SKUButtonSpriteStateProperties*)propertiesWithTexture:(SKTexture*)texture andAlpha:(CGFloat)alpha;
-/*! Returns a new object with the included default properties. */
+/*! Returns a new object with the included default properties. 
+ @brief propertiesWithDefaultsSKU
+ */
 +(SKUButtonSpriteStateProperties*)propertiesWithDefaultsSKU NS_SWIFT_NAME(init(defaultsSKU:));
-/*! Returns a new object with the included default toggle on properties. */
+/*! Returns a new object with the included default toggle on properties.
+ @brief propertiesWithDefaultsToggleOnSKU
+*/
 +(SKUButtonSpriteStateProperties*)propertiesWithDefaultsToggleOnSKU NS_SWIFT_NAME(init(defaultsToggleOnSKU:));
-/*! Returns a new object with the included default toggle off properties. */
+/*! Returns a new object with the included default toggle off properties. 
+ @brief propertiesWithDefaultsToggleOffSKU
+*/
 +(SKUButtonSpriteStateProperties*)propertiesWithDefaultsToggleOffSKU NS_SWIFT_NAME(init(defaultsToggleOffSKU:));
 /*! Returns a new object with the included default knob properties. */
 +(SKUButtonSpriteStateProperties*)propertiesWithDefaultsSliderKnobSKU:(BOOL)pressed;
-/*! Returns a new object with the included default slider slide properties. */
+/*! Returns a new object with the included default slider slide properties. 
+ @brief propertiesWithDefaultsSliderSlideSKU
+*/
 +(SKUButtonSpriteStateProperties*)propertiesWithDefaultsSliderSlideSKU NS_SWIFT_NAME(init(defaultsSliderSlideSKU:));
 /*! Sets the x and y scale together. */
 -(void)setScale:(CGFloat)scale;
@@ -1367,15 +1380,25 @@ Vulnerable to lag spikes if used.
 +(SKUButtonSpriteStatePropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonSpriteStateProperties *)defaultState andPressedState:(SKUButtonSpriteStateProperties *)pressedState;
 /*! Allows you to explicitly set default state and derives the pressed state from the default with 0.5 blend factor of a gray color overlay, and the disabled state from default, but with half opacity, and the hovered state from the default with skuHoverScale scale. */
 +(SKUButtonSpriteStatePropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonSpriteStateProperties *)defaultState;
-/*! Returns a package based on the included assets. */
+/*! Returns a package based on the included assets. 
+ @brief packageWithDefaultPropertiesSKU
+ */
 +(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultPropertiesSKU NS_SWIFT_NAME(init(defaultPropertiesSKU:));
-/*! Returns a package based on the included assets. */
+/*! Returns a package based on the included assets. 
+ @brief packageWithDefaultToggleOnPropertiesSKU
+ */
 +(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultToggleOnPropertiesSKU NS_SWIFT_NAME(init(defaultToggleOnPropertiesSKU:));
-/*! Returns a package based on the included assets. */
+/*! Returns a package based on the included assets. 
+ @brief packageWithDefaultToggleOffPropertiesSKU
+ */
 +(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultToggleOffPropertiesSKU NS_SWIFT_NAME(init(defaultToggleOffPropertiesSKU:));
-/*! Returns a package based on the included assets. */
+/*! Returns a package based on the included assets. 
+ @brief packageWithDefaultSliderKnobPropertiesSKU
+ */
 +(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultSliderKnobPropertiesSKU NS_SWIFT_NAME(init(defaultSliderKnobPropertiesSKU:));
-/*! Returns a package based on the included assets. */
+/*! Returns a package based on the included assets. 
+ @brief packageWithDefaultSliderSliderSlidePropertiesSKU
+ */
 +(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultSliderSliderSlidePropertiesSKU NS_SWIFT_NAME(init(defaultSliderSliderSlidePropertiesSKU:));
 
 /*! Allows you to change the texture for all states at once. */
