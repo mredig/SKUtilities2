@@ -66,15 +66,11 @@
 	
 // slider button
 	
-	SKUButtonSpriteStatePropertiesPackage* knobPackage = [SKUButtonSpriteStatePropertiesPackage packageWithDefaultSliderKnobPropertiesSKU];
-	SKUButtonSpriteStatePropertiesPackage* sliderPackage = [SKUButtonSpriteStatePropertiesPackage packageWithDefaultSliderSliderSlidePropertiesSKU];
 	
 	SKUButtonSpriteStatePropertiesPackage* maxPackage = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:[SKUButtonSpriteStateProperties propertiesWithTexture:[SKTexture textureWithImageNamed:@"plusSKU"] andAlpha:1.0f]];
 	SKUButtonSpriteStatePropertiesPackage* minPackage = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:[SKUButtonSpriteStateProperties propertiesWithTexture:[SKTexture textureWithImageNamed:@"minusSKU"] andAlpha:1.0f]];
-	
-	slider = [SKUSliderButton node];
-	[slider setSlideSpriteStatesWithPackage:sliderPackage];
-	[slider setKnobSpriteStatesWithPackage:knobPackage];
+
+	slider = [SKUSliderButton sliderButtonWithDefaults];
 	slider.position = pointMultiplyByPoint(pointFromCGSize(self.size), CGPointMake(0.66, 0.5));
 	slider.minimumValue = -10;
 	slider.maximumValue = 100;

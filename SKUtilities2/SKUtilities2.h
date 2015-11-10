@@ -1870,6 +1870,28 @@ typedef enum {
  */
 @property (nonatomic) CGFloat stepSize;
 
+/*! @methodgroup Slider Inits */
+
+/*!
+ Creates and returns an SKUSliderButton with packages provided.
+ @param sliderPackage SKUButtonSpriteStatePropertiesPackage object providing a stretching slider.
+ @param knobPackage   SKUButtonSpriteStatePropertiesPackage object providing knob sprite states.
+ @return new SKUSliderButton object
+ */
++(SKUSliderButton*)sliderButtonWithSliderPackage:(SKUButtonSpriteStatePropertiesPackage*)sliderPackage andKnobPackage:(SKUButtonSpriteStatePropertiesPackage*)knobPackage;
+/*!
+ Creates and returns an SKUSliderButton with packages provided.
+ @param knobPackage   SKUButtonSpriteStatePropertiesPackage object providing knob sprite states.
+ @return new SKUSliderButton object
+ */
++(SKUSliderButton*)sliderButtonWithKnobPackage:(SKUButtonSpriteStatePropertiesPackage*)knobPackage;
+/*!
+ Creates and returns an SKUSliderButton with default settings.
+ @return new SKUSliderButton object
+ */
++(SKUSliderButton*)sliderButtonWithDefaults NS_SWIFT_NAME(init(defaults:));
+
+
 /*! @methodgroup Slider Looks */
 
 -(void)setKnobSpriteStatesWithPackage:(SKUButtonSpriteStatePropertiesPackage*)package;

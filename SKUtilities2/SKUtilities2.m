@@ -2896,8 +2896,17 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 +(SKUSliderButton*)sliderButtonWithKnobPackage:(SKUButtonSpriteStatePropertiesPackage*)knobPackage {
-	
-	return nil;
+	SKUSliderButton* button = [SKUSliderButton node];
+	[button setSlideSpriteStatesWithPackage:[SKUButtonSpriteStatePropertiesPackage packageWithDefaultSliderSliderSlidePropertiesSKU]];
+	[button setKnobSpriteStatesWithPackage:knobPackage];
+	return button;
+}
+
++(SKUSliderButton*)sliderButtonWithDefaults {
+	SKUSliderButton* button = [SKUSliderButton node];
+	[button setSlideSpriteStatesWithPackage:[SKUButtonSpriteStatePropertiesPackage packageWithDefaultSliderSliderSlidePropertiesSKU]];
+	[button setKnobSpriteStatesWithPackage:[SKUButtonSpriteStatePropertiesPackage packageWithDefaultSliderKnobPropertiesSKU]];
+	return button;
 }
 
 -(void)internalDidInitialize {
