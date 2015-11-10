@@ -1885,10 +1885,10 @@ typedef enum {
  @return new SKUSliderButton object
  */
 +(SKUSliderButton*)sliderButtonWithKnobPackage:(SKUButtonSpriteStatePropertiesPackage*)knobPackage;
-/*!
- @brief sliderButtonWithDefaults
+/*! 
  Creates and returns an SKUSliderButton with default settings.
  @return new SKUSliderButton object
+ @brief sliderButtonWithDefaults
  */
 +(SKUSliderButton*)sliderButtonWithDefaults NS_SWIFT_NAME(init(defaults:));
 
