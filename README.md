@@ -1,5 +1,14 @@
 # SKUtilities 2
 
+* [Overview](#overview)
+* [Documentation](#documentation)
+* [Getting Started](#getting-started)
+* [Objective C](#objective-c)
+* [Swift](#swift)
+* [Swift Notes](#swift-notes)
+* [Features](#features)
+* [Requirements](#requirements:)
+
 ## Overview
 
 Intended to be an easy resource for SpriteKit projects to get quick access to common, cross platform functions.
