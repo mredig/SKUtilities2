@@ -7,6 +7,46 @@
  <p>Available for download at <a href="https://github.com/mredig/SKUtilities2">GitHub</a></p>
  <p>Documentation available at <a href="http://mredig.github.io/SKUtilities2_Doc/">GitHub Pages</a></p>
  
+ <p><h4>Miscellaneous:</h4></p>
+ 
+ <p>
+ 
+ <ul>
+ 
+ <li>Run this as a script in a build phase to automatically increment build numbers
+  <pre>
+ @textblock
+ #!/bin/bash
+ bN=$(/usr/libexec/PlistBuddy -c "Print CFBundleVersion" "$INFOPLIST_FILE")
+ bN=$((bN += 1))
+ bN=$(printf "%d" $bN)
+ /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $bN" "$INFOPLIST_FILE"
+ @/textblock
+ </pre></li>
+ 
+ <li>Header formatting for documentation can be referenced <a href="https://developer.apple.com/library/mac/documentation/DeveloperTools/Conceptual/HeaderDoc/tags/tags.html#//apple_ref/doc/uid/TP40001215-CH346-SW16">here</a> and <a href="http://www.raywenderlich.com/66395/documenting-in-xcode-with-headerdoc-tutorial">here</a></li>
+
+ <li>To activate mouse movement capture on OSX, use this line in Obj C
+ 
+  <pre>
+ @textblock
+ self.view.window.acceptsMouseMovedEvents = YES;
+ @/textblock
+ </pre>
+ 
+ or this line in Swift
+ 
+  <pre>
+ @textblock
+ self.view!.window!.acceptsMouseMovedEvents = true;
+ @/textblock
+ </pre>
+ 
+ </li>
+ 
+ </ul>
+ </p>
+ 
  @author	Michael Redig
  @copyright	2015 Michael Redig - (See license file)
  @version	2.0b
@@ -38,28 +78,28 @@ bN=$(printf "%d" $bN)
 /*!
  Constant approximate value (0.41666) good for scaling assets.
  */
-#define kSKUPadToPhoneScale ((CGFloat) 0.41666)
+static const CGFloat kSKUPadToPhoneScale = (CGFloat) 0.41666;
 /*!
  Constant approximate value (0.41666) good for scaling assets.
  */
-#define kSKUPhoneFromPadScale ((CGFloat) 0.41666)
+static const CGFloat kSKUPhoneFromPadScale = (CGFloat) 0.41666;
 /*!
  Constant approximate value (2.40003840061441) good for scaling assets.
  */
-#define kSKUPhoneToPadScale ((CGFloat) 2.40003840061441) //likely very low usage as it would be upscaling
+static const CGFloat kSKUPhoneToPadScale = (CGFloat) 2.40003840061441; //likely very low usage as it would be upscaling
 /*!
  Constant approximate value (2.40003840061441) good for scaling assets.
  */
-#define kSKUPadFromPhoneScale ((CGFloat) 2.40003840061441)
+static const CGFloat kSKUPadFromPhoneScale = ((CGFloat) 2.40003840061441);
 
 /*!
  Constant value to convert from degrees to radians. (0.017453292519943295)
  */
-#define kSKUDegToRadConvFactor 0.017453292519943295 // pi/180
+static const CGFloat kSKUDegToRadConvFactor = 0.017453292519943295; // pi/180
 /*!
  Constant value to convert from radians to degrees. (57.29577951308232)
  */
-#define kSKURadToDegConvFactor 57.29577951308232 // 180/pi
+static const CGFloat kSKURadToDegConvFactor = 57.29577951308232; // 180/pi
 
 /*!
  @discussion BOOLEAN determining visibility
@@ -72,7 +112,7 @@ bN=$(printf "%d" $bN)
  @/textblock
  </pre>
  */
-#define VISIBLE 0
+static const BOOL VISIBLE = 0;
 /*!
  @discussion 
  BOOLEAN determining visibility
@@ -84,11 +124,27 @@ bN=$(printf "%d" $bN)
  @/textblock
  </pre>
  */
-#define HIDDEN 1 
+static const BOOL HIDDEN = 1;
 
 /*!
  Allows simplification between platforms, using similar classes.
  On iOS and tvOS, remaps <i>UIImage</i> to <i>SKUImage</i> and <i>UIFont</i> to <i>SKUFont</i> and on OS X, remaps <i>NSImage</i> to <i>SKUImage</i> and <i>NSFont</i> to <i>SKUFont</i> as they are close enough that most methods work on all platforms. Also defines a constant that is only true on OS X for conditional targetting.
+ 
+ To get the same result in Swift, use this in a global scope:
+  <pre>
+ @textblock
+ #if os(OSX)
+	typealias SKUImage = NSImage;
+	typealias SKUFont = NSFont;
+ #else
+	typealias SKUImage = UIImage;
+	typealias SKUFont = UIFont;
+ #endif
+ @/textblock
+ </pre>
+ 
+ @attributelist Language:
+ Objective-C
  */
 #if TARGET_OS_IPHONE
 #define SKUImage UIImage
@@ -100,6 +156,17 @@ bN=$(printf "%d" $bN)
 #endif
 /*!
  Simplifies access to the singleton.
+ 
+ To get the same result in Swift, use this in a global scope:
+  <pre>
+ @textblock
+ let SKUSharedUtilities = SKUtilities2.sharedUtilities();
+ @/textblock
+ </pre>
+
+ 
+ @attributelist Language:
+ Objective-C
  */
 #define SKUSharedUtilities [SKUtilities2 sharedUtilities] 
 
@@ -619,6 +686,8 @@ double bezierTValueAtXValue (double x, double p0x, double p1x, double p2x, doubl
 
 /*!
  Prints text to the console using NSLog, but only prints if verbosityLevelRequired is lower than SKUSharedUtilities.verbosityLevel. Also only prints in compiler debug mode.
+  @attributelist Language:
+ Objective-C
  @seealso SKUtilities2 SKUtilities2 verbosityLevel
  */
 void SKULog(NSInteger verbosityLevelRequired, NSString *format, ...);
@@ -650,6 +719,9 @@ typedef enum {
  @constant kSKUMouseButtonFlagLeft Flag for when left mouse is used.
  @constant kSKUMouseButtonFlagRight Flag for when right mouse is used.
  @constant kSKUMouseButtonFlagOther Flag for when other mouse is used (mouse buttons 3 and greater).
+ 
+ To get the same result in Swift, be sure to use rawValue
+ 
  @attributelist Platforms:
  OSX
  @seealso SKUtilities2
@@ -705,6 +777,9 @@ Vulnerable to lag spikes if used.
 #if TARGET_OS_OSX_SKU
 /*!
  Flags to determine what sort of mouse button is passed onto nodes. By default, it only passes left mouse button events, but adding other kSKUMouseButtonFlags flags allows to respond to other mouse buttons.
+ 
+ To get the same result in Swift, be sure to use rawValue
+ 
  @seealso kSKUMouseButtonFlags
  @attributelist Platforms:
  OSX
@@ -984,21 +1059,21 @@ Vulnerable to lag spikes if used.
  @param color  Color of circle.
  @return SKUShapeNode
  */
-+(SKUShapeNode*)circleWithRadius:(CGFloat)radius andColor:(SKColor*)color;
++(SKUShapeNode*)circleWithRadius:(CGFloat)radius andColor:(SKColor*)color NS_SWIFT_NAME(init(circleWithRadius:andColor:));
 /*!
  Convenience method that creates and returns a new shape object in the shape of a sqaure.
  @param width Value that determines size of square.
  @param color Color of square
  @return SKUShapeNode
  */
-+(SKUShapeNode*)squareWithWidth:(CGFloat)width andColor:(SKColor*)color;
++(SKUShapeNode*)squareWithWidth:(CGFloat)width andColor:(SKColor*)color NS_SWIFT_NAME(init(squareWithWidth:andColor:));
 /*!
  Convenience method that creates and returns a new shape object in the shape of a rectanlge.
  @param size  CGSize value to make a rectange of.
  @param color Color of rectangle.
  @return SKUShapeNode
  */
-+(SKUShapeNode*)rectangleWithSize:(CGSize)size andColor:(SKColor*)color;
++(SKUShapeNode*)rectangleWithSize:(CGSize)size andColor:(SKColor*)color NS_SWIFT_NAME(init(rectangleWithSize:andColor:));
 /*!
  Convenience method that creates and returns a new shape object in the shape of a rounded rectangle.
  @param size   CGSize value to make a rectangle of.
@@ -1006,14 +1081,14 @@ Vulnerable to lag spikes if used.
  @param color  Color of shape
  @return SKUShapeNode
  */
-+(SKUShapeNode*)rectangleRoundedWithSize:(CGSize)size andCornerRadius:(CGFloat)radius andColor:(SKColor*)color;
++(SKUShapeNode*)rectangleRoundedWithSize:(CGSize)size andCornerRadius:(CGFloat)radius andColor:(SKColor*)color NS_SWIFT_NAME(init(rectangleRoundedWithSize:andCornerRadius:andColor:));
 /*!
  Convenience method that creates and returns a new shape object in the shape of the provided path.
  @param path  CGPathRef path to make a shape out of. A copy is made, so you are responsible for releasing this reference.
  @param color Color to make shape.
  @return SKUShapeNode
  */
-+(SKUShapeNode*)shapeWithPath:(CGPathRef)path andColor:(SKColor*)color;
++(SKUShapeNode*)shapeWithPath:(CGPathRef)path andColor:(SKColor*)color NS_SWIFT_NAME(init(shapeWithPath:andColor:));
 
 
 @end
@@ -1245,15 +1320,15 @@ Vulnerable to lag spikes if used.
 /*! Returns a new object with the following properties. */
 +(SKUButtonSpriteStateProperties*)propertiesWithTexture:(SKTexture*)texture andAlpha:(CGFloat)alpha;
 /*! Returns a new object with the included default properties. */
-+(SKUButtonSpriteStateProperties*)propertiesWithDefaultsSKU;
++(SKUButtonSpriteStateProperties*)propertiesWithDefaultsSKU NS_SWIFT_NAME(init(defaultsSKU:));
 /*! Returns a new object with the included default toggle on properties. */
-+(SKUButtonSpriteStateProperties*)propertiesWithDefaultsToggleOnSKU;
++(SKUButtonSpriteStateProperties*)propertiesWithDefaultsToggleOnSKU NS_SWIFT_NAME(init(defaultsToggleOnSKU:));
 /*! Returns a new object with the included default toggle off properties. */
-+(SKUButtonSpriteStateProperties*)propertiesWithDefaultsToggleOffSKU;
++(SKUButtonSpriteStateProperties*)propertiesWithDefaultsToggleOffSKU NS_SWIFT_NAME(init(defaultsToggleOffSKU:));
 /*! Returns a new object with the included default knob properties. */
 +(SKUButtonSpriteStateProperties*)propertiesWithDefaultsSliderKnobSKU:(BOOL)pressed;
 /*! Returns a new object with the included default slider slide properties. */
-+(SKUButtonSpriteStateProperties*)propertiesWithDefaultsSliderSlideSKU;
++(SKUButtonSpriteStateProperties*)propertiesWithDefaultsSliderSlideSKU NS_SWIFT_NAME(init(defaultsSliderSlideSKU:));
 /*! Sets the x and y scale together. */
 -(void)setScale:(CGFloat)scale;
 
@@ -1293,15 +1368,15 @@ Vulnerable to lag spikes if used.
 /*! Allows you to explicitly set default state and derives the pressed state from the default with 0.5 blend factor of a gray color overlay, and the disabled state from default, but with half opacity, and the hovered state from the default with skuHoverScale scale. */
 +(SKUButtonSpriteStatePropertiesPackage*)packageWithPropertiesForDefaultState:(SKUButtonSpriteStateProperties *)defaultState;
 /*! Returns a package based on the included assets. */
-+(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultPropertiesSKU;
++(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultPropertiesSKU NS_SWIFT_NAME(init(defaultPropertiesSKU:));
 /*! Returns a package based on the included assets. */
-+(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultToggleOnPropertiesSKU;
++(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultToggleOnPropertiesSKU NS_SWIFT_NAME(init(defaultToggleOnPropertiesSKU:));
 /*! Returns a package based on the included assets. */
-+(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultToggleOffPropertiesSKU;
++(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultToggleOffPropertiesSKU NS_SWIFT_NAME(init(defaultToggleOffPropertiesSKU:));
 /*! Returns a package based on the included assets. */
-+(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultSliderKnobPropertiesSKU;
++(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultSliderKnobPropertiesSKU NS_SWIFT_NAME(init(defaultSliderKnobPropertiesSKU:));
 /*! Returns a package based on the included assets. */
-+(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultSliderSliderSlidePropertiesSKU;
++(SKUButtonSpriteStatePropertiesPackage*)packageWithDefaultSliderSliderSlidePropertiesSKU NS_SWIFT_NAME(init(defaultSliderSliderSlidePropertiesSKU:));
 
 /*! Allows you to change the texture for all states at once. */
 -(void)changeTexture:(SKTexture*)texture;
@@ -1317,7 +1392,10 @@ Vulnerable to lag spikes if used.
  @constant kSKUButtonMethodPostNotification Sends out an NSNotification with a name determined by either the notificationNameDown or notificationNameUp property. Only sends button release notifications if the release remained within the button bounds.
  @constant kSKUButtonMethodDelegate Calls doButtonDown or doButtonUp on the delegate, set with the delegate property. This is the only way to detech button releases that aren't within the bounds of the button.
  @constant kSKUButtonMethodRunActions Calls selectors set with methods setDownAction and setUpAction. Only sends button release calls if the release remained within the button bounds.
- @seealso SKUButton
+ 
+ To get the same result in Swift, be sure to use rawValue
+ 
+@seealso SKUButton
  */
 typedef enum {
 	kSKUButtonMethodPostNotification = 1,
@@ -1346,6 +1424,9 @@ typedef enum {
  @constant kSKUButtonStatePressedOutOfBounds Flagged when enabled and pressed down, but the current location of the input is beyond the bounds of the button.
  @constant kSKUButtonStateHovered Flagged when button is hovered. (This will either be an OS X mouse or a tvOS focus)
  @constant kSKUButtonStateDisabled Flagged when the button is disabled.
+ 
+ To get the same result in Swift, be sure to use rawValue
+ 
  @seealso SKUButton
  */
 typedef enum {
@@ -1411,6 +1492,9 @@ typedef enum {
 @property (nonatomic) NSInteger whichButton;
 /*! 
  Current state of the button
+
+ To get the same result in Swift, be sure to use rawValue
+
  @seealso kSKUButtonStates
  */
 @property (nonatomic, readonly) kSKUButtonStates buttonState;
@@ -1418,6 +1502,9 @@ typedef enum {
 @property (nonatomic, readonly) BOOL isHovered;
 /*! 
  Used for enumeration of button ids 
+
+ To get the same result in Swift, be sure to use rawValue
+
  @seealso kSKUButtonMethods
  */
 @property (nonatomic) uint8_t buttonMethod;

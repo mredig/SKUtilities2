@@ -14,8 +14,9 @@ Documentation is available [here](http://mredig.github.io/SKUtilities2_Doc/).
 See [license](https://raw.githubusercontent.com/mredig/SKUtilities2/master/LICENSE.txt) for rights.
 
 ### Getting Started
+#### Objective C
 
-Copy or link to the following files into your SpriteKit project. This is assuming you're using Objective C. Swift is coming later.
+Copy or link to the following files into your SpriteKit project.
 
 * SKUtilities2.h
 * SKUtilities2.m
@@ -55,7 +56,7 @@ Add a button like this:
 Setup the method it calls like this:
 
 	-(void)doSomething:(SKUButton*)button {
-		SKULog(0, @"pressed: %@", button.name);
+		SKULog(0, @"released: %@", button.name);
 	}
 
 Be able to use it on iOS, Mac OS, and tvOS (with minor additional code) from the same code!
@@ -65,6 +66,101 @@ Get input from all three platforms like this:
 	-(void)inputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary *)eventDict {
 		//do something with input here
 	}
+
+
+#### Swift
+
+Copy or link to the following files into your SpriteKit project.
+
+* SKUtilities2.h
+* SKUtilities2.m
+* SKUtilities2.xcassets
+
+Add this line to your [bridging header](https://developer.apple.com/library/prerelease/ios/documentation/Swift/Conceptual/BuildingCocoaApps/MixandMatch.html#//apple_ref/doc/uid/TP40014216-CH10-ID122).
+
+	#import "SKUtilties2.h"
+
+Add the following in a global scope in a swift file:
+
+	let SKUSharedUtilities = SKUtilities2.sharedUtilities();
+
+	#if os(OSX)
+		typealias SKUImage = NSImage;
+		typealias SKUFont = NSFont;
+	#else
+		typealias SKUImage = UIImage;
+		typealias SKUFont = UIFont;
+	#endif
+
+Add the line "SKUSharedUtilities.updateCurrentTime(currentTime)" to the update statement of your scenes similar to this:
+
+	override func update(currentTime: CFTimeInterval) {
+		SKUSharedUtilities.updateCurrentTime(currentTime);
+	}
+
+Now you can access frame delta times and the current time from anywhere in your code, not just the update statement!
+
+	SKUSharedUtilities.currentTime
+	SKUSharedUtilities.deltaFrameTime
+
+
+Have an asset that persists through more than one scene? Store it in the singleton's dictionary!
+
+
+	let sprite = SKSpriteNode(color: SKColor.purpleColor(), size: CGSizeMake(10, 10));
+	SKUSharedUtilities.userData = NSMutableDictionary(); //note that the dictionary is not initialized until you do it
+	SKUSharedUtilities.userData["sprite"] = sprite;
+
+Add a button like this:
+
+	let buttonExample = SKUPushButton(title: "Button Title");
+	buttonExample.position = CGPointMake(0.66, 0.25);
+	buttonExample.zPosition = 1.0;
+	buttonExample.setUpAction("doSomething:", toPerformOnTarget: self);
+	buttonExample.name = "buttonExample";
+	self.addChild(buttonExample);
+
+Setup the method it calls like this:
+
+	func doSomething(button: SKUButton) {
+		print(button.name!, "released");
+	}
+
+Be able to use it on iOS, Mac OS, and tvOS (with minor additional code) from the same code!
+
+Get input from all three platforms like this:
+
+	override func inputBeganSKU(location: CGPoint, withEventDictionary eventDict: [NSObject : AnyObject]!) {
+		//do something with input here
+	}
+
+#### Swift Notes:
+
+This library was built in Objective C. While it should work in Swift just fine, there may be idiosyncrasies causing inconsistent behavior. For example:
+
+* When using flag type enumerations, you need to use rawValue. 
+
+		//In Objective C:
+		SKUSharedUtilities.macButtonFlags = kSKUMouseButtonFlagLeft | kSKUMouseButtonFlagRight;
+		//In Swift:
+		SKUSharedUtilities.macButtonFlags.rawValue = kSKUMouseButtonFlagLeft.rawValue | kSKUMouseButtonFlagRight.rawValue;
+
+* Some class methods don't import correctly and need to have [manual override](https://developer.apple.com/library/prerelease/ios/documentation/Swift/Conceptual/BuildingCocoaApps/MixandMatch.html#//apple_ref/doc/uid/TP40014216-CH10-ID122). I did my best to catch these, but I can't promise I caught them all. If you find any that I missed, please submit a pull request or open an issue detailing how to fix it.
+	* Additionally, most initializers get automatically renamed when they contain the word "with". Example:
+
+
+			//In Objective C:
+			SKUPushButton* buttonExample = [SKUPushButton pushButtonWithTitle:@"Button Title"];
+			//In Swift:
+			let buttonExample = SKUPushButton(title: "Button Title");
+
+
+* SKULog is not available in Swift.
+* \#define macros don't work. To overcome the issue caused by this, you need to add some code to the swift project. Follow this [link](#swift) and use the section referring to the global scope.
+* And finally, the catchall. There may be other issues I didn't experience or foresee. So other than everything, it should work right!
+
+
+## Features
 
 New classes are:
 
