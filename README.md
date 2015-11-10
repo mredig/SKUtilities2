@@ -7,7 +7,7 @@
 * [Swift](#swift)
 * [Swift Notes](#swift-notes)
 * [Features](#features)
-* [Requirements](#requirements:)
+* [Requirements](#requirements)
 
 ## Overview
 
