@@ -63,6 +63,21 @@ bN=$(printf "%d" $bN)
  
  */
 
+// Swift copy/paste convenience
+/**
+ 
+ let SKUSharedUtilities = SKUtilities2.sharedUtilities();
+ 
+ #if os(OSX)
+	 typealias SKUImage = NSImage;
+	 typealias SKUFont = NSFont;
+ #else
+	 typealias SKUImage = UIImage;
+	 typealias SKUFont = UIFont;
+ #endif
+ 
+ */
+
 
 /**
  Header formatting for documentation can be referenced here https://developer.apple.com/library/mac/documentation/DeveloperTools/Conceptual/HeaderDoc/tags/tags.html#//apple_ref/doc/uid/TP40001215-CH346-SW16 and here http://www.raywenderlich.com/66395/documenting-in-xcode-with-headerdoc-tutorial
