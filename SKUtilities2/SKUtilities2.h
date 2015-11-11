@@ -86,6 +86,7 @@ bN=$(printf "%d" $bN)
 #import <Foundation/Foundation.h>
 #import <QuartzCore/QuartzCore.h>
 #import <SpriteKit/SpriteKit.h>
+#import <CoreGraphics/CoreGraphics.h>
 
 #pragma mark CONSTANTS
 /*! @group Common Constants */
