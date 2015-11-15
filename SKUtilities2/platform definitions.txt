@@ -26,3 +26,10 @@ mac os
     #define TARGET_OS_MAC         
 	#define TARGET_OS_OSX_SKU
 
+SWIFT
+
+os()
+OSX, iOS, watchOS, tvOS
+
+arch()
+x86_64, arm, arm64, i386
