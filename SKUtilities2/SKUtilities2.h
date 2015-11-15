@@ -697,6 +697,23 @@ CGPoint bezierPoint (CGFloat t, CGPoint point0, CGPoint point1, CGPoint point2, 
  */
 double bezierTValueAtXValue (double x, double p0x, double p1x, double p2x, double p3x);
 
+
+#pragma mark Mac Cursor Handling
+
+/*!
+ Used to show or hide the OS Cursor. Mac only, but harmless on other platforms.
+ @param hide Boolean determining if
+ @seealso centerOSCursorInWindow
+ */
+void hideOSCursor(BOOL hide);
+
+/*!
+ Centers the Mac OS Cursor in the center of the window. Typically used incoordination of mouseMoved events. Mac only, but harmless on other platforms.
+ @seealso hideOSCursor
+ @seealso SKNode(ConsolidatedInput) mouseMovedSKU
+ */
+void centerOSCursorInWindow();
+
 #pragma mark LOGGING
 /*! @functiongroup Logging */
 

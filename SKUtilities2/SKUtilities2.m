@@ -504,6 +504,43 @@ double bezierTValueAtXValue (double x, double p0x, double p1x, double p2x, doubl
 
 ////end x bezier algorithm
 
+
+#pragma mark Mac Cursor Handling
+
+
+void hideOSCursor(BOOL hide) {
+#if TARGET_OS_OSX_SKU
+	if (hide) {
+		[NSCursor hide];
+	} else {
+		[NSCursor unhide];
+	}
+#endif
+}
+
+void centerOSCursorInWindow() {
+#if TARGET_OS_OSX_SKU
+
+	CGDirectDisplayID displayID = CGMainDisplayID();
+	CGRect bounds = CGDisplayBounds(displayID);
+	CGFloat mainHeight = -bounds.size.height;
+	
+	NSWindow* window = [NSApplication sharedApplication].mainWindow;
+	
+	if (!window) {
+		window = [NSApplication sharedApplication].windows[0];
+	}
+	
+	CGPoint globalCenterPoint = midPointOfRect(window.frame);
+	// invert y value
+	globalCenterPoint.y += mainHeight;
+	globalCenterPoint.y *= -1.0;
+	
+	CGWarpMouseCursorPosition(globalCenterPoint);
+#endif
+}
+
+
 #pragma mark LOGGING
 
 void SKULog(const NSInteger verbosityLevel, NSString* format, ...) {
