@@ -28,19 +28,19 @@ I have learned a lot since I first started my original utilities package, and de
 	* Logging assistance (Objective C only)
 	* Cursor handling on OSX
 * New classes to automate other things:
-	* **SKUtilities2**
+	* [**SKUtilities2**](http://mredig.github.io/SKUtilities2_Doc/SKUtilities2_h/index.html)
 		* Singleton augmenting much functionality throughout this library. Wow.
-	* **SKUMultiLineLabelNode**
+	* [**SKUMultiLineLabelNode**](http://mredig.github.io/SKUtilities2_Doc/SKUtilities2_h/Classes/SKUMultiLineLabelNode/index.html)
 		* SKLabelNode-like interface allowing for multiline labels. Sourced from Chris Allwein of Downright Simple(c). Many thanks to him for open sourcing this code!
-	* **SKUPositionObject**
+	* [**SKUPositionObject**](http://mredig.github.io/SKUtilities2_Doc/SKUtilities2_h/Classes/SKUPositionObject/index.html)
 		* Allows for storing and passing some struct data as objects (useful for NSArray, NSDictionary, NSNotifications, etc)
-	* **SKUShapeNode**
+	* [**SKUShapeNode**](http://mredig.github.io/SKUtilities2_Doc/SKUtilities2_h/Classes/SKUShapeNode/index.html)
 		* Renders shapes into textures instead of rerendering the shape every frame
-	* **SKUPushButton**
+	* [**SKUPushButton**](http://mredig.github.io/SKUtilities2_Doc/SKUtilities2_h/Classes/SKUPushButton/index.html)
 		* Cross platform push button
-	* **SKUToggleButton**
+	* [**SKUToggleButton**](http://mredig.github.io/SKUtilities2_Doc/SKUtilities2_h/Classes/SKUToggleButton/index.html)
 		* Cross platform toggle button
-	* **SKUSliderButton**
+	* [**SKUSliderButton**](http://mredig.github.io/SKUtilities2_Doc/SKUtilities2_h/Classes/SKUSliderButton/index.html)
 		* Cross platform slider
 * With support classes for some of them.
 
