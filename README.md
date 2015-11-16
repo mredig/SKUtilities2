@@ -8,6 +8,7 @@
 	* [Swift](#swift)
 		* [Swift Notes](#swift-notes)
 * [Requirements](#requirements)
+* [Donate](#donate)
 
 ## Overview
 
