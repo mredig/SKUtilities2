@@ -561,6 +561,15 @@ CGPoint pointMultiplyByPoint (CGPoint pointA, CGPoint pointB);
 CGPoint pointMultiplyByFactor (CGPoint point, CGFloat factor);
 
 /*!
+ Returns a CGPoint that is the result of multiplying the scene size by the point provided
+ @param scene scene
+ @param point point (anchor point style: 0.0 - 1.0 range)
+ @seealso pointMultiplyByPoint
+ @seealso pointFromCGSize
+ */
+CGPoint pointRelativeToScene (SKScene* scene, CGPoint point);
+
+/*!
  Returns a CGPoint struct that is the result of movement based on the factors provided
  @param origin
  CGPoint where the point is in the current frame, prior to moving to the next frame
@@ -1170,11 +1179,11 @@ Vulnerable to lag spikes if used.
 /*!
  Allows to make text fit into a vertical space. Might be necessary to force stroke to work right.
  */
-@property(nonatomic, assign) CGFloat paragraphHeight; //should only be necessary to force a proper height for stroked text
+@property(nonatomic, assign) CGFloat paragraphHeight;
 /*!
  Space between lines in points.
  */
-@property(nonatomic, assign) CGFloat lineSpacing; //measures in points
+@property(nonatomic, assign) CGFloat lineSpacing;
 /*!
  Width of the stroke.
  */

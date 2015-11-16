@@ -243,6 +243,10 @@ CGPoint pointMultiplyByFactor (CGPoint point, CGFloat factor){
 	return CGPointMake(point.x * factor, point.y * factor);
 }
 
+CGPoint pointRelativeToScene (SKScene* scene, CGPoint point) {
+	return pointMultiplyByPoint(pointFromCGSize(scene.size), point);
+}
+
 CGFloat processIntervals(CGFloat pInterval, CGFloat pMaxInterval) {
 	
 	double rInterval = pInterval;
