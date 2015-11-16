@@ -1252,6 +1252,20 @@ static SKUtilities2* sharedUtilities = Nil;
 -(void) setHorizontalAlignmentMode:(SKLabelHorizontalAlignmentMode)horizontalAlignmentMode {
 	_horizontalAlignmentMode = horizontalAlignmentMode;
 	[self retexture];
+	switch (_horizontalAlignmentMode) {
+		case SKLabelHorizontalAlignmentModeCenter:
+			self.anchorPoint = CGPointMake(0.5, self.anchorPoint.y);
+			break;
+		case SKLabelHorizontalAlignmentModeLeft:
+			self.anchorPoint = CGPointMake(0.0, self.anchorPoint.y);
+			break;
+		case SKLabelHorizontalAlignmentModeRight:
+			self.anchorPoint = CGPointMake(1.0, self.anchorPoint.y);
+			break;
+			
+		default:
+			break;
+	}
 }
 
 -(void) setText:(NSString *)text {
@@ -1261,7 +1275,23 @@ static SKUtilities2* sharedUtilities = Nil;
 
 -(void) setVerticalAlignmentMode:(SKLabelVerticalAlignmentMode)verticalAlignmentMode {
 	_verticalAlignmentMode = verticalAlignmentMode;
-	[self retexture];
+	switch (_verticalAlignmentMode) {
+		case SKLabelVerticalAlignmentModeBaseline:
+			self.anchorPoint = CGPointMake(self.anchorPoint.x, 0.0);
+			break;
+		case SKLabelVerticalAlignmentModeBottom:
+			self.anchorPoint = CGPointMake(self.anchorPoint.x, 0.0);
+			break;
+		case SKLabelVerticalAlignmentModeCenter:
+			self.anchorPoint = CGPointMake(self.anchorPoint.x, 0.5);
+			break;
+		case SKLabelVerticalAlignmentModeTop:
+			self.anchorPoint = CGPointMake(self.anchorPoint.x, 1.0);
+			break;
+			
+		default:
+			break;
+	}
 }
 
 -(void)setParagraphWidth:(CGFloat)paragraphWidth {
@@ -1303,7 +1333,7 @@ static SKUtilities2* sharedUtilities = Nil;
 
 
 //Generates and applies new textures based on the current property values
--(void) retexture {
+-(void)retexture {
 	if (!self.text) {
 		return;
 	}
@@ -1314,12 +1344,12 @@ static SKUtilities2* sharedUtilities = Nil;
 		newTexture =[SKTexture textureWithImage:newTextImage];
 	}
 	
-	SKSpriteNode *selfNode = (SKSpriteNode*) self;
-	selfNode.texture = newTexture;
+//	SKSpriteNode *selfNode = (SKSpriteNode*) self;
+	self.texture = newTexture;
 	
 	//Resetting the texture also reset the anchorPoint.  Let's recenter it.
-	selfNode.anchorPoint = CGPointMake(0.5, 0.5);
 	
+	self.verticalAlignmentMode = _verticalAlignmentMode;
 }
 
 
@@ -1397,8 +1427,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	//	SKULog(0,@"textRect = %f %f %f %f", textRect.origin.x, textRect.origin.y, textRect.size.width, textRect.size.height);
 	
 	//The size of the bounding rect is going to be the size of our new node, so set the size here.
-	SKSpriteNode *selfNode = (SKSpriteNode*) self;
-	selfNode.size = textRect.size;
+	self.size = textRect.size;
 	
 #if TARGET_OS_IPHONE
 	//Create the graphics context
