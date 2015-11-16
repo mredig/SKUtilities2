@@ -23,7 +23,6 @@ I have learned a lot since I first started my original utilities package, and de
 	* Distance calculations
 	* Orientation between points
 	* Various CGVector and CGPoint helpers
-	* Storing common structs as objects for passing between things like NSNotifications or storing in arrays and dictionaries
 	* Bezier calculations (for both drawing curves and timing functions)
 	* Logging assistance (Objective C only)
 	* Cursor handling on OSX
@@ -43,13 +42,10 @@ I have learned a lot since I first started my original utilities package, and de
 	* [**SKUSliderButton**](http://mredig.github.io/SKUtilities2_Doc/SKUtilities2_h/Classes/SKUSliderButton/index.html)
 		* Cross platform slider
 * With support classes for some of them.
-
 * Categories to expand upon default functionality on these classes:
-
 	* SKColor(Mixing)
 	* SKNode(ConsolidatedInput)
 	* SKView(AdditionalMouseSupport)
-
 * Built in support to handle tvOS menu navigation!
 
 See the demo files for examples and [documentation](http://mredig.github.io/SKUtilities2_Doc/) for more detail. Videos coming soon!
