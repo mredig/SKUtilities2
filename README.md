@@ -212,3 +212,11 @@ This library was built in Objective C. While it should work in Swift just fine, 
 Target requirements: **iOS 9+** and/or **Mac OS X 10.11+** and/or **tvOS 9+**
 
 Honestly, I'm not 100% sure and I don't care enough to look them up just for this. I'm not your mom.
+
+### Donate
+
+Appreciate these utilities? Feel free to donate to show your support!
+
+<a href='https://pledgie.com/campaigns/30575'><img alt='Click here to lend your support to: SKUtilities2 Donations and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/30575.png?skin_name=chrome' border='0' ></a>
+
+
