@@ -71,7 +71,7 @@
 		335C92C01BB71D7000DC1BD2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = main.m; path = OSX/main.m; sourceTree = "<group>"; };
 		335C92C21BB71D7000DC1BD2 /* 01NumbersDemo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = 01NumbersDemo.h; path = "demo scenes/01NumbersDemo.h"; sourceTree = "<group>"; };
 		335C92C31BB71D7000DC1BD2 /* 01NumbersDemo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = 01NumbersDemo.m; path = "demo scenes/01NumbersDemo.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		335C92C71BB71D7000DC1BD2 /* SceneAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = SceneAssets.xcassets; path = OSX/SceneAssets.xcassets; sourceTree = "<group>"; };
+		335C92C71BB71D7000DC1BD2 /* SceneAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = SceneAssets.xcassets; path = "demo scenes/SceneAssets.xcassets"; sourceTree = "<group>"; };
 		335C92CA1BB71D7000DC1BD2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		335C92CC1BB71D7000DC1BD2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = OSX/Info.plist; sourceTree = "<group>"; };
 		335C92D31BB71EEA00DC1BD2 /* SKUtilities2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKUtilities2.h; sourceTree = "<group>"; };
@@ -104,8 +104,8 @@
 		335C93331BBB8ADD00DC1BD2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = SKUtilities2/tvOS/Info.plist; sourceTree = SOURCE_ROOT; };
 		33A199C91BC9FF6D00A98913 /* shapeBenchmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = shapeBenchmark.h; path = "demo scenes/shapeBenchmark.h"; sourceTree = "<group>"; };
 		33A199CA1BC9FF6D00A98913 /* shapeBenchmark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = shapeBenchmark.m; path = "demo scenes/shapeBenchmark.m"; sourceTree = "<group>"; };
-		33A1D8021BF99211008077F7 /* osximages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = osximages.xcassets; sourceTree = "<group>"; };
-		33A1D8041BF9925C008077F7 /* iosimages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = iosimages.xcassets; path = SKUtilities2/iosimages.xcassets; sourceTree = SOURCE_ROOT; };
+		33A1D8021BF99211008077F7 /* osximages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = osximages.xcassets; path = OSX/osximages.xcassets; sourceTree = "<group>"; };
+		33A1D8041BF9925C008077F7 /* iosimages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = iosimages.xcassets; path = SKUtilities2/iOS/iosimages.xcassets; sourceTree = SOURCE_ROOT; };
 		33B260761BD4923B0004CB3A /* TODO */ = {isa = PBXFileReference; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
 		33BA01BB1BDB34360012F8B3 /* SKUtilities2.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = SKUtilities2.xcassets; sourceTree = "<group>"; };
 		33E0A6041BDD72DB00FB0414 /* 08ButtonDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = 08ButtonDemo.h; path = "demo scenes/08ButtonDemo.h"; sourceTree = "<group>"; };

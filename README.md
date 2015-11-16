@@ -1,4 +1,4 @@
-# SKUtilities 2
+# ![SKUtilities2 logo](https://raw.githubusercontent.com/mredig/SKUtilities2/master/SKUtilities2/OSX/osximages.xcassets/AppIcon.appiconset/icon256.png) SKUtilities 2
 
 * [Overview](#overview)
 * [Features](#features)
