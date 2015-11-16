@@ -1160,7 +1160,7 @@ Vulnerable to lag spikes if used.
  */
 @property(copy, nonatomic) NSString* text;
 /*!
- Uses SKLabelNode alignment mode enumerations to determine horizontal alignment. Note that, due to the inability to determine the location of the bottom baseline, both the baseline and bottom enumerations result in baseline like behavior.
+ Uses SKLabelNode alignment mode enumerations to determine horizontal alignment. Note that, due to the inability to determine the location of the bottom baseline, both the baseline and bottom enumerations result in bottom-like behavior.
  */
 @property(nonatomic) SKLabelVerticalAlignmentMode verticalAlignmentMode;
 /*!
