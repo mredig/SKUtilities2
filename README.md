@@ -17,32 +17,40 @@ I have learned a lot since I first started my original utilities package, and de
 
 ## Features
 
-New classes are:
+* Tons of functions to automate things like:
+	* Number interpolation
+	* Random number generation
+	* Distance calculations
+	* Orientation between points
+	* Various CGVector and CGPoint helpers
+	* Storing common structs as objects for passing between things like NSNotifications or storing in arrays and dictionaries
+	* Bezier calculations (for both drawing curves and timing functions)
+	* Logging assistance (Objective C only)
+	* Cursor handling on OSX
+* New classes to automate other things:
+	* **SKUtilities2**
+		* Singleton augmenting much functionality throughout this library. Wow.
+	* **SKUMultiLineLabelNode**
+		* SKLabelNode-like interface allowing for multiline labels. Sourced from Chris Allwein of Downright Simple(c). Many thanks to him for open sourcing this code!
+	* **SKUPositionObject**
+		* Allows for storing and passing some struct data as objects (useful for NSArray, NSDictionary, NSNotifications, etc)
+	* **SKUShapeNode**
+		* Renders shapes into textures instead of rerendering the shape every frame
+	* **SKUPushButton**
+		* Cross platform push button
+	* **SKUToggleButton**
+		* Cross platform toggle button
+	* **SKUSliderButton**
+		* Cross platform slider
+* With support classes for some of them.
 
-* **SKUtilities2**
-	* Singleton augmenting much functionality throughout this library. Wow.
-* **SKUMultiLineLabelNode**
-	* SKLabelNode-like interface allowing for multiline labels. Sourced from Chris Allwein of Downright Simple(c). Many thanks to him for open sourcing this code!
-* **SKUPositionObject**
-	* Allows for storing and passing some struct data as objects (useful for NSArray, NSDictionary, NSNotifications, etc)
-* **SKUShapeNode**
-	* Renders shapes into textures instead of rerendering the shape every frame
-* **SKUPushButton**
-	* Cross platform push button
-* **SKUToggleButton**
-	* Cross platform toggle button
-* **SKUSliderButton**
-	* Cross platform slider
+* Categories to expand upon default functionality on these classes:
 
-With support classes for some of them.
+	* SKColor(Mixing)
+	* SKNode(ConsolidatedInput)
+	* SKView(AdditionalMouseSupport)
 
-Categories to expand upon default functionality on these classes:
-
-* SKColor(Mixing)
-* SKNode(ConsolidatedInput)
-* SKView(AdditionalMouseSupport)
-
-And built in support to handle tvOS menu navigation!
+* Built in support to handle tvOS menu navigation!
 
 See the demo files for examples and [documentation](http://mredig.github.io/SKUtilities2_Doc/) for more detail. Videos coming soon!
 
