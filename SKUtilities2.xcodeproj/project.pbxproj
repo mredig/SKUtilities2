@@ -74,8 +74,8 @@
 		335C92C71BB71D7000DC1BD2 /* SceneAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = SceneAssets.xcassets; path = "demo scenes/SceneAssets.xcassets"; sourceTree = "<group>"; };
 		335C92CA1BB71D7000DC1BD2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		335C92CC1BB71D7000DC1BD2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = OSX/Info.plist; sourceTree = "<group>"; };
-		335C92D31BB71EEA00DC1BD2 /* SKUtilities2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKUtilities2.h; sourceTree = "<group>"; };
-		335C92D41BB71EEA00DC1BD2 /* SKUtilities2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKUtilities2.m; sourceTree = "<group>"; };
+		335C92D31BB71EEA00DC1BD2 /* SKUtilities2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SKUtilities2.h; path = "SKUtilities2-Include/SKUtilities2.h"; sourceTree = "<group>"; };
+		335C92D41BB71EEA00DC1BD2 /* SKUtilities2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SKUtilities2.m; path = "SKUtilities2-Include/SKUtilities2.m"; sourceTree = "<group>"; };
 		335C92D61BB7AEB100DC1BD2 /* 02rotationScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = 02rotationScene.h; path = "demo scenes/02rotationScene.h"; sourceTree = "<group>"; };
 		335C92D71BB7AEB100DC1BD2 /* 02rotationScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = 02rotationScene.m; path = "demo scenes/02rotationScene.m"; sourceTree = "<group>"; };
 		335C92D91BB8959400DC1BD2 /* 03VectorPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = 03VectorPoint.h; path = "demo scenes/03VectorPoint.h"; sourceTree = "<group>"; };
@@ -107,7 +107,7 @@
 		33A1D8021BF99211008077F7 /* osximages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = osximages.xcassets; path = OSX/osximages.xcassets; sourceTree = "<group>"; };
 		33A1D8041BF9925C008077F7 /* iosimages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = iosimages.xcassets; path = SKUtilities2/iOS/iosimages.xcassets; sourceTree = SOURCE_ROOT; };
 		33B260761BD4923B0004CB3A /* TODO */ = {isa = PBXFileReference; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
-		33BA01BB1BDB34360012F8B3 /* SKUtilities2.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = SKUtilities2.xcassets; sourceTree = "<group>"; };
+		33BA01BB1BDB34360012F8B3 /* SKUtilities2.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = SKUtilities2.xcassets; path = "SKUtilities2-Include/SKUtilities2.xcassets"; sourceTree = "<group>"; };
 		33E0A6041BDD72DB00FB0414 /* 08ButtonDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = 08ButtonDemo.h; path = "demo scenes/08ButtonDemo.h"; sourceTree = "<group>"; };
 		33E0A6051BDD72DB00FB0414 /* 08ButtonDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = 08ButtonDemo.m; path = "demo scenes/08ButtonDemo.m"; sourceTree = "<group>"; };
 		33E1DF0E1BEF12D8000E1894 /* LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE.txt; sourceTree = SOURCE_ROOT; };

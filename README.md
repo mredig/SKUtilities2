@@ -60,7 +60,7 @@ See [license](https://raw.githubusercontent.com/mredig/SKUtilities2/master/LICEN
 ### Getting Started
 #### Objective C
 
-Copy or link to the following files into your SpriteKit project.
+Copy or link to the following files into your SpriteKit project (these files are conveniently located inside the folder titled "SKUtilities2-Include").
 
 * SKUtilities2.h
 * SKUtilities2.m
@@ -114,7 +114,7 @@ Get input from all three platforms like this:
 
 #### Swift
 
-Copy or link to the following files into your SpriteKit project.
+Copy or link to the following files into your SpriteKit project (these files are conveniently located inside the folder titled "SKUtilities2-Include").
 
 * SKUtilities2.h
 * SKUtilities2.m
