@@ -50,6 +50,8 @@
 		33A199CB1BC9FF6D00A98913 /* shapeBenchmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 33A199CA1BC9FF6D00A98913 /* shapeBenchmark.m */; };
 		33A199CC1BC9FF6D00A98913 /* shapeBenchmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 33A199CA1BC9FF6D00A98913 /* shapeBenchmark.m */; };
 		33A199CD1BC9FF6D00A98913 /* shapeBenchmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 33A199CA1BC9FF6D00A98913 /* shapeBenchmark.m */; };
+		33A1D8031BF99211008077F7 /* osximages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 33A1D8021BF99211008077F7 /* osximages.xcassets */; };
+		33A1D8051BF9925C008077F7 /* iosimages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 33A1D8041BF9925C008077F7 /* iosimages.xcassets */; };
 		33BA01BC1BDB34360012F8B3 /* SKUtilities2.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 33BA01BB1BDB34360012F8B3 /* SKUtilities2.xcassets */; };
 		33BA01BD1BDB34360012F8B3 /* SKUtilities2.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 33BA01BB1BDB34360012F8B3 /* SKUtilities2.xcassets */; };
 		33BA01BE1BDB34360012F8B3 /* SKUtilities2.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 33BA01BB1BDB34360012F8B3 /* SKUtilities2.xcassets */; };
@@ -102,6 +104,8 @@
 		335C93331BBB8ADD00DC1BD2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = SKUtilities2/tvOS/Info.plist; sourceTree = SOURCE_ROOT; };
 		33A199C91BC9FF6D00A98913 /* shapeBenchmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = shapeBenchmark.h; path = "demo scenes/shapeBenchmark.h"; sourceTree = "<group>"; };
 		33A199CA1BC9FF6D00A98913 /* shapeBenchmark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = shapeBenchmark.m; path = "demo scenes/shapeBenchmark.m"; sourceTree = "<group>"; };
+		33A1D8021BF99211008077F7 /* osximages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = osximages.xcassets; sourceTree = "<group>"; };
+		33A1D8041BF9925C008077F7 /* iosimages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = iosimages.xcassets; path = SKUtilities2/iosimages.xcassets; sourceTree = SOURCE_ROOT; };
 		33B260761BD4923B0004CB3A /* TODO */ = {isa = PBXFileReference; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
 		33BA01BB1BDB34360012F8B3 /* SKUtilities2.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = SKUtilities2.xcassets; sourceTree = "<group>"; };
 		33E0A6041BDD72DB00FB0414 /* 08ButtonDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = 08ButtonDemo.h; path = "demo scenes/08ButtonDemo.h"; sourceTree = "<group>"; };
@@ -182,6 +186,7 @@
 			isa = PBXGroup;
 			children = (
 				335C92BC1BB71D7000DC1BD2 /* AppDelegate.h */,
+				33A1D8021BF99211008077F7 /* osximages.xcassets */,
 				335C92BD1BB71D7000DC1BD2 /* AppDelegate.m */,
 				335C92C91BB71D7000DC1BD2 /* MainMenu.xib */,
 				335C92CC1BB71D7000DC1BD2 /* Info.plist */,
@@ -199,6 +204,7 @@
 				335C92FD1BBB7F0C00DC1BD2 /* GameViewController.h */,
 				335C92FE1BBB7F0C00DC1BD2 /* GameViewController.m */,
 				335C93001BBB7F0C00DC1BD2 /* Main.storyboard */,
+				33A1D8041BF9925C008077F7 /* iosimages.xcassets */,
 				335C93051BBB7F0C00DC1BD2 /* LaunchScreen.storyboard */,
 				335C93081BBB7F0C00DC1BD2 /* Info.plist */,
 				335C92F21BBB7F0C00DC1BD2 /* Supporting Files */,
@@ -369,6 +375,7 @@
 			files = (
 				335C92C81BB71D7000DC1BD2 /* SceneAssets.xcassets in Resources */,
 				33BA01BC1BDB34360012F8B3 /* SKUtilities2.xcassets in Resources */,
+				33A1D8031BF99211008077F7 /* osximages.xcassets in Resources */,
 				335C92CB1BB71D7000DC1BD2 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -377,6 +384,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				33A1D8051BF9925C008077F7 /* iosimages.xcassets in Resources */,
 				335C93071BBB7F0C00DC1BD2 /* LaunchScreen.storyboard in Resources */,
 				33BA01BD1BDB34360012F8B3 /* SKUtilities2.xcassets in Resources */,
 				335C930C1BBB7F2800DC1BD2 /* SceneAssets.xcassets in Resources */,
@@ -605,7 +613,7 @@
 		335C930A1BBB7F0C00DC1BD2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = iOSAppIcon;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -622,7 +630,7 @@
 		335C930B1BBB7F0C00DC1BD2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = iOSAppIcon;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";

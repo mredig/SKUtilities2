@@ -2,6 +2,7 @@
   "images" : [
     {
       "idiom" : "tv",
+      "filename" : "icontvos_BG.png",
       "scale" : "1x"
     }
   ],
