@@ -3567,6 +3567,119 @@ static SKUtilities2* sharedUtilities = Nil;
 
 @end
 
+
+@implementation SKUNode
+
+-(id)init {
+	if (self = [super init]) {
+		
+	}
+	[self didInitialize];
+	return self;
+}
+
+-(id)initWithCoder:(NSCoder *)aDecoder {
+	if (self = [super initWithCoder:aDecoder]) {
+		
+	}
+	[self didInitialize];
+	return self;
+}
+
+-(void)didInitialize {
+	
+}
+
+@end
+
+@implementation SKUScene
+
+-(id)init {
+	if (self = [super init]) {
+		
+	}
+	[self didInitialize];
+	return self;
+}
+
+-(id)initWithCoder:(NSCoder *)aDecoder {
+	if (self = [super initWithCoder:aDecoder]) {
+		
+	}
+	[self didInitialize];
+	return self;
+}
+
+-(id)initWithSize:(CGSize)size {
+	if (self = [super initWithSize:size]) {
+		
+	}
+	[self didInitialize];
+	return self;
+}
+
+-(void)didInitialize {
+	
+}
+
+@end
+
+@implementation SKUSpriteNode
+
+-(id)init {
+	if (self = [super init]) {
+		
+	}
+	[self didInitialize];
+	return self;
+}
+
+-(id)initWithCoder:(NSCoder *)aDecoder {
+	if (self = [super initWithCoder:aDecoder]) {
+		
+	}
+	[self didInitialize];
+	return self;
+}
+
+-(id)initWithColor:(SKColor *)color size:(CGSize)size {
+	if (self = [super initWithColor:color size:size]) {
+		
+	}
+	[self didInitialize];
+	return self;
+}
+
+-(id)initWithImageNamed:(NSString *)name {
+	if (self = [super initWithImageNamed:name]) {
+		
+	}
+	[self didInitialize];
+	return self;
+}
+
+-(id)initWithTexture:(SKTexture *)texture {
+	if (self = [super initWithTexture:texture]) {
+		
+	}
+	[self didInitialize];
+	return self;
+}
+
+-(id)initWithTexture:(SKTexture *)texture color:(SKColor *)color size:(CGSize)size {
+	if (self = [super initWithTexture:texture color:color size:size]) {
+		
+	}
+	[self didInitialize];
+	return self;
+}
+
+-(void)didInitialize {
+	
+}
+
+@end
+
 #pragma mark CLASS CATEGORIES
 
 #pragma mark SKView Modifications

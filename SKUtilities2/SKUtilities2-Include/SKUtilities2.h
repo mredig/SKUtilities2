@@ -1949,6 +1949,40 @@ typedef enum {
 
 @end
 
+/*!
+ Subclass of SKNode unifying all initialization methods to call "didInitialize" when finished.
+ */
+@interface SKUNode : SKNode
+/*! @methodgroup Inits */
+/*!
+ Called once initialization is finished: use to handle events that you want to complete before "didMoveToView".
+ */
+-(void)didInitialize;
+
+@end
+/*!
+ Subclass of SKScene unifying all initialization methods to call "didInitialize" when finished.
+ */
+@interface SKUScene : SKScene
+/*! @methodgroup Inits */
+/*!
+ Called once initialization is finished: use to handle events that you want to complete before "didMoveToView".
+ */
+-(void)didInitialize;
+
+@end
+/*!
+ Subclass of SKSpriteNode unifying all initialization methods to call "didInitialize" when finished.
+ */
+@interface SKUSpriteNode : SKSpriteNode
+/*! @methodgroup Inits */
+/*!
+ Called once initialization is finished: use to handle events that you want to complete before "didMoveToView".
+ */
+-(void)didInitialize;
+
+@end
+
 #pragma mark CLASS CATEGORIES
 
 #pragma mark SKView Modifications
