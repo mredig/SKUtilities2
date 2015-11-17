@@ -1794,6 +1794,12 @@ typedef enum {
 /*! @group SKUToggleButton Methods */
 
 /*!
+ Creates and returns an SKUToggleButton with title provided.
+ @param title String to derive packages from.
+ @return new SKUToggleButton object
+ */
++(SKUToggleButton*)toggleButtonWithTitle:(NSString*)title;
+/*!
  Creates and returns an SKUToggleButton with packages provided.
  @param backgroundPackage SKUButtonSpriteStatePropertiesPackage object providing varied background sprite states.
  @param foregroundPackage SKUButtonSpriteStatePropertiesPackage object providing varied foreground sprite states.

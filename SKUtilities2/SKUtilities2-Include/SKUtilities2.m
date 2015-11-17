@@ -2597,6 +2597,16 @@ static SKUtilities2* sharedUtilities = Nil;
 
 @implementation SKUToggleButton
 
++(SKUToggleButton*)toggleButtonWithTitle:(NSString *)title {
+	SKUToggleButton* button = [SKUToggleButton node];
+	
+	[button setBaseStatesWithPackage:[SKUButtonSpriteStatePropertiesPackage packageWithDefaultPropertiesSKU]];
+	[button setTitleLabelStatesWithPackage:[SKUButtonLabelPropertiesPackage packageWithDefaultPropertiesWithText:title]];
+	[button setToggleSpriteOnStatesWithPackage:[SKUButtonSpriteStatePropertiesPackage packageWithDefaultToggleOnPropertiesSKU]];
+	[button setToggleSpriteOffStatesWithPackage:[SKUButtonSpriteStatePropertiesPackage packageWithDefaultToggleOffPropertiesSKU]];
+	return button;
+}
+
 +(SKUToggleButton*)toggleButtonWithBackgroundPropertiesPackage:(SKUButtonSpriteStatePropertiesPackage*)backgroundPackage andForeGroundSpritePropertiesPackage:(SKUButtonSpriteStatePropertiesPackage*)foregroundPackage {
 	
 	SKUToggleButton* button = [SKUToggleButton node];
