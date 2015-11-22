@@ -87,6 +87,7 @@ bN=$(printf "%d" $bN)
 #import <QuartzCore/QuartzCore.h>
 #import <SpriteKit/SpriteKit.h>
 #import <CoreGraphics/CoreGraphics.h>
+@import GameController;
 
 #pragma mark CONSTANTS
 /*! @group Common Constants */
@@ -185,6 +186,15 @@ static const BOOL HIDDEN = 1;
  Objective-C
  */
 #define SKUSharedUtilities [SKUtilities2 sharedUtilities] 
+
+/*!
+ Constant for posting notification to turn user interface interaction on for the remote and controllers on tvOS.
+ */
+extern NSString* const kSKURemoteInteractionOn;
+/*!
+ Constant for posting notification to turn user interface interaction off for the remote and controllers on tvOS.
+ */
+extern NSString* const kSKURemoteInteractionOff;
 
 #pragma mark NUMBER INTERPOLATION
 /*! @functiongroup Number Interpolation */
@@ -956,6 +966,14 @@ Vulnerable to lag spikes if used.
  </pre>
  */
 -(void)updateCurrentTime:(CFTimeInterval)timeUpdate;
+/*!
+ Enables or disables the sleeping of the display on iOS and tvOS platforms. Harmless on other platforms.
+ @param enableIdleTimer boolean determining whether idle time is enabled or not.
+ @attributelist Platforms:
+ tvOS
+ iOS
+ */
+-(void)idleTimerEnable:(BOOL)enableIdleTimer;
 
 
 @end
@@ -1984,6 +2002,24 @@ typedef enum {
 /*! @methodgroup Inits */
 /*!
  Called once initialization is finished: use to handle events that you want to complete before "didMoveToView".
+ */
+-(void)didInitialize;
+
+@end
+
+/*!
+ Subclass of platform dependent view controller, primarily intended for GCEventViewController on tvOS to be able to turn off the X button's default function on controllers for tvOS.
+ */
+#if TARGET_OS_TV
+@interface SKUViewController : GCEventViewController
+#elif TARGET_OS_IOS
+@interface SKUViewController : UIViewController
+#elif TARGET_OS_OSX_SKU
+@interface SKUViewController : NSViewController
+#endif
+/*! @methodgroup Inits */
+/*!
+ Called once initialization is finished: use to handle events that you want to complete before "viewDidLoad".
  */
 -(void)didInitialize;
 

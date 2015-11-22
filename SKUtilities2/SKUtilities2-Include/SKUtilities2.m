@@ -20,6 +20,9 @@
 
 #pragma mark CONSTANTS
 
+NSString * const kSKURemoteInteractionOn = @"remoteInteractionOn";
+NSString * const kSKURemoteInteractionOff = @"remoteInteractionOff";
+
 
 #pragma mark NUMBER INTERPOLATION
 
@@ -593,6 +596,8 @@ static SKUtilities2* sharedUtilities = Nil;
 	_deltaMaxTime = 1.0f;
 	_deltaFrameTime = 1.0f/60.0f;
 	_deltaFrameTimeUncapped = 1.0f/60.0f;
+	
+
 #if TARGET_OS_OSX_SKU
 	_macButtonFlags = 0;
 	_macButtonFlags = _macButtonFlags | kSKUMouseButtonFlagLeft;
@@ -602,6 +607,9 @@ static SKUtilities2* sharedUtilities = Nil;
 	selectLocation = CGPointMake(960.0, 540.0); //midpoint of 1080p
 	_navMode = kSKUNavModeOn;
 #endif
+	
+	[self idleTimerEnable:NO];
+
 }
 
 -(void)updateCurrentTime:(CFTimeInterval)timeUpdate {
@@ -613,6 +621,12 @@ static SKUtilities2* sharedUtilities = Nil;
 		_deltaFrameTime = _deltaFrameTimeUncapped;
 	}
 	_currentTime = timeUpdate;
+}
+
+-(void)idleTimerEnable:(BOOL)enableIdleTimer {
+#if TARGET_OS_IPHONE
+	[UIApplication sharedApplication].idleTimerDisabled = !enableIdleTimer;
+#endif
 }
 
 #if TARGET_OS_TV
@@ -3686,6 +3700,58 @@ static SKUtilities2* sharedUtilities = Nil;
 
 -(void)didInitialize {
 	
+}
+
+@end
+
+@implementation SKUViewController
+//FIXME: remove logs
+-(instancetype)init {
+	if (self = [super init]) {
+		NSLog(@"initted");
+		[self internalDidInitialize];
+	}
+	return self;
+}
+
+-(instancetype)initWithCoder:(NSCoder *)aDecoder {
+	if (self = [super initWithCoder:aDecoder]) {
+		NSLog(@"initted coder");
+		[self internalDidInitialize];
+	}
+	return self;
+}
+
+-(instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+	if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
+		NSLog(@"initted nib");
+		[self internalDidInitialize];
+	}
+	return self;
+}
+
+-(void)internalDidInitialize {
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(remoteInteractionOn) name:@"remoteInteractionOn" object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(remoteInteractionOff) name:@"remoteInteractionOff" object:nil];
+	[self didInitialize];
+}
+ 
+-(void)didInitialize {
+
+}
+
+-(void)remoteInteractionOn {
+#if TARGET_OS_TV
+	self.controllerUserInteractionEnabled = YES;
+	NSLog(@"user interaction: %i", self.controllerUserInteractionEnabled);
+#endif
+}
+
+-(void)remoteInteractionOff {
+#if TARGET_OS_TV
+	self.controllerUserInteractionEnabled = NO;
+	NSLog(@"user interaction: %i", self.controllerUserInteractionEnabled);
+#endif
 }
 
 @end
