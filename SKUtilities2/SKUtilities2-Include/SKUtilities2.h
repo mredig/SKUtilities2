@@ -967,7 +967,7 @@ Vulnerable to lag spikes if used.
  */
 -(void)updateCurrentTime:(CFTimeInterval)timeUpdate;
 /*!
- Enables or disables the sleeping of the display on iOS and tvOS platforms. Harmless on other platforms.
+ Enables or disables the sleeping of the display on iOS and tvOS platforms. Off by default. Harmless on other platforms.
  @param enableIdleTimer boolean determining whether idle time is enabled or not.
  @attributelist Platforms:
  tvOS
