@@ -567,7 +567,7 @@ void SKULog(const NSInteger verbosityLevel, NSString* format, ...) {
 
 
 @interface SKUtilities2() {
-	CGPoint selectLocation; // initial value could be wonky... look into this
+	CGPoint selectLocation;
 }
 
 @end
@@ -601,12 +601,11 @@ static SKUtilities2* sharedUtilities = Nil;
 #if TARGET_OS_OSX_SKU
 	_macButtonFlags = 0;
 	_macButtonFlags = _macButtonFlags | kSKUMouseButtonFlagLeft;
-#elif TARGET_OS_TV
+#endif
 	_touchTracker = [NSMutableSet set];
 	_navThresholdDistance = 125.0;
-	selectLocation = CGPointMake(960.0, 540.0); //midpoint of 1080p
+	selectLocation = CGPointMake(NAN, NAN);
 	_navMode = kSKUNavModeOn;
-#endif
 	
 	[self idleTimerEnable:NO];
 
@@ -631,11 +630,16 @@ static SKUtilities2* sharedUtilities = Nil;
 
 -(void)setNavFocus:(SKNode *)navFocus {
 	_navFocus = navFocus;
+	[_touchTracker removeAllObjects];
 }
 
 -(SKNode*)handleSubNodeMovement:(CGPoint)location withCurrentFocus:(SKNode *)currentFocusedNode inSet:(NSSet *)navNodeSet inScene:(SKScene*)scene {
 	
 	SKNode* rNode;
+	
+	if (isnan(selectLocation.x) && isnan(selectLocation.y)) {
+		selectLocation = midPointOfRect(scene.frame); // might need to change to view's frame
+	}
 	
 	CGFloat distance = distanceBetween(location, selectLocation);
 	if (distance > _navThresholdDistance) {
@@ -665,6 +669,10 @@ static SKUtilities2* sharedUtilities = Nil;
 	
 	return rNode;
 	
+}
+
+-(void)resetSelectLocation {
+	selectLocation = CGPointMake(NAN, NAN);
 }
 
 -(SKNode*)selectDirection:(kSKUSwipeDirections)direction withNodes:(NSSet*)pNavNodes fromCurrentNode:(SKNode*)pCurrentNode inScene:(SKScene*)scene {
@@ -4361,9 +4369,10 @@ static SKUtilities2* sharedUtilities = Nil;
 -(void)siriRemoteinputEndedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary*)eventDict {
 	if (SKUSharedUtilities.navMode == kSKUNavModeOn) {
 		UITouch* touch = eventDict[@"touch"];
-		if (![SKUSharedUtilities.touchTracker containsObject:touch]) {
+		if ([SKUSharedUtilities.touchTracker containsObject:touch]) {
 			[SKUSharedUtilities.touchTracker removeObject:touch];
 		}
+		[SKUSharedUtilities resetSelectLocation];
 	}
 	[self relativeInputEndedSKU:location withDelta:delta withEventDictionary:eventDict];
 }
