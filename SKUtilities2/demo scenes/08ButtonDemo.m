@@ -134,9 +134,6 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notifyUp:) name:@"notifyUp" object:nil];
 	
 	
-	
-#if TARGET_OS_TV
-	
 	[self addNodeToNavNodesSKU:nextSlide];
 	[self addNodeToNavNodesSKU:customImageButtonExample];
 	[self addNodeToNavNodesSKU:notificationButton];
@@ -148,7 +145,6 @@
 	
 	[SKUSharedUtilities setNavFocus:self];
 	
-#endif
 }
 
 -(void)notifyDown:(NSNotification*)notification {

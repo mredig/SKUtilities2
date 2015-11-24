@@ -270,7 +270,6 @@
 	[self addChild:prevSlide];
 	
 	
-#if TARGET_OS_TV
 	
 	SKUSharedUtilities.navMode = kSKUNavModeOn;
 	[self addNodeToNavNodesSKU:nextSlide];
@@ -279,7 +278,6 @@
 	
 	[SKUSharedUtilities setNavFocus:self];
 	
-#endif
 }
 
 -(void)inputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {

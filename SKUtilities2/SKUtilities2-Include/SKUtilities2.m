@@ -629,8 +629,6 @@ static SKUtilities2* sharedUtilities = Nil;
 #endif
 }
 
-#if TARGET_OS_TV
-
 -(void)setNavFocus:(SKNode *)navFocus {
 	_navFocus = navFocus;
 }
@@ -649,15 +647,15 @@ static SKUtilities2* sharedUtilities = Nil;
 		
 		if (absX > absY) { // horizontal movement
 			if (diff.x > 0) {
-				rNode = [self selectDirection:UISwipeGestureRecognizerDirectionRight withNodes:navNodeSet fromCurrentNode:currentFocusedNode inScene:scene];
+				rNode = [self selectDirection:kSKUSwipeDirectionRight withNodes:navNodeSet fromCurrentNode:currentFocusedNode inScene:scene];
 			} else {
-				rNode = [self selectDirection:UISwipeGestureRecognizerDirectionLeft withNodes:navNodeSet fromCurrentNode:currentFocusedNode inScene:scene];
+				rNode = [self selectDirection:kSKUSwipeDirectionLeft withNodes:navNodeSet fromCurrentNode:currentFocusedNode inScene:scene];
 			}
 		} else { // vertical movement
 			if (diff.y > 0) {
-				rNode = [self selectDirection:UISwipeGestureRecognizerDirectionUp withNodes:navNodeSet fromCurrentNode:currentFocusedNode inScene:scene];
+				rNode = [self selectDirection:kSKUSwipeDirectionUp withNodes:navNodeSet fromCurrentNode:currentFocusedNode inScene:scene];
 			} else {
-				rNode = [self selectDirection:UISwipeGestureRecognizerDirectionDown withNodes:navNodeSet fromCurrentNode:currentFocusedNode inScene:scene];
+				rNode = [self selectDirection:kSKUSwipeDirectionDown withNodes:navNodeSet fromCurrentNode:currentFocusedNode inScene:scene];
 			}
 		}
 		selectLocation = location;
@@ -669,7 +667,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	
 }
 
--(SKNode*)selectDirection:(UISwipeGestureRecognizerDirection)direction withNodes:(NSSet*)pNavNodes fromCurrentNode:(SKNode*)pCurrentNode inScene:(SKScene*)scene {
+-(SKNode*)selectDirection:(kSKUSwipeDirections)direction withNodes:(NSSet*)pNavNodes fromCurrentNode:(SKNode*)pCurrentNode inScene:(SKScene*)scene {
 	
 	if (!pCurrentNode.parent) {
 		return nil;
@@ -683,22 +681,22 @@ static SKUtilities2* sharedUtilities = Nil;
 		CGPoint newNodeWorldSpace = [focusCandidate.parent convertPoint:focusCandidate.position toNode:scene];
 		
 		switch (direction) {
-			case UISwipeGestureRecognizerDirectionUp:
+			case kSKUSwipeDirectionUp:
 				if (newNodeWorldSpace.y > focusedWorldSpace.y) {
 					[directionCandidates addObject:focusCandidate];
 				}
 				break;
-			case UISwipeGestureRecognizerDirectionDown:
+			case kSKUSwipeDirectionDown:
 				if (newNodeWorldSpace.y < focusedWorldSpace.y) {
 					[directionCandidates addObject:focusCandidate];
 				}
 				break;
-			case UISwipeGestureRecognizerDirectionLeft:
+			case kSKUSwipeDirectionLeft:
 				if (newNodeWorldSpace.x < focusedWorldSpace.x) {
 					[directionCandidates addObject:focusCandidate];
 				}
 				break;
-			case UISwipeGestureRecognizerDirectionRight:
+			case kSKUSwipeDirectionRight:
 				if (newNodeWorldSpace.x > focusedWorldSpace.x) {
 					[directionCandidates addObject:focusCandidate];
 				}
@@ -755,8 +753,6 @@ static SKUtilities2* sharedUtilities = Nil;
 		}
 	}
 }
-
-#endif
 
 @end
 
@@ -2965,10 +2961,8 @@ static SKUtilities2* sharedUtilities = Nil;
 	BOOL stateMinValueDefaultInitialized;
 	BOOL stateMinValueDisabledInitialized;
 	
-#if TARGET_OS_TV
 	BOOL focusStartPress;
 	BOOL focusSlideMode;
-#endif
 	
 	NSInvocation* changedSelector;
 	
@@ -3564,7 +3558,6 @@ static SKUtilities2* sharedUtilities = Nil;
 
 #pragma mark SKUSliderButton tvOS Stuff
 
-#if TARGET_OS_TV
 -(void)buttonPressed:(CGPoint)location {
 	if (self.isEnabled) {
 		if (!focusSlideMode) {
@@ -3587,7 +3580,6 @@ static SKUtilities2* sharedUtilities = Nil;
 		}
 	}
 }
-#endif
 
 @end
 
@@ -4258,7 +4250,6 @@ static SKUtilities2* sharedUtilities = Nil;
 #endif
 
 
-#if TARGET_OS_TV
 
 
 -(void)addNodeToNavNodesSKU:(SKNode*)node {
@@ -4322,6 +4313,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	//override this method to update visuals
 }
 
+#if TARGET_OS_TV
 -(void)siriRemoteinputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
 	
 	if (SKUSharedUtilities.navMode == kSKUNavModeOn) {
@@ -4375,6 +4367,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	}
 	[self relativeInputEndedSKU:location withDelta:delta withEventDictionary:eventDict];
 }
+#endif
 
 -(void)nodePressedDownSKU:(SKNode*)node {
 	
@@ -4384,7 +4377,6 @@ static SKUtilities2* sharedUtilities = Nil;
 	
 }
 
-#endif
 
 -(void)relativeInputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
 }

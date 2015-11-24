@@ -77,17 +77,7 @@
 	xAndTvalueLabel.fontColor = [SKColor whiteColor];
 	xAndTvalueLabel.name = @"xAndTvalueLabel";
 	[self addChild:xAndTvalueLabel];
-	
-#if TARGET_OS_TV
-	
-	[self addNodeToNavNodesSKU:handle1];
-	[self addNodeToNavNodesSKU:handle2];
-	
-	SKUSharedUtilities.navMode = kSKUNavModeOn;
-	[SKUSharedUtilities setNavFocus:self];
 
-	[self setCurrentFocusedNodeSKU:handle1];
-#endif
 }
 
 #if TARGET_OS_TV
@@ -146,16 +136,15 @@
 	[self addChild:prevSlide];
 	
 	
-#if TARGET_OS_TV
-	
 	SKUSharedUtilities.navMode = kSKUNavModeOn;
+	[self addNodeToNavNodesSKU:handle1];
+	[self addNodeToNavNodesSKU:handle2];
 	[self addNodeToNavNodesSKU:nextSlide];
 	[self addNodeToNavNodesSKU:prevSlide];
 	[self setCurrentFocusedNodeSKU:nextSlide];
 	
 	[SKUSharedUtilities setNavFocus:self];
 	
-#endif
 }
 
 -(void)currentFocusedNodeUpdatedSKU:(SKNode *)node {

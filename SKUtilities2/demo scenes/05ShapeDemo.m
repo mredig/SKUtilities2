@@ -95,8 +95,6 @@
 	[self addChild:benchmark];
 	
 	
-#if TARGET_OS_TV
-	
 	SKUSharedUtilities.navMode = kSKUNavModeOn;
 	[self addNodeToNavNodesSKU:nextSlide];
 	[self addNodeToNavNodesSKU:prevSlide];
@@ -105,7 +103,6 @@
 	
 	[SKUSharedUtilities setNavFocus:self];
 	
-#endif
 }
 
 -(void)transferScene:(SKUButton*)button {

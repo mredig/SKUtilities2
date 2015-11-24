@@ -13,7 +13,6 @@
 
 @interface _7ColorBlending() {
 	
-	CGPoint prevLocation;
 	CGFloat yAlpha, xAlpha;
 }
 
@@ -59,8 +58,6 @@
 	[self addChild:prevSlide];
 	
 	
-#if TARGET_OS_TV
-	
 	SKUSharedUtilities.navMode = kSKUNavModeOn;
 	[self addNodeToNavNodesSKU:nextSlide];
 	[self addNodeToNavNodesSKU:prevSlide];
@@ -68,7 +65,6 @@
 	
 	[SKUSharedUtilities setNavFocus:self];
 	
-#endif
 }
 
 -(void)inputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
@@ -77,22 +73,17 @@
 	SKColor* greenColor = [SKColor greenColor];
 	SKColor* blueColor = [SKColor blueColor];
 	
-#if TARGET_OS_TV
-	UITouch* touch = eventDict[@"touch"];
-	prevLocation = [touch previousLocationInNode:self];
-	
-#endif
 	CGFloat difference = 0.025;
 
-	if (location.x > prevLocation.x) {
+	if (delta.x > 0) {
 		xAlpha += difference;
-	} else if (location.x < prevLocation.x) {
+	} else if (delta.x < 0) {
 		xAlpha -= difference;
 	}
 	
-	if (location.y > prevLocation.y) {
+	if (delta.y > 0) {
 		yAlpha += difference;
-	} else if (location.y < prevLocation.y) {
+	} else if (delta.y < 0) {
 		yAlpha -= difference;
 	}
 	self.backgroundColor = [SKColor blendColorSKU:blueColor withColor:greenColor alpha:xAlpha];
@@ -101,7 +92,6 @@
 	yAlpha = clipFloatWithinRange(yAlpha, 0.0, 1.0);
 	xAlpha = clipFloatWithinRange(xAlpha, 0.0, 1.0);
 	
-	prevLocation = location;
 	
 }
 

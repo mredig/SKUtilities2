@@ -139,7 +139,6 @@
 	[prevSlide setUpAction:@selector(prevScene:) toPerformOnTarget:self];
 	[self addChild:prevSlide];
 	
-#if TARGET_OS_TV
 	
 	SKUSharedUtilities.navMode = kSKUNavModeOn;
 	cursor = [SKSpriteNode spriteNodeWithColor:[SKColor greenColor] size:CGSizeMake(20, 20)];
@@ -148,7 +147,7 @@
 	cursor.hidden = HIDDEN;
 	[self addChild:cursor];
 	
-	SKLabelNode* menuNotice = [SKLabelNode labelNodeWithText:@"Press Menu to return to nav mode"];
+	SKLabelNode* menuNotice = [SKLabelNode labelNodeWithText:@"Press Menu (Siri Remote) or pause (controller) to return to nav mode"];
 	menuNotice.fontSize = 28.0;
 	menuNotice.position = midPointOfRect(self.frame);
 	menuNotice.name = @"menuNotice";
@@ -172,25 +171,29 @@
 	
 }
 
+#if TARGET_OS_TV
 -(void)menuPressed:(UIGestureRecognizer*)gesture {
 	[self toggleDemoMode:nil];
 	[self.view removeGestureRecognizer:gesture];
 }
+#endif
 
 -(void)toggleDemoMode:(SKUButton*)button {
 	if (SKUSharedUtilities.navMode == kSKUNavModeOn) {
 		SKUSharedUtilities.navMode = kSKUNavModeOff;
 		cursor.hidden = VISIBLE;
 		[self childNodeWithName:@"menuNotice"].hidden = VISIBLE;
+		
+#if TARGET_OS_TV
 		UITapGestureRecognizer* menuPressed = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(menuPressed:)];
 		menuPressed.allowedPressTypes = @[[NSNumber numberWithInteger:UIPressTypeMenu]];
 		[self.view addGestureRecognizer:menuPressed];
+#endif
 	} else {
 		SKUSharedUtilities.navMode = kSKUNavModeOn;
 		cursor.hidden = HIDDEN;
 		[self childNodeWithName:@"menuNotice"].hidden = HIDDEN;
 	}
-#endif
 }
 
 

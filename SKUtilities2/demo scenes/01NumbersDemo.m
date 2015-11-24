@@ -104,14 +104,12 @@
 	[self addChild:nextSlide];
 	
 	
-#if TARGET_OS_TV
 
 	[self addNodeToNavNodesSKU:nextSlide];
 	[self setCurrentFocusedNodeSKU:nextSlide];
 	
 	[SKUSharedUtilities setNavFocus:self];
 	
-#endif
 }
 
 -(void)setupButtonPackages {

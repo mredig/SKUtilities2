@@ -195,7 +195,6 @@ float cpu_usage()
 	animateToggle.name = @"animateToggle";
 	[self addChild:animateToggle];
 	
-#if TARGET_OS_TV
 	
 	SKUSharedUtilities.navMode = kSKUNavModeOn;
 	[self addNodeToNavNodesSKU:skuButton];
@@ -207,9 +206,7 @@ float cpu_usage()
 	[self setCurrentFocusedNodeSKU:nextSlide];
 	
 	[SKUSharedUtilities setNavFocus:self];
-	
-#endif
-	
+		
 }
 
 -(void)animateNodes:(SKUToggleButton*)button {

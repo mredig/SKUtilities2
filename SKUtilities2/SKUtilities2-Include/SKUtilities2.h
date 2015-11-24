@@ -747,14 +747,11 @@ void SKULog(NSInteger verbosityLevelRequired, NSString *format, ...);
 
 #pragma mark SKUTILITES SINGLETON
 
-#if TARGET_OS_TV
 /*!
- Nav mode enumerator for AppleTV.
+ Nav mode enumerator for focus based navigation.
  @constant kSKUNavModeOn Nav mode on.
  @constant kSKUNavModeOff Nav mode off.
  @constant kSKUNavModePressed Nav mode paused while a press is in progress. (Don't set this manually).
- @attributelist Platforms:
- AppleTV
  @seealso SKUtilities2
  */
 typedef enum {
@@ -763,7 +760,13 @@ typedef enum {
 	kSKUNavModePressed,
 } kSKUNavModes;
 
-#endif
+
+typedef enum {
+	kSKUSwipeDirectionRight,
+	kSKUSwipeDirectionLeft,
+	kSKUSwipeDirectionUp,
+	kSKUSwipeDirectionDown,
+} kSKUSwipeDirections;
 
 #if TARGET_OS_OSX_SKU
 /*!
@@ -839,13 +842,10 @@ Vulnerable to lag spikes if used.
 @property (nonatomic) kSKUMouseButtonFlags macButtonFlags;
 #endif
 
-#if TARGET_OS_TV
 
 /*!
  Allows you to set the current kSKUNavModes type.
  @seealso kSKUNavModes
- @attributelist Platforms:
- tvOS
  */
 @property (nonatomic) kSKUNavModes navMode;
 /*!
@@ -877,14 +877,10 @@ Vulnerable to lag spikes if used.
  
  
  @seealso SKNode(ConsolidatedInput)
- @attributelist Platforms:
- tvOS
  */
 @property (nonatomic, readonly) SKNode* navFocus;
 /*!
- Change this value to change how sensitive the Siri remote is to movement. The concept is that from one navigation movement to another, this is the distance your touch must travel before signalling another navigational focus change. Higher values are less sensitive.
- @attributelist Platforms:
- tvOS
+ Change this value to change how sensitive the Siri remote or controller is to movement. The concept is that from one navigation movement to another, this is the distance your touch must travel before signalling another navigational focus change. Higher values are less sensitive.
  */
 @property (nonatomic) CGFloat navThresholdDistance;
 
@@ -932,12 +928,9 @@ Vulnerable to lag spikes if used.
  [self addNodeToNavNodesSKU:buttonExample];
  @/textblock
  </pre>
- @attributelist Platforms:
- tvOS
  */
 -(void)setNavFocus:(SKNode *)navFocus;
 
-#endif
 
 /*! @methodgroup Singleton */
 
@@ -2042,7 +2035,6 @@ typedef enum {
  */
 @interface SKNode (ConsolidatedInput)
 
-#if TARGET_OS_TV
 
 /*! @methodgroup Navigational */
 
@@ -2058,17 +2050,12 @@ typedef enum {
 
 /*! @methodgroup Input */
 
-/*! Override this method to perform logic with non SKUButton nodes when pressed. 
-  @attributelist Platforms:
- tvOS
+/*! Override this method to perform logic with non SKUButton nodes when pressed.
  */
 -(void)nodePressedDownSKU:(SKNode*)node;
-/*! Override this method to perform logic with non SKUButton nodes when released. 
-  @attributelist Platforms:
- tvOS
+/*! Override this method to perform logic with non SKUButton nodes when released.
  */
 -(void)nodePressedUpSKU:(SKNode*)node;
-#endif
 
 /*! Called when relative type input begins (Currently only AppleTV's Siri Remote touches). Harmless to include on other platforms. */
 -(void)relativeInputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict;
