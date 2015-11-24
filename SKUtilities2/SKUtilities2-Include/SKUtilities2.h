@@ -969,6 +969,8 @@ Vulnerable to lag spikes if used.
 -(void)idleTimerEnable:(BOOL)enableIdleTimer;
 
 
+-(void)resetSelectLocation;
+
 @end
 
 #pragma mark NEW CLASSES
