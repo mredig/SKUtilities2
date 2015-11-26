@@ -3705,10 +3705,8 @@ static SKUtilities2* sharedUtilities = Nil;
 @end
 
 @implementation SKUViewController
-//FIXME: remove logs
 -(instancetype)init {
 	if (self = [super init]) {
-		NSLog(@"initted");
 		[self internalDidInitialize];
 	}
 	return self;
@@ -3716,7 +3714,6 @@ static SKUtilities2* sharedUtilities = Nil;
 
 -(instancetype)initWithCoder:(NSCoder *)aDecoder {
 	if (self = [super initWithCoder:aDecoder]) {
-		NSLog(@"initted coder");
 		[self internalDidInitialize];
 	}
 	return self;
@@ -3724,15 +3721,14 @@ static SKUtilities2* sharedUtilities = Nil;
 
 -(instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
 	if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
-		NSLog(@"initted nib");
 		[self internalDidInitialize];
 	}
 	return self;
 }
 
 -(void)internalDidInitialize {
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(remoteInteractionOn) name:@"remoteInteractionOn" object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(remoteInteractionOff) name:@"remoteInteractionOff" object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(remoteInteractionOn) name:kSKURemoteInteractionOn object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(remoteInteractionOff) name:kSKURemoteInteractionOff object:nil];
 	[self didInitialize];
 }
  
