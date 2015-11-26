@@ -3796,7 +3796,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	}
 }
 
-//-(void)pressesCancelled:(NSSet<UIPress *> *)presses withEvent:(UIPressesEvent *)event { //not sure if this should send signals to tapUp (when it is there, it causes misfires on 04BezierDemo
+//-(void)pressesCancelled:(NSSet<UIPress *> *)presses withEvent:(UIPressesEvent *)event { //not sure if this should send signals to tapUp (when it is there, it causes misfires on 04BezierDemo)
 //	[super pressesCancelled:presses withEvent:event];
 //	for (UIPress* press in presses) {
 //		switch (press.type) {
