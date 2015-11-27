@@ -768,6 +768,13 @@ typedef enum {
 	kSKUSwipeDirectionDown,
 } kSKUSwipeDirections;
 
+typedef enum {
+	kSKUGamePadPlayerFlag1 = 1 << 0,
+	kSKUGamePadPlayerFlag2 = 1 << 1,
+	kSKUGamePadPlayerFlag3 = 1 << 2,
+	kSKUGamePadPlayerFlag4 = 1 << 3,
+} kSKUGamePadPlayerFlags;
+
 #if TARGET_OS_OSX_SKU
 /*!
  Mouse button type enumerator/flags for Mac.
@@ -826,6 +833,11 @@ Vulnerable to lag spikes if used.
  This mutable dictionary is similar in concept to the item of the same name on all SKNodes that Apple does, but on the singleton allows you to store objects for access game wide, not just on one node. It remains uninitialized until you initialize it.
  */
 @property (nonatomic, strong) NSMutableDictionary* userData;
+
+/*! @group Game Controllers */
+
+@property (nonatomic, strong) NSMutableArray* playerControllers;
+@property (nonatomic) uint8_t validPlayerNav;
 
 /*! @group Navigational */
 

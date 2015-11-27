@@ -606,6 +606,8 @@ static SKUtilities2* sharedUtilities = Nil;
 	_navThresholdDistance = 125.0;
 	selectLocation = CGPointMake(NAN, NAN);
 	_navMode = kSKUNavModeOn;
+	_validPlayerNav = kSKUGamePadPlayerFlag1 | kSKUGamePadPlayerFlag2 | kSKUGamePadPlayerFlag3 | kSKUGamePadPlayerFlag4;
+	_playerControllers = [NSMutableArray array];
 	
 	[self idleTimerEnable:NO];
 
