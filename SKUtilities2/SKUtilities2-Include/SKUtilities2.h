@@ -547,7 +547,8 @@ CGPoint pointAddValue (CGPoint point, CGFloat value);
  CGPoint point struct to be factored.
  @seealso vectorAdd
  @seealso pointAdd
- @seealso pointAddValue @seealso vectorMultiplyByVector
+ @seealso pointAddValue 
+ @seealso vectorMultiplyByVector
  @seealso vectorMultiplyByFactor
  @seealso pointAdd
  @seealso pointAddValue
@@ -745,7 +746,7 @@ void centerOSCursorInWindow();
 void SKULog(NSInteger verbosityLevelRequired, NSString *format, ...);
 
 
-#pragma mark SKUTILITES SINGLETON AND CONTROLLER HANDLERS
+#pragma mark SKUTILITES SINGLETON
 
 /*!
  Nav mode enumerator for focus based navigation.
@@ -826,49 +827,8 @@ typedef enum {
 
 #endif
 
-/*!
- Not intended for you to create instances of this class but instead to be able to control controller related functions through the SKUtilities singleton
- */
-@interface SKUGCControllerController : NSObject
-
-/*! @group Game Controllers */
-/*!
-Array with controller objects in the order of players. Note that it's not readonly and is mutable, but do NOT change it. It's this way for internal reasons: it's only intended for you to read from this array.
-*/
-@property (nonatomic, strong) NSMutableArray* playerControllers;
-/*!
- Flags determining which players are allowed to control navigation. Note that Siri Remote ALWAYS gets to control nav.
- */
-@property (nonatomic) uint8_t validPlayerNav;
-
-/*!
- Set automatically when using SKUScene. Assuming the view never changes, all controller events get filtered through your view. If the view ever gets changed, you will need to update this property with the current view and call "checkForChangedControllerState" again (untested, but I think should work).
- */
-@property (nonatomic, weak) SKView* view;
-
--(void)checkForChangedControllerState;
--(void)setPlayerOne:(GCController*)controller;
--(GCController*)gamepadForPlayer:(GCControllerPlayerIndex)player;
--(GCController*)gamepadForVendor:(NSString*)vendor;
--(BOOL)canPlayerControlNav:(GCControllerPlayerIndex)player;
-
-
-@end
-
-/*!
- Controller events only fire when changed, so this is needed to store the state on frames when the state doesn't change.
- */
-@interface SKUGameControllerState : NSObject
-
-@property (nonatomic, assign) CGVector vector;
-@property (nonatomic, assign) CGPoint location;
-@property (nonatomic, assign) kSKUGCControllerInputs buttonsPressed;
-
-+(SKUGameControllerState*)controllerState;
-+(SKUGameControllerState*)controllerStateWithCenterPosition:(CGPoint)location;
-
-@end
-
+@class SKUGameControllerState;
+@class SKUGCControllerController;
 
 /*!
  This is a singleton class that carries a lot of information allowing for access anywhere within your app. It'll track the current time, intervals between frames, handle logging, store objects, and manage navigation and other built in utilties with this library.
@@ -1062,6 +1022,89 @@ Vulnerable to lag spikes if used.
 
 
 #pragma mark NEW CLASSES
+
+#pragma mark SKUGCControllerController
+/*!
+ Not intended for you to create instances of this class but instead to be able to control controller related functions through the SKUtilities singleton
+ */
+@interface SKUGCControllerController : NSObject
+
+/*! @group Game Controllers */
+/*!
+ Array with controller objects in the order of players. Note that it's not readonly and is mutable, but do NOT change it. It's this way for internal reasons: it's only intended for you to read from this array.
+ */
+@property (nonatomic, strong) NSMutableArray* playerControllers;
+/*!
+ Flags determining which players are allowed to control navigation. Note that Siri Remote ALWAYS gets to control nav.
+ @seealso canPlayerControlNav:
+ */
+@property (nonatomic) uint8_t validPlayerNav;
+
+/*!
+ Set automatically when setting the [SKUtilities setNavFocus] method on the scene itself or if you call [super didMoveToView] on an SKUScene. Note that this is only set if the gcController object has already been initialized (which happens automatically if you use SKUScene). If the view ever gets changed, you will need to update this property with the current view and call "checkForChangedControllerState" again (untested, but I think should work).
+ */
+@property (nonatomic, weak) SKView* view;
+/*!
+ Used for access to the current controller state for navigation purposes. Internal.
+ */
+@property (nonatomic, strong) SKUGameControllerState* navControllerState;
+
+/*!
+ Called automatically when a controller connects or disconnects, but can also be called manually if you want to.
+ */
+-(void)checkForChangedControllerState;
+/*!
+ Allows you to set which controller is player one and then fills in the rest automatically. This is primarily intended for convenience on the AppleTV if you want to turn the Siri remote to player two and allow the gamepad to take over as P1.
+ @param controller GCController object that should get set to player one.
+ */
+-(void)setPlayerOne:(GCController*)controller;
+/*!
+ Finds the GCController object for a given player. Returns nil if not found.
+ @param player which player
+ @return GCController object designated for the player.
+ */
+-(GCController*)gamepadForPlayer:(GCControllerPlayerIndex)player;
+/*!
+ Returns the first GCController object found for a given vendor string. Returns nil if not found.
+ */
+-(GCController*)gamepadForVendor:(NSString*)vendor;
+/*!
+ Returns boolean answering whether a particular player is allowed to control navigation set via the flag validPlayerNav.
+ @seealso validPlayerNav
+ */
+-(BOOL)canPlayerControlNav:(GCControllerPlayerIndex)player;
+
+
+@end
+
+#pragma mark SKUGameControllerState
+
+/*!
+ Controller events only fire when changed, so this is needed to store the state on frames when the state doesn't change.
+ */
+@interface SKUGameControllerState : NSObject
+/*!
+ Vector that the control was pointed in. May or may not be normal. (internally set as normal)
+ */
+@property (nonatomic, assign) CGVector vector;
+/*!
+ Location store for determining relative input.
+ */
+@property (nonatomic, assign) CGPoint location;
+/*!
+ Flags determining which buttons are pressed or not.
+ */
+@property (nonatomic, assign) kSKUGCControllerInputs buttonsPressed;
+
++(SKUGameControllerState*)controllerState;
+/*!
+ Returns a new object with a center position provided.
+ */
++(SKUGameControllerState*)controllerStateWithCenterPosition:(CGPoint)location;
+
+@end
+
+
 
 #pragma mark SKUPositionObject
 
@@ -2077,6 +2120,131 @@ typedef enum {
  */
 -(void)didInitialize;
 
+#pragma mark gamepad executes
+#pragma mark gamepad vague executes buttons
+/*! @methodgroup Gamepad Calls */
+
+/*!
+ Called when gamepad input changes.
+ @param player          GCControllerPlayerIndex determining which player caused the input.
+ @param input           kSKUGamePadInputs enumeration determining which input was pressed
+ @param xValue          Used for both button and directional inputs. Directional inputs will show x direction vector of the input while button inputs will show the pressure it was pressed with.
+ @param yValue          Used only for directional inputs. Shows the y direction vector of the input.
+ @param pressed         Boolean determining whether the button is pressed or not.
+ @param eventDictionary NSDictionary object with objects originating the events.
+ */
+-(void)gamepadInputChangedForPlayer:(GCControllerPlayerIndex)player withInput:(kSKUGamePadInputs)input andXValue:(float)xValue andYValue:(float)yValue isPressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary;
+/*!
+ Called when gamepad motion input changes.
+ @param player          GCControllerPlayerIndex determining which player caused the input.
+ @param acceleration    SKUAcceleration struct to determine which direction the controller is facing.
+ @param eventDictionary NSDictionary object with objects originating the events.
+ */
+-(void)gamepadMotionInputChangedForPlayer:(GCControllerPlayerIndex)player withAcceleration:(SKUAcceleration)acceleration andEventDictionary:(NSDictionary*)eventDictionary;
+
+#pragma mark gamepad specific executes buttons
+/*!
+ Called when the left shoulder input changes.
+ @param player          GCControllerPlayerIndex value for player who caused change.
+ @param value           float value of pressure applied to input
+ @param pressed         boolean determining whether it is pressed or not
+ @param eventDictionary NSDictionary containing objects originating events
+ */
+-(void)gamepadLeftShoulderChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary;
+/*!
+ Called when the left trigger input changes.
+ @param player          GCControllerPlayerIndex value for player who caused change.
+ @param value           float value of pressure applied to input
+ @param pressed         boolean determining whether it is pressed or not
+ @param eventDictionary NSDictionary containing objects originating events
+ */
+-(void)gamepadLeftTriggerChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary;
+/*!
+ Called when the right shoulder input changes.
+ @param player          GCControllerPlayerIndex value for player who caused change.
+ @param value           float value of pressure applied to input
+ @param pressed         boolean determining whether it is pressed or not
+ @param eventDictionary NSDictionary containing objects originating events
+ */
+-(void)gamepadRightShoulderChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary;
+/*!
+ Called when the right trigger input changes.
+ @param player          GCControllerPlayerIndex value for player who caused change.
+ @param value           float value of pressure applied to input
+ @param pressed         boolean determining whether it is pressed or not
+ @param eventDictionary NSDictionary containing objects originating events
+ */
+-(void)gamepadRightTriggerChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary;
+/*!
+ Called when the A button input changes.
+ @param player          GCControllerPlayerIndex value for player who caused change.
+ @param value           float value of pressure applied to input
+ @param pressed         boolean determining whether it is pressed or not
+ @param eventDictionary NSDictionary containing objects originating events
+ */
+-(void)gamepadButtonAChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary;
+/*!
+ Called when the B button input changes.
+ @param player          GCControllerPlayerIndex value for player who caused change.
+ @param value           float value of pressure applied to input
+ @param pressed         boolean determining whether it is pressed or not
+ @param eventDictionary NSDictionary containing objects originating events
+ */
+-(void)gamepadButtonBChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary;
+/*!
+ Called when the X button input changes.
+ @param player          GCControllerPlayerIndex value for player who caused change.
+ @param value           float value of pressure applied to input
+ @param pressed         boolean determining whether it is pressed or not
+ @param eventDictionary NSDictionary containing objects originating events
+ */
+-(void)gamepadButtonXChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary;
+/*!
+ Called when the Y button input changes.
+ @param player          GCControllerPlayerIndex value for player who caused change.
+ @param value           float value of pressure applied to input
+ @param pressed         boolean determining whether it is pressed or not
+ @param eventDictionary NSDictionary containing objects originating events
+ */
+-(void)gamepadButtonYChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary;
+/*!
+ Called when the pause button is pressed. Note that there's no call for when the button is let go.
+ @param player          GCControllerPlayerIndex value for player who caused change.
+ @param eventDictionary NSDictionary containing objects originating events
+ */
+-(void)gamepadButtonPausePressedForPlayer:(GCControllerPlayerIndex)player andEventDictionary:(NSDictionary*)eventDictionary;
+
+#pragma mark gamepad specific executes dpads
+/*!
+ Called when the left thumbstick input changes.
+ @param player          GCControllerPlayerIndex value for player who caused change.
+ @param vector          CGVector of direction the joystick is pointing.
+ @param eventDictionary NSDictionary containing objects originating events
+ */
+-(void)gamepadLeftThumbstickChangedForPlayer:(GCControllerPlayerIndex)player withVector:(CGVector)vector andEventDictionary:(NSDictionary*)eventDictionary;
+/*!
+ Called when the right thumbstick input changes.
+ @param player          GCControllerPlayerIndex value for player who caused change.
+ @param vector          CGVector of direction the joystick is pointing.
+ @param eventDictionary NSDictionary containing objects originating events
+ */
+-(void)gamepadRightThumbstickChangedForPlayer:(GCControllerPlayerIndex)player withVector:(CGVector)vector andEventDictionary:(NSDictionary*)eventDictionary;
+/*!
+ Called when the dpad input changes.
+ @param player          GCControllerPlayerIndex value for player who caused change.
+ @param vector          CGVector of direction the dpad is pointing.
+ @param eventDictionary NSDictionary containing objects originating events
+ */
+-(void)gamepadDirectionalPadChangedForPlayer:(GCControllerPlayerIndex)player withVector:(CGVector)vector andEventDictionary:(NSDictionary*)eventDictionary;
+#pragma mark update
+/*! @methodgroup Update Note */
+
+/*!
+ This is simply in the header as a reminder that you need to call [super update] to allow controllers to work with nav functions. Also automatically calls [SKUSharedUtilities updateCurrentTime] so you don't have to.
+ */
+-(void)update:(CFTimeInterval)currentTime;
+
+
 @end
 /*!
  Subclass of SKSpriteNode unifying all initialization methods to call "didInitialize" when finished.
@@ -2106,8 +2274,13 @@ typedef enum {
  */
 -(void)didInitialize;
 
+#if TARGET_OS_TV // headerdoc requires this stupidity
 @end
-
+#elif TARGET_OS_IOS
+@end
+#elif TARGET_OS_OSX_SKU
+@end
+#endif
 
 #pragma mark CLASS CATEGORIES
 
@@ -2117,7 +2290,22 @@ typedef enum {
  */
 @interface SKView (AdditionalMouseSupport)
 
+/*!
+ Called when gamepad motion input changes. Automatically passes onto scene if the scene is a subclass of SKUScene.
+ @param player          GCControllerPlayerIndex determining which player caused the input.
+ @param acceleration    SKUAcceleration struct to determine which direction the controller is facing.
+ @param eventDictionary NSDictionary object with objects originating the events.
+ */
 -(void)gamepadMotionInputChangedForPlayer:(GCControllerPlayerIndex)player withAcceleration:(SKUAcceleration)acceleration andEventDictionary:(NSDictionary*)eventDictionary;
+/*!
+ Called when gamepad input changes. Automatically passes onto scene if the scene is a subclass of SKUScene.
+ @param player          GCControllerPlayerIndex determining which player caused the input.
+ @param input           kSKUGamePadInputs enumeration determining which input was pressed
+ @param xValue          Used for both button and directional inputs. Directional inputs will show x direction vector of the input while button inputs will show the pressure it was pressed with.
+ @param yValue          Used only for directional inputs. Shows the y direction vector of the input.
+ @param pressed         Boolean determining whether the button is pressed or not.
+ @param eventDictionary NSDictionary object with objects originating the events.
+ */
 -(void)gamepadInputChangedForPlayer:(GCControllerPlayerIndex)player withInput:(kSKUGamePadInputs)input andXValue:(float)xValue andYValue:(float)yValue isPressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary;
 
 @end

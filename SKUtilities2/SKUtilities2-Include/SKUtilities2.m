@@ -574,7 +574,211 @@ void SKULog(const NSInteger verbosityLevel, NSString* format, ...) {
 
 
 
-#pragma mark SKUTILITES SINGLETON AND CONTROLLER HANDLERS
+#pragma mark SKUTILITES SINGLETON
+
+@interface SKUtilities2() {
+	CGPoint selectLocation;
+}
+
+@end
+
+
+@implementation SKUtilities2
+
+static SKUtilities2* sharedUtilities = Nil;
+
++(SKUtilities2*) sharedUtilities {
+	if (sharedUtilities == nil) {
+		sharedUtilities = [[SKUtilities2 alloc] init];
+	}
+	return sharedUtilities;
+}
+
+-(id) init {
+	if (self = [super init]) {
+	}
+	[self initialSetup];
+	return self;
+}
+
+-(void)initialSetup {
+	_verbosityLevel = 0;
+	_deltaMaxTime = 1.0f;
+	_deltaFrameTime = 1.0f/60.0f;
+	_deltaFrameTimeUncapped = 1.0f/60.0f;
+	
+
+#if TARGET_OS_OSX_SKU
+	_macButtonFlags = 0;
+	_macButtonFlags = _macButtonFlags | kSKUMouseButtonFlagLeft;
+#endif
+	_touchTracker = [NSMutableSet set];
+	_navThresholdDistance = 125.0;
+	selectLocation = CGPointMake(NAN, NAN);
+	_navMode = kSKUNavModeOn;
+	
+	[self idleTimerEnable:NO];
+
+}
+
+-(void)updateCurrentTime:(CFTimeInterval)timeUpdate {
+	_deltaFrameTimeUncapped = timeUpdate - _currentTime;
+	
+	if (_deltaFrameTimeUncapped > _deltaMaxTime) {
+		_deltaFrameTime = _deltaMaxTime;
+	} else {
+		_deltaFrameTime = _deltaFrameTimeUncapped;
+	}
+	_currentTime = timeUpdate;
+}
+
+-(void)idleTimerEnable:(BOOL)enableIdleTimer {
+#if TARGET_OS_IPHONE
+	[UIApplication sharedApplication].idleTimerDisabled = !enableIdleTimer;
+#endif
+}
+
+-(void)setNavFocus:(SKNode *)navFocus {
+	_navFocus = navFocus;
+	[_touchTracker removeAllObjects];
+	
+	if ([navFocus isKindOfClass:[SKUScene class]]) {
+		SKUScene* scene = (SKUScene*)navFocus;
+		_gcController.view = scene.view;
+	}
+}
+
+-(SKNode*)handleSubNodeMovement:(CGPoint)location withCurrentFocus:(SKNode *)currentFocusedNode inSet:(NSSet *)navNodeSet inScene:(SKScene*)scene {
+	
+	SKNode* rNode;
+	
+	if (isnan(selectLocation.x) && isnan(selectLocation.y)) {
+		selectLocation = midPointOfRect(scene.frame); // might need to change to view's frame
+	}
+	
+	CGFloat distance = distanceBetween(location, selectLocation);
+	if (distance > _navThresholdDistance) {
+		CGPoint diff = pointAdd(pointInverse(selectLocation), location);
+		
+		CGFloat absX, absY;
+		absX = fabs(diff.x);
+		absY = fabs(diff.y);
+		
+		if (absX > absY) { // horizontal movement
+			if (diff.x > 0) {
+				rNode = [self selectDirection:kSKUSwipeDirectionRight withNodes:navNodeSet fromCurrentNode:currentFocusedNode inScene:scene];
+			} else {
+				rNode = [self selectDirection:kSKUSwipeDirectionLeft withNodes:navNodeSet fromCurrentNode:currentFocusedNode inScene:scene];
+			}
+		} else { // vertical movement
+			if (diff.y > 0) {
+				rNode = [self selectDirection:kSKUSwipeDirectionUp withNodes:navNodeSet fromCurrentNode:currentFocusedNode inScene:scene];
+			} else {
+				rNode = [self selectDirection:kSKUSwipeDirectionDown withNodes:navNodeSet fromCurrentNode:currentFocusedNode inScene:scene];
+			}
+		}
+		selectLocation = location;
+	} else {
+		rNode = currentFocusedNode;
+	}
+	
+	return rNode;
+	
+}
+
+-(void)resetSelectLocation {
+	selectLocation = CGPointMake(NAN, NAN);
+}
+
+-(SKNode*)selectDirection:(kSKUSwipeDirections)direction withNodes:(NSSet*)pNavNodes fromCurrentNode:(SKNode*)pCurrentNode inScene:(SKScene*)scene {
+	
+	if (!pCurrentNode.parent) {
+		return nil;
+	}
+	
+	CGPoint focusedWorldSpace = [pCurrentNode.parent convertPoint:pCurrentNode.position toNode:scene];
+	
+	NSMutableSet* directionCandidates = [NSMutableSet set];
+	
+	for (SKNode* focusCandidate in pNavNodes) {
+		CGPoint newNodeWorldSpace = [focusCandidate.parent convertPoint:focusCandidate.position toNode:scene];
+		
+		switch (direction) {
+			case kSKUSwipeDirectionUp:
+				if (newNodeWorldSpace.y > focusedWorldSpace.y) {
+					[directionCandidates addObject:focusCandidate];
+				}
+				break;
+			case kSKUSwipeDirectionDown:
+				if (newNodeWorldSpace.y < focusedWorldSpace.y) {
+					[directionCandidates addObject:focusCandidate];
+				}
+				break;
+			case kSKUSwipeDirectionLeft:
+				if (newNodeWorldSpace.x < focusedWorldSpace.x) {
+					[directionCandidates addObject:focusCandidate];
+				}
+				break;
+			case kSKUSwipeDirectionRight:
+				if (newNodeWorldSpace.x > focusedWorldSpace.x) {
+					[directionCandidates addObject:focusCandidate];
+				}
+				break;
+			default:
+				break;
+		}
+	}
+	
+	SKNode* newNode;
+	CGFloat lowestDistance = MAXFLOAT;
+	for (SKNode* directionCand in directionCandidates) {
+		CGPoint newNodeWorldSpace = [directionCand.parent convertPoint:directionCand.position toNode:scene];
+		CGFloat distance = distanceBetween(focusedWorldSpace, newNodeWorldSpace);
+		if (distance < lowestDistance) {
+			newNode = directionCand;
+			lowestDistance = distance;
+		}
+	}
+	return newNode;
+}
+
+-(void)gestureTapDown {
+	if (_navMode == kSKUNavModeOn) {
+		_navMode = kSKUNavModePressed;
+		SKNode* currentFocusedNode = SKUSharedUtilities.navFocus.userData[kSKUNavConstantCurrentFocusedNode];
+		if ([currentFocusedNode isKindOfClass:[SKUButton class]]) {
+			[(SKUButton*)currentFocusedNode buttonPressed:CGPointZero];
+		} else {
+			[SKUSharedUtilities.navFocus nodePressedDownSKU:currentFocusedNode];
+		}
+	}
+}
+
+-(void)gestureTapUp {
+	if (_navMode == kSKUNavModeOn || _navMode == kSKUNavModePressed) {
+		SKNode* currentFocusedNode = SKUSharedUtilities.navFocus.userData[kSKUNavConstantCurrentFocusedNode];
+		if ([currentFocusedNode isKindOfClass:[SKUButton class]]) {
+			SKUButton* button = (SKUButton*)currentFocusedNode;
+			switch (button.buttonType) {
+				case kSKUButtonTypeSlider:
+					//sliders set nav mode themselves
+					[button buttonReleased:CGPointZero];
+					break;
+					
+				default:
+					_navMode = kSKUNavModeOn;
+					[button buttonReleased:CGPointZero];
+					break;
+			}
+		} else {
+			_navMode = kSKUNavModeOn;
+			[SKUSharedUtilities.navFocus nodePressedUpSKU:currentFocusedNode];
+		}
+	}
+}
+
+@end
+
 
 #pragma mark SKUGCControllerController
 
@@ -590,6 +794,7 @@ void SKULog(const NSInteger verbosityLevel, NSString* format, ...) {
 	}
 	return self;
 }
+#pragma mark gamepad setups
 
 -(void)checkForChangedControllerState {
 	
@@ -843,26 +1048,20 @@ void SKULog(const NSInteger verbosityLevel, NSString* format, ...) {
 	BOOL playerCanControl = [self canPlayerControlNav:player];
 	
 	if ((SKUSharedUtilities.navMode == kSKUNavModeOn || SKUSharedUtilities.navMode == kSKUNavModePressed) && ![controller.vendorName isEqualToString:@"Remote"] && playerCanControl) {
-		if (!SKUSharedUtilities.navFocus.userData) {
-			SKUSharedUtilities.navFocus.userData = [NSMutableDictionary dictionary];
-		}
-		SKUGameControllerState* controllerState = SKUSharedUtilities.navFocus.userData[@"controllerStateSKU"];
-		if (!controllerState) {
-			controllerState = [SKUGameControllerState controllerStateWithCenterPosition:midPointOfRect(_view.scene.frame)];
-			SKUSharedUtilities.navFocus.userData[@"controllerStateSKU"] = controllerState;
+		if (!_navControllerState) {
+			_navControllerState = [SKUGameControllerState controllerStateWithCenterPosition:midPointOfRect(_view.scene.frame)];
 		}
 		
-		NSLog(@"pushed: %i", input);
-		
+		// NAV ONLY
 		switch (input) {
 			case kSKUGamePadInputDirectionalPad:
 			{
-				[self gamepadNavDpadWithControllerState:controllerState andXValue:xValue andYValue:yValue];
+				[self gamepadNavDpadWithControllerState:_navControllerState andXValue:xValue andYValue:yValue];
 			}
 				break;
 			case kSKUGamePadInputLeftThumbstick:
 			{
-				[self gamepadNavDpadWithControllerState:controllerState andXValue:xValue andYValue:yValue];
+				[self gamepadNavDpadWithControllerState:_navControllerState andXValue:xValue andYValue:yValue];
 			}
 				break;
 			case kSKUGamePadInputButtonA:
@@ -875,12 +1074,14 @@ void SKULog(const NSInteger verbosityLevel, NSString* format, ...) {
 			}
 				break;
 				
-				
 			default:
 				break;
 		}
 	}
 	
+	if (!_view) {
+		NSLog(@"No view set on SKUSharedUtilities.gcController.view. Please set it properly to use controllers.");
+	}
 	[_view gamepadInputChangedForPlayer:player withInput:input andXValue:xValue andYValue:yValue isPressed:pressed andEventDictionary:eventDictionary];
 }
 
@@ -927,205 +1128,6 @@ void SKULog(const NSInteger verbosityLevel, NSString* format, ...) {
 	SKUGameControllerState* state = [[SKUGameControllerState alloc] init];
 	state.location = location;
 	return state;
-}
-
-@end
-
-
-@interface SKUtilities2() {
-	CGPoint selectLocation;
-}
-
-@end
-
-
-@implementation SKUtilities2
-
-static SKUtilities2* sharedUtilities = Nil;
-
-+(SKUtilities2*) sharedUtilities {
-	if (sharedUtilities == nil) {
-		sharedUtilities = [[SKUtilities2 alloc] init];
-	}
-	return sharedUtilities;
-}
-
--(id) init {
-	if (self = [super init]) {
-	}
-	[self initialSetup];
-	return self;
-}
-
--(void)initialSetup {
-	_verbosityLevel = 0;
-	_deltaMaxTime = 1.0f;
-	_deltaFrameTime = 1.0f/60.0f;
-	_deltaFrameTimeUncapped = 1.0f/60.0f;
-	
-
-#if TARGET_OS_OSX_SKU
-	_macButtonFlags = 0;
-	_macButtonFlags = _macButtonFlags | kSKUMouseButtonFlagLeft;
-#endif
-	_touchTracker = [NSMutableSet set];
-	_navThresholdDistance = 125.0;
-	selectLocation = CGPointMake(NAN, NAN);
-	_navMode = kSKUNavModeOn;
-	
-	[self idleTimerEnable:NO];
-
-}
-
--(void)updateCurrentTime:(CFTimeInterval)timeUpdate {
-	_deltaFrameTimeUncapped = timeUpdate - _currentTime;
-	
-	if (_deltaFrameTimeUncapped > _deltaMaxTime) {
-		_deltaFrameTime = _deltaMaxTime;
-	} else {
-		_deltaFrameTime = _deltaFrameTimeUncapped;
-	}
-	_currentTime = timeUpdate;
-}
-
--(void)idleTimerEnable:(BOOL)enableIdleTimer {
-#if TARGET_OS_IPHONE
-	[UIApplication sharedApplication].idleTimerDisabled = !enableIdleTimer;
-#endif
-}
-
--(void)setNavFocus:(SKNode *)navFocus {
-	_navFocus = navFocus;
-	[_touchTracker removeAllObjects];
-}
-
--(SKNode*)handleSubNodeMovement:(CGPoint)location withCurrentFocus:(SKNode *)currentFocusedNode inSet:(NSSet *)navNodeSet inScene:(SKScene*)scene {
-	
-	SKNode* rNode;
-	
-	if (isnan(selectLocation.x) && isnan(selectLocation.y)) {
-		selectLocation = midPointOfRect(scene.frame); // might need to change to view's frame
-	}
-	
-	CGFloat distance = distanceBetween(location, selectLocation);
-	if (distance > _navThresholdDistance) {
-		CGPoint diff = pointAdd(pointInverse(selectLocation), location);
-		
-		CGFloat absX, absY;
-		absX = fabs(diff.x);
-		absY = fabs(diff.y);
-		
-		if (absX > absY) { // horizontal movement
-			if (diff.x > 0) {
-				rNode = [self selectDirection:kSKUSwipeDirectionRight withNodes:navNodeSet fromCurrentNode:currentFocusedNode inScene:scene];
-			} else {
-				rNode = [self selectDirection:kSKUSwipeDirectionLeft withNodes:navNodeSet fromCurrentNode:currentFocusedNode inScene:scene];
-			}
-		} else { // vertical movement
-			if (diff.y > 0) {
-				rNode = [self selectDirection:kSKUSwipeDirectionUp withNodes:navNodeSet fromCurrentNode:currentFocusedNode inScene:scene];
-			} else {
-				rNode = [self selectDirection:kSKUSwipeDirectionDown withNodes:navNodeSet fromCurrentNode:currentFocusedNode inScene:scene];
-			}
-		}
-		selectLocation = location;
-	} else {
-		rNode = currentFocusedNode;
-	}
-	
-	return rNode;
-	
-}
-
--(void)resetSelectLocation {
-	selectLocation = CGPointMake(NAN, NAN);
-}
-
--(SKNode*)selectDirection:(kSKUSwipeDirections)direction withNodes:(NSSet*)pNavNodes fromCurrentNode:(SKNode*)pCurrentNode inScene:(SKScene*)scene {
-	
-	if (!pCurrentNode.parent) {
-		return nil;
-	}
-	
-	CGPoint focusedWorldSpace = [pCurrentNode.parent convertPoint:pCurrentNode.position toNode:scene];
-	
-	NSMutableSet* directionCandidates = [NSMutableSet set];
-	
-	for (SKNode* focusCandidate in pNavNodes) {
-		CGPoint newNodeWorldSpace = [focusCandidate.parent convertPoint:focusCandidate.position toNode:scene];
-		
-		switch (direction) {
-			case kSKUSwipeDirectionUp:
-				if (newNodeWorldSpace.y > focusedWorldSpace.y) {
-					[directionCandidates addObject:focusCandidate];
-				}
-				break;
-			case kSKUSwipeDirectionDown:
-				if (newNodeWorldSpace.y < focusedWorldSpace.y) {
-					[directionCandidates addObject:focusCandidate];
-				}
-				break;
-			case kSKUSwipeDirectionLeft:
-				if (newNodeWorldSpace.x < focusedWorldSpace.x) {
-					[directionCandidates addObject:focusCandidate];
-				}
-				break;
-			case kSKUSwipeDirectionRight:
-				if (newNodeWorldSpace.x > focusedWorldSpace.x) {
-					[directionCandidates addObject:focusCandidate];
-				}
-				break;
-			default:
-				break;
-		}
-	}
-	
-	SKNode* newNode;
-	CGFloat lowestDistance = MAXFLOAT;
-	for (SKNode* directionCand in directionCandidates) {
-		CGPoint newNodeWorldSpace = [directionCand.parent convertPoint:directionCand.position toNode:scene];
-		CGFloat distance = distanceBetween(focusedWorldSpace, newNodeWorldSpace);
-		if (distance < lowestDistance) {
-			newNode = directionCand;
-			lowestDistance = distance;
-		}
-	}
-	return newNode;
-}
-
--(void)gestureTapDown {
-	if (_navMode == kSKUNavModeOn) {
-		_navMode = kSKUNavModePressed;
-		SKNode* currentFocusedNode = SKUSharedUtilities.navFocus.userData[kSKUNavConstantCurrentFocusedNode];
-		if ([currentFocusedNode isKindOfClass:[SKUButton class]]) {
-			[(SKUButton*)currentFocusedNode buttonPressed:CGPointZero];
-		} else {
-			[SKUSharedUtilities.navFocus nodePressedDownSKU:currentFocusedNode];
-		}
-	}
-}
-
--(void)gestureTapUp {
-	if (_navMode == kSKUNavModeOn || _navMode == kSKUNavModePressed) {
-		SKNode* currentFocusedNode = SKUSharedUtilities.navFocus.userData[kSKUNavConstantCurrentFocusedNode];
-		if ([currentFocusedNode isKindOfClass:[SKUButton class]]) {
-			SKUButton* button = (SKUButton*)currentFocusedNode;
-			switch (button.buttonType) {
-				case kSKUButtonTypeSlider:
-					//sliders set nav mode themselves
-					[button buttonReleased:CGPointZero];
-					break;
-					
-				default:
-					_navMode = kSKUNavModeOn;
-					[button buttonReleased:CGPointZero];
-					break;
-			}
-		} else {
-			_navMode = kSKUNavModeOn;
-			[SKUSharedUtilities.navFocus nodePressedUpSKU:currentFocusedNode];
-		}
-	}
 }
 
 @end
@@ -4013,13 +4015,110 @@ static SKUtilities2* sharedUtilities = Nil;
 	if (!SKUSharedUtilities.gcController) {
 		SKUSharedUtilities.gcController = [[SKUGCControllerController alloc] init];
 	}
-	SKUSharedUtilities.gcController.view = self.view;
 	[self didInitialize];
 }
 
 -(void)didInitialize {
 	
 }
+
+-(void)didMoveToView:(SKView *)view {
+	SKUSharedUtilities.gcController.view = view;
+}
+
+#pragma mark gamepad executes
+#pragma mark gamepad vague executes buttons
+
+
+-(void)gamepadInputChangedForPlayer:(GCControllerPlayerIndex)player withInput:(kSKUGamePadInputs)input andXValue:(float)xValue andYValue:(float)yValue isPressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary {
+
+}
+
+-(void)gamepadMotionInputChangedForPlayer:(GCControllerPlayerIndex)player withAcceleration:(SKUAcceleration)acceleration andEventDictionary:(NSDictionary*)eventDictionary {
+
+}
+
+#pragma mark gamepad specific executes buttons
+
+-(void)gamepadLeftShoulderChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary {
+	
+}
+
+-(void)gamepadLeftTriggerChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary {
+	
+}
+
+-(void)gamepadRightShoulderChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary {
+	
+}
+
+-(void)gamepadRightTriggerChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary {
+	
+}
+
+-(void)gamepadButtonAChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary {
+
+}
+
+-(void)gamepadButtonBChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary {
+	
+}
+
+-(void)gamepadButtonXChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary {
+	
+}
+
+-(void)gamepadButtonYChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary {
+	
+}
+
+-(void)gamepadButtonPausePressedForPlayer:(GCControllerPlayerIndex)player andEventDictionary:(NSDictionary*)eventDictionary {
+	
+}
+
+#pragma mark gamepad specific executes dpads
+
+-(void)gamepadLeftThumbstickChangedForPlayer:(GCControllerPlayerIndex)player withVector:(CGVector)vector andEventDictionary:(NSDictionary*)eventDictionary {
+	
+}
+
+-(void)gamepadRightThumbstickChangedForPlayer:(GCControllerPlayerIndex)player withVector:(CGVector)vector andEventDictionary:(NSDictionary*)eventDictionary {
+
+}
+
+-(void)gamepadDirectionalPadChangedForPlayer:(GCControllerPlayerIndex)player withVector:(CGVector)vector andEventDictionary:(NSDictionary*)eventDictionary {
+
+}
+
+#pragma mark update
+-(void)update:(CFTimeInterval)currentTime {
+	/* Called before each frame is rendered */
+	
+	[SKUSharedUtilities updateCurrentTime:currentTime];
+	
+	if (SKUSharedUtilities.navMode == kSKUNavModeOn) {
+		SKUGameControllerState* controllerState = SKUSharedUtilities.gcController.navControllerState;
+		if (!controllerState) {
+			controllerState = [SKUGameControllerState controllerStateWithCenterPosition:midPointOfRect(self.frame)];
+		}
+		if (controllerState.buttonsPressed & kSKUGamePadInputDirectionalPad) {
+			SKNode* prevFocus = SKUSharedUtilities.navFocus.userData[kSKUNavConstantCurrentFocusedNode];
+			NSSet* nodeSet = SKUSharedUtilities.navFocus.userData[kSKUNavConstantNavNodes];
+			if (!prevFocus) {
+				SKULog(0,@"Error: no currently focused node - did you set the initial node focus (setCurrentFocusedNodeSKU:(SKNode*)) and set the navFocus on the singleton ([SKUSharedUtilities setNavFocus:(SKNode*)]?");
+			} else if (!nodeSet) {
+				SKULog(0,@"Error: no navNodes to navigate through - did you add nodes to the nav nodes (addNodeToNavNodesSKU:(SKNode*)) and set the navFocus on the singleton ([SKUSharedUtilities setNavFocus:(SKNode*)]?");
+			} else {
+				SKNode* currentFocusNode = [SKUSharedUtilities handleSubNodeMovement:controllerState.location withCurrentFocus:prevFocus inSet:nodeSet inScene:self.scene];
+				[self performSelector:@selector(skuInternalUpdateCurrentFocusedNode:) withObject:currentFocusNode];
+				controllerState.location = pointAdd(controllerState.location, pointMultiplyByFactor(pointFromCGVector(controllerState.vector), SKUSharedUtilities.navThresholdDistance * 0.05));
+				//				NSLog(@"dpad pressed: vec: %f %f pos: %f %f pressed: %i", controllerState.vector.dx, controllerState.vector.dy, controllerState.location.x, controllerState.location.y, controllerState.buttonsPressed);
+				//				[self skuInternalUpdateCurrentFocusedNode:currentFocusNode];
+			}
+		}
+	}
+}
+
 
 @end
 
@@ -4303,11 +4402,71 @@ static SKUtilities2* sharedUtilities = Nil;
 
 -(void)gamepadInputChangedForPlayer:(GCControllerPlayerIndex)player withInput:(kSKUGamePadInputs)input andXValue:(float)xValue andYValue:(float)yValue isPressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary {
 	
+	if (![self.scene isKindOfClass:[SKUScene class]]) {
+		return;
+	}
+	
+	SKUScene* gcScene = (SKUScene*)self.scene;
+	
+	// DISTRIBUTING ALL BUTTONS
+	
+	CGVector inputVector = CGVectorMake(xValue, yValue);
+	
+	switch (input) {
+		case kSKUGamePadInputButtonA:
+			[gcScene gamepadButtonAChangedForPlayer:player withValue:xValue pressed:pressed andEventDictionary:eventDictionary];
+			break;
+		case kSKUGamePadInputButtonB:
+			[gcScene gamepadButtonBChangedForPlayer:player withValue:xValue pressed:pressed andEventDictionary:eventDictionary];
+			break;
+		case kSKUGamePadInputButtonX:
+			[gcScene gamepadButtonXChangedForPlayer:player withValue:xValue pressed:pressed andEventDictionary:eventDictionary];
+			break;
+		case kSKUGamePadInputButtonY:
+			[gcScene gamepadButtonYChangedForPlayer:player withValue:xValue pressed:pressed andEventDictionary:eventDictionary];
+			break;
+		case kSKUGamePadInputButtonPause:
+			[gcScene gamepadButtonPausePressedForPlayer:player andEventDictionary:eventDictionary];
+			break;
+		case kSKUGamePadInputLeftShoulder:
+			[gcScene gamepadLeftShoulderChangedForPlayer:player withValue:xValue pressed:pressed andEventDictionary:eventDictionary];
+			break;
+		case kSKUGamePadInputLeftTrigger:
+			[gcScene gamepadLeftTriggerChangedForPlayer:player withValue:xValue pressed:pressed andEventDictionary:eventDictionary];
+			break;
+		case kSKUGamePadInputRightShoulder:
+			[gcScene gamepadRightShoulderChangedForPlayer:player withValue:xValue pressed:pressed andEventDictionary:eventDictionary];
+			break;
+		case kSKUGamePadInputRightTrigger:
+			[gcScene gamepadRightTriggerChangedForPlayer:player withValue:xValue pressed:pressed andEventDictionary:eventDictionary];
+			break;
+			
+		case kSKUGamePadInputLeftThumbstick:
+			[gcScene gamepadLeftThumbstickChangedForPlayer:player withVector:inputVector andEventDictionary:eventDictionary];
+			break;
+		case kSKUGamePadInputRightThumbstick:
+			[gcScene gamepadRightThumbstickChangedForPlayer:player withVector:inputVector andEventDictionary:eventDictionary];
+			break;
+		case kSKUGamePadInputDirectionalPad:
+			[gcScene gamepadDirectionalPadChangedForPlayer:player withVector:inputVector andEventDictionary:eventDictionary];
+			break;
+			
+		default:
+			break;
+	}
+	
+	[gcScene gamepadInputChangedForPlayer:player withInput:input andXValue:xValue andYValue:yValue isPressed:pressed andEventDictionary:eventDictionary];
+	
 }
 
 -(void)gamepadMotionInputChangedForPlayer:(GCControllerPlayerIndex)player withAcceleration:(SKUAcceleration)acceleration andEventDictionary:(NSDictionary*)eventDictionary {
-//	threeDee.position = CGPointMake((acceleration.x * self.size.width * 0.5) + self.size.width * 0.5, (-acceleration.y * self.size.height * 0.5) + self.size.height * 0.5);
-//	[threeDee setScale:acceleration.z + 1.5];
+	if (![self.scene isKindOfClass:[SKUScene class]]) {
+		return;
+	}
+	
+	SKUScene* gcScene = (SKUScene*)self.scene;
+	
+	[gcScene gamepadMotionInputChangedForPlayer:player withAcceleration:acceleration andEventDictionary:eventDictionary];
 }
 
 @end
