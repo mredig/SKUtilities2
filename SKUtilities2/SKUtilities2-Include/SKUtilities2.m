@@ -972,7 +972,6 @@ static SKUtilities2* sharedUtilities = Nil;
 	_navThresholdDistance = 125.0;
 	selectLocation = CGPointMake(NAN, NAN);
 	_navMode = kSKUNavModeOn;
-	_gcController = [[SKUGCControllerController alloc] init];
 	
 	[self idleTimerEnable:NO];
 
@@ -4011,6 +4010,9 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 -(void)preDidInitialize {
+	if (!SKUSharedUtilities.gcController) {
+		SKUSharedUtilities.gcController = [[SKUGCControllerController alloc] init];
+	}
 	SKUSharedUtilities.gcController.view = self.view;
 	[self didInitialize];
 }
