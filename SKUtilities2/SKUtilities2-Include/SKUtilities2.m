@@ -4240,7 +4240,7 @@ static SKUtilities2* sharedUtilities = Nil;
 
 #pragma mark SKView Modifications
 
-@implementation SKView (AdditionalMouseSupport)
+@implementation SKView (SKUModifications)
 
 
 #if TARGET_OS_TV
@@ -4489,7 +4489,7 @@ static SKUtilities2* sharedUtilities = Nil;
 
 #pragma mark SKNode Modifications
 
-@implementation SKNode (ConsolidatedInput)
+@implementation SKNode (SKUModifications)
 
 
 #if TARGET_OS_IPHONE

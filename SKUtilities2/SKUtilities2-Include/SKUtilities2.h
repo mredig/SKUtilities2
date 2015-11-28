@@ -2296,7 +2296,7 @@ typedef enum {
 /*!
  Category on SKView to allow for additional mouse buttons on OS X and some button support for AppleTV. Also adds controller support for all platforms.
  */
-@interface SKView (AdditionalMouseSupport)
+@interface SKView (SKUModifications)
 
 /*!
  Called when gamepad motion input changes. Automatically passes onto scene if the scene is a subclass of SKUScene.
@@ -2323,7 +2323,7 @@ typedef enum {
 /*!
  Category on SKNode augmenting a LOT of functionality to scenes and nodes (Scenes are a subclass of SKNode). First and foremost is the ability to consolidate input between the different platforms. Instead of having a different -(void)touchesBegan for iOS and tvOS and -(void)mouseDown on OS X, you can instead use inputBeganSKU in both situation. It also allows for getting mouse movement (non clicking) on OS X, and a simple way to distinguish the separate movement types between iOS, tvOS, and Mac OS.
  */
-@interface SKNode (ConsolidatedInput)
+@interface SKNode (SKUModifications)
 
 
 /*! @methodgroup Navigational */
