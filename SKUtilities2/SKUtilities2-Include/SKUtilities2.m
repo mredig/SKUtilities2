@@ -574,7 +574,362 @@ void SKULog(const NSInteger verbosityLevel, NSString* format, ...) {
 
 
 
-#pragma mark SKUTILITES SINGLETON
+#pragma mark SKUTILITES SINGLETON AND CONTROLLER HANDLERS
+
+#pragma mark SKUGCControllerController
+
+@implementation SKUGCControllerController
+
+-(instancetype)init {
+	if (self = [super init]) {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkForChangedControllerState) name:GCControllerDidConnectNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkForChangedControllerState) name:GCControllerDidDisconnectNotification object:nil];
+		
+		_validPlayerNav = kSKUGamePadPlayerFlag1 | kSKUGamePadPlayerFlag2 | kSKUGamePadPlayerFlag3 | kSKUGamePadPlayerFlag4;
+		_playerControllers = [NSMutableArray array];
+	}
+	return self;
+}
+
+-(void)checkForChangedControllerState {
+	
+	BOOL controllerConnected;
+	
+	NSArray* controllers = [GCController controllers];
+	if (controllers.count > 0) {
+		controllerConnected = YES;
+	} else {
+		controllerConnected = NO;
+	}
+	
+	SKULog(100, @"controllers connected: %i", controllerConnected);
+	SKULog(100, @"controllers: %@", controllers);
+	
+	for (int i = 0; i < SKUSharedUtilities.gcController.playerControllers.count; i++) {
+		GCController* controller = SKUSharedUtilities.gcController.playerControllers[i];
+		if (![controllers containsObject:controller] || !controller) {
+			[SKUSharedUtilities.gcController.playerControllers removeObject:controller];
+		}
+	}
+	
+	[self assignControllerInputsWithControllersArray:controllers];
+}
+
+-(void)assignControllerInputsWithControllersArray:(NSArray*)controllers {
+	
+	for (int i = 0; i < controllers.count; i++) {
+		GCController* controller = controllers[i];
+		
+#if TARGET_OS_TV
+		if (controller.microGamepad) {
+			SKULog(100, @"at least micro gamepad: %@", controller.vendorName);
+			GCMicroGamepad* microPadProfile = controller.microGamepad;
+			[self registerMicroGamepadButtonsOnController:(GCGamepad*)microPadProfile];
+		}
+#endif
+		if (controller.extendedGamepad) {
+			SKULog(100, @"extended gamepad: %@", controller.vendorName);
+			GCExtendedGamepad* extendedPadProfile = controller.extendedGamepad;
+			[self registerGamepadButtonsOnController:(GCGamepad*)extendedPadProfile];
+			[self registerExtendedGamepadButtonsOnController:extendedPadProfile];
+			
+		} else if (controller.gamepad) {
+			SKULog(100, @"gamepad: %@", controller.vendorName);
+			GCGamepad* padProfile = controller.gamepad;
+			[self registerGamepadButtonsOnController:padProfile];
+		}
+		if (controller.motion) {
+			SKULog(100, @"motion supported: %@", controller.vendorName);
+			GCMotion* motionProfile = controller.motion;
+			motionProfile.valueChangedHandler = ^(GCMotion* motionGamepad) {
+				SKUAcceleration accel;
+				accel.x = motionGamepad.gravity.x;
+				accel.y = motionGamepad.gravity.y;
+				accel.z = motionGamepad.gravity.z;
+				NSDictionary* theDict = [NSDictionary dictionaryWithObject:motionGamepad forKey:@"gamepadProfile"];
+				[SKUSharedUtilities.gcController.view gamepadMotionInputChangedForPlayer:motionGamepad.controller.playerIndex withAcceleration:accel andEventDictionary:theDict];
+			};
+		}
+	}
+	[self setControllerPlayerIndices];
+}
+
+-(void)setControllerPlayerIndices {
+	for (GCController* controller in [GCController controllers]) {
+		if (![SKUSharedUtilities.gcController.playerControllers containsObject:controller]) {
+			[SKUSharedUtilities.gcController.playerControllers addObject:controller];
+		}
+	}
+	
+	for (int i = 0; i < SKUSharedUtilities.gcController.playerControllers.count; i++) {
+		GCController* controller = SKUSharedUtilities.gcController.playerControllers[i];
+		switch (i) {
+			case 0:
+				controller.playerIndex = GCControllerPlayerIndex1;
+				break;
+			case 1:
+				controller.playerIndex = GCControllerPlayerIndex2;
+				break;
+			case 2:
+				controller.playerIndex = GCControllerPlayerIndex3;
+				break;
+			case 3:
+				controller.playerIndex = GCControllerPlayerIndex4;
+				break;
+				
+			default:
+				controller.playerIndex = GCControllerPlayerIndexUnset;
+				break;
+		}
+	}
+	
+}
+
+
+-(void)registerMicroGamepadButtonsOnController:(GCGamepad*)microGamepad {
+	
+	microGamepad.buttonA.valueChangedHandler = ^(GCControllerButtonInput* button, float value, BOOL pressed) {
+		NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:@[button, microGamepad.controller] forKeys:@[@"button", @"controller"]];
+		[self gamepadInputChangedInternalForPlayer:microGamepad.controller.playerIndex withInput:kSKUGamePadInputButtonA andXValue:value andYValue:value isPressed:pressed andEventDictionary:eventDict];
+	};
+	
+	microGamepad.buttonX.valueChangedHandler = ^(GCControllerButtonInput* button, float value, BOOL pressed) {
+		NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:@[button, microGamepad.controller] forKeys:@[@"button", @"controller"]];
+		[self gamepadInputChangedInternalForPlayer:microGamepad.controller.playerIndex withInput:kSKUGamePadInputButtonX andXValue:value andYValue:value isPressed:pressed andEventDictionary:eventDict];
+	};
+	
+	//axes
+	microGamepad.dpad.valueChangedHandler = ^(GCControllerDirectionPad* dpad, float xValue, float yValue) {
+		NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:@[dpad, microGamepad.controller] forKeys:@[@"button", @"controller"]];
+		[self gamepadInputChangedInternalForPlayer:microGamepad.controller.playerIndex withInput:kSKUGamePadInputRightShoulder andXValue:xValue andYValue:yValue isPressed:YES andEventDictionary:eventDict];
+	};
+	
+	microGamepad.controller.controllerPausedHandler = ^(GCController* controller) {
+		NSDictionary* eventDict = [NSDictionary dictionaryWithObject:controller forKey:@"controller"];
+		[self gamepadInputChangedInternalForPlayer:controller.playerIndex withInput:kSKUGamePadInputButtonPause andXValue:0.0 andYValue:0.0 isPressed:NO andEventDictionary:eventDict];
+	};
+}
+
+-(void)registerGamepadButtonsOnController:(GCGamepad*)gamepad {
+	//buttons
+	gamepad.leftShoulder.valueChangedHandler = ^(GCControllerButtonInput* button, float value, BOOL pressed) {
+		NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:@[button, gamepad.controller] forKeys:@[@"button", @"controller"]];
+		[self gamepadInputChangedInternalForPlayer:gamepad.controller.playerIndex withInput:kSKUGamePadInputLeftShoulder andXValue:value andYValue:value isPressed:pressed andEventDictionary:eventDict];
+	};
+	gamepad.buttonA.valueChangedHandler = ^(GCControllerButtonInput* button, float value, BOOL pressed) {
+		NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:@[button, gamepad.controller] forKeys:@[@"button", @"controller"]];
+		[self gamepadInputChangedInternalForPlayer:gamepad.controller.playerIndex withInput:kSKUGamePadInputButtonA andXValue:value andYValue:value isPressed:pressed andEventDictionary:eventDict];
+	};
+	gamepad.buttonB.valueChangedHandler = ^(GCControllerButtonInput* button, float value, BOOL pressed) {
+		NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:@[button, gamepad.controller] forKeys:@[@"button", @"controller"]];
+		[self gamepadInputChangedInternalForPlayer:gamepad.controller.playerIndex withInput:kSKUGamePadInputButtonB andXValue:value andYValue:value isPressed:pressed andEventDictionary:eventDict];
+	};
+	gamepad.buttonX.valueChangedHandler = ^(GCControllerButtonInput* button, float value, BOOL pressed) {
+		NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:@[button, gamepad.controller] forKeys:@[@"button", @"controller"]];
+		[self gamepadInputChangedInternalForPlayer:gamepad.controller.playerIndex withInput:kSKUGamePadInputButtonX andXValue:value andYValue:value isPressed:pressed andEventDictionary:eventDict];
+	};
+	gamepad.buttonY.valueChangedHandler = ^(GCControllerButtonInput* button, float value, BOOL pressed) {
+		NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:@[button, gamepad.controller] forKeys:@[@"button", @"controller"]];
+		[self gamepadInputChangedInternalForPlayer:gamepad.controller.playerIndex withInput:kSKUGamePadInputButtonY andXValue:value andYValue:value isPressed:pressed andEventDictionary:eventDict];
+	};
+	gamepad.rightShoulder.valueChangedHandler = ^(GCControllerButtonInput* button, float value, BOOL pressed) {
+		NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:@[button, gamepad.controller] forKeys:@[@"button", @"controller"]];
+		[self gamepadInputChangedInternalForPlayer:gamepad.controller.playerIndex withInput:kSKUGamePadInputRightShoulder andXValue:value andYValue:value isPressed:pressed andEventDictionary:eventDict];
+	};
+	
+	gamepad.controller.controllerPausedHandler = ^(GCController* controller) {
+		NSDictionary* eventDict = [NSDictionary dictionaryWithObject:controller forKey:@"controller"];
+		[self gamepadInputChangedInternalForPlayer:controller.playerIndex withInput:kSKUGamePadInputButtonPause andXValue:0.0 andYValue:0.0 isPressed:NO andEventDictionary:eventDict];
+	};
+	
+	//axes
+	gamepad.dpad.valueChangedHandler = ^(GCControllerDirectionPad* dpad, float xValue, float yValue) {
+		NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:@[dpad, gamepad.controller] forKeys:@[@"button", @"controller"]];
+		[self gamepadInputChangedInternalForPlayer:gamepad.controller.playerIndex withInput:kSKUGamePadInputDirectionalPad andXValue:xValue andYValue:yValue isPressed:YES andEventDictionary:eventDict];
+	};
+}
+
+-(void)registerExtendedGamepadButtonsOnController:(GCExtendedGamepad*)extendedGamepad {
+	//buttons
+	extendedGamepad.leftTrigger.valueChangedHandler = ^(GCControllerButtonInput* button, float value, BOOL pressed) {
+		NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:@[button, extendedGamepad.controller] forKeys:@[@"button", @"controller"]];
+		[self gamepadInputChangedInternalForPlayer:extendedGamepad.controller.playerIndex withInput:kSKUGamePadInputLeftTrigger andXValue:value andYValue:value isPressed:pressed andEventDictionary:eventDict];
+	};
+	extendedGamepad.rightTrigger.valueChangedHandler = ^(GCControllerButtonInput* button, float value, BOOL pressed) {
+		NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:@[button, extendedGamepad.controller] forKeys:@[@"button", @"controller"]];
+		[self gamepadInputChangedInternalForPlayer:extendedGamepad.controller.playerIndex withInput:kSKUGamePadInputRightTrigger andXValue:value andYValue:value isPressed:pressed andEventDictionary:eventDict];
+	};
+	
+	//axes
+	extendedGamepad.leftThumbstick.valueChangedHandler = ^(GCControllerDirectionPad* dpad, float xValue, float yValue) {
+		NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:@[dpad, extendedGamepad.controller] forKeys:@[@"button", @"controller"]];
+		[self gamepadInputChangedInternalForPlayer:extendedGamepad.controller.playerIndex withInput:kSKUGamePadInputLeftThumbstick andXValue:xValue andYValue:yValue isPressed:YES andEventDictionary:eventDict];
+	};
+	extendedGamepad.rightThumbstick.valueChangedHandler = ^(GCControllerDirectionPad* dpad, float xValue, float yValue) {
+		NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:@[dpad, extendedGamepad.controller] forKeys:@[@"button", @"controller"]];
+		[self gamepadInputChangedInternalForPlayer:extendedGamepad.controller.playerIndex withInput:kSKUGamePadInputRightThumbstick andXValue:xValue andYValue:yValue isPressed:YES andEventDictionary:eventDict];
+	};
+	
+}
+
+#pragma mark setting or getting controllers
+
+-(void)setPlayerOne:(GCController*)controller {
+	NSMutableArray* playerControllers = SKUSharedUtilities.gcController.playerControllers;
+	if ([playerControllers containsObject:controller]) {
+		NSUInteger indexToSwap = [playerControllers indexOfObject:controller];
+		[playerControllers exchangeObjectAtIndex:0 withObjectAtIndex:indexToSwap];
+	} else if (![playerControllers containsObject:controller] && playerControllers.count > 1) {
+		GCController* oldP1 = playerControllers[0];
+		[playerControllers removeObject:oldP1];
+		[playerControllers insertObject:controller atIndex:0];
+		[playerControllers addObject:oldP1];
+	} else {
+		[playerControllers insertObject:controller atIndex:0];
+	}
+	
+	[self setControllerPlayerIndices];
+	
+}
+
+-(GCController*)gamepadForPlayer:(GCControllerPlayerIndex)player {
+	NSArray* controllers = [GCController controllers];
+	for (GCController* controller in controllers) {
+		if (controller.playerIndex == player) {
+			return controller;
+		}
+	}
+	return nil;
+}
+
+-(GCController*)gamepadForVendor:(NSString*)vendor {
+	NSArray* controllers = [GCController controllers];
+	for (GCController* controller in controllers) {
+		if ([controller.vendorName isEqualToString:vendor]) {
+			return controller;
+		}
+	}
+	return nil;
+}
+
+#pragma mark gamepad vague executes
+
+
+-(BOOL)canPlayerControlNav:(GCControllerPlayerIndex)player {
+	
+	BOOL player1IsValid = SKUSharedUtilities.gcController.validPlayerNav & kSKUGamePadPlayerFlag1;
+	BOOL player2IsValid = SKUSharedUtilities.gcController.validPlayerNav & kSKUGamePadPlayerFlag2;
+	BOOL player3IsValid = SKUSharedUtilities.gcController.validPlayerNav & kSKUGamePadPlayerFlag3;
+	BOOL player4IsValid = SKUSharedUtilities.gcController.validPlayerNav & kSKUGamePadPlayerFlag4;
+	BOOL playerCanControl = NO;
+	
+	if (player == GCControllerPlayerIndex1 && player1IsValid) {
+		playerCanControl = YES;
+	} else if (player == GCControllerPlayerIndex2 && player2IsValid) {
+		playerCanControl = YES;
+	} else if (player == GCControllerPlayerIndex3 && player3IsValid) {
+		playerCanControl = YES;
+	} else if (player == GCControllerPlayerIndex4 && player4IsValid) {
+		playerCanControl = YES;
+	}
+	
+	return playerCanControl;
+}
+
+
+-(void)gamepadInputChangedInternalForPlayer:(GCControllerPlayerIndex)player withInput:(kSKUGamePadInputs)input andXValue:(float)xValue andYValue:(float)yValue isPressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary {
+	GCController* controller = eventDictionary[@"controller"];
+	
+	BOOL playerCanControl = [self canPlayerControlNav:player];
+	
+	if ((SKUSharedUtilities.navMode == kSKUNavModeOn || SKUSharedUtilities.navMode == kSKUNavModePressed) && ![controller.vendorName isEqualToString:@"Remote"] && playerCanControl) {
+		if (!SKUSharedUtilities.navFocus.userData) {
+			SKUSharedUtilities.navFocus.userData = [NSMutableDictionary dictionary];
+		}
+		SKUGameControllerState* controllerState = SKUSharedUtilities.navFocus.userData[@"controllerStateSKU"];
+		if (!controllerState) {
+			controllerState = [SKUGameControllerState controllerStateWithCenterPosition:midPointOfRect(_view.scene.frame)];
+			SKUSharedUtilities.navFocus.userData[@"controllerStateSKU"] = controllerState;
+		}
+		
+		NSLog(@"pushed: %i", input);
+		
+		switch (input) {
+			case kSKUGamePadInputDirectionalPad:
+			{
+				[self gamepadNavDpadWithControllerState:controllerState andXValue:xValue andYValue:yValue];
+			}
+				break;
+			case kSKUGamePadInputLeftThumbstick:
+			{
+				[self gamepadNavDpadWithControllerState:controllerState andXValue:xValue andYValue:yValue];
+			}
+				break;
+			case kSKUGamePadInputButtonA:
+			{
+				if (pressed) {
+					[SKUSharedUtilities gestureTapDown];
+				} else {
+					[SKUSharedUtilities gestureTapUp];
+				}
+			}
+				break;
+				
+				
+			default:
+				break;
+		}
+	}
+	
+	[_view gamepadInputChangedForPlayer:player withInput:input andXValue:xValue andYValue:yValue isPressed:pressed andEventDictionary:eventDictionary];
+}
+
+-(void)gamepadNavDpadWithControllerState:(SKUGameControllerState*)controllerState andXValue:(CGFloat)xValue andYValue:(CGFloat)yValue {
+	BOOL wasPressed = controllerState.buttonsPressed & kSKUGamePadInputDirectionalPad;
+	CGFloat multiplier;
+	if (wasPressed) {
+		multiplier = 0.0;
+	} else {
+		multiplier = 100.0;
+	}
+	
+	if (!(xValue == 0.0 && yValue == 0.0)) {
+		controllerState.buttonsPressed |= kSKUGamePadInputDirectionalPad;
+	} else {
+		controllerState.buttonsPressed &= ~kSKUGamePadInputDirectionalPad;
+		controllerState.location = midPointOfRect(_view.scene.frame);
+		[SKUSharedUtilities resetSelectLocation];
+	}
+	controllerState.vector = CGVectorMake(xValue, yValue);
+	controllerState.location = pointAdd(controllerState.location, pointMultiplyByFactor(pointFromCGVector(controllerState.vector), SKUSharedUtilities.navThresholdDistance * multiplier));
+}
+
+
+@end
+
+
+
+@implementation SKUGameControllerState
+
+-(instancetype)init {
+	if (self = [super init]) {
+		_buttonsPressed = 0;
+		_vector = CGVectorMake(0.0, 0.0);
+	}
+	return self;
+}
+
++(SKUGameControllerState*)controllerState {
+	return [[SKUGameControllerState alloc] init];
+}
+
++(SKUGameControllerState*)controllerStateWithCenterPosition:(CGPoint)location {
+	SKUGameControllerState* state = [[SKUGameControllerState alloc] init];
+	state.location = location;
+	return state;
+}
+
+@end
 
 
 @interface SKUtilities2() {
@@ -776,19 +1131,6 @@ static SKUtilities2* sharedUtilities = Nil;
 
 @end
 
-#pragma mark SKUGCControllerController
-
-@implementation SKUGCControllerController
-
--(instancetype)init {
-	if (self = [super init]) {
-		_validPlayerNav = kSKUGamePadPlayerFlag1 | kSKUGamePadPlayerFlag2 | kSKUGamePadPlayerFlag3 | kSKUGamePadPlayerFlag4;
-		_playerControllers = [NSMutableArray array];
-	}
-	return self;
-}
-
-@end
 
 #pragma mark SKUPositionObject
 
@@ -3648,7 +3990,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	if (self = [super init]) {
 		
 	}
-	[self didInitialize];
+	[self preDidInitialize];
 	return self;
 }
 
@@ -3656,7 +3998,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	if (self = [super initWithCoder:aDecoder]) {
 		
 	}
-	[self didInitialize];
+	[self preDidInitialize];
 	return self;
 }
 
@@ -3664,8 +4006,13 @@ static SKUtilities2* sharedUtilities = Nil;
 	if (self = [super initWithSize:size]) {
 		
 	}
-	[self didInitialize];
+	[self preDidInitialize];
 	return self;
+}
+
+-(void)preDidInitialize {
+	SKUSharedUtilities.gcController.view = self.view;
+	[self didInitialize];
 }
 
 -(void)didInitialize {
@@ -3775,6 +4122,8 @@ static SKUtilities2* sharedUtilities = Nil;
 	NSLog(@"user interaction: %i", self.controllerUserInteractionEnabled);
 #endif
 }
+
+
 
 @end
 
@@ -3949,6 +4298,15 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 #endif
+
+-(void)gamepadInputChangedForPlayer:(GCControllerPlayerIndex)player withInput:(kSKUGamePadInputs)input andXValue:(float)xValue andYValue:(float)yValue isPressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary {
+	
+}
+
+-(void)gamepadMotionInputChangedForPlayer:(GCControllerPlayerIndex)player withAcceleration:(SKUAcceleration)acceleration andEventDictionary:(NSDictionary*)eventDictionary {
+//	threeDee.position = CGPointMake((acceleration.x * self.size.width * 0.5) + self.size.width * 0.5, (-acceleration.y * self.size.height * 0.5) + self.size.height * 0.5);
+//	[threeDee setScale:acceleration.z + 1.5];
+}
 
 @end
 

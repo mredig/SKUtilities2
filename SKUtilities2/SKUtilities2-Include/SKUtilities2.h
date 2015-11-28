@@ -745,7 +745,7 @@ void centerOSCursorInWindow();
 void SKULog(NSInteger verbosityLevelRequired, NSString *format, ...);
 
 
-#pragma mark SKUTILITES SINGLETON
+#pragma mark SKUTILITES SINGLETON AND CONTROLLER HANDLERS
 
 /*!
  Nav mode enumerator for focus based navigation.
@@ -767,6 +767,36 @@ typedef enum {
 	kSKUSwipeDirectionUp,
 	kSKUSwipeDirectionDown,
 } kSKUSwipeDirections;
+
+
+struct SKUAcceleration {
+	double x;
+	double y;
+	double z;
+};
+typedef struct SKUAcceleration SKUAcceleration;
+
+typedef enum {
+	kSKUButtonInput,
+	kSKUAxisInput,
+	kSKUDirectionalPadInput,
+} kSKUGCControllerInputs;
+
+
+typedef enum {
+	kSKUGamePadInputLeftShoulder = 1 << 0,
+	kSKUGamePadInputLeftTrigger = 1 << 1,
+	kSKUGamePadInputLeftThumbstick = 1 << 2,
+	kSKUGamePadInputRightShoulder = 1 << 3,
+	kSKUGamePadInputRightTrigger = 1 << 4,
+	kSKUGamePadInputRightThumbstick = 1 << 5,
+	kSKUGamePadInputDirectionalPad = 1 << 6,
+	kSKUGamePadInputButtonA = 1 << 7,
+	kSKUGamePadInputButtonB = 1 << 8,
+	kSKUGamePadInputButtonX = 1 << 9,
+	kSKUGamePadInputButtonY = 1 << 10,
+	kSKUGamePadInputButtonPause = 1 << 11,
+} kSKUGamePadInputs;
 
 typedef enum {
 	kSKUGamePadPlayerFlag1 = 1 << 0,
@@ -811,7 +841,34 @@ Array with controller objects in the order of players. Note that it's not readon
  */
 @property (nonatomic) uint8_t validPlayerNav;
 
+/*!
+ Set automatically when using SKUScene. Assuming the view never changes, all controller events get filtered through your view. If the view ever gets changed, you will need to update this property with the current view and call "checkForChangedControllerState" again (untested, but I think should work).
+ */
+@property (nonatomic, weak) SKView* view;
+
+-(void)checkForChangedControllerState;
+-(void)setPlayerOne:(GCController*)controller;
+-(GCController*)gamepadForPlayer:(GCControllerPlayerIndex)player;
+-(GCController*)gamepadForVendor:(NSString*)vendor;
+-(BOOL)canPlayerControlNav:(GCControllerPlayerIndex)player;
+
+
 @end
+
+/*!
+ Controller events only fire when changed, so this is needed to store the state on frames when the state doesn't change.
+ */
+@interface SKUGameControllerState : NSObject
+
+@property (nonatomic, assign) CGVector vector;
+@property (nonatomic, assign) CGPoint location;
+@property (nonatomic, assign) kSKUGCControllerInputs buttonsPressed;
+
++(SKUGameControllerState*)controllerState;
++(SKUGameControllerState*)controllerStateWithCenterPosition:(CGPoint)location;
+
+@end
+
 
 /*!
  This is a singleton class that carries a lot of information allowing for access anywhere within your app. It'll track the current time, intervals between frames, handle logging, store objects, and manage navigation and other built in utilties with this library.
@@ -2051,13 +2108,17 @@ typedef enum {
 
 @end
 
+
 #pragma mark CLASS CATEGORIES
 
 #pragma mark SKView Modifications
 /*!
- Category on SKView to allow for additional mouse buttons on OS X and some button support for AppleTV.
+ Category on SKView to allow for additional mouse buttons on OS X and some button support for AppleTV. Also adds controller support for all platforms.
  */
 @interface SKView (AdditionalMouseSupport)
+
+-(void)gamepadMotionInputChangedForPlayer:(GCControllerPlayerIndex)player withAcceleration:(SKUAcceleration)acceleration andEventDictionary:(NSDictionary*)eventDictionary;
+-(void)gamepadInputChangedForPlayer:(GCControllerPlayerIndex)player withInput:(kSKUGamePadInputs)input andXValue:(float)xValue andYValue:(float)yValue isPressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary;
 
 @end
 
