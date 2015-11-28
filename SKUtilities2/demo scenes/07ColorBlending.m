@@ -7,7 +7,6 @@
 //
 
 #import "07ColorBlending.h"
-#import "SKUtilities2.h"
 #import "06MultiLineDemo.h"
 #import "08ButtonDemo.h"
 
@@ -117,6 +116,7 @@
 
 
 -(void)update:(NSTimeInterval)currentTime {
+	[super update:currentTime];
 }
 
 

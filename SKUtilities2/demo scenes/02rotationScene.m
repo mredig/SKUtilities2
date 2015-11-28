@@ -7,7 +7,6 @@
 //
 
 #import "02rotationScene.h"
-#import "SKUtilities2.h"
 #import "03VectorPoint.h"
 #import "01NumbersDemo.h"
 
@@ -241,7 +240,8 @@
 
 
 -(void)update:(NSTimeInterval)currentTime {
-	
+	[super update:currentTime];
+
 	
 	
 }

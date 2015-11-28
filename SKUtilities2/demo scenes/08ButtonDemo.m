@@ -7,7 +7,6 @@
 //
 
 #import "08ButtonDemo.h"
-#import "SKUtilities2.h"
 #import "07ColorBlending.h"
 
 @interface _8ButtonDemo() {
@@ -223,6 +222,7 @@
 
 -(void)update:(CFTimeInterval)currentTime {
 	/* Called before each frame is rendered */
+	[super update:currentTime];
 }
 
 

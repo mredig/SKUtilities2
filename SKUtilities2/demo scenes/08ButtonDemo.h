@@ -10,6 +10,6 @@
 #import "SKUtilities2.h"
 
 
-@interface _8ButtonDemo : SKScene <SKUButtonDelegate>
+@interface _8ButtonDemo : SKUScene <SKUButtonDelegate>
 
 @end

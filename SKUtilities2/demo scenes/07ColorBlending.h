@@ -7,7 +7,8 @@
 //
 
 #import <SpriteKit/SpriteKit.h>
+#import "SKUtilities2.h"
 
-@interface _7ColorBlending : SKScene
+@interface _7ColorBlending : SKUScene
 
 @end

@@ -7,7 +7,6 @@
 //
 
 #import "shapeBenchmark.h"
-#import "SKUtilities2.h"
 #import "06MultiLineDemo.h"
 
 
@@ -282,7 +281,7 @@ float cpu_usage()
 
 -(void)update:(CFTimeInterval)currentTime {
 	/* Called before each frame is rendered */
-	[SKUSharedUtilities updateCurrentTime:currentTime];
+	[super update:currentTime];
 	
 	frameStep ++;
 	if (frameStep == 30) {

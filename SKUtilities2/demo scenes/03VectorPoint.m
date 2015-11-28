@@ -8,7 +8,6 @@
 
 #import "03VectorPoint.h"
 #import "04BezierDemo.h"
-#import "SKUtilities2.h"
 #import "02rotationScene.h"
 
 @interface _3VectorPoint() {
@@ -333,7 +332,7 @@
 
 
 -(void)update:(NSTimeInterval)currentTime {
-	[SKUSharedUtilities updateCurrentTime:currentTime];
+	[super update:currentTime];
 	
 	[self moveNodes];
 	

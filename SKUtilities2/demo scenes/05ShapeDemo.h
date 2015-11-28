@@ -7,7 +7,8 @@
 //
 
 #import <SpriteKit/SpriteKit.h>
+#import "SKUtilities2.h"
 
-@interface _5ShapeDemo : SKScene
+@interface _5ShapeDemo : SKUScene
 
 @end

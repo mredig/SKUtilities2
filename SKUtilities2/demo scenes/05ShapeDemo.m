@@ -7,7 +7,6 @@
 //
 
 #import "05ShapeDemo.h"
-#import "SKUtilities2.h"
 #import "06MultiLineDemo.h"
 #import "shapeBenchmark.h"
 #import "04BezierDemo.h"
@@ -125,6 +124,7 @@
 
 
 -(void)update:(NSTimeInterval)currentTime {
+	[super update:currentTime];
 }
 
 

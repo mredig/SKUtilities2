@@ -7,7 +7,6 @@
 //
 
 #import "01NumbersDemo.h"
-#import "SKUtilities2.h"
 #import "02rotationScene.h"
 #import "08ButtonDemo.h"
 
@@ -170,6 +169,7 @@
 
 -(void)update:(CFTimeInterval)currentTime {
 	/* Called before each frame is rendered */
+	[super update:currentTime];
 }
 
 @end
