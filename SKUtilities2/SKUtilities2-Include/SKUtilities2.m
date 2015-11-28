@@ -1066,11 +1066,19 @@ static SKUtilities2* sharedUtilities = Nil;
 				break;
 			case kSKUGamePadInputButtonA:
 			{
-				if (pressed) {
-					[SKUSharedUtilities gestureTapDown];
-				} else {
-					[SKUSharedUtilities gestureTapUp];
+#if TARGET_OS_TV
+				GCEventViewController* evc = (GCEventViewController*)[UIApplication sharedApplication].keyWindow.rootViewController;
+				BOOL vcNavOn = evc.controllerUserInteractionEnabled;
+				if (!vcNavOn) {
+#endif
+					if (pressed) {
+						[SKUSharedUtilities gestureTapDown];
+					} else {
+						[SKUSharedUtilities gestureTapUp];
+					}
+#if TARGET_OS_TV
 				}
+#endif
 			}
 				break;
 				
@@ -4248,8 +4256,9 @@ static SKUtilities2* sharedUtilities = Nil;
 			default:
 				break;
 		}
-		
 	}
+	
+	[self.scene pressesBegan:presses withEvent:event];
 }
 
 -(void)pressesEnded:(NSSet<UIPress *> *)presses withEvent:(UIPressesEvent *)event {
@@ -4264,12 +4273,12 @@ static SKUtilities2* sharedUtilities = Nil;
 			default:
 				break;
 		}
-		
 	}
+	[self.scene pressesEnded:presses withEvent:event];
 }
 
-//-(void)pressesCancelled:(NSSet<UIPress *> *)presses withEvent:(UIPressesEvent *)event { //not sure if this should send signals to tapUp (when it is there, it causes misfires on 04BezierDemo)
-//	[super pressesCancelled:presses withEvent:event];
+-(void)pressesCancelled:(NSSet<UIPress *> *)presses withEvent:(UIPressesEvent *)event { //not sure if this should send signals to tapUp (when it is there, it causes misfires on 04BezierDemo)
+	[super pressesCancelled:presses withEvent:event];
 //	for (UIPress* press in presses) {
 //		switch (press.type) {
 //			case UIPressTypeSelect: {
@@ -4282,7 +4291,13 @@ static SKUtilities2* sharedUtilities = Nil;
 //		}
 //		
 //	}
-//}
+	[self.scene pressesCancelled:presses withEvent:event];
+}
+
+-(void)pressesChanged:(NSSet<UIPress *> *)presses withEvent:(UIPressesEvent *)event {
+	[super pressesChanged:presses withEvent:event];
+	[self.scene pressesChanged:presses withEvent:event];
+}
 
 
 #elif TARGET_OS_OSX_SKU
