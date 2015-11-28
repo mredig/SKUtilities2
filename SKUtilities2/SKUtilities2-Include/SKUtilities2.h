@@ -795,6 +795,24 @@ typedef enum {
 } kSKUMouseButtonFlags;
 
 #endif
+
+/*!
+ Not intended for you to create instances of this class but instead to be able to control controller related functions through the SKUtilities singleton
+ */
+@interface SKUGCControllerController : NSObject
+
+/*! @group Game Controllers */
+/*!
+Array with controller objects in the order of players. Note that it's not readonly and is mutable, but do NOT change it. It's this way for internal reasons: it's only intended for you to read from this array.
+*/
+@property (nonatomic, strong) NSMutableArray* playerControllers;
+/*!
+ Flags determining which players are allowed to control navigation. Note that Siri Remote ALWAYS gets to control nav.
+ */
+@property (nonatomic) uint8_t validPlayerNav;
+
+@end
+
 /*!
  This is a singleton class that carries a lot of information allowing for access anywhere within your app. It'll track the current time, intervals between frames, handle logging, store objects, and manage navigation and other built in utilties with this library.
  */
@@ -836,8 +854,7 @@ Vulnerable to lag spikes if used.
 
 /*! @group Game Controllers */
 
-@property (nonatomic, strong) NSMutableArray* playerControllers;
-@property (nonatomic) uint8_t validPlayerNav;
+@property (nonatomic, strong) SKUGCControllerController* gcController;
 
 /*! @group Navigational */
 
@@ -984,6 +1001,8 @@ Vulnerable to lag spikes if used.
 -(void)resetSelectLocation;
 
 @end
+
+
 
 #pragma mark NEW CLASSES
 

@@ -20,8 +20,19 @@
 
 #pragma mark CONSTANTS
 
-NSString * const kSKURemoteInteractionOn = @"remoteInteractionOn";
-NSString * const kSKURemoteInteractionOff = @"remoteInteractionOff";
+NSString* const kSKURemoteInteractionOn = @"remoteInteractionOn";
+NSString* const kSKURemoteInteractionOff = @"remoteInteractionOff";
+
+NSString* const kSKUNavConstantCurrentFocusedNode = @"sku_currentFocusedNode";
+NSString* const kSKUNavConstantRightMouseDown = @"sku_rightMouseDown";
+NSString* const kSKUNavConstantOtherMouseDown = @"sku_otherMouseDown";
+NSString* const kSKUNavConstantNavNodes = @"sku_navNodes";
+NSString* const kSKUNavConstantHoverArray = @"sku_hoverArray";
+
+NSInteger const kSKUNavConstantUserDictCapacity = 5;
+
+
+
 
 
 #pragma mark NUMBER INTERPOLATION
@@ -606,8 +617,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	_navThresholdDistance = 125.0;
 	selectLocation = CGPointMake(NAN, NAN);
 	_navMode = kSKUNavModeOn;
-	_validPlayerNav = kSKUGamePadPlayerFlag1 | kSKUGamePadPlayerFlag2 | kSKUGamePadPlayerFlag3 | kSKUGamePadPlayerFlag4;
-	_playerControllers = [NSMutableArray array];
+	_gcController = [[SKUGCControllerController alloc] init];
 	
 	[self idleTimerEnable:NO];
 
@@ -732,7 +742,7 @@ static SKUtilities2* sharedUtilities = Nil;
 -(void)gestureTapDown {
 	if (_navMode == kSKUNavModeOn) {
 		_navMode = kSKUNavModePressed;
-		SKNode* currentFocusedNode = SKUSharedUtilities.navFocus.userData[@"sku_currentFocusedNode"];
+		SKNode* currentFocusedNode = SKUSharedUtilities.navFocus.userData[kSKUNavConstantCurrentFocusedNode];
 		if ([currentFocusedNode isKindOfClass:[SKUButton class]]) {
 			[(SKUButton*)currentFocusedNode buttonPressed:CGPointZero];
 		} else {
@@ -743,7 +753,7 @@ static SKUtilities2* sharedUtilities = Nil;
 
 -(void)gestureTapUp {
 	if (_navMode == kSKUNavModeOn || _navMode == kSKUNavModePressed) {
-		SKNode* currentFocusedNode = SKUSharedUtilities.navFocus.userData[@"sku_currentFocusedNode"];
+		SKNode* currentFocusedNode = SKUSharedUtilities.navFocus.userData[kSKUNavConstantCurrentFocusedNode];
 		if ([currentFocusedNode isKindOfClass:[SKUButton class]]) {
 			SKUButton* button = (SKUButton*)currentFocusedNode;
 			switch (button.buttonType) {
@@ -762,6 +772,20 @@ static SKUtilities2* sharedUtilities = Nil;
 			[SKUSharedUtilities.navFocus nodePressedUpSKU:currentFocusedNode];
 		}
 	}
+}
+
+@end
+
+#pragma mark SKUGCControllerController
+
+@implementation SKUGCControllerController
+
+-(instancetype)init {
+	if (self = [super init]) {
+		_validPlayerNav = kSKUGamePadPlayerFlag1 | kSKUGamePadPlayerFlag2 | kSKUGamePadPlayerFlag3 | kSKUGamePadPlayerFlag4;
+		_playerControllers = [NSMutableArray array];
+	}
+	return self;
 }
 
 @end
@@ -3821,7 +3845,7 @@ static SKUtilities2* sharedUtilities = Nil;
 			if (node.userInteractionEnabled) {
 				[node rightMouseDown:theEvent];
 				[self initDictSKU];
-				self.scene.userData[@"sku_rightMouseDown"] = node;
+				self.scene.userData[kSKUNavConstantRightMouseDown] = node;
 				return;
 			}
 		}
@@ -3831,7 +3855,7 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 -(void)rightMouseDragged:(NSEvent *)theEvent {
-	SKNode* node = self.scene.userData[@"sku_rightMouseDown"];
+	SKNode* node = self.scene.userData[kSKUNavConstantRightMouseDown];
 	if (node) {
 		[node rightMouseDragged:theEvent];
 	} else {
@@ -3840,10 +3864,10 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 -(void)rightMouseUp:(NSEvent *)theEvent {
-	SKNode* node = self.scene.userData[@"sku_rightMouseDown"];
+	SKNode* node = self.scene.userData[kSKUNavConstantRightMouseDown];
 	if (node) {
 		[node rightMouseUp:theEvent];
-		[self.scene.userData removeObjectForKey:@"sku_rightMouseDown"];
+		[self.scene.userData removeObjectForKey:kSKUNavConstantRightMouseDown];
 	} else {
 		[self.scene rightMouseUp:theEvent];
 	}
@@ -3858,7 +3882,7 @@ static SKUtilities2* sharedUtilities = Nil;
 			if (node.userInteractionEnabled) {
 				[node otherMouseDown:theEvent];
 				[self initDictSKU];
-				self.scene.userData[@"sku_otherMouseDown"] = node;
+				self.scene.userData[kSKUNavConstantOtherMouseDown] = node;
 				return;
 			}
 		}
@@ -3867,7 +3891,7 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 -(void)otherMouseDragged:(NSEvent *)theEvent {
-	SKNode* node = self.scene.userData[@"sku_otherMouseDown"];
+	SKNode* node = self.scene.userData[kSKUNavConstantOtherMouseDown];
 	if (node) {
 		[node otherMouseDragged:theEvent];
 	} else {
@@ -3876,10 +3900,10 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 -(void)otherMouseUp:(NSEvent *)theEvent {
-	SKNode* node = self.scene.userData[@"sku_otherMouseDown"];
+	SKNode* node = self.scene.userData[kSKUNavConstantOtherMouseDown];
 	if (node) {
 		[node otherMouseUp:theEvent];
-		[self.scene.userData removeObjectForKey:@"sku_otherMouseDown"];
+		[self.scene.userData removeObjectForKey:kSKUNavConstantOtherMouseDown];
 	} else {
 		[self.scene otherMouseUp:theEvent];
 	}
@@ -3887,11 +3911,11 @@ static SKUtilities2* sharedUtilities = Nil;
 
 -(void)initDictSKU {
 	if (!self.scene.userData) {
-		self.scene.userData = [NSMutableDictionary dictionary];
+		self.scene.userData = [NSMutableDictionary dictionaryWithCapacity:kSKUNavConstantUserDictCapacity];
 	}
-	if (!self.scene.userData[@"sku_hoverArray"]) {
+	if (!self.scene.userData[kSKUNavConstantHoverArray]) {
 		NSMutableArray* hoverArray = [NSMutableArray array];
-		[self.scene.userData setObject:hoverArray forKey:@"sku_hoverArray"];
+		[self.scene.userData setObject:hoverArray forKey:kSKUNavConstantHoverArray];
 	}
 }
 
@@ -3903,7 +3927,7 @@ static SKUtilities2* sharedUtilities = Nil;
 			if ([node isKindOfClass:[SKUButton class]]) {
 				SKUButton* button = (SKUButton*)node;
 				[self initDictSKU];
-				NSMutableArray* hoverArray = self.scene.userData[@"sku_hoverArray"];
+				NSMutableArray* hoverArray = self.scene.userData[kSKUNavConstantHoverArray];
 				if (![hoverArray containsObject:button]) {
 					[hoverArray addObject:button];
 					[button hoverButton];
@@ -3911,7 +3935,7 @@ static SKUtilities2* sharedUtilities = Nil;
 			}
 		}
 	}
-	NSMutableArray* hoverArray = self.scene.userData[@"sku_hoverArray"];
+	NSMutableArray* hoverArray = self.scene.userData[kSKUNavConstantHoverArray];
 	for (int i = 0; i < hoverArray.count; i++) {
 		SKUButton* button = hoverArray[i];
 		bool inBounds = [button checkIfLocationIsWithinButtonBounds:[self.scene convertPoint:location toNode:button]];
@@ -4261,10 +4285,10 @@ static SKUtilities2* sharedUtilities = Nil;
 -(void)addNodeToNavNodesSKU:(SKNode*)node {
 	
 	if (!self.userData) {
-		self.userData = [NSMutableDictionary dictionary];
+		self.userData = [NSMutableDictionary dictionaryWithCapacity:kSKUNavConstantUserDictCapacity];
 	}
 	
-	NSMutableSet* navNodes = self.userData[@"sku_navNodes"];
+	NSMutableSet* navNodes = self.userData[kSKUNavConstantNavNodes];
 	
 	if (!navNodes) {
 		navNodes = [NSMutableSet set];
@@ -4276,13 +4300,13 @@ static SKUtilities2* sharedUtilities = Nil;
 		SKULog(0,@"error: can't add node named '%@' to navNodes when it doesn't have a parent.", node.name);
 	}
 	
-	if (!self.userData[@"sku_navNodes"]) {
-		self.userData[@"sku_navNodes"] = navNodes;
+	if (!self.userData[kSKUNavConstantNavNodes]) {
+		self.userData[kSKUNavConstantNavNodes] = navNodes;
 	}
 }
 
 -(void)removeNodeFromNavNodesSKU:(SKNode*)node {
-	NSMutableSet* navNodes = self.userData[@"sku_navNodes"];
+	NSMutableSet* navNodes = self.userData[kSKUNavConstantNavNodes];
 	if (navNodes && [navNodes containsObject:node]) {
 		[navNodes removeObject:node];
 	}
@@ -4293,16 +4317,16 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 -(void)skuInternalUpdateCurrentFocusedNode:(SKNode*)node {
-	if (!node || [self.userData[@"sku_currentFocusedNode"] isEqual:node]) {
+	if (!node || [self.userData[kSKUNavConstantCurrentFocusedNode] isEqual:node]) {
 		return;
 	}
 	
 	if (!self.userData) {
-		self.userData = [NSMutableDictionary dictionary];
+		self.userData = [NSMutableDictionary dictionaryWithCapacity:kSKUNavConstantUserDictCapacity];
 	}
 	
-	self.userData[@"sku_currentFocusedNode"] = node;
-	NSSet* navNodes = self.userData[@"sku_navNodes"];
+	self.userData[kSKUNavConstantCurrentFocusedNode] = node;
+	NSSet* navNodes = self.userData[kSKUNavConstantNavNodes];
 	for (SKNode* tNode in navNodes) {
 		if ([tNode isKindOfClass:[SKUButton class]]) {
 			SKUButton* button = (SKUButton*)tNode;
@@ -4336,8 +4360,8 @@ static SKUtilities2* sharedUtilities = Nil;
 	if (SKUSharedUtilities.navMode == kSKUNavModeOn) {
 		UITouch* touch = eventDict[@"touch"];
 		if ([SKUSharedUtilities.touchTracker containsObject:touch]) {
-			SKNode* prevFocus = SKUSharedUtilities.navFocus.userData[@"sku_currentFocusedNode"];
-			NSSet* nodeSet = SKUSharedUtilities.navFocus.userData[@"sku_navNodes"];
+			SKNode* prevFocus = SKUSharedUtilities.navFocus.userData[kSKUNavConstantCurrentFocusedNode];
+			NSSet* nodeSet = SKUSharedUtilities.navFocus.userData[kSKUNavConstantNavNodes];
 			if (!prevFocus) {
 				SKULog(0,@"Error: no currently focused node - did you set the initial node focus (setCurrentFocusedNodeSKU:(SKNode*)) and set the navFocus on the singleton ([SKUSharedUtilities setNavFocus:(SKNode*)]?");
 			} else if (!nodeSet) {
@@ -4348,7 +4372,7 @@ static SKUtilities2* sharedUtilities = Nil;
 			}
 		}
 	} else if (SKUSharedUtilities.navMode == kSKUNavModePressed) {
-		SKNode* currentFocus = SKUSharedUtilities.navFocus.userData[@"sku_currentFocusedNode"];
+		SKNode* currentFocus = SKUSharedUtilities.navFocus.userData[kSKUNavConstantCurrentFocusedNode];
 		if ([currentFocus isKindOfClass:[SKUSliderButton class]]) {
 			SKUSliderButton* slider = (SKUSliderButton*)currentFocus;
 			CGFloat stepsize;
