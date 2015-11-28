@@ -2267,7 +2267,18 @@ typedef enum {
 @end
 
 /*!
- Subclass of platform dependent view controller, primarily intended for GCEventViewController on tvOS to be able to turn off the X button's default function on controllers for tvOS.
+ Subclass of platform dependent view controller, primarily intended for GCEventViewController on tvOS to be able to turn off the X button's default function on controllers for tvOS. Call this following line anywhere in your code to use the controller for system nav:
+  <pre>
+ @textblock
+ [[NSNotificationCenter defaultCenter] postNotificationName:kSKURemoteInteractionOn object:nil];
+ @/textblock
+ </pre>
+ or to turn it off:
+ <pre>
+ @textblock
+ [[NSNotificationCenter defaultCenter] postNotificationName:kSKURemoteInteractionOff object:nil];
+ @/textblock
+ </pre>
  */
 #if TARGET_OS_TV
 @interface SKUViewController : GCEventViewController
