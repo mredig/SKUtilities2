@@ -458,6 +458,18 @@ CGVector vectorMultiplyByVector (CGVector vectorA, CGVector vectorB);
  */
 CGVector vectorMultiplyByFactor (CGVector vector, CGFloat factor);
 /*!
+ Checks if a vector is equal to CGVectorZero
+ @param vector value to check
+ @return boolean determining whether it was equal to zero or not
+ */
+BOOL vectorIsZero (CGVector vector);
+/*!
+ Calculates the distance of a vector
+ @param vector vector to check
+ @return distance value
+ */
+CGFloat vectorDistance (CGVector vector);
+/*!
  Returns a CGVector that would face the destination point from the origin point
  @param destination
  CGPoint struct
@@ -744,7 +756,11 @@ void centerOSCursorInWindow();
  @seealso SKUtilities2 SKUtilities2 verbosityLevel
  */
 void SKULog(NSInteger verbosityLevelRequired, NSString *format, ...);
-
+/*!
+ Prints the 0s and 1s of a number. Useful for visualizing flags.
+ @param value uint32_t value.
+ */
+void SKULogBinary(uint32_t value);
 
 #pragma mark SKUTILITES SINGLETON
 
@@ -1043,6 +1059,10 @@ Vulnerable to lag spikes if used.
  */
 @property (nonatomic, strong) NSMutableArray* playerControllers;
 /*!
+ Array with a designated controller state for each player. These are initialized and updated automatically.
+ */
+@property (nonatomic, strong, readonly) NSArray<SKUGameControllerState*>* controllerStates;
+/*!
  Flags determining which players are allowed to control navigation. Note that Siri Remote ALWAYS gets to control nav.
  @seealso canPlayerControlNav:
  */
@@ -1092,9 +1112,45 @@ Vulnerable to lag spikes if used.
  */
 @interface SKUGameControllerState : NSObject
 /*!
- Vector that the control was pointed in. May or may not be normal. (internally set as normal)
+ Vector that the control was pointed in. May or may not be normal.
  */
-@property (nonatomic, assign) CGVector vector;
+@property (nonatomic, assign) CGVector vectorDPad;
+/*!
+ Vector that the control was pointed in. Always normal.
+ */
+@property (nonatomic, assign) CGVector normalVectorDPad;
+/*!
+ Vector that the control was pointed in. May or may not be normal.
+ */
+@property (nonatomic, assign) CGVector vectorLThumbstick;
+/*!
+ Vector that the control was pointed in. Always normal.
+ */
+@property (nonatomic, assign) CGVector normalVectorLThumbstick;
+/*!
+ Vector that the control was pointed in. May or may not be normal.
+ */
+@property (nonatomic, assign) CGVector vectorRThumbstick;
+/*!
+ Vector that the control was pointed in. Always normal.
+ */
+@property (nonatomic, assign) CGVector normalVectorRThumbstick;
+/*!
+ CGFloat storing a speed value.
+ */
+@property (nonatomic, assign) CGFloat speed;
+/*!
+ CGFloat storing a speed mod value.
+ */
+@property (nonatomic, assign) CGFloat speedModDPad;
+/*!
+ CGFloat storing a speed mod value.
+ */
+@property (nonatomic, assign) CGFloat speedModLThumbstick;
+/*!
+ CGFloat storing a speed mod value.
+ */
+@property (nonatomic, assign) CGFloat speedModRThumbstick;
 /*!
  Location store for determining relative input.
  */
@@ -1103,6 +1159,10 @@ Vulnerable to lag spikes if used.
  Flags determining which buttons are pressed or not.
  */
 @property (nonatomic, assign) kSKUGCControllerInputs buttonsPressed;
+/*!
+ Flags determining which buttons are pressed or not, prior to the most recent change.
+ */
+@property (nonatomic, assign) kSKUGCControllerInputs buttonsPressedPrevious;
 
 +(SKUGameControllerState*)controllerState;
 /*!
@@ -2106,6 +2166,7 @@ typedef enum {
 -(void)setChangedAction:(SEL)selector toPerformOnTarget:(NSObject*)target;
 
 @end
+#pragma mark SKUNode
 
 /*!
  Subclass of SKNode unifying all initialization methods to call "didInitialize" when finished.
@@ -2118,6 +2179,8 @@ typedef enum {
 -(void)didInitialize;
 
 @end
+
+#pragma mark SKUScene
 /*!
  Subclass of SKScene unifying all initialization methods to call "didInitialize" when finished.
  */
@@ -2254,6 +2317,8 @@ typedef enum {
 
 
 @end
+#pragma mark SKUSpriteNode
+
 /*!
  Subclass of SKSpriteNode unifying all initialization methods to call "didInitialize" when finished.
  */
@@ -2266,6 +2331,8 @@ typedef enum {
 
 @end
 
+
+#pragma mark SKUViewController
 /*!
  Subclass of platform dependent view controller, primarily intended for GCEventViewController on tvOS to be able to turn off the X button's default function on controllers for tvOS. Call this following line anywhere in your code to use the controller for system nav:
   <pre>

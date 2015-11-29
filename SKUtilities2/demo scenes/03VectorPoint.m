@@ -24,6 +24,8 @@
 	
 	NSInteger verbosityLevelRequired;
 
+	SKUGameControllerState* controllerState;
+
 }
 
 @end
@@ -34,7 +36,8 @@
 -(void) didMoveToView:(SKView *)view {
 	
 	verbosityLevelRequired = 0;
-
+	
+	controllerState = SKUSharedUtilities.gcController.controllerStates[4];
 	
 	SKULog( verbosityLevelRequired, @"\n\n\n\n03VectorPoint: demos vector and point functions");
 	self.name = @"vectors and points and other demo stuff scene";
@@ -330,10 +333,18 @@
 	
 }
 
+-(void)updateLatFromController {
+	if (controllerState.buttonsPressed & kSKUGamePadInputLeftThumbstick) {
+		CGFloat difference = controllerState.vectorLThumbstick.dy * 0.1;
+		latValue += difference;
+		latValue = clipFloatWithinRange(latValue, -1.0, 1.0);
+	}
+}
 
 -(void)update:(NSTimeInterval)currentTime {
 	[super update:currentTime];
 	
+	[self updateLatFromController];
 	[self moveNodes];
 	
 }

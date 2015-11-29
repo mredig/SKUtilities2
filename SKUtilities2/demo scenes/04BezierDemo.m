@@ -22,6 +22,9 @@
 	SKLabelNode* xAndTvalueLabel;
 	
 	SKNode* lockedNode;
+	SKNode* currentFocusNode;
+	
+	SKUGameControllerState* controllerState;
 
 }
 
@@ -34,6 +37,8 @@
 	SKULog(0,@"\n\n\n\n04Bezier demo: demos bezier stuff");
 	self.name = @"bezier demo scene";
 	self.backgroundColor = [SKColor grayColor];
+	
+	controllerState = SKUSharedUtilities.gcController.controllerStates[4];
 
 #pragma mark BEZIER CALCUATIONS
 	[self setupSpriteDemos];
@@ -79,34 +84,56 @@
 
 }
 
-#if TARGET_OS_TV
--(void)gestureTap:(UIGestureRecognizer*)gesture {
+//#if TARGET_OS_TV
+//-(void)gestureTap:(UIGestureRecognizer*)gesture {
+//	[self unlockNode];
+//	[self.view removeGestureRecognizer:gesture];
+//}
+//#endif
+//
+//-(void)nodePressedUpSKU:(SKNode *)node {
+//	if (!lockedNode) {
+//		[self lockNode:node];
+//		SKView* scnView = (SKView*)self.view;
+//#if TARGET_OS_TV
+//		UITapGestureRecognizer* tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gestureTap:)];
+//		tapGesture.allowedPressTypes = @[[NSNumber numberWithInteger:UIPressTypeSelect]];
+//		[scnView addGestureRecognizer:tapGesture]; //// have to add a gesture since nav mode is off in this case. we won't get navigation signals, including presses and press releases until nav mode is back on
+//#endif
+//	}
+//}
+
+
+-(void)gamepadButtonAChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary *)eventDictionary {
+	BOOL wasPressed = controllerState.buttonsPressedPrevious & kSKUGamePadInputButtonA;
+	BOOL ended = wasPressed && !pressed;
+	BOOL began = !wasPressed && pressed;
+	if (ended) {
+		if (lockedNode) {
+			[self unlockNode];
+		} else {
+			[self lockNode:currentFocusNode];
+		}
+	}
+}
+
+-(void)unlockNode {
 	if ([lockedNode.name containsString:@"handle"]) {
 		SKSpriteNode* sprite = (SKSpriteNode*)lockedNode;
 		sprite.color = [SKColor greenColor];
+		lockedNode = nil;
+		SKUSharedUtilities.navMode = kSKUNavModeOn;
 	}
-	lockedNode = nil;
-	SKUSharedUtilities.navMode = kSKUNavModeOn;
-	[self.view removeGestureRecognizer:gesture];
 }
 
--(void)nodePressedUpSKU:(SKNode *)node {
-	if (!lockedNode) {
+-(void)lockNode:(SKNode*)node {
+	if ([node.name containsString:@"handle"]) {
 		lockedNode = node;
-		if ([lockedNode.name containsString:@"handle"]) {
-			SKSpriteNode* sprite = (SKSpriteNode*)lockedNode;
-			sprite.color = [SKColor blueColor];
-		}
+		SKSpriteNode* sprite = (SKSpriteNode*)lockedNode;
+		sprite.color = [SKColor blueColor];
 		SKUSharedUtilities.navMode = kSKUNavModeOff;
-		SKView* scnView = (SKView*)self.view;
-		
-		UITapGestureRecognizer* tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gestureTap:)];
-		tapGesture.allowedPressTypes = @[[NSNumber numberWithInteger:UIPressTypeSelect]];
-		[scnView addGestureRecognizer:tapGesture]; //// have to add a gesture since nav mode is off in this case. we won't get navigation signals, including presses and press releases until nav mode is back on
 	}
 }
-#endif
-
 
 -(void)updateBezierCurve {
 	for (NSInteger i = 0; i < bezParts.count; i++) {
@@ -150,6 +177,7 @@
 	if ([node.name containsString:@"handle"]) {
 		[node setScale:3.0f];
 	}
+	currentFocusNode = node;
 	[prevFcousedNode setScale:1.0f];
 	prevFcousedNode = node;
 }
@@ -183,6 +211,7 @@
 	}
 }
 
+
 -(void)inputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
 	[self updateBezierCurve];
 
@@ -213,6 +242,11 @@
 
 -(void)update:(NSTimeInterval)currentTime {
 	[super update:currentTime];
+	
+	if (lockedNode) {
+		lockedNode.position = pointStepVectorFromPointWithInterval(lockedNode.position, controllerState.normalVectorLThumbstick, 0.0, 0.0, 700.0f, controllerState.speedModLThumbstick);
+		[self updateBezierCurve];
+	}
 }
 
 

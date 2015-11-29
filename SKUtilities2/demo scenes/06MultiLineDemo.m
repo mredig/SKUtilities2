@@ -108,6 +108,11 @@
 
 -(void)update:(NSTimeInterval)currentTime {
 	[super update:currentTime];
+	
+	SKUGameControllerState* controllerState = SKUSharedUtilities.gcController.controllerStates[4];
+	if (controllerState.buttonsPressed & kSKUGamePadInputLeftThumbstick) {
+		multiLineLabel.position = pointStepVectorFromPointWithInterval(multiLineLabel.position, controllerState.normalVectorLThumbstick, 0.0, 0.0, 700.0f, controllerState.speedModLThumbstick);
+	}
 }
 
 

@@ -210,6 +210,18 @@ CGVector vectorMultiplyByFactor (CGVector vector, CGFloat factor) {
 	return CGVectorMake(vector.dx * factor, vector.dy * factor);
 }
 
+BOOL vectorIsZero (CGVector vector) {
+	BOOL zero = NO;
+	if (vector.dx == 0.0 && vector.dy == 0.0) {
+		zero = YES;
+	}
+	return zero;
+}
+
+CGFloat vectorDistance (CGVector vector) {
+	return distanceBetween(pointFromCGVector(vector), CGPointZero);
+}
+
 CGVector vectorFacingPoint (CGPoint destination, CGPoint origin, bool normalize) { //test more carefully
 	CGVector destVect = vectorFromCGPoint(destination);
 	CGVector origVect = vectorFromCGPoint(origin);
@@ -571,6 +583,23 @@ void SKULog(const NSInteger verbosityLevel, NSString* format, ...) {
 #endif
 }
 
+void SKULogBinary(uint32_t value) {
+	uint32_t tValue = value;
+	uint32_t one = 1;
+	NSString* string = @"";
+	for (uint8_t i = 1; i <= 32; i++) {
+		BOOL bit = (one & tValue) == 1;
+		string = [NSString stringWithFormat:@"%i%@", bit, string];
+		tValue = tValue >> 1;
+		if (i % 4 == 0 && i != 1) {
+			string = [NSString stringWithFormat:@" %@", string];
+		}
+		if (i % 8 == 0 && i != 1) {
+			string = [NSString stringWithFormat:@" %@", string];
+		}
+	}
+	NSLog(@"\n%@", string);
+}
 
 
 
@@ -791,6 +820,8 @@ static SKUtilities2* sharedUtilities = Nil;
 		
 		_validPlayerNav = kSKUGamePadPlayerFlag1 | kSKUGamePadPlayerFlag2 | kSKUGamePadPlayerFlag3 | kSKUGamePadPlayerFlag4;
 		_playerControllers = [NSMutableArray array];
+		
+		_controllerStates = @[[SKUGameControllerState controllerState], [SKUGameControllerState controllerState], [SKUGameControllerState controllerState], [SKUGameControllerState controllerState], [SKUGameControllerState controllerState]];
 	}
 	return self;
 }
@@ -1090,6 +1121,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	if (!_view) {
 		NSLog(@"No view set on SKUSharedUtilities.gcController.view. Please set it properly to use controllers.");
 	}
+	[self updateControllerStateForPlayer:player withInput:input andXValue:xValue andYValue:yValue isPressed:pressed andEventDictionary:eventDictionary];
 	[_view gamepadInputChangedForPlayer:player withInput:input andXValue:xValue andYValue:yValue isPressed:pressed andEventDictionary:eventDictionary];
 }
 
@@ -1109,10 +1141,86 @@ static SKUtilities2* sharedUtilities = Nil;
 		controllerState.location = midPointOfRect(_view.scene.frame);
 		[SKUSharedUtilities resetSelectLocation];
 	}
-	controllerState.vector = CGVectorMake(xValue, yValue);
-	controllerState.location = pointAdd(controllerState.location, pointMultiplyByFactor(pointFromCGVector(controllerState.vector), SKUSharedUtilities.navThresholdDistance * multiplier));
+	controllerState.vectorDPad = CGVectorMake(xValue, yValue);
+	controllerState.location = pointAdd(controllerState.location, pointMultiplyByFactor(pointFromCGVector(controllerState.vectorDPad), SKUSharedUtilities.navThresholdDistance * multiplier));
 }
 
+-(void)updateControllerStateForPlayer:(GCControllerPlayerIndex)player withInput:(kSKUGamePadInputs)input andXValue:(float)xValue andYValue:(float)yValue isPressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary {
+	
+	SKUGameControllerState* controllerState;
+	SKUGameControllerState* metaState = _controllerStates[4];
+	switch (player) {
+		case GCControllerPlayerIndex1:
+			controllerState = _controllerStates[0];
+			break;
+		case GCControllerPlayerIndex2:
+			controllerState = _controllerStates[1];
+			break;
+		case GCControllerPlayerIndex3:
+			controllerState = _controllerStates[2];
+			break;
+		case GCControllerPlayerIndex4:
+			controllerState = _controllerStates[3];
+			break;
+		default:
+			break;
+	}
+	CGVector inputVector = CGVectorMake(xValue, yValue);
+	static const kSKUGamePadInputs buttons = kSKUGamePadInputButtonA | kSKUGamePadInputButtonB | kSKUGamePadInputButtonX | kSKUGamePadInputButtonY | kSKUGamePadInputLeftShoulder | kSKUGamePadInputLeftTrigger | kSKUGamePadInputRightShoulder | kSKUGamePadInputRightTrigger;
+	static const kSKUGamePadInputs directions = kSKUGamePadInputLeftThumbstick | kSKUGamePadInputDirectionalPad | kSKUGamePadInputRightThumbstick;
+	
+	BOOL isButtons = input & buttons;
+	BOOL isDirections = input & directions;
+	BOOL isPause = input & kSKUGamePadInputButtonPause;
+	
+	if (isButtons) {
+		[self setStateForButton:input pressed:pressed withControllerState:controllerState];
+		[self setStateForButton:input pressed:pressed withControllerState:metaState];
+	} else if (isDirections) {
+		[self setStateForDirection:input withVector:inputVector andControllerState:controllerState];
+		[self setStateForDirection:input withVector:inputVector andControllerState:metaState];
+	} else if (isPause) {
+		BOOL alreadyPaused = controllerState.buttonsPressed & kSKUGamePadInputButtonPause;
+		[self setStateForButton:input pressed:!alreadyPaused withControllerState:controllerState];
+		[self setStateForButton:input pressed:!alreadyPaused withControllerState:metaState];
+	}
+	
+//	SKULogBinary(controllerState.buttonsPressed);
+}
+
+-(void)setStateForButton:(kSKUGamePadInputs)button pressed:(BOOL)pressed withControllerState:(SKUGameControllerState*)controllerState {
+	controllerState.buttonsPressedPrevious = controllerState.buttonsPressed;
+	if (pressed) {
+		controllerState.buttonsPressed |= button;
+	} else {
+		controllerState.buttonsPressed &= ~button;
+	}
+}
+-(void)setStateForDirection:(kSKUGamePadInputs)directionPad withVector:(CGVector)vector andControllerState:(SKUGameControllerState*)controllerState {
+	controllerState.buttonsPressedPrevious = controllerState.buttonsPressed;
+	if (!vectorIsZero(vector)) {
+		controllerState.buttonsPressed |= directionPad;
+	} else {
+		controllerState.buttonsPressed &= ~directionPad;
+	}
+	switch (directionPad) {
+		case kSKUGamePadInputDirectionalPad:
+			controllerState.vectorDPad = vector;
+			controllerState.speedModDPad = fmin(vectorDistance(vector), 1.0);
+			break;
+		case kSKUGamePadInputLeftThumbstick:
+			controllerState.vectorLThumbstick = vector;
+			controllerState.speedModLThumbstick = fmin(vectorDistance(vector), 1.0);
+			break;
+		case kSKUGamePadInputRightThumbstick:
+			controllerState.vectorRThumbstick= vector;
+			controllerState.speedModRThumbstick = fmin(vectorDistance(vector), 1.0);
+			break;
+			
+		default:
+			break;
+	}
+}
 
 @end
 
@@ -1123,7 +1231,16 @@ static SKUtilities2* sharedUtilities = Nil;
 -(instancetype)init {
 	if (self = [super init]) {
 		_buttonsPressed = 0;
-		_vector = CGVectorMake(0.0, 0.0);
+		_vectorDPad = CGVectorMake(0.0, 0.0);
+		_normalVectorDPad = CGVectorMake(0.0, 0.0);
+		_vectorLThumbstick = CGVectorMake(0.0, 0.0);
+		_normalVectorLThumbstick = CGVectorMake(0.0, 0.0);
+		_vectorRThumbstick = CGVectorMake(0.0, 0.0);
+		_normalVectorRThumbstick = CGVectorMake(0.0, 0.0);
+		_speed = 0.0;
+		_speedModDPad = 0.0;
+		_speedModLThumbstick = 0.0;
+		_speedModRThumbstick = 0.0;
 	}
 	return self;
 }
@@ -1136,6 +1253,60 @@ static SKUtilities2* sharedUtilities = Nil;
 	SKUGameControllerState* state = [[SKUGameControllerState alloc] init];
 	state.location = location;
 	return state;
+}
+
+-(void)setVectorDPad:(CGVector)vectorDPad {
+	_normalVectorDPad = vectorNormalize(vectorDPad);
+	_vectorDPad = vectorDPad;
+	
+	_normalVectorDPad = [self checkVectorIsntNaN:_normalVectorDPad];
+}
+
+-(void)setNormalVectorDPad:(CGVector)normalVectorDPad {
+	_normalVectorDPad = vectorNormalize(normalVectorDPad);
+	_vectorDPad = normalVectorDPad;
+	
+	_normalVectorDPad = [self checkVectorIsntNaN:_normalVectorDPad];
+}
+
+-(void)setVectorLThumbstick:(CGVector)vectorLThumbstick {
+	_normalVectorLThumbstick = vectorNormalize(vectorLThumbstick);
+	_vectorLThumbstick = vectorLThumbstick;
+	
+	_normalVectorLThumbstick = [self checkVectorIsntNaN:_normalVectorLThumbstick];
+}
+
+-(void)setNormalVectorLThumbstick:(CGVector)normalVectorLThumbstick {
+	_normalVectorLThumbstick = vectorNormalize(normalVectorLThumbstick);
+	_vectorLThumbstick = normalVectorLThumbstick;
+	
+	_normalVectorLThumbstick = [self checkVectorIsntNaN:_normalVectorLThumbstick];
+}
+
+-(void)setVectorRThumbstick:(CGVector)vectorRThumbstick {
+	_normalVectorRThumbstick = vectorNormalize(vectorRThumbstick);
+	_vectorRThumbstick = vectorRThumbstick;
+	
+	_normalVectorRThumbstick = [self checkVectorIsntNaN:_normalVectorRThumbstick];
+
+}
+
+-(void)setNormalVectorRThumbstick:(CGVector)normalVectorRThumbstick {
+	_normalVectorRThumbstick = vectorNormalize(normalVectorRThumbstick);
+	_vectorRThumbstick = normalVectorRThumbstick;
+	
+	_normalVectorRThumbstick = [self checkVectorIsntNaN:_normalVectorRThumbstick];
+}
+
+-(CGVector)checkVectorIsntNaN:(CGVector)vector {
+	CGVector rVector = vector;
+	if (isnan(rVector.dx)) {
+		rVector = CGVectorMake(0.0, rVector.dy);
+	}
+	if (isnan(rVector.dy)) {
+		rVector = CGVectorMake(rVector.dx, 0.0);
+	}
+	return rVector;
 }
 
 @end
@@ -4119,7 +4290,7 @@ static SKUtilities2* sharedUtilities = Nil;
 			} else {
 				SKNode* currentFocusNode = [SKUSharedUtilities handleSubNodeMovement:controllerState.location withCurrentFocus:prevFocus inSet:nodeSet inScene:self.scene];
 				[self performSelector:@selector(skuInternalUpdateCurrentFocusedNode:) withObject:currentFocusNode];
-				controllerState.location = pointAdd(controllerState.location, pointMultiplyByFactor(pointFromCGVector(controllerState.vector), SKUSharedUtilities.navThresholdDistance * 0.05));
+				controllerState.location = pointAdd(controllerState.location, pointMultiplyByFactor(pointFromCGVector(controllerState.vectorDPad), SKUSharedUtilities.navThresholdDistance * 0.05));
 				//				NSLog(@"dpad pressed: vec: %f %f pos: %f %f pressed: %i", controllerState.vector.dx, controllerState.vector.dy, controllerState.location.x, controllerState.location.y, controllerState.buttonsPressed);
 				//				[self skuInternalUpdateCurrentFocusedNode:currentFocusNode];
 			}

@@ -20,6 +20,8 @@
 	SKSpriteNode* cursor;
 	
 	NSInteger verbosityLevelRequired;
+	
+	SKUGameControllerState* cursorMovement;
 }
 
 @end
@@ -35,6 +37,8 @@
 	
 	SKULog( verbosityLevelRequired, @"\n\n\n\n02RotationScene: demos orientation functions");
 
+	cursorMovement = SKUSharedUtilities.gcController.controllerStates[4];
+	cursorMovement.speed = 700.0f;
 	
 	orientUpNode = [SKSpriteNode spriteNodeWithImageNamed:@"Spaceship"];
 	orientUpNode.position = CGPointMake(self.size.width * 0.25, self.size.height * 0.25);
@@ -197,7 +201,7 @@
 
 
 
--(void)relativeInputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
+-(void)relativeInputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict { // handle movement with Siri remote
 	[super relativeInputMovedSKU:location withDelta:delta withEventDictionary:eventDict];
 	if (cursor.hidden == VISIBLE) {
 		cursor.position = pointAdd(delta, cursor.position);
@@ -205,10 +209,17 @@
 	}
 }
 
--(void)absoluteInputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict {
+-(void)absoluteInputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict { // handle movement with direct input (ios and osx)
 	[self rotations:location];
 }
 
+-(void)gamepadButtonXChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary *)eventDictionary {
+	BOOL wasPressed = cursorMovement.buttonsPressedPrevious & kSKUGamePadInputButtonX;
+	if (wasPressed && !pressed) {
+		GCController* newFirst = [SKUSharedUtilities.gcController gamepadForPlayer:GCControllerPlayerIndex2];
+		[SKUSharedUtilities.gcController setPlayerOne:newFirst];
+	}
+}
 
 -(void)rotations:(CGPoint)location {
 	orientUpNode.zRotation = orientToFromUpFace(location, orientUpNode.position);
@@ -241,8 +252,11 @@
 
 -(void)update:(NSTimeInterval)currentTime {
 	[super update:currentTime];
-
 	
+	if (cursorMovement.buttonsPressed & kSKUGamePadInputLeftThumbstick && cursor.hidden == VISIBLE) { // handle movement with gamepad
+		cursor.position = pointStepVectorFromPointWithInterval(cursor.position, cursorMovement.normalVectorLThumbstick, 0.0, 0.0, cursorMovement.speed, cursorMovement.speedModLThumbstick);
+		[self rotations:cursor.position];
+	}
 	
 }
 

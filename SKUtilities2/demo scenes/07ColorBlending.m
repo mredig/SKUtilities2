@@ -85,12 +85,12 @@
 	} else if (delta.y < 0) {
 		yAlpha -= difference;
 	}
-	self.backgroundColor = [SKColor blendColorSKU:blueColor withColor:greenColor alpha:xAlpha];
-	self.backgroundColor = [SKColor blendColorSKU:self.backgroundColor withColor:redColor alpha:yAlpha];
 
 	yAlpha = clipFloatWithinRange(yAlpha, 0.0, 1.0);
 	xAlpha = clipFloatWithinRange(xAlpha, 0.0, 1.0);
 	
+	self.backgroundColor = [SKColor blendColorSKU:blueColor withColor:greenColor alpha:xAlpha];
+	self.backgroundColor = [SKColor blendColorSKU:self.backgroundColor withColor:redColor alpha:yAlpha];
 	
 }
 
@@ -117,6 +117,24 @@
 
 -(void)update:(NSTimeInterval)currentTime {
 	[super update:currentTime];
+	
+	SKUGameControllerState* controllerState = SKUSharedUtilities.gcController.controllerStates[4];
+	if (controllerState.buttonsPressed & kSKUGamePadInputLeftThumbstick) {
+		
+		xAlpha += controllerState.vectorLThumbstick.dx * 0.05;
+		yAlpha += controllerState.vectorLThumbstick.dy * 0.05;
+		
+		yAlpha = clipFloatWithinRange(yAlpha, 0.0, 1.0);
+		xAlpha = clipFloatWithinRange(xAlpha, 0.0, 1.0);
+		
+		SKColor* redColor = [SKColor redColor];
+		SKColor* greenColor = [SKColor greenColor];
+		SKColor* blueColor = [SKColor blueColor];
+		
+		self.backgroundColor = [SKColor blendColorSKU:blueColor withColor:greenColor alpha:xAlpha];
+		self.backgroundColor = [SKColor blendColorSKU:self.backgroundColor withColor:redColor alpha:yAlpha];
+
+	}
 }
 
 
