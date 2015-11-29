@@ -1169,9 +1169,9 @@ static SKUtilities2* sharedUtilities = Nil;
 	static const kSKUGamePadInputs buttons = kSKUGamePadInputButtonA | kSKUGamePadInputButtonB | kSKUGamePadInputButtonX | kSKUGamePadInputButtonY | kSKUGamePadInputLeftShoulder | kSKUGamePadInputLeftTrigger | kSKUGamePadInputRightShoulder | kSKUGamePadInputRightTrigger;
 	static const kSKUGamePadInputs directions = kSKUGamePadInputLeftThumbstick | kSKUGamePadInputDirectionalPad | kSKUGamePadInputRightThumbstick;
 	
-	BOOL isButtons = input & buttons;
-	BOOL isDirections = input & directions;
-	BOOL isPause = input & kSKUGamePadInputButtonPause;
+	BOOL isButtons = (input & buttons) > 0;
+	BOOL isDirections = (input & directions) > 0;
+	BOOL isPause = (input & kSKUGamePadInputButtonPause) > 0;
 	
 	if (isButtons) {
 		[self setStateForButton:input pressed:pressed withControllerState:controllerState];

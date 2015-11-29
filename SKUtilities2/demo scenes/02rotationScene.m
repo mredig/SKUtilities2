@@ -125,6 +125,16 @@
 	[orientDownNode addChild:downDirectionSprite];
 	
 	[self setupButton];
+	
+#if TARGET_OS_IPHONE
+	UIDevice* thisDevice = [UIDevice currentDevice];
+	if(thisDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone) {
+		[orientDownNode setScale:0.5];
+		[orientUpNode setScale:0.5];
+		[orientLeftNode setScale:0.5];
+		[orientRightNode setScale:0.5];
+	}
+#endif
 }
 
 -(void)setupButton {
@@ -177,12 +187,11 @@
 #if TARGET_OS_TV
 -(void)menuPressed:(UIGestureRecognizer*)gesture {
 	[self toggleDemoMode:nil];
-	[self.view removeGestureRecognizer:gesture];
 }
 #endif
 
 -(void)toggleDemoMode:(SKUButton*)button {
-	if (SKUSharedUtilities.navMode == kSKUNavModeOn) {
+	if (SKUSharedUtilities.navMode == kSKUNavModeOn && button) {
 		SKUSharedUtilities.navMode = kSKUNavModeOff;
 		cursor.hidden = VISIBLE;
 		[self childNodeWithName:@"menuNotice"].hidden = VISIBLE;
@@ -196,9 +205,25 @@
 		SKUSharedUtilities.navMode = kSKUNavModeOn;
 		cursor.hidden = HIDDEN;
 		[self childNodeWithName:@"menuNotice"].hidden = HIDDEN;
+#if TARGET_OS_TV
+		[self.view removeGestureRecognizer:gesture];
+#endif
 	}
 }
 
+-(void)gamepadButtonPausePressedForPlayer:(GCControllerPlayerIndex)player andEventDictionary:(NSDictionary *)eventDictionary {
+#if TARGET_OS_TV
+#else
+	[self toggleDemoMode:nil];
+#endif
+}
+
+-(void)gamepadButtonBChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary *)eventDictionary {
+	BOOL wasPressed = (cursorMovement.buttonsPressedPrevious & kSKUGamePadInputButtonB) > 0;
+	if (wasPressed && !pressed) {
+		[self toggleDemoMode:nil];
+	}
+}
 
 
 -(void)relativeInputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary *)eventDict { // handle movement with Siri remote
