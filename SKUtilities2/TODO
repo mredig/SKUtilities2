@@ -7,7 +7,6 @@ potential future ideas
 
 maybe refactor input movement stuff with localevents (inspired here: http://stackoverflow.com/questions/1628366/global-mouse-moved-events-in-cocoa?rq=1 )
 
-add nav functionality to iOS and Mac for integration with gamepad controllers (need controller to test this with first tho) -  mostly done - need to get sliders to work
 enumerate button states and pass that as argument to button calls on skuscene
 
 

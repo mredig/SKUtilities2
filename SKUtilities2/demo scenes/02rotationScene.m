@@ -21,6 +21,10 @@
 	
 	NSInteger verbosityLevelRequired;
 	
+#if TARGET_OS_TV
+	UITapGestureRecognizer* menuPressed;
+#endif
+	
 	SKUGameControllerState* cursorMovement;
 }
 
@@ -197,7 +201,7 @@
 		[self childNodeWithName:@"menuNotice"].hidden = VISIBLE;
 		
 #if TARGET_OS_TV
-		UITapGestureRecognizer* menuPressed = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(menuPressed:)];
+		menuPressed = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(menuPressed:)];
 		menuPressed.allowedPressTypes = @[[NSNumber numberWithInteger:UIPressTypeMenu]];
 		[self.view addGestureRecognizer:menuPressed];
 #endif
@@ -206,7 +210,8 @@
 		cursor.hidden = HIDDEN;
 		[self childNodeWithName:@"menuNotice"].hidden = HIDDEN;
 #if TARGET_OS_TV
-		[self.view removeGestureRecognizer:gesture];
+		[self.view removeGestureRecognizer:menuPressed];
+		menuPressed = nil;
 #endif
 	}
 }
@@ -242,7 +247,9 @@
 	BOOL wasPressed = cursorMovement.buttonsPressedPrevious & kSKUGamePadInputButtonX;
 	if (wasPressed && !pressed) {
 		GCController* newFirst = [SKUSharedUtilities.gcController gamepadForPlayer:GCControllerPlayerIndex2];
-		[SKUSharedUtilities.gcController setPlayerOne:newFirst];
+		if (newFirst) {
+			[SKUSharedUtilities.gcController setPlayerOne:newFirst];
+		}
 	}
 }
 

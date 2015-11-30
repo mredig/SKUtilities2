@@ -682,7 +682,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	SKNode* rNode;
 	
 	if (isnan(selectLocation.x) && isnan(selectLocation.y)) {
-		selectLocation = midPointOfRect(scene.frame); // might need to change to view's frame
+		selectLocation = midPointOfRect(scene.frame); // might need to change to view's frame - then again, it uses the scene's coordinate system to do the calculation so probably not
 	}
 	
 	CGFloat distance = distanceBetween(location, selectLocation);
@@ -4164,6 +4164,13 @@ static SKUtilities2* sharedUtilities = Nil;
 
 @end
 
+@interface SKNode (SKUModifications) // this needs to be declared for SKUScene's update method to work right
+
+-(void)skuInternalUpdateCurrentFocusedNode:(SKNode*)node;
+
+@end
+
+
 @implementation SKUScene
 
 -(id)init {
@@ -4274,12 +4281,14 @@ static SKUtilities2* sharedUtilities = Nil;
 	/* Called before each frame is rendered */
 	
 	[SKUSharedUtilities updateCurrentTime:currentTime];
+
+	SKUGameControllerState* controllerState = SKUSharedUtilities.gcController.navControllerState;
+	if (!controllerState) {
+		controllerState = [SKUGameControllerState controllerStateWithCenterPosition:midPointOfRect(self.frame)];
+		SKUSharedUtilities.gcController.navControllerState = controllerState;
+	}
 	
 	if (SKUSharedUtilities.navMode == kSKUNavModeOn) {
-		SKUGameControllerState* controllerState = SKUSharedUtilities.gcController.navControllerState;
-		if (!controllerState) {
-			controllerState = [SKUGameControllerState controllerStateWithCenterPosition:midPointOfRect(self.frame)];
-		}
 		if (controllerState.buttonsPressed & kSKUGamePadInputDirectionalPad) {
 			SKNode* prevFocus = SKUSharedUtilities.navFocus.userData[kSKUNavConstantCurrentFocusedNode];
 			NSSet* nodeSet = SKUSharedUtilities.navFocus.userData[kSKUNavConstantNavNodes];
@@ -4289,11 +4298,23 @@ static SKUtilities2* sharedUtilities = Nil;
 				SKULog(0,@"Error: no navNodes to navigate through - did you add nodes to the nav nodes (addNodeToNavNodesSKU:(SKNode*)) and set the navFocus on the singleton ([SKUSharedUtilities setNavFocus:(SKNode*)]?");
 			} else {
 				SKNode* currentFocusNode = [SKUSharedUtilities handleSubNodeMovement:controllerState.location withCurrentFocus:prevFocus inSet:nodeSet inScene:self.scene];
-				[self performSelector:@selector(skuInternalUpdateCurrentFocusedNode:) withObject:currentFocusNode];
+				[self skuInternalUpdateCurrentFocusedNode:currentFocusNode];
 				controllerState.location = pointAdd(controllerState.location, pointMultiplyByFactor(pointFromCGVector(controllerState.vectorDPad), SKUSharedUtilities.navThresholdDistance * 0.05));
 				//				NSLog(@"dpad pressed: vec: %f %f pos: %f %f pressed: %i", controllerState.vector.dx, controllerState.vector.dy, controllerState.location.x, controllerState.location.y, controllerState.buttonsPressed);
-				//				[self skuInternalUpdateCurrentFocusedNode:currentFocusNode];
 			}
+		}
+	} else if (SKUSharedUtilities.navMode == kSKUNavModePressed && controllerState.buttonsPressed & kSKUGamePadInputDirectionalPad) {
+		SKNode* currentFocus = SKUSharedUtilities.navFocus.userData[kSKUNavConstantCurrentFocusedNode];
+		if ([currentFocus isKindOfClass:[SKUSliderButton class]]) {
+			SKUSliderButton* slider = (SKUSliderButton*)currentFocus;
+			CGFloat stepsize;
+			if (slider.stepSize > 0.0) {
+				stepsize = slider.stepSize * controllerState.vectorDPad.dx;
+			} else {
+				stepsize = ((slider.maximumValue - slider.minimumValue) / (slider.sliderWidth * 0.2)) * controllerState.vectorDPad.dx;
+			}
+			slider.value += stepsize;
+			[slider sendChanged:NO];
 		}
 	}
 }
@@ -5052,7 +5073,7 @@ static SKUtilities2* sharedUtilities = Nil;
 -(void)siriRemoteinputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
 	
 	if (SKUSharedUtilities.navMode == kSKUNavModeOn) {
-		UITouch* touch = eventDict[@"touch"];
+		UITouch* touch = eventDict[@"touch"]; // this whole thing may be unecessary, but not removing cuz I don't remember why I did it
 		if (![SKUSharedUtilities.touchTracker containsObject:touch]) {
 			[SKUSharedUtilities.touchTracker addObject:touch];
 		}
