@@ -104,11 +104,8 @@
 //}
 
 
--(void)gamepadButtonAChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary *)eventDictionary {
-	BOOL wasPressed = controllerState.buttonsPressedPrevious & kSKUGamePadInputButtonA;
-	BOOL ended = wasPressed && !pressed;
-	BOOL began = !wasPressed && pressed;
-	if (ended) {
+-(void)gamepadButtonAChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressedState:(kSKUGamepadButtonStates)pressedState andEventDictionary:(NSDictionary *)eventDictionary {
+	if (pressedState == kSKUGamepadButtonStateEnded) {
 		if (lockedNode) {
 			[self unlockNode];
 		} else {

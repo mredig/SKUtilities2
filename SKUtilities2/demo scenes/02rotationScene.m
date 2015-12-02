@@ -223,9 +223,8 @@
 #endif
 }
 
--(void)gamepadButtonBChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary *)eventDictionary {
-	BOOL wasPressed = (cursorMovement.buttonsPressedPrevious & kSKUGamePadInputButtonB) > 0;
-	if (wasPressed && !pressed) {
+-(void)gamepadButtonBChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressedState:(kSKUGamepadButtonStates)pressedState andEventDictionary:(NSDictionary *)eventDictionary {
+	if (pressedState == kSKUGamepadButtonStateEnded) {
 		[self toggleDemoMode:nil];
 	}
 }

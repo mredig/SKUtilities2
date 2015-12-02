@@ -269,6 +269,14 @@ CGPoint pointMultiplyByFactor (CGPoint point, CGFloat factor){
 	return CGPointMake(point.x * factor, point.y * factor);
 }
 
+BOOL pointIsZero (CGPoint point) {
+	BOOL zero = NO;
+	if (point.x == 0.0 && point.y == 0.0) {
+		zero = YES;
+	}
+	return zero;
+}
+
 CGPoint pointRelativeToScene (SKScene* scene, CGPoint point) {
 	return pointMultiplyByPoint(pointFromCGSize(scene.size), point);
 }
@@ -937,7 +945,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	//axes
 	microGamepad.dpad.valueChangedHandler = ^(GCControllerDirectionPad* dpad, float xValue, float yValue) {
 		NSDictionary* eventDict = [NSDictionary dictionaryWithObjects:@[dpad, microGamepad.controller] forKeys:@[@"button", @"controller"]];
-		[self gamepadInputChangedInternalForPlayer:microGamepad.controller.playerIndex withInput:kSKUGamePadInputRightShoulder andXValue:xValue andYValue:yValue isPressed:YES andEventDictionary:eventDict];
+		[self gamepadInputChangedInternalForPlayer:microGamepad.controller.playerIndex withInput:kSKUGamePadInputDirectionalPad andXValue:xValue andYValue:yValue isPressed:YES andEventDictionary:eventDict];
 	};
 	
 	microGamepad.controller.controllerPausedHandler = ^(GCController* controller) {
@@ -1097,7 +1105,7 @@ static SKUtilities2* sharedUtilities = Nil;
 				break;
 			case kSKUGamePadInputButtonA:
 			{
-#if TARGET_OS_TV
+#if TARGET_OS_TV // if tvOS, check the state of gamepad user interaction being enabled or not
 				GCEventViewController* evc = (GCEventViewController*)[UIApplication sharedApplication].keyWindow.rootViewController;
 				BOOL vcNavOn = evc.controllerUserInteractionEnabled;
 				if (!vcNavOn) {
@@ -1121,8 +1129,9 @@ static SKUtilities2* sharedUtilities = Nil;
 	if (!_view) {
 		NSLog(@"No view set on SKUSharedUtilities.gcController.view. Please set it properly to use controllers.");
 	}
-	[self updateControllerStateForPlayer:player withInput:input andXValue:xValue andYValue:yValue isPressed:pressed andEventDictionary:eventDictionary];
-	[_view gamepadInputChangedForPlayer:player withInput:input andXValue:xValue andYValue:yValue isPressed:pressed andEventDictionary:eventDictionary];
+
+	kSKUGamepadButtonStates buttonState = [self updateControllerStateForPlayer:player withInput:input andXValue:xValue andYValue:yValue isPressed:pressed andEventDictionary:eventDictionary]; // serves dual purpose: updates controller state and generates button state
+	[_view gamepadInputChangedForPlayer:player withInput:input andXValue:xValue andYValue:yValue pressedState:buttonState andEventDictionary:eventDictionary];
 }
 
 -(void)gamepadNavDpadWithControllerState:(SKUGameControllerState*)controllerState andXValue:(CGFloat)xValue andYValue:(CGFloat)yValue {
@@ -1145,7 +1154,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	controllerState.location = pointAdd(controllerState.location, pointMultiplyByFactor(pointFromCGVector(controllerState.vectorDPad), SKUSharedUtilities.navThresholdDistance * multiplier));
 }
 
--(void)updateControllerStateForPlayer:(GCControllerPlayerIndex)player withInput:(kSKUGamePadInputs)input andXValue:(float)xValue andYValue:(float)yValue isPressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary {
+-(kSKUGamepadButtonStates)updateControllerStateForPlayer:(GCControllerPlayerIndex)player withInput:(kSKUGamePadInputs)input andXValue:(float)xValue andYValue:(float)yValue isPressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary {
 	
 	SKUGameControllerState* controllerState;
 	SKUGameControllerState* metaState = _controllerStates[4];
@@ -1185,7 +1194,24 @@ static SKUtilities2* sharedUtilities = Nil;
 		[self setStateForButton:input pressed:!alreadyPaused withControllerState:metaState];
 	}
 	
+	BOOL wasPressed = (controllerState.buttonsPressedPrevious & input) > 0;
+	kSKUGamepadButtonStates buttonState;
+	if (!wasPressed && pressed) {
+		buttonState = kSKUGamepadButtonStateBegan;
+//		SKULog(0, @"began");
+	} else if (wasPressed && !pressed) {
+		buttonState = kSKUGamepadButtonStateEnded;
+//		SKULog(0, @"ended");
+	} else if (wasPressed && xValue == 0.0 && yValue == 0.0 && isDirections) {
+		buttonState = kSKUGamepadButtonStateEnded;
+//		SKULog(0, @"ended");
+	} else {
+		buttonState = kSKUGamepadButtonStateChanged;
+//		SKULog(0, @"changed");
+	}
+	
 //	SKULogBinary(controllerState.buttonsPressed);
+	return buttonState;
 }
 
 -(void)setStateForButton:(kSKUGamePadInputs)button pressed:(BOOL)pressed withControllerState:(SKUGameControllerState*)controllerState {
@@ -4216,7 +4242,7 @@ static SKUtilities2* sharedUtilities = Nil;
 #pragma mark gamepad vague executes buttons
 
 
--(void)gamepadInputChangedForPlayer:(GCControllerPlayerIndex)player withInput:(kSKUGamePadInputs)input andXValue:(float)xValue andYValue:(float)yValue isPressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary {
+-(void)gamepadInputChangedForPlayer:(GCControllerPlayerIndex)player withInput:(kSKUGamePadInputs)input andXValue:(float)xValue andYValue:(float)yValue pressedState:(kSKUGamepadButtonStates)pressedState andEventDictionary:(NSDictionary*)eventDictionary {
 
 }
 
@@ -4226,35 +4252,35 @@ static SKUtilities2* sharedUtilities = Nil;
 
 #pragma mark gamepad specific executes buttons
 
--(void)gamepadLeftShoulderChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary {
+-(void)gamepadLeftShoulderChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressedState:(kSKUGamepadButtonStates)pressedState andEventDictionary:(NSDictionary*)eventDictionary {
 	
 }
 
--(void)gamepadLeftTriggerChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary {
+-(void)gamepadLeftTriggerChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressedState:(kSKUGamepadButtonStates)pressedState andEventDictionary:(NSDictionary*)eventDictionary {
 	
 }
 
--(void)gamepadRightShoulderChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary {
+-(void)gamepadRightShoulderChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressedState:(kSKUGamepadButtonStates)pressedState andEventDictionary:(NSDictionary*)eventDictionary {
 	
 }
 
--(void)gamepadRightTriggerChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary {
+-(void)gamepadRightTriggerChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressedState:(kSKUGamepadButtonStates)pressedState andEventDictionary:(NSDictionary*)eventDictionary {
 	
 }
 
--(void)gamepadButtonAChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary {
+-(void)gamepadButtonAChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressedState:(kSKUGamepadButtonStates)pressedState andEventDictionary:(NSDictionary*)eventDictionary {
 
 }
 
--(void)gamepadButtonBChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary {
+-(void)gamepadButtonBChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressedState:(kSKUGamepadButtonStates)pressedState andEventDictionary:(NSDictionary*)eventDictionary {
 	
 }
 
--(void)gamepadButtonXChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary {
+-(void)gamepadButtonXChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressedState:(kSKUGamepadButtonStates)pressedState andEventDictionary:(NSDictionary*)eventDictionary {
 	
 }
 
--(void)gamepadButtonYChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary {
+-(void)gamepadButtonYChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressedState:(kSKUGamepadButtonStates)pressedState andEventDictionary:(NSDictionary*)eventDictionary {
 	
 }
 
@@ -4607,7 +4633,7 @@ static SKUtilities2* sharedUtilities = Nil;
 
 #endif
 
--(void)gamepadInputChangedForPlayer:(GCControllerPlayerIndex)player withInput:(kSKUGamePadInputs)input andXValue:(float)xValue andYValue:(float)yValue isPressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary {
+-(void)gamepadInputChangedForPlayer:(GCControllerPlayerIndex)player withInput:(kSKUGamePadInputs)input andXValue:(float)xValue andYValue:(float)yValue pressedState:(kSKUGamepadButtonStates)pressedState andEventDictionary:(NSDictionary*)eventDictionary {
 	
 	if (![self.scene isKindOfClass:[SKUScene class]]) {
 		return;
@@ -4621,31 +4647,31 @@ static SKUtilities2* sharedUtilities = Nil;
 	
 	switch (input) {
 		case kSKUGamePadInputButtonA:
-			[gcScene gamepadButtonAChangedForPlayer:player withValue:xValue pressed:pressed andEventDictionary:eventDictionary];
+			[gcScene gamepadButtonAChangedForPlayer:player withValue:xValue pressedState:pressedState andEventDictionary:eventDictionary];
 			break;
 		case kSKUGamePadInputButtonB:
-			[gcScene gamepadButtonBChangedForPlayer:player withValue:xValue pressed:pressed andEventDictionary:eventDictionary];
+			[gcScene gamepadButtonBChangedForPlayer:player withValue:xValue pressedState:pressedState andEventDictionary:eventDictionary];
 			break;
 		case kSKUGamePadInputButtonX:
-			[gcScene gamepadButtonXChangedForPlayer:player withValue:xValue pressed:pressed andEventDictionary:eventDictionary];
+			[gcScene gamepadButtonXChangedForPlayer:player withValue:xValue pressedState:pressedState andEventDictionary:eventDictionary];
 			break;
 		case kSKUGamePadInputButtonY:
-			[gcScene gamepadButtonYChangedForPlayer:player withValue:xValue pressed:pressed andEventDictionary:eventDictionary];
+			[gcScene gamepadButtonYChangedForPlayer:player withValue:xValue pressedState:pressedState andEventDictionary:eventDictionary];
 			break;
 		case kSKUGamePadInputButtonPause:
 			[gcScene gamepadButtonPausePressedForPlayer:player andEventDictionary:eventDictionary];
 			break;
 		case kSKUGamePadInputLeftShoulder:
-			[gcScene gamepadLeftShoulderChangedForPlayer:player withValue:xValue pressed:pressed andEventDictionary:eventDictionary];
+			[gcScene gamepadLeftShoulderChangedForPlayer:player withValue:xValue pressedState:pressedState andEventDictionary:eventDictionary];
 			break;
 		case kSKUGamePadInputLeftTrigger:
-			[gcScene gamepadLeftTriggerChangedForPlayer:player withValue:xValue pressed:pressed andEventDictionary:eventDictionary];
+			[gcScene gamepadLeftTriggerChangedForPlayer:player withValue:xValue pressedState:pressedState andEventDictionary:eventDictionary];
 			break;
 		case kSKUGamePadInputRightShoulder:
-			[gcScene gamepadRightShoulderChangedForPlayer:player withValue:xValue pressed:pressed andEventDictionary:eventDictionary];
+			[gcScene gamepadRightShoulderChangedForPlayer:player withValue:xValue pressedState:pressedState andEventDictionary:eventDictionary];
 			break;
 		case kSKUGamePadInputRightTrigger:
-			[gcScene gamepadRightTriggerChangedForPlayer:player withValue:xValue pressed:pressed andEventDictionary:eventDictionary];
+			[gcScene gamepadRightTriggerChangedForPlayer:player withValue:xValue pressedState:pressedState andEventDictionary:eventDictionary];
 			break;
 			
 		case kSKUGamePadInputLeftThumbstick:
@@ -4662,7 +4688,7 @@ static SKUtilities2* sharedUtilities = Nil;
 			break;
 	}
 	
-	[gcScene gamepadInputChangedForPlayer:player withInput:input andXValue:xValue andYValue:yValue isPressed:pressed andEventDictionary:eventDictionary];
+	[gcScene gamepadInputChangedForPlayer:player withInput:input andXValue:xValue andYValue:yValue pressedState:pressedState andEventDictionary:eventDictionary];
 	
 }
 

@@ -584,6 +584,13 @@ CGPoint pointMultiplyByPoint (CGPoint pointA, CGPoint pointB);
 CGPoint pointMultiplyByFactor (CGPoint point, CGFloat factor);
 
 /*!
+ Returns a boolean stating whether the given point was equal to CGPointZero or not.
+ @param point
+ CGPoint point struct to be evaluated as to whether it is equal to CGPointZero or not.
+ */
+BOOL pointIsZero (CGPoint point);
+
+/*!
  Returns a CGPoint that is the result of multiplying the scene size by the point provided
  @param scene scene
  @param point point (anchor point style: 0.0 - 1.0 range)
@@ -785,6 +792,18 @@ typedef enum {
 	kSKUSwipeDirectionDown,
 } kSKUSwipeDirections;
 
+/*!
+ Enumeration describing the state of a button press from a gamepad.
+ @constant kSKUGamepadButtonStateBegan Represents when a button is first pressed.
+ @constant kSKUGamepadButtonStateChanged Represents when a button's value changes, but remains pressed.
+ @constant kSKUGamepadButtonStateEnded Represents when a button is released.
+ */
+typedef enum {
+	kSKUGamepadButtonStateBegan,
+	kSKUGamepadButtonStateChanged,
+	kSKUGamepadButtonStateEnded,
+//	kSKUGamepadButtonStateCancelled,
+} kSKUGamepadButtonStates;
 
 struct SKUAcceleration {
 	double x;
@@ -793,13 +812,22 @@ struct SKUAcceleration {
 };
 typedef struct SKUAcceleration SKUAcceleration;
 
-typedef enum {
-	kSKUButtonInput,
-	kSKUAxisInput,
-	kSKUDirectionalPadInput,
-} kSKUGCControllerInputs;
-
-
+/*!
+ Gamepad buttons enumerated as flags.
+ @constant kSKUGamePadInputLeftShoulder Represents the left shoulder button.
+ @constant kSKUGamePadInputLeftTrigger Represents the left trigger button.
+ @constant kSKUGamePadInputLeftThumbstick Represents the left thumbstick axis.
+ @constant kSKUGamePadInputRightShoulder Represents the right shoulder button.
+ @constant kSKUGamePadInputRightTrigger Represents the right trigger button.
+ @constant kSKUGamePadInputRightThumbstick Represents the right thumbstick axis.
+ @constant kSKUGamePadInputDirectionalPad Represents the dpad axis.
+ @constant kSKUGamePadInputButtonA Represents the A button.
+ @constant kSKUGamePadInputButtonB Represents the B button.
+ @constant kSKUGamePadInputButtonX Represents the X button.
+ @constant kSKUGamePadInputButtonY Represents the Y button.
+ @constant kSKUGamePadInputButtonPause  Represents the Pause button.
+ @seealso SKUGCControllerController
+ */
 typedef enum {
 	kSKUGamePadInputLeftShoulder = 1 << 0,
 	kSKUGamePadInputLeftTrigger = 1 << 1,
@@ -815,6 +843,10 @@ typedef enum {
 	kSKUGamePadInputButtonPause = 1 << 11,
 } kSKUGamePadInputs;
 
+/*!
+ Player IDs enumerated as flags. Used to turn flags for which players can control nav, but you can use it for your own purposes as well.
+ @seealso validPlayerNav SKUGCControllerController validPlayerNav
+ */
 typedef enum {
 	kSKUGamePadPlayerFlag1 = 1 << 0,
 	kSKUGamePadPlayerFlag2 = 1 << 1,
@@ -1158,11 +1190,11 @@ Vulnerable to lag spikes if used.
 /*!
  Flags determining which buttons are pressed or not.
  */
-@property (nonatomic, assign) kSKUGCControllerInputs buttonsPressed;
+@property (nonatomic, assign) kSKUGamePadInputs buttonsPressed;
 /*!
  Flags determining which buttons are pressed or not, prior to the most recent change.
  */
-@property (nonatomic, assign) kSKUGCControllerInputs buttonsPressedPrevious;
+@property (nonatomic, assign) kSKUGamePadInputs buttonsPressedPrevious;
 
 +(SKUGameControllerState*)controllerState;
 /*!
@@ -2201,10 +2233,10 @@ typedef enum {
  @param input           kSKUGamePadInputs enumeration determining which input was pressed
  @param xValue          Used for both button and directional inputs. Directional inputs will show x direction vector of the input while button inputs will show the pressure it was pressed with.
  @param yValue          Used only for directional inputs. Shows the y direction vector of the input.
- @param pressed         Boolean determining whether the button is pressed or not.
+ @param pressedState    kSKUGamepadButtonStates representing the state of the button press.
  @param eventDictionary NSDictionary object with objects originating the events.
  */
--(void)gamepadInputChangedForPlayer:(GCControllerPlayerIndex)player withInput:(kSKUGamePadInputs)input andXValue:(float)xValue andYValue:(float)yValue isPressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary;
+-(void)gamepadInputChangedForPlayer:(GCControllerPlayerIndex)player withInput:(kSKUGamePadInputs)input andXValue:(float)xValue andYValue:(float)yValue pressedState:(kSKUGamepadButtonStates)pressedState andEventDictionary:(NSDictionary*)eventDictionary;
 /*!
  Called when gamepad motion input changes.
  @param player          GCControllerPlayerIndex determining which player caused the input.
@@ -2218,66 +2250,66 @@ typedef enum {
  Called when the left shoulder input changes.
  @param player          GCControllerPlayerIndex value for player who caused change.
  @param value           float value of pressure applied to input
- @param pressed         boolean determining whether it is pressed or not
+ @param pressedState    kSKUGamepadButtonStates representing the state of the button press.
  @param eventDictionary NSDictionary containing objects originating events
  */
--(void)gamepadLeftShoulderChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary;
+-(void)gamepadLeftShoulderChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressedState:(kSKUGamepadButtonStates)pressedState andEventDictionary:(NSDictionary*)eventDictionary;
 /*!
  Called when the left trigger input changes.
  @param player          GCControllerPlayerIndex value for player who caused change.
  @param value           float value of pressure applied to input
- @param pressed         boolean determining whether it is pressed or not
+ @param pressedState    kSKUGamepadButtonStates representing the state of the button press.
  @param eventDictionary NSDictionary containing objects originating events
  */
--(void)gamepadLeftTriggerChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary;
+-(void)gamepadLeftTriggerChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressedState:(kSKUGamepadButtonStates)pressedState andEventDictionary:(NSDictionary*)eventDictionary;
 /*!
  Called when the right shoulder input changes.
  @param player          GCControllerPlayerIndex value for player who caused change.
  @param value           float value of pressure applied to input
- @param pressed         boolean determining whether it is pressed or not
+ @param pressedState    kSKUGamepadButtonStates representing the state of the button press.
  @param eventDictionary NSDictionary containing objects originating events
  */
--(void)gamepadRightShoulderChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary;
+-(void)gamepadRightShoulderChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressedState:(kSKUGamepadButtonStates)pressedState andEventDictionary:(NSDictionary*)eventDictionary;
 /*!
  Called when the right trigger input changes.
  @param player          GCControllerPlayerIndex value for player who caused change.
  @param value           float value of pressure applied to input
- @param pressed         boolean determining whether it is pressed or not
+ @param pressedState    kSKUGamepadButtonStates representing the state of the button press.
  @param eventDictionary NSDictionary containing objects originating events
  */
--(void)gamepadRightTriggerChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary;
+-(void)gamepadRightTriggerChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressedState:(kSKUGamepadButtonStates)pressedState andEventDictionary:(NSDictionary*)eventDictionary;
 /*!
  Called when the A button input changes.
  @param player          GCControllerPlayerIndex value for player who caused change.
  @param value           float value of pressure applied to input
- @param pressed         boolean determining whether it is pressed or not
+ @param pressedState    kSKUGamepadButtonStates representing the state of the button press.
  @param eventDictionary NSDictionary containing objects originating events
  */
--(void)gamepadButtonAChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary;
+-(void)gamepadButtonAChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressedState:(kSKUGamepadButtonStates)pressedState andEventDictionary:(NSDictionary*)eventDictionary;
 /*!
  Called when the B button input changes.
  @param player          GCControllerPlayerIndex value for player who caused change.
  @param value           float value of pressure applied to input
- @param pressed         boolean determining whether it is pressed or not
+ @param pressedState    kSKUGamepadButtonStates representing the state of the button press.
  @param eventDictionary NSDictionary containing objects originating events
  */
--(void)gamepadButtonBChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary;
+-(void)gamepadButtonBChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressedState:(kSKUGamepadButtonStates)pressedState andEventDictionary:(NSDictionary*)eventDictionary;
 /*!
  Called when the X button input changes.
  @param player          GCControllerPlayerIndex value for player who caused change.
  @param value           float value of pressure applied to input
- @param pressed         boolean determining whether it is pressed or not
+ @param pressedState    kSKUGamepadButtonStates representing the state of the button press.
  @param eventDictionary NSDictionary containing objects originating events
  */
--(void)gamepadButtonXChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary;
+-(void)gamepadButtonXChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressedState:(kSKUGamepadButtonStates)pressedState andEventDictionary:(NSDictionary*)eventDictionary;
 /*!
  Called when the Y button input changes.
  @param player          GCControllerPlayerIndex value for player who caused change.
  @param value           float value of pressure applied to input
- @param pressed         boolean determining whether it is pressed or not
+ @param pressedState    kSKUGamepadButtonStates representing the state of the button press.
  @param eventDictionary NSDictionary containing objects originating events
  */
--(void)gamepadButtonYChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary;
+-(void)gamepadButtonYChangedForPlayer:(GCControllerPlayerIndex)player withValue:(float)value pressedState:(kSKUGamepadButtonStates)pressedState andEventDictionary:(NSDictionary*)eventDictionary;
 /*!
  Called when the pause button is pressed. Note that there's no call for when the button is let go.
  @param player          GCControllerPlayerIndex value for player who caused change.
@@ -2389,10 +2421,10 @@ typedef enum {
  @param input           kSKUGamePadInputs enumeration determining which input was pressed
  @param xValue          Used for both button and directional inputs. Directional inputs will show x direction vector of the input while button inputs will show the pressure it was pressed with.
  @param yValue          Used only for directional inputs. Shows the y direction vector of the input.
- @param pressed         Boolean determining whether the button is pressed or not.
+ @param pressedState    kSKUGamepadButtonStates representing the state of the button press.
  @param eventDictionary NSDictionary object with objects originating the events.
  */
--(void)gamepadInputChangedForPlayer:(GCControllerPlayerIndex)player withInput:(kSKUGamePadInputs)input andXValue:(float)xValue andYValue:(float)yValue isPressed:(BOOL)pressed andEventDictionary:(NSDictionary*)eventDictionary;
+-(void)gamepadInputChangedForPlayer:(GCControllerPlayerIndex)player withInput:(kSKUGamePadInputs)input andXValue:(float)xValue andYValue:(float)yValue pressedState:(kSKUGamepadButtonStates)pressedState andEventDictionary:(NSDictionary*)eventDictionary;
 
 @end
 
