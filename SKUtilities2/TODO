@@ -1,13 +1,9 @@
 might wanna add archiving support? -not now
 might wanna add descriptions to other classes -figure that it'd mostly be beneficial for me in designing the classes in the first place - if there's a demand for it though, I can do it.
 
-darken non selected button states
-
 potential future ideas
 
 maybe refactor input movement stuff with localevents (inspired here: http://stackoverflow.com/questions/1628366/global-mouse-moved-events-in-cocoa?rq=1 )
-
-enumerate button states and pass that as argument to button calls on skuscene
 
 
 cgpath length (research: http://www.mlsite.net/blog/?p=1312

@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "buttonBG.png",
+      "filename" : "buttonHoverBG.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "buttonBG@2x.png",
+      "filename" : "buttonHoverBG@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "buttonBG@3x.png",
+      "filename" : "buttonHoverBG@3x.png",
       "scale" : "3x"
     }
   ],
