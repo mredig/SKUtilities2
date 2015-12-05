@@ -5064,6 +5064,15 @@ static SKUtilities2* sharedUtilities = Nil;
 	}
 }
 
+-(BOOL)nodeIsMemberOfNavNodesSKU:(SKNode*)node {
+	NSMutableSet* navNodes = self.userData[kSKUNavConstantNavNodes];
+	if (navNodes && [navNodes containsObject:node]) {
+		return YES;
+	} else {
+		return NO;
+	}
+}
+
 -(void)setCurrentFocusedNodeSKU:(SKNode*)node {
 	[self skuInternalUpdateCurrentFocusedNode:node];
 }

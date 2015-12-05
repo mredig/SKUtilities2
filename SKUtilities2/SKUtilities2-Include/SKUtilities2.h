@@ -196,6 +196,11 @@ extern NSString* const kSKURemoteInteractionOn;
  */
 extern NSString* const kSKURemoteInteractionOff;
 
+/*!
+ Constant for retrieving whatever node is currently focused.
+ */
+extern NSString* const kSKUNavConstantCurrentFocusedNode;
+
 #pragma mark NUMBER INTERPOLATION
 /*! @functiongroup Number Interpolation */
 
@@ -2442,6 +2447,8 @@ typedef enum {
 -(void)addNodeToNavNodesSKU:(SKNode*)node;
 /*! Call this method to remove a node from the list of navigation nodes paired with this node. */
 -(void)removeNodeFromNavNodesSKU:(SKNode*)node;
+/*! Call this method to get a boolean returned answering whether a specified node is part of the nav nodes set. */
+-(BOOL)nodeIsMemberOfNavNodesSKU:(SKNode*)node;
 
 /*! Call this method to set the currently focused node within the navNodes set. */
 -(void)setCurrentFocusedNodeSKU:(SKNode*)node;
