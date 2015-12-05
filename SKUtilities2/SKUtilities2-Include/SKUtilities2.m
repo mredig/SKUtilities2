@@ -4319,7 +4319,7 @@ static SKUtilities2* sharedUtilities = Nil;
 			SKNode* prevFocus = SKUSharedUtilities.navFocus.userData[kSKUNavConstantCurrentFocusedNode];
 			NSSet* nodeSet = SKUSharedUtilities.navFocus.userData[kSKUNavConstantNavNodes];
 			if (!prevFocus) {
-				SKULog(0,@"Error: no currently focused node - did you set the initial node focus (setCurrentFocusedNodeSKU:(SKNode*)) and set the navFocus on the singleton ([SKUSharedUtilities setNavFocus:(SKNode*)]?");
+				SKULog(0,@"Error: no currently focused node - did you set the initial node focus (setCurrentFocusedNodeSKU:(SKNode*)) **AFTER** you set the navFocus on the singleton ([SKUSharedUtilities setNavFocus:(SKNode*)]?");
 			} else if (!nodeSet) {
 				SKULog(0,@"Error: no navNodes to navigate through - did you add nodes to the nav nodes (addNodeToNavNodesSKU:(SKNode*)) and set the navFocus on the singleton ([SKUSharedUtilities setNavFocus:(SKNode*)]?");
 			} else {
@@ -5090,7 +5090,26 @@ static SKUtilities2* sharedUtilities = Nil;
 		SKUSharedUtilities.navFocus.userData = [NSMutableDictionary dictionaryWithCapacity:kSKUNavConstantUserDictCapacity];
 	}
 	
-	SKUSharedUtilities.navFocus.userData[kSKUNavConstantCurrentFocusedNode] = node;
+	if (!self.userData) {
+		self.userData = [NSMutableDictionary dictionaryWithCapacity:kSKUNavConstantUserDictCapacity];
+	}
+	
+	if ([node.parent isEqual:self] && ![SKUSharedUtilities.navFocus isEqual:self]) { //update current focused node on self if the node parent is self and self isn't navFocus - same logic as below
+		self.userData[kSKUNavConstantCurrentFocusedNode] = node;
+		NSSet* navNodes = self.userData[kSKUNavConstantNavNodes];
+		for (SKNode* tNode in navNodes) {
+			if ([tNode isKindOfClass:[SKUButton class]]) {
+				SKUButton* button = (SKUButton*)tNode;
+				[button unhoverButton];
+			}
+		}
+		if ([node isKindOfClass:[SKUButton class]]) {
+			[(SKUButton*)node hoverButton];
+		}
+		[self currentFocusedNodeUpdatedSKU:node];
+	}
+	
+	SKUSharedUtilities.navFocus.userData[kSKUNavConstantCurrentFocusedNode] = node; //update focused node on navFocus
 	NSSet* navNodes = SKUSharedUtilities.navFocus.userData[kSKUNavConstantNavNodes];
 	for (SKNode* tNode in navNodes) {
 		if ([tNode isKindOfClass:[SKUButton class]]) {
@@ -5128,7 +5147,7 @@ static SKUtilities2* sharedUtilities = Nil;
 			SKNode* prevFocus = SKUSharedUtilities.navFocus.userData[kSKUNavConstantCurrentFocusedNode];
 			NSSet* nodeSet = SKUSharedUtilities.navFocus.userData[kSKUNavConstantNavNodes];
 			if (!prevFocus) {
-				SKULog(0,@"Error: no currently focused node - did you set the initial node focus (setCurrentFocusedNodeSKU:(SKNode*)) and set the navFocus on the singleton ([SKUSharedUtilities setNavFocus:(SKNode*)]?");
+				SKULog(0,@"Error: no currently focused node - did you set the initial node focus (setCurrentFocusedNodeSKU:(SKNode*)) **AFTER** you set the navFocus on the singleton ([SKUSharedUtilities setNavFocus:(SKNode*)]?");
 			} else if (!nodeSet) {
 				SKULog(0,@"Error: no navNodes to navigate through - did you add nodes to the nav nodes (addNodeToNavNodesSKU:(SKNode*)) and set the navFocus on the singleton ([SKUSharedUtilities setNavFocus:(SKNode*)]?");
 			} else {

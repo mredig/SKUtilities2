@@ -953,7 +953,7 @@ Vulnerable to lag spikes if used.
  */
 @property (nonatomic) kSKUNavModes navMode;
 /*!
- Allows for readonly access to the current navFocus node.
+ Allows for access to and setting the current navFocus node.
  
  Set via
   <pre>
@@ -982,7 +982,7 @@ Vulnerable to lag spikes if used.
  
  @seealso SKNode(ConsolidatedInput)
  */
-@property (nonatomic, readonly) SKNode* navFocus;
+@property (nonatomic) SKNode* navFocus;
 /*!
  Change this value to change how sensitive the Siri remote or controller is to movement. The concept is that from one navigation movement to another, this is the distance your touch must travel before signalling another navigational focus change. Higher values are less sensitive.
  */
