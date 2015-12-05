@@ -2449,6 +2449,10 @@ typedef enum {
 -(void)removeNodeFromNavNodesSKU:(SKNode*)node;
 /*! Call this method to get a boolean returned answering whether a specified node is part of the nav nodes set. */
 -(BOOL)nodeIsMemberOfNavNodesSKU:(SKNode*)node;
+/*!
+ Returns an NSSet of the current collection of navNodes. Returns nil if it doesn't exist.
+ */
+-(NSSet*)navNodes;
 
 /*! Call this method to set the currently focused node within the navNodes set. */
 -(void)setCurrentFocusedNodeSKU:(SKNode*)node;

@@ -5073,6 +5073,10 @@ static SKUtilities2* sharedUtilities = Nil;
 	}
 }
 
+-(NSSet*)navNodes {
+	return (NSSet*)self.userData[kSKUNavConstantNavNodes];
+}
+
 -(void)setCurrentFocusedNodeSKU:(SKNode*)node {
 	[self skuInternalUpdateCurrentFocusedNode:node];
 }
