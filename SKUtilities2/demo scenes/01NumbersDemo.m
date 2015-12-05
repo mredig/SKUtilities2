@@ -105,9 +105,9 @@
 	
 
 	[self addNodeToNavNodesSKU:nextSlide];
-	[self setCurrentFocusedNodeSKU:nextSlide];
 	
 	[SKUSharedUtilities setNavFocus:self];
+	[self setCurrentFocusedNodeSKU:nextSlide];
 	
 }
 

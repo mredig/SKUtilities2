@@ -140,10 +140,10 @@
 	[self addNodeToNavNodesSKU:prevSlide];
 	[self addNodeToNavNodesSKU:toggleTest];
 	[self addNodeToNavNodesSKU:delegateButton];
-	[self setCurrentFocusedNodeSKU:toggleTest];
 	
 	[SKUSharedUtilities setNavFocus:self];
-	
+	[self setCurrentFocusedNodeSKU:toggleTest];
+
 }
 
 -(void)notifyDown:(NSNotification*)notification {

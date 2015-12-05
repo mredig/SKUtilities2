@@ -164,10 +164,10 @@
 	[self addNodeToNavNodesSKU:handle2];
 	[self addNodeToNavNodesSKU:nextSlide];
 	[self addNodeToNavNodesSKU:prevSlide];
-	[self setCurrentFocusedNodeSKU:nextSlide];
 	
 	[SKUSharedUtilities setNavFocus:self];
-	
+	[self setCurrentFocusedNodeSKU:nextSlide];
+
 }
 
 -(void)currentFocusedNodeUpdatedSKU:(SKNode *)node {

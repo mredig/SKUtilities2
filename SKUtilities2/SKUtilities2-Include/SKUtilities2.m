@@ -5082,16 +5082,16 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 -(void)skuInternalUpdateCurrentFocusedNode:(SKNode*)node {
-	if (!node || [self.userData[kSKUNavConstantCurrentFocusedNode] isEqual:node]) {
+	if (!node || [SKUSharedUtilities.navFocus.userData[kSKUNavConstantCurrentFocusedNode] isEqual:node]) {
 		return;
 	}
 	
-	if (!self.userData) {
-		self.userData = [NSMutableDictionary dictionaryWithCapacity:kSKUNavConstantUserDictCapacity];
+	if (!SKUSharedUtilities.navFocus.userData) {
+		SKUSharedUtilities.navFocus.userData = [NSMutableDictionary dictionaryWithCapacity:kSKUNavConstantUserDictCapacity];
 	}
 	
-	self.userData[kSKUNavConstantCurrentFocusedNode] = node;
-	NSSet* navNodes = self.userData[kSKUNavConstantNavNodes];
+	SKUSharedUtilities.navFocus.userData[kSKUNavConstantCurrentFocusedNode] = node;
+	NSSet* navNodes = SKUSharedUtilities.navFocus.userData[kSKUNavConstantNavNodes];
 	for (SKNode* tNode in navNodes) {
 		if ([tNode isKindOfClass:[SKUButton class]]) {
 			SKUButton* button = (SKUButton*)tNode;
@@ -5101,7 +5101,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	if ([node isKindOfClass:[SKUButton class]]) {
 		[(SKUButton*)node hoverButton];
 	}
-	[self currentFocusedNodeUpdatedSKU:node];
+	[SKUSharedUtilities.navFocus currentFocusedNodeUpdatedSKU:node];
 }
 
 -(void)currentFocusedNodeUpdatedSKU:(SKNode *)node {
@@ -5111,20 +5111,20 @@ static SKUtilities2* sharedUtilities = Nil;
 #if TARGET_OS_TV
 -(void)siriRemoteinputBeganSKU:(CGPoint)location withEventDictionary:(NSDictionary*)eventDict {
 	
-	if (SKUSharedUtilities.navMode == kSKUNavModeOn) {
-		UITouch* touch = eventDict[@"touch"]; // this whole thing may be unecessary, but not removing cuz I don't remember why I did it
-		if (![SKUSharedUtilities.touchTracker containsObject:touch]) {
-			[SKUSharedUtilities.touchTracker addObject:touch];
-		}
-	}
+//	if (SKUSharedUtilities.navMode == kSKUNavModeOn) {
+//		UITouch* touch = eventDict[@"touch"]; // this whole thing may be unecessary, but not removing cuz I don't remember why I did it
+//		if (![SKUSharedUtilities.touchTracker containsObject:touch]) {
+//			[SKUSharedUtilities.touchTracker addObject:touch];
+//		}
+//	}
 
 	[self relativeInputBeganSKU:location withEventDictionary:eventDict];
 }
 
 -(void)siriRemoteinputMovedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary*)eventDict {
 	if (SKUSharedUtilities.navMode == kSKUNavModeOn) {
-		UITouch* touch = eventDict[@"touch"];
-		if ([SKUSharedUtilities.touchTracker containsObject:touch]) {
+//		UITouch* touch = eventDict[@"touch"];
+//		if ([SKUSharedUtilities.touchTracker containsObject:touch]) {
 			SKNode* prevFocus = SKUSharedUtilities.navFocus.userData[kSKUNavConstantCurrentFocusedNode];
 			NSSet* nodeSet = SKUSharedUtilities.navFocus.userData[kSKUNavConstantNavNodes];
 			if (!prevFocus) {
@@ -5135,8 +5135,8 @@ static SKUtilities2* sharedUtilities = Nil;
 				SKNode* currentFocusNode = [SKUSharedUtilities handleSubNodeMovement:location withCurrentFocus:prevFocus inSet:nodeSet inScene:self.scene];
 				[self skuInternalUpdateCurrentFocusedNode:currentFocusNode];
 			}
-		}
-	} else if (SKUSharedUtilities.navMode == kSKUNavModePressed) {
+//		}
+	} else if (SKUSharedUtilities.navMode == kSKUNavModePressed) { // special case for SKUSliderButton
 		SKNode* currentFocus = SKUSharedUtilities.navFocus.userData[kSKUNavConstantCurrentFocusedNode];
 		if ([currentFocus isKindOfClass:[SKUSliderButton class]]) {
 			SKUSliderButton* slider = (SKUSliderButton*)currentFocus;
@@ -5155,10 +5155,10 @@ static SKUtilities2* sharedUtilities = Nil;
 
 -(void)siriRemoteinputEndedSKU:(CGPoint)location withDelta:(CGPoint)delta withEventDictionary:(NSDictionary*)eventDict {
 	if (SKUSharedUtilities.navMode == kSKUNavModeOn) {
-		UITouch* touch = eventDict[@"touch"];
-		if ([SKUSharedUtilities.touchTracker containsObject:touch]) {
-			[SKUSharedUtilities.touchTracker removeObject:touch];
-		}
+//		UITouch* touch = eventDict[@"touch"];
+//		if ([SKUSharedUtilities.touchTracker containsObject:touch]) {
+//			[SKUSharedUtilities.touchTracker removeObject:touch];
+//		}
 		[SKUSharedUtilities resetSelectLocation];
 	}
 	[self relativeInputEndedSKU:location withDelta:delta withEventDictionary:eventDict];

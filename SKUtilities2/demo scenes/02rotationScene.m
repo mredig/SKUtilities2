@@ -182,10 +182,9 @@
 	[self addNodeToNavNodesSKU:nextSlide];
 	[self addNodeToNavNodesSKU:prevSlide];
 	[self addNodeToNavNodesSKU:activateCursor];
-	[self setCurrentFocusedNodeSKU:nextSlide];
 	
 	[SKUSharedUtilities setNavFocus:self];
-	
+	[self setCurrentFocusedNodeSKU:nextSlide];
 }
 
 #if TARGET_OS_TV

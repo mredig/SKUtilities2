@@ -202,10 +202,10 @@ float cpu_usage()
 	[self addNodeToNavNodesSKU:clearNodes];
 	[self addNodeToNavNodesSKU:animateToggle];
 	
-	[self setCurrentFocusedNodeSKU:nextSlide];
 	
 	[SKUSharedUtilities setNavFocus:self];
-		
+	[self setCurrentFocusedNodeSKU:nextSlide];
+
 }
 
 -(void)animateNodes:(SKUToggleButton*)button {
