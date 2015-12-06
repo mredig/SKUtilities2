@@ -1845,7 +1845,7 @@ typedef enum {
  While you can edit properties on the sprite itself, it is discouraged unless you really know what you're doing.
  */
 @property (nonatomic, readonly) SKSpriteNode* baseSprite;
-/*! Used for padding around buttons when using centerRect to scale imagery. */
+/*! Used for padding around buttons when using centerRect to scale imagery. Defaults to 30.0f */
 @property (nonatomic) CGFloat padding;
 /*! Establishes the smallest possible area the button can take up (not accounting for properties with centerRect set that automatically expand). This is the same thing as setting the size property. It only exists to document clarity.  */
 @property (nonatomic) CGSize sizeMinimumBoundary;
