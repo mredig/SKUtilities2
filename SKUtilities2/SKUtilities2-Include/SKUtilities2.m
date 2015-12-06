@@ -4439,14 +4439,14 @@ static SKUtilities2* sharedUtilities = Nil;
 -(void)remoteInteractionOn {
 #if TARGET_OS_TV
 	self.controllerUserInteractionEnabled = YES;
-	NSLog(@"user interaction: %i", self.controllerUserInteractionEnabled);
+//	NSLog(@"user interaction: %i", self.controllerUserInteractionEnabled);
 #endif
 }
 
 -(void)remoteInteractionOff {
 #if TARGET_OS_TV
 	self.controllerUserInteractionEnabled = NO;
-	NSLog(@"user interaction: %i", self.controllerUserInteractionEnabled);
+//	NSLog(@"user interaction: %i", self.controllerUserInteractionEnabled);
 #endif
 }
 
