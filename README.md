@@ -206,6 +206,27 @@ This library was built in Objective C. While it should work in Swift just fine, 
 * And finally, the catchall. There may be other issues I didn't experience or foresee. So other than everything, it should work right!
 
 
+#### Known Issues:
+
+* Long press gestures, when released, will trigger the "tap up" function if they are released with a button focused. Workaround is to turn navMode to kSKUNavModeOff on the begin state of the gesture and kSKUNavModeOff on the release.
+
+		-(void)longPressed:(UIGestureRecognizer*)gesture {
+
+			switch (gesture.state) {
+				case UIGestureRecognizerStateBegan:
+					SKUSharedUtilities.navMode = kSKUNavModeOff;
+					// do long press actions here
+					break;
+				case UIGestureRecognizerStateEnded:
+					SKUSharedUtilities.navMode = kSKUNavModeOn;
+					break;
+
+				default:
+					break;
+			}
+
+		}
+
 ### Requirements:
 
 **Xcode 7+**

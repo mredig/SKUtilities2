@@ -5082,7 +5082,7 @@ static SKUtilities2* sharedUtilities = Nil;
 }
 
 -(void)skuInternalUpdateCurrentFocusedNode:(SKNode*)node {
-	if (!node || [SKUSharedUtilities.navFocus.userData[kSKUNavConstantCurrentFocusedNode] isEqual:node]) {
+	if (!node || [SKUSharedUtilities.navFocus.userData[kSKUNavConstantCurrentFocusedNode] isEqual:node] || [self.userData[kSKUNavConstantCurrentFocusedNode] isEqual:node]) {
 		return;
 	}
 	
@@ -5094,7 +5094,7 @@ static SKUtilities2* sharedUtilities = Nil;
 		self.userData = [NSMutableDictionary dictionaryWithCapacity:kSKUNavConstantUserDictCapacity];
 	}
 	
-	if ([node.parent isEqual:self] && ![SKUSharedUtilities.navFocus isEqual:self]) { //update current focused node on self if the node parent is self and self isn't navFocus - same logic as below
+	if ([self nodeIsMemberOfNavNodesSKU:node]) { //update current focused node on self if the node is a member of the navNodes set
 		self.userData[kSKUNavConstantCurrentFocusedNode] = node;
 		NSSet* navNodes = self.userData[kSKUNavConstantNavNodes];
 		for (SKNode* tNode in navNodes) {
@@ -5107,20 +5107,20 @@ static SKUtilities2* sharedUtilities = Nil;
 			[(SKUButton*)node hoverButton];
 		}
 		[self currentFocusedNodeUpdatedSKU:node];
-	}
-	
-	SKUSharedUtilities.navFocus.userData[kSKUNavConstantCurrentFocusedNode] = node; //update focused node on navFocus
-	NSSet* navNodes = SKUSharedUtilities.navFocus.userData[kSKUNavConstantNavNodes];
-	for (SKNode* tNode in navNodes) {
-		if ([tNode isKindOfClass:[SKUButton class]]) {
-			SKUButton* button = (SKUButton*)tNode;
-			[button unhoverButton];
+	} else if ([SKUSharedUtilities.navFocus nodeIsMemberOfNavNodesSKU:node]) { //update focused node on navFocus if the node is a member of the navNodes set
+		SKUSharedUtilities.navFocus.userData[kSKUNavConstantCurrentFocusedNode] = node;
+		NSSet* navNodes = SKUSharedUtilities.navFocus.userData[kSKUNavConstantNavNodes];
+		for (SKNode* tNode in navNodes) {
+			if ([tNode isKindOfClass:[SKUButton class]]) {
+				SKUButton* button = (SKUButton*)tNode;
+				[button unhoverButton];
+			}
 		}
+		if ([node isKindOfClass:[SKUButton class]]) {
+			[(SKUButton*)node hoverButton];
+		}
+		[SKUSharedUtilities.navFocus currentFocusedNodeUpdatedSKU:node];
 	}
-	if ([node isKindOfClass:[SKUButton class]]) {
-		[(SKUButton*)node hoverButton];
-	}
-	[SKUSharedUtilities.navFocus currentFocusedNodeUpdatedSKU:node];
 }
 
 -(void)currentFocusedNodeUpdatedSKU:(SKNode *)node {
