@@ -754,7 +754,7 @@ void hideOSCursor(BOOL hide);
 /*!
  Centers the Mac OS Cursor in the center of the window. Typically used incoordination of mouseMoved events. Mac only, but harmless on other platforms.
  @seealso hideOSCursor
- @seealso SKNode(ConsolidatedInput) mouseMovedSKU
+ @seealso SKNode(SKUModifications) mouseMovedSKU
  */
 void centerOSCursorInWindow();
 
@@ -980,7 +980,7 @@ Vulnerable to lag spikes if used.
  </pre>
  
  
- @seealso SKNode(ConsolidatedInput)
+ @seealso SKNode(SKUModifications)
  */
 @property (nonatomic, weak) SKNode* navFocus;
 /*!
