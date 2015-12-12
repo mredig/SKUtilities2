@@ -2196,6 +2196,13 @@ static SKUtilities2* sharedUtilities = Nil;
 	_propertiesDisabledState.text = text;
 }
 
+-(void)changeFontSize:(CGFloat)fontSize {
+	_propertiesDefaultState.fontSize = fontSize;
+	_propertiesPressedState.fontSize = fontSize;
+	_propertiesHoveredState.fontSize = fontSize;
+	_propertiesDisabledState.fontSize = fontSize;
+}
+
 @end
 
 #pragma mark SKUButtonSpriteStateProperties
@@ -2203,11 +2210,25 @@ static SKUtilities2* sharedUtilities = Nil;
 @implementation SKUButtonSpriteStateProperties
 
 -(id)copyWithZone:(NSZone *)zone {
-	return [SKUButtonSpriteStateProperties propertiesWithTexture:_texture andAlpha:_alpha andColor:_color andColorBlendFactor:_colorBlendFactor andPositionOffset:_position andXScale:_xScale andYScale:_yScale andCenterRect:_centerRect];
+	return [SKUButtonSpriteStateProperties propertiesWithTexture:_texture andAlpha:_alpha andColor:_color andColorBlendFactor:_colorBlendFactor andPositionOffset:_position andXScale:_xScale andYScale:_yScale andCenterRect:_centerRect andPadding:_padding];
 }
 
 -(NSString*)description {
 	return [NSString stringWithFormat:@"SKUButtonSpriteStateProperties texture: %@ alpha: %f color: %@ colorBlendFactor: %f positionOffset: %f, %f scale: %f, %f centerRect x: %f y: %f width: %f height %f", _texture, _alpha, _color, _colorBlendFactor, _position.x, _position.y, _xScale, _yScale, _centerRect.origin.x, _centerRect.origin.y, _centerRect.size.width, _centerRect.size.height];
+}
+
++(SKUButtonSpriteStateProperties*)propertiesWithTexture:(SKTexture *)texture andAlpha:(CGFloat)alpha andColor:(UIColor *)color andColorBlendFactor:(CGFloat)colorBlendFactor andPositionOffset:(CGPoint)position andXScale:(CGFloat)xScale andYScale:(CGFloat)yScale andCenterRect:(CGRect)centerRect andPadding:(CGFloat)padding {
+	SKUButtonSpriteStateProperties* props = [[SKUButtonSpriteStateProperties alloc] init];
+	props.alpha = alpha;
+	props.color = color;
+	props.colorBlendFactor = colorBlendFactor;
+	props.position = position;
+	props.xScale = xScale;
+	props.yScale = yScale;
+	props.texture = texture;
+	props.centerRect = centerRect;
+	props.padding = padding;
+	return props;
 }
 
 +(SKUButtonSpriteStateProperties*)propertiesWithTexture:(SKTexture*)texture andAlpha:(CGFloat)alpha andColor:(SKColor *)color andColorBlendFactor:(CGFloat)colorBlendFactor andPositionOffset:(CGPoint)position andXScale:(CGFloat)xScale andYScale:(CGFloat)yScale andCenterRect:(CGRect)centerRect {
@@ -2220,6 +2241,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	props.yScale = yScale;
 	props.texture = texture;
 	props.centerRect = centerRect;
+	props.padding = 30.0;
 	return props;
 }
 
@@ -2233,6 +2255,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	props.yScale = yScale;
 	props.texture = texture;
 	props.centerRect = CGRectMake(0, 0, 1.0, 1.0);
+	props.padding = 30.0;
 	return props;
 }
 
@@ -2246,6 +2269,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	props.yScale = 1.0f;
 	props.texture = texture;
 	props.centerRect = CGRectMake(0, 0, 1.0, 1.0);
+	props.padding = 30.0;
 	return props;
 }
 
@@ -2259,6 +2283,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	props.yScale = 1.0f;
 	props.texture = texture;
 	props.centerRect = CGRectMake(0, 0, 1.0, 1.0);
+	props.padding = 30.0;
 	return props;
 }
 
@@ -2272,6 +2297,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	props.yScale = 1.0f;
 	props.texture = texture;
 	props.centerRect = CGRectMake(0, 0, 1.0, 1.0);
+	props.padding = 30.0;
 	return props;
 }
 
@@ -2286,6 +2312,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	props.yScale = 1.0f;
 	props.texture = buttonBG;
 	props.centerRect = CGRectMake(40.0/buttonBG.size.width, 60.0/buttonBG.size.height, 40.0/buttonBG.size.width, 40.0/buttonBG.size.height);
+	props.padding = 30.0;
 	return props;
 }
 
@@ -2301,6 +2328,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	props.yScale = 1.0f;
 	props.texture = tex;
 	props.centerRect = CGRectMake(0, 0, 1.0, 1.0);
+	props.padding = 30.0;
 	return props;
 }
 
@@ -2315,6 +2343,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	props.yScale = 1.0f;
 	props.texture = tex;
 	props.centerRect = CGRectMake(0, 0, 1.0, 1.0);
+	props.padding = 30.0;
 	return props;
 }
 
@@ -2335,6 +2364,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	props.yScale = 1.0f;
 	props.texture = tex;
 	props.centerRect = CGRectMake(0, 0, 1.0, 1.0);
+	props.padding = 0.0;
 	return props;
 }
 
@@ -2349,6 +2379,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	props.yScale = 1.0f;
 	props.texture = tex;
 	props.centerRect = CGRectMake(15.0/tex.size.width, 0, 40.0/tex.size.width, 1.0);
+	props.padding = 0.0;
 	return props;
 }
 
@@ -2474,6 +2505,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	NSInvocation* downSelector;
 	NSInvocation* upSelector;
 	SKUButtonSpriteStateProperties* defaultProperties;
+	CGFloat padding;
 	
 	BOOL stateDefaultInitialized;
 	BOOL statePressedInitialized;
@@ -2537,7 +2569,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	statePressedInitialized = NO;
 	stateDisabledInitialized = NO;
 	stateHoveredInitialized = NO;
-	_padding = 30.0f;
+	padding = 30.0f;
 	
 	[self internalDidInitialize];
 	[self enableButton];
@@ -2693,10 +2725,11 @@ static SKUtilities2* sharedUtilities = Nil;
 	_baseSprite.centerRect = properties.centerRect;
 	_baseSprite.xScale = properties.xScale;
 	_baseSprite.yScale = properties.yScale;
+	padding = properties.padding;
 	
 	if (_baseSprite.centerRect.origin.x != 0.0 || _baseSprite.centerRect.origin.y != 0.0 || _baseSprite.centerRect.size.width != 1.0 || _baseSprite.centerRect.size.height != 1.0) {
 		CGSize thisSize = [self getButtonSizeMinusBase];
-		thisSize = CGSizeMake(thisSize.width + _padding * 2.0f, thisSize.height + _padding * 2.0f);
+		thisSize = CGSizeMake(thisSize.width + padding * 2.0f, thisSize.height + padding * 2.0f);
 		_baseSprite.xScale = thisSize.width / properties.texture.size.width;
 		_baseSprite.yScale = thisSize.height / properties.texture.size.height;
 	}
@@ -2979,6 +3012,8 @@ static SKUtilities2* sharedUtilities = Nil;
 	}
 	[super updateCurrentSpriteStateProperties];
 
+	
+	_labelPropertiesPackage = [SKUButtonLabelPropertiesPackage packageWithPropertiesForDefaultState:_labelPropertiesDefault andPressedState:_labelPropertiesPressed andHoveredState:_labelPropertiesHovered andDisabledState:_labelPropertiesDisabled];
 }
 
 -(void)setTitleSpritePropertiesDefault:(SKUButtonSpriteStateProperties *)titleSpritePropertiesDefault {

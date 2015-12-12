@@ -1558,6 +1558,8 @@ Vulnerable to lag spikes if used.
 
 /*! Allows you to change the text for all states at once. */
 -(void)changeText:(NSString*)text;
+/*! Change the size of all states at once. */
+-(void)changeFontSize:(CGFloat)fontSize;
 
 @end
 
@@ -1599,12 +1601,18 @@ Vulnerable to lag spikes if used.
  */
 @property (nonatomic) CGFloat yScale;
 /*!
+ padding value stored for a given state.
+ */
+@property (nonatomic) CGFloat padding;
+/*!
  SKTexture object stored for a given state.
  */
 @property (nonatomic, strong) SKTexture* texture;
 
 /*! @group SKUButtonSpriteStateProperties Methods */
 
+/*! Returns a new object with the following properties. */
++(SKUButtonSpriteStateProperties*)propertiesWithTexture:(SKTexture*)texture andAlpha:(CGFloat)alpha andColor:(SKColor *)color andColorBlendFactor:(CGFloat)colorBlendFactor andPositionOffset:(CGPoint)position andXScale:(CGFloat)xScale andYScale:(CGFloat)yScale andCenterRect:(CGRect)centerRect andPadding:(CGFloat)padding;
 /*! Returns a new object with the following properties. */
 +(SKUButtonSpriteStateProperties*)propertiesWithTexture:(SKTexture*)texture andAlpha:(CGFloat)alpha andColor:(SKColor *)color andColorBlendFactor:(CGFloat)colorBlendFactor andPositionOffset:(CGPoint)position andXScale:(CGFloat)xScale andYScale:(CGFloat)yScale andCenterRect:(CGRect)centerRect;
 /*! Returns a new object with the following properties. */
@@ -1845,9 +1853,7 @@ typedef enum {
  While you can edit properties on the sprite itself, it is discouraged unless you really know what you're doing.
  */
 @property (nonatomic, readonly) SKSpriteNode* baseSprite;
-/*! Used for padding around buttons when using centerRect to scale imagery. Defaults to 30.0f */
-@property (nonatomic) CGFloat padding;
-/*! Establishes the smallest possible area the button can take up (not accounting for properties with centerRect set that automatically expand). This is the same thing as setting the size property. It only exists to document clarity.  */
+/*! Establishes the smallest possible area the button can take up (not accounting for properties with centerRect set that automatically expand). This is the same thing as setting the size property. It only exists to document clarity. */
 @property (nonatomic) CGSize sizeMinimumBoundary;
 /*!
  Properties to use on the base sprite in default state.
@@ -1916,6 +1922,7 @@ typedef enum {
 /*! Calls the actions for button release. Location is in local space. */
 -(void)buttonReleased:(CGPoint)location;
 
+-(void)updateCurrentSpriteStateProperties;
 
 
 
@@ -1942,6 +1949,8 @@ typedef enum {
 @property (nonatomic) SKUButtonLabelProperties* labelPropertiesHovered;
 /*! Set this to setup the title label properties when the button is disabled. */
 @property (nonatomic) SKUButtonLabelProperties* labelPropertiesDisabled;
+/*! Readonly access to a package for the label properties */
+@property (nonatomic, readonly) SKUButtonLabelPropertiesPackage* labelPropertiesPackage;
 
 
 
