@@ -1560,6 +1560,8 @@ Vulnerable to lag spikes if used.
 -(void)changeText:(NSString*)text;
 /*! Change the size of all states at once. */
 -(void)changeFontSize:(CGFloat)fontSize;
+/*! Change the font of all states at once. */
+-(void)changeFontName:(NSString*)fontName;
 
 @end
 
@@ -1702,6 +1704,8 @@ Vulnerable to lag spikes if used.
 
 /*! Allows you to change the texture for all states at once. */
 -(void)changeTexture:(SKTexture*)texture;
+/*! Allows you to change the padding for all states at once. */
+-(void)changePadding:(CGFloat)padding;
 
 @end
 
@@ -1865,6 +1869,9 @@ typedef enum {
 @property (nonatomic) SKUButtonSpriteStateProperties* baseSpritePropertiesHovered;
 /*! Properties to use on the base sprite in disabled state. */
 @property (nonatomic) SKUButtonSpriteStateProperties* baseSpritePropertiesDisabled;
+/*! Readonly access to a package for the base sprite properties */
+@property (nonatomic) SKUButtonSpriteStatePropertiesPackage* baseSpritePropertiesPackage;
+
 
 /*! @methodgroup Initialization */
 
@@ -2470,10 +2477,10 @@ typedef enum {
 
 /*! @methodgroup Input */
 
-/*! Override this method to perform logic with non SKUButton nodes when pressed.
+/*! Override this method to perform logic with non SKUButton nodes when pressed on a controller or remote button.
  */
 -(void)nodePressedDownSKU:(SKNode*)node;
-/*! Override this method to perform logic with non SKUButton nodes when released.
+/*! Override this method to perform logic with non SKUButton nodes when released on a controller or remote button.
  */
 -(void)nodePressedUpSKU:(SKNode*)node;
 

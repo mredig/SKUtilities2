@@ -2203,6 +2203,13 @@ static SKUtilities2* sharedUtilities = Nil;
 	_propertiesDisabledState.fontSize = fontSize;
 }
 
+-(void)changeFontName:(NSString *)fontName {
+	_propertiesDefaultState.fontName = fontName;
+	_propertiesPressedState.fontName = fontName;
+	_propertiesHoveredState.fontName = fontName;
+	_propertiesDisabledState.fontName = fontName;
+}
+
 @end
 
 #pragma mark SKUButtonSpriteStateProperties
@@ -2498,6 +2505,13 @@ static SKUtilities2* sharedUtilities = Nil;
 	_propertiesHoveredState.texture = texture;
 }
 
+-(void)changePadding:(CGFloat)padding {
+	_propertiesDefaultState.padding = padding;
+	_propertiesPressedState.padding = padding;
+	_propertiesDisabledState.padding = padding;
+	_propertiesHoveredState.padding = padding;
+}
+
 @end
 
 #pragma mark SKUButton
@@ -2627,6 +2641,17 @@ static SKUtilities2* sharedUtilities = Nil;
 
 #pragma mark SKUButton OTHER SETTERS
 
+//-(void)setDebugMode:(BOOL)debugMode {
+//	_debugMode = debugMode;
+//	if (_debugMode) {
+//		CGSize newSize = [self calculateAccumulatedFrame].size;
+//		SKULog(0, @"size: %f %f", newSize.width, newSize.height);
+//		self.texture = [SKTexture textureVectorNoiseWithSmoothness:0.5 size:newSize];
+//		self.color = [SKColor colorWithRed:randomFloatBetweenZeroAndHighend(1.0) green:randomFloatBetweenZeroAndHighend(1.0) blue:randomFloatBetweenZeroAndHighend(1.0) alpha:1.0];
+//		self.colorBlendFactor = 1.0;
+//	}
+//}
+
 -(void)setSizeMinimumBoundary:(CGSize)sizeMinimumBoundary {
 	_sizeMinimumBoundary = sizeMinimumBoundary;
 	self.size = sizeMinimumBoundary;
@@ -2733,6 +2758,8 @@ static SKUtilities2* sharedUtilities = Nil;
 		_baseSprite.xScale = thisSize.width / properties.texture.size.width;
 		_baseSprite.yScale = thisSize.height / properties.texture.size.height;
 	}
+	
+	_baseSpritePropertiesPackage = [SKUButtonSpriteStatePropertiesPackage packageWithPropertiesForDefaultState:_baseSpritePropertiesDefault andPressedState:_baseSpritePropertiesPressed andHoveredState:_baseSpritePropertiesHovered andDisabledState:_baseSpritePropertiesDisabled];
 }
 
 -(CGSize)getButtonSizeMinusBase { //// note to remember to update subclasses if any changes are made - they don't call super
