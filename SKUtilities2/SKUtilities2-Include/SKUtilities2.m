@@ -1965,12 +1965,11 @@ static SKUtilities2* sharedUtilities = Nil;
 		font = [SKUFont fontWithName:@"Helvetica" size:self.fontSize];
 		if (!setupMode) {
 			SKULog(0,@"The font you specified was unavailable. Defaulted to Helvetica.");
-//			SKULog(0,@"The font you specified was unavailable. Defaulted to Helvetica. Here is a list of available fonts: %@", [DSMultiLineLabelFont familyNames]); //only available for debugging on iOS
-//			SKULog(0,@"Here is a list of variations to %@: %@", _fontName, [DSMultiLineLabelFont familyNames]);
+//			SKULog(0,@"The font you specified was unavailable. Defaulted to Helvetica. Here is a list of available fonts: %@", [SKUFont familyNames]); //only available for debugging on iOS
 		}
-		
 	}
-	
+//	SKULog(0,@"Here is a list of variations to %@: %@", _fontName, [SKUFont fontNamesForFamilyName:_fontName]);
+
 	//Create our textAttributes dictionary that we'll use when drawing to the graphics context
 	NSMutableDictionary *textAttributes = [NSMutableDictionary dictionary];
 	
