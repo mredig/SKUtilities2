@@ -139,6 +139,16 @@ CGFloat randomFloatBetweenZeroAndHighend (CGFloat highend) {
 	return floatRandom;
 }
 
+bool percentChance (CGFloat chance) {
+	
+	CGFloat roll = randomFloatBetweenZeroAndHighend(100.0);
+	if (chance <= roll) {
+		return YES;
+	} else {
+		return NO;
+	}
+}
+
 #pragma mark DISTANCE FUNCTIONS
 
 CGFloat distanceBetween (CGPoint pointA, CGPoint pointB) {
@@ -2223,7 +2233,7 @@ static SKUtilities2* sharedUtilities = Nil;
 	return [NSString stringWithFormat:@"SKUButtonSpriteStateProperties texture: %@ alpha: %f color: %@ colorBlendFactor: %f positionOffset: %f, %f scale: %f, %f centerRect x: %f y: %f width: %f height %f", _texture, _alpha, _color, _colorBlendFactor, _position.x, _position.y, _xScale, _yScale, _centerRect.origin.x, _centerRect.origin.y, _centerRect.size.width, _centerRect.size.height];
 }
 
-+(SKUButtonSpriteStateProperties*)propertiesWithTexture:(SKTexture *)texture andAlpha:(CGFloat)alpha andColor:(UIColor *)color andColorBlendFactor:(CGFloat)colorBlendFactor andPositionOffset:(CGPoint)position andXScale:(CGFloat)xScale andYScale:(CGFloat)yScale andCenterRect:(CGRect)centerRect andPadding:(CGFloat)padding {
++(SKUButtonSpriteStateProperties*)propertiesWithTexture:(SKTexture *)texture andAlpha:(CGFloat)alpha andColor:(SKColor *)color andColorBlendFactor:(CGFloat)colorBlendFactor andPositionOffset:(CGPoint)position andXScale:(CGFloat)xScale andYScale:(CGFloat)yScale andCenterRect:(CGRect)centerRect andPadding:(CGFloat)padding {
 	SKUButtonSpriteStateProperties* props = [[SKUButtonSpriteStateProperties alloc] init];
 	props.alpha = alpha;
 	props.color = color;

@@ -296,6 +296,15 @@ u_int32_t randomUnsignedIntegerBetweenTwoValues (u_int32_t lowend, u_int32_t hig
  */
 CGFloat randomFloatBetweenZeroAndHighend (CGFloat highend);
 
+/*!
+ Returns a boolean that was determined by rng based on the value passed into it.
+ @param chance
+ CGFloat Percent chance that the boolean returns true.
+ @seealso randomFloatBetweenZeroAndHighend
+ */
+bool percentChance (CGFloat chance);
+
+
 #pragma mark DISTANCE FUNCTIONS
 /*! @functiongroup Distance Functions */
 
